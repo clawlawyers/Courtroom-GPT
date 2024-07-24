@@ -1,0 +1,21 @@
+.container {
+  margin-bottom: 21px;
+  border-radius: 10px;
+  z-index: 2;
+  position: relative;
+}
+
+.promptText {
+  font-family: "Lato";
+  overflow-wrap: break-word;
+  width: 100%;
+  white-space: pre-line;
+  font-size: 15;
+  
+}
+
+@media only screen and (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+}
