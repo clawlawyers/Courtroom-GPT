@@ -208,7 +208,7 @@ const AiSidebar = () => {
                     onChange={(e) => setAssistantQuery(e.target.value)}
                   />
                   <img
-                    className="absolute top-2 left-3"
+                    className="absolute top-2 left-3 w-10 h-10"
                     src={searchIcon}
                     alt="search"
                   />

@@ -78,7 +78,7 @@ function Home() {
           <br />
 
           <div className="flex px-5 gap-5">
-            <Link to="/court-room/book-now">
+            <Link to="/book-now">
               <motion.button
                 style={{
                   position: "relative",
@@ -121,7 +121,7 @@ function Home() {
                 </span>
               </motion.button>
             </Link>
-            <Link to="/court-room/login">
+            <Link to="/login">
               <motion.button
                 style={{
                   position: "relative",
@@ -588,19 +588,21 @@ function Home() {
                 Experience the AI Courtroom
               </h1>
             </div>
-            <button
-              style={{
-                backgroundColor: isHovered ? "white" : "#008080",
-                color: isHovered ? "#008080" : "white",
-                margin: "15px",
-                padding: "12px 40px",
-                borderRadius: 10,
-                border: "none",
-                fontSize: 27,
-              }}
-            >
-              Contact us
-            </button>
+            <Link to={"/contact"}>
+              <button
+                style={{
+                  backgroundColor: isHovered ? "white" : "#008080",
+                  color: isHovered ? "#008080" : "white",
+                  margin: "15px",
+                  padding: "12px 40px",
+                  borderRadius: 10,
+                  border: "none",
+                  fontSize: 27,
+                }}
+              >
+                Contact us
+              </button>
+            </Link>
           </div>
         </motion.div>
       </div>

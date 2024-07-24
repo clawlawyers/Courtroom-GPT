@@ -129,7 +129,8 @@ const CourtroomAiHome = () => {
           </Link>
           <Link
             className="flex-1 flex justify-center items-center gap-1 my-2 p-[10px]"
-            to={"/courtroom-ai/arguments"}
+            // to={"/courtroom-ai/arguments"}
+            to={overviewText !== null ? "/courtroom-ai/arguments" : "#"}
           >
             <motion.button
               whileTap={{ scale: "0.95" }}

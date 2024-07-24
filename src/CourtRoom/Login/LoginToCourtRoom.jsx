@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
@@ -222,6 +222,7 @@ function LoginToCourtRoom() {
                   <motion.button
                     type="submit"
                     whileTap={{ scale: "0.95" }}
+                    className="px-3 py-2"
                     style={{
                       background: "none",
                       border: "2px solid white",
@@ -371,6 +372,7 @@ function LoginToCourtRoom() {
               zIndex: 2,
               display: "flex",
               justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
             <div style={{ width: "50%" }}>
@@ -384,19 +386,21 @@ function LoginToCourtRoom() {
                 Experience the AI Courtroom
               </h1>
             </div>
-            <button
-              style={{
-                backgroundColor: isHovered ? "white" : "#008080",
-                color: isHovered ? "#008080" : "white",
-                margin: "15px",
-                padding: "12px 40px",
-                borderRadius: 10,
-                border: "none",
-                fontSize: 27,
-              }}
-            >
-              Contact us
-            </button>
+            <Link to={"/contact"}>
+              <button
+                style={{
+                  backgroundColor: isHovered ? "white" : "#008080",
+                  color: isHovered ? "#008080" : "white",
+                  margin: "15px",
+                  padding: "12px 40px",
+                  borderRadius: 10,
+                  border: "none",
+                  fontSize: 27,
+                }}
+              >
+                Contact us
+              </button>
+            </Link>
           </div>
         </motion.div>
       </div>
