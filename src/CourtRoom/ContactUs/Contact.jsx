@@ -35,7 +35,7 @@ const Contact = () => {
         <form style={{ position: "relative" }} onSubmit={handleSave}>
           <div className="m-28">
             <div
-              className="bg-gradient-to-br from-[#006E6E] to-[#09FFFF]"
+              className="bg-gradient-to-br from-[#025555] to-[#028f8f] p-3"
               style={{
                 // background: "bg-gradient-to-br from-[#006E6E] to-[#09FFFF]",
                 border: "2px solid white",
@@ -85,9 +85,9 @@ const Contact = () => {
                 />
               </div>
               <div className="flex justify-between items-center mx-2 mb-3">
-                <div className="flex gap-1 items-baseline">
-                  <h2 className="text-sm m-0 text-white">
-                    Preferred Contact Mode:{" "}
+                <div className="flex gap-2 items-start">
+                  <h2 className="text-lg m-0 text-white leading-none">
+                    Preferred Contact Mode :{" "}
                   </h2>
                   <div className="flex flex-col gap-1">
                     <div className="w-full flex gap-1">
@@ -98,7 +98,7 @@ const Contact = () => {
                         onChange={(e) => setContactMode(e.target.value)}
                         className=""
                       />
-                      <h1 className="m-0 text-xs text-white">via E-Mail</h1>
+                      <h1 className="m-0 text-sm text-white">via E-Mail</h1>
                     </div>
                     <div className="w-full flex gap-1">
                       <input
@@ -108,7 +108,7 @@ const Contact = () => {
                         onChange={(e) => setContactMode(e.target.value)}
                         className=""
                       />
-                      <h1 className="m-0 text-xs text-white">via Call</h1>
+                      <h1 className="m-0 text-sm text-white">via Call</h1>
                     </div>
                   </div>
                 </div>
@@ -117,7 +117,7 @@ const Contact = () => {
                     whileTap={{ scale: "0.95" }}
                     type="submit"
                     style={{ border: "2px solid white" }}
-                    className="px-24 rounded-md hover:bg-transparent"
+                    className="px-24 py-2 rounded-md bg-transparent text-white text-xl font-bold"
                   >
                     Send
                   </motion.button>
