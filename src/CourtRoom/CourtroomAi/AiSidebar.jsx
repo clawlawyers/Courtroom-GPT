@@ -34,6 +34,7 @@ const AiSidebar = () => {
   const [assistantQuery, setAssistantQuery] = useState("");
   const [showAssistant, setShowAssistant] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
+  const [AiQuestions, setAiQuestions] = useState("");
   // console.log(timeLeft);
 
   useEffect(() => {
@@ -99,7 +100,12 @@ const AiSidebar = () => {
           user_id: currentUser.userId,
         }
       );
-      console.log(response.data);
+      console.log(
+        response.data.data.hallucinationQuestions.assistant_questions
+      );
+      setAiQuestions(
+        response.data.data.hallucinationQuestions.assistant_questions
+      );
     } catch (error) {
       console.error("Error fetching AI questions:", error);
     }
