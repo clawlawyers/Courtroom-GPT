@@ -22,6 +22,9 @@ const aiSuggestion =
   "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.";
 
 const AiSidebar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const overViewDetails = useSelector((state) => state.user.caseOverview);
   const currentUser = useSelector((state) => state.user.user);
 
@@ -30,13 +33,31 @@ const AiSidebar = () => {
   const [aiIconHover, setAiIconHover] = useState(false);
   const [assistantQuery, setAssistantQuery] = useState("");
   const [showAssistant, setShowAssistant] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
+  // console.log(timeLeft);
 
   useEffect(() => {
     setText(overViewDetails);
   }, [overViewDetails]);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date();
+
+      const minutesLeft = 60 - now.getMinutes() - 1;
+      const secondsLeft = 60 - now.getSeconds();
+
+      setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
+    };
+
+    calculateTimeLeft();
+
+    const timer = setInterval(() => {
+      calculateTimeLeft();
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleExit = () => {
     localStorage.removeItem("hasSeenSplash");
@@ -69,6 +90,21 @@ const AiSidebar = () => {
     dispatch(setOverview(text));
     setEditDialog(false);
   };
+
+  const getAiQuestions = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
+        {
+          user_id: currentUser.userId,
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching AI questions:", error);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-3 h-full py-3 pl-3">
@@ -92,9 +128,17 @@ const AiSidebar = () => {
               <h1 className="text-sm m-0 py-2">{overViewDetails}</h1>
             </div>
           </div>
-          <div className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 border-white rounded">
+          <div
+            className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
+            style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
+          >
             <h1 className="text-sm m-0">Time Remaining:</h1>
-            <h1 className="text-sm m-0">00 : 00</h1>
+            <h1
+              className="text-sm m-0 font-semibold"
+              style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
+            >
+              {timeLeft.minutes} : {timeLeft.seconds}
+            </h1>
           </div>
         </div>
         {/* bottom container */}
@@ -175,7 +219,10 @@ const AiSidebar = () => {
               src={aiAssistant}
               onHoverStart={() => setAiIconHover(true)}
               onHoverEnd={() => setAiIconHover(false)}
-              onClick={() => setShowAssistant(!showAssistant)}
+              onClick={() => {
+                setShowAssistant(true);
+                getAiQuestions();
+              }}
             />
             {aiIconHover ? (
               <h1 className="absolute text-xs right-14 top-5 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
@@ -194,11 +241,32 @@ const AiSidebar = () => {
                   }
                 }
               >
-                <div className="flex items-center gap-2 shadow-md">
-                  <img alt="logo" className="h-20 w-20" src={assistantLogo} />
-                  <h1 className="m-0 text-2xl font-semibold text-[#008080]">
-                    CLAW AI Assistant
-                  </h1>
+                <div className="flex justify-between items-center shadow-md">
+                  <div className="flex items-center">
+                    <img alt="logo" className="h-20 w-20" src={assistantLogo} />
+                    <h1 className="m-0 text-2xl font-semibold text-[#008080]">
+                      CLAW AI Assistant
+                    </h1>
+                  </div>
+                  <div>
+                    <svg
+                      onClick={() => setShowAssistant(false)}
+                      width="30"
+                      height="30"
+                      fill="red"
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                      stroke-linejoin="round"
+                      stroke-miterlimit="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 8.933-2.721-2.722c-.146-.146-.339-.219-.531-.219-.404 0-.75.324-.75.749 0 .193.073.384.219.531l2.722 2.722-2.728 2.728c-.147.147-.22.34-.22.531 0 .427.35.75.751.75.192 0 .384-.073.53-.219l2.728-2.728 2.729 2.728c.146.146.338.219.53.219.401 0 .75-.323.75-.75 0-.191-.073-.384-.22-.531l-2.727-2.728 2.717-2.717c.146-.147.219-.338.219-.531 0-.425-.346-.75-.75-.75-.192 0-.385.073-.531.22z"
+                        fill-rule="nonzero"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div className="mx-4 my-3 shadow-md relative">
                   <input
