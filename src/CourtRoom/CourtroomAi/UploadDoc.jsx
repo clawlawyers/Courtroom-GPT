@@ -30,7 +30,7 @@ const UploadDoc = () => {
     }
   };
   console.log(uploadedFile);
-  const transition = { duration: 1 };
+  const transition = { duration: 0.5 };
   const variants = {
     open: { height: "100%", width: "100%" },
     closed: { height: "40%", width: "70%" },

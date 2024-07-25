@@ -390,6 +390,7 @@ const AiSidebar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            zIndex:"3",
           }}
         >
           <div
