@@ -270,7 +270,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         )}
         {uploadComplete && (
           <textarea
-            className="w-full h-40 p-2.5 mb-4 text-black rounded-md resize-none"
+            className="w-full h-64  p-2.5 mb-4 text-black rounded-md "
             value={caseOverview}
             onChange={handleChange}
           />

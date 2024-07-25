@@ -167,6 +167,7 @@ const BookNow = () => {
           <form className={styles.forms} onSubmit={handleSubmit}>
             <h2>Enter your Details</h2>
             <input
+            
               type="text"
               id="name"
               name="name"
@@ -227,6 +228,7 @@ const BookNow = () => {
               </button>
             </div>
             <input
+              className="text-black"
               type="text"
               id="contact"
               name="contact"
@@ -246,7 +248,20 @@ const BookNow = () => {
               />
               <label htmlFor="record">Record the CourtRoom</label>
             </div>
-            <button type="submit">Proceed for Payment</button>
+            <button
+              className=""
+              type="submit"
+              style={{
+                background: "linear-gradient(100deg, #008080 0%, #15B3B3 100%)",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "5px",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Proceed for Payment
+            </button>
           </form>
         </div>
       </section>

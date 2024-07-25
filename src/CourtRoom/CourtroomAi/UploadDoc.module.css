@@ -29,6 +29,9 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border:1px solid black;
+
+
 }
 .uploadButton img {
   border-radius: 0 !important;
@@ -49,6 +52,11 @@
   width: max-content !important;
   padding:40px;
   transform: scale(1.5);
+  cursor: pointer;
+}
+.images img:hover{
+  transform: scale(1.7);
+  transition: 0.5s;
 }
 .verticalLine {
   height: 200%;

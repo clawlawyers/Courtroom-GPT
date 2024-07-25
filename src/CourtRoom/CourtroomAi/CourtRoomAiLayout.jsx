@@ -7,8 +7,12 @@ import Styles from "./CourtroomAiLayout.module.css";
 import splashVideo from "../../assets/images/door open.mp4";
 import splashImage from "../../assets/images/splashImage.png";
 import LogoSplash from "../../assets/images/logoSplash.png";
+import { useSelector } from "react-redux";
 
 const CourtRoomAiLayout = () => {
+  // const user = useSelector((state)=> state.auth.user);
+  // console.log(user);
+
   const [showSplash, setShowSplash] = useState(
     !localStorage.getItem("hasSeenSplash")
   );
