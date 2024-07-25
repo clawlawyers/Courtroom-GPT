@@ -37,21 +37,7 @@ const Container = styled.div`
   }
 `;
 
-const ScaledCalendar = styled.div`
 
-  transform: scale(1.7);
-  font-weight:900;
-  color:white;
-  transform-origin: center;
-
-  @media (max-width: 768px) {
-    transform: scale(1);
-  }
-
-  @media (max-width: 480px) {
-    transform: scale(0.8);
-  }
-`;
 
 const CalendarComponent = ({scheduledSlots,setScheduledSlots}) => {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -120,17 +106,17 @@ const CalendarComponent = ({scheduledSlots,setScheduledSlots}) => {
         <div
          className="flex flex-col gap-5 w-full justify-center items-center"
         >
-          <Button
-          className="w-1/12 bg-teal-500 "
+          <div className="w-full flex flex-row justify-center">
+          <button
+          className="md:w-1/12 w-1/8  bg-gradient-to-r from-teal-800 to-teal-400 p-2 rounded-md font-semibold"
             variant="contained"
             color="primary"
             onClick={addSlot}
-            sx={{
-              backgroundColor:"#14b8a6"
-            }}
+            
           >
             Add to Slot
-          </Button>
+          </button>
+          </div>
           <div
             style={{
               backgroundColor: "#000000a6",

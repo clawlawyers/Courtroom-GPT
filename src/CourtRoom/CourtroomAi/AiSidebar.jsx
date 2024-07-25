@@ -39,18 +39,17 @@ const AiSidebar = () => {
   const dispatch = useDispatch();
 
   const handleExit = () => {
-    localStorage.removeItem("hasSeenSplash");
-
-    localStorage.setItem("FileUploaded", false);
-
     navigate("/court-room");
   };
 
   const ExitToCourtroom = () => {
+    localStorage.removeItem("hasSeenSplash");
+    localStorage.setItem("FileUploaded", false);
+
     saveHistory();
     dispatch(logout());
 
-    navigate("/court-room");
+    navigate("/");
   };
 
   const saveHistory = async () => {
