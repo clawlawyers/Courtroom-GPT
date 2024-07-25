@@ -70,18 +70,17 @@ const AiSidebar = () => {
   }, [minutes, seconds]);
 
   const handleExit = () => {
-    localStorage.removeItem("hasSeenSplash");
-
-    localStorage.setItem("FileUploaded", false);
-
     navigate("/court-room");
   };
 
   const ExitToCourtroom = () => {
+    localStorage.removeItem("hasSeenSplash");
+    localStorage.setItem("FileUploaded", false);
+
     saveHistory();
     dispatch(logout());
 
-    navigate("/court-room");
+    navigate("/");
   };
 
   const saveHistory = async () => {
@@ -470,6 +469,7 @@ const AiSidebar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            zIndex:"3",
           }}
         >
           <div

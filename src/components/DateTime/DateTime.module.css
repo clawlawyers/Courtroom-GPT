@@ -52,3 +52,11 @@
   .MuiButtonBase-root MuiPickersDay-root MuiPickersDay-dayWithMargin css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root{
     color:white !important;
   }
+
+  .css-23p0if-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+    background-color: #15B3B3 !important;
+  }
+  .custom-calendar .Mui-selected {
+    background-color: #00ffa3;
+    color: white;
+  }

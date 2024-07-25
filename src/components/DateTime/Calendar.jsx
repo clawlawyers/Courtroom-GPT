@@ -8,10 +8,10 @@ import TimePickerValue from "./Clock"; // Assuming you have a separate TimePicke
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { addSelectedTime } from "../../features/bookCourtRoom/selectedDatesTimesSlice";
-import "./DateTime.module.css"
+import "./DateTime.module.css";
 const Container = styled.div`
   background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
-  border-radius: 5px;
+  border-radius: 10px;
   border: 2px solid white;
   padding: 15px;
   display: flex;
@@ -35,28 +35,13 @@ const Container = styled.div`
     width: 100vw;
     padding: 10px;
   }
+  
 `;
 
-const ScaledCalendar = styled.div`
-
-  transform: scale(1.7);
-  font-weight:900;
-  color:white;
-  transform-origin: center;
-
-  @media (max-width: 768px) {
-    transform: scale(1);
-  }
-
-  @media (max-width: 480px) {
-    transform: scale(0.8);
-  }
-`;
-
-const CalendarComponent = ({scheduledSlots,setScheduledSlots}) => {
+const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
-  
+
   const dispatch = useDispatch();
 
   const minDate = dayjs().startOf("month");
@@ -78,59 +63,51 @@ const CalendarComponent = ({scheduledSlots,setScheduledSlots}) => {
     setScheduledSlots([...scheduledSlots, newSlot]);
     setSelectedTimes([]); // Clear selected times after adding
     dispatch(addSelectedTime(newSlot));
-
-    
   };
 
   return (
-    <main
-    className="flex w-full flex-col justify-center items-center gap-[70px]"
-    >
+    <main className="flex w-full flex-col justify-center items-center gap-[70px]">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <section
-          className="flex w-full flex-row justify-center items-center gap-[70px]  h-[70vh]"
-        >
+        <section className="flex w-full flex-row justify-center items-center gap-[70px]  h-[70vh]">
           <Container>
-           
-              <DateCalendar
-                onChange={handleDateChange}
-                minDate={minDate}
-                maxDate={maxDate}
-                shouldDisableDate={(date) =>
-                  dayjs(date).isBefore(dayjs(), "day")
-                }
-                views={["day",]}
-                sx={{
-                  color:"white",
-                  marginTop:"50px",
-                  transform: "scale(1.7)",
-                  transformOrigin:"center"
-                }}
-              />
-            
+            <DateCalendar
+              className="custom-calendar"
+              onChange={handleDateChange}
+              minDate={minDate}
+              maxDate={maxDate}
+              shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(), "day")}
+              views={["day"]}
+              sx={{
+                color: "white",
+                marginTop: "50px",
+                transform: "scale(1.7)",
+                transformOrigin: "center",
+                
+              }}
+            />
           </Container>
           <div className="border-2 border-white p-1 rounded-md bg-gradient-to-r from-teal-600 to-cyan-500">
-            <h3 className="text-[1.2rem] p-1 text-center font-semibold">Select Time:</h3>
+            <h3 className="text-[1.2rem] p-1 text-center font-semibold">
+              Select Time:
+            </h3>
             <TimePickerValue
               selectedTimes={selectedTimes}
               setSelectedTimes={setSelectedTimes}
             />
           </div>
         </section>
-        <div
-         className="flex flex-col gap-5 w-full justify-center items-center"
-        >
-          <Button
-          className="w-1/12 bg-teal-500 "
-            variant="contained"
-            color="primary"
-            onClick={addSlot}
-            sx={{
-              backgroundColor:"#14b8a6"
-            }}
-          >
-            Add to Slot
-          </Button>
+        <div className="flex flex-col gap-5 w-full justify-center items-center">
+          <div className="w-full flex flex-row justify-center">
+            <button
+              className="w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 bg-gradient-to-r from-teal-800 to-teal-400 p-2 rounded-md font-semibold"
+              variant="contained"
+              color="primary"
+              onClick={addSlot}
+            >
+              Add to Slot
+            </button>
+          </div>
+
           <div
             style={{
               backgroundColor: "#000000a6",
@@ -150,12 +127,12 @@ const CalendarComponent = ({scheduledSlots,setScheduledSlots}) => {
                 justifyContent: "start",
                 alignItems: "center",
                 border: "3px solid  teal",
-                backgroundColor:"white",
+                backgroundColor: "white",
                 width: "70%",
                 height: "80px",
                 padding: "10px",
                 borderRadius: "5px",
-                gap:"20px",
+                gap: "20px",
               }}
             >
               {scheduledSlots.map((slot, index) => (
@@ -169,7 +146,6 @@ const CalendarComponent = ({scheduledSlots,setScheduledSlots}) => {
                   })}
                   {","}
                   {slot.time}
-                  
                 </div>
               ))}
             </div>
