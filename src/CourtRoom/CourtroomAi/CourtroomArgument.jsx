@@ -98,24 +98,28 @@ const CourtroomArgument = () => {
   };
 
   const GenerateDetails = async (index) => {
-    const laywerArgument = await axios.post(
+    let laywerArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Generate", argument_index: index }
     );
-    const judgeArgument = await axios.post(
+
+    laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    setLawyerArgument(laywerArgument);
+
+    let judgeArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/judge`,
       { user_id: currentUser.userId, action: "Generate", argument_index: index }
     );
 
-    return {
-      laywerArgument: laywerArgument.data.data.lawyerArguemnt.counter_argument,
-      judgeArgument: judgeArgument.data.data.judgeArguemnt.judgement,
-    };
+    judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
+    setJudgeArgument(judgeArgument);
   };
 
   const handleAddArgument = async () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
+
+    setLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -129,13 +133,11 @@ const CourtroomArgument = () => {
     console.log(inserUserArgument.data.data.argumentIndex.argument_index);
 
     setLoading(true);
-    const { laywerArgument, judgeArgument } = await GenerateDetails(
+    await GenerateDetails(
       inserUserArgument.data.data.argumentIndex.argument_index
     );
-    setLawyerArgument(laywerArgument);
-    setJudgeArgument(judgeArgument);
 
-    console.log(laywerArgument, judgeArgument);
+    // console.log(laywerArgument, judgeArgument);
 
     setLoading(false);
 
