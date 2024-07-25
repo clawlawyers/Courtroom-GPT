@@ -8,6 +8,7 @@ import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -29,6 +30,8 @@ import { useSelector } from "react-redux";
 // ];
 
 const CourtroomArgument = () => {
+  const navigate = useNavigate();
+
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [lawyerArgument, setLawyerArgument] = useState("");
@@ -98,6 +101,12 @@ const CourtroomArgument = () => {
     setAiLawyerLoading(false);
 
     // api call here
+  };
+
+  const handleVerdict = () => {
+    //verdict api call
+
+    navigate("/courtroom-ai/verdict");
   };
 
   const GenerateDetails = async (index) => {
@@ -454,6 +463,8 @@ const CourtroomArgument = () => {
               <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
             </motion.button>
             <motion.button
+              whileTap={{ scale: "0.95" }}
+              onClick={handleVerdict}
               className="flex-1 my-2"
               style={{
                 display: "flex",
@@ -468,7 +479,7 @@ const CourtroomArgument = () => {
                 color: "white",
               }}
             >
-              <h2 style={{ fontSize: "15px", margin: "0" }}>Reset Your Case</h2>
+              <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
             </motion.button>
           </div>
         </div>
