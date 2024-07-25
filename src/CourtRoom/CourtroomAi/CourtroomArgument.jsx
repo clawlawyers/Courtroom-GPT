@@ -40,8 +40,8 @@ const CourtroomArgument = () => {
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
   const [selectedUserArgumentContent, setSelectedUserArgumentContent] =
     useState(null);
-  const [aiJudgeLoading, setAiJudgeLoading] = useState(true);
-  const [aiLawyerLoading, setAiLawyerLoading] = useState(true);
+  const [aiJudgeLoading, setAiJudgeLoading] = useState(false);
+  const [aiLawyerLoading, setAiLawyerLoading] = useState(false);
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
 
   const currentUser = useSelector((state) => state.user.user);
@@ -74,31 +74,34 @@ const CourtroomArgument = () => {
   };
 
   const RetieveDetails = async (index) => {
-    const laywerArgument = await axios.post(
+    setAiLawyerLoading(true);
+    let laywerArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
     );
-    const judgeArgument = await axios.post(
+
+    laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    setLawyerArgument(laywerArgument);
+
+    setAiLawyerLoading(false);
+
+    setAiJudgeLoading(true);
+
+    let judgeArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/judge`,
       { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
     );
 
-    return {
-      laywerArgument: laywerArgument.data.data.lawyerArguemnt.counter_argument,
-      judgeArgument: judgeArgument.data.data.judgeArguemnt.judgement,
-    };
+    judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
+    setJudgeArgument(judgeArgument);
+
+    setAiJudgeLoading(false);
   };
 
-  const handleArgumentSelect = (index, x) => {
+  const handleArgumentSelect = async (index, x) => {
     setSelectedUserArgument(index);
     setSelectedUserArgumentContent(x);
-    setAiJudgeLoading(true);
-    setAiLawyerLoading(true);
-    const { laywerArgument, judgeArgument } = RetieveDetails(index);
-    setLawyerArgument(laywerArgument);
-    setJudgeArgument(judgeArgument);
-    setAiJudgeLoading(false);
-    setAiLawyerLoading(false);
+    await RetieveDetails(index);
 
     // api call here
   };
@@ -110,6 +113,7 @@ const CourtroomArgument = () => {
   };
 
   const GenerateDetails = async (index) => {
+    setAiLawyerLoading(true);
     let laywerArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Generate", argument_index: index }
@@ -117,6 +121,9 @@ const CourtroomArgument = () => {
 
     laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
     setLawyerArgument(laywerArgument);
+    setAiLawyerLoading(false);
+
+    setAiJudgeLoading(true);
 
     let judgeArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/judge`,
@@ -125,6 +132,7 @@ const CourtroomArgument = () => {
 
     judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
     setJudgeArgument(judgeArgument);
+    setAiJudgeLoading(false);
   };
 
   const handleAddArgument = async () => {
