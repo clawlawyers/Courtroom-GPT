@@ -43,6 +43,9 @@ const AiSidebar = () => {
     parseInt(60 - new Date().getSeconds())
   );
   const [countdownOver, setCountDownOver] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
+  const [AiQuestions, setAiQuestions] = useState("");
+  // console.log(timeLeft);
 
   useEffect(() => {
     setText(overViewDetails);
@@ -108,7 +111,12 @@ const AiSidebar = () => {
           user_id: currentUser.userId,
         }
       );
-      console.log(response.data);
+      console.log(
+        response.data.data.hallucinationQuestions.assistant_questions
+      );
+      setAiQuestions(
+        response.data.data.hallucinationQuestions.assistant_questions
+      );
     } catch (error) {
       console.error("Error fetching AI questions:", error);
     }
