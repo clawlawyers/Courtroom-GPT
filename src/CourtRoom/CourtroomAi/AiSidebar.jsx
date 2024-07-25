@@ -469,7 +469,7 @@ const AiSidebar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex:"3",
+            zIndex: "3",
           }}
         >
           <div
@@ -562,17 +562,20 @@ const AiSidebar = () => {
             </div>
             <div className="flex justify-between">
               <motion.button
+                onClick={() => ExitToCourtroom()}
                 whileTap={{ scale: "0.95" }}
                 className="border border-white rounded-lg py-2 px-8"
               >
                 Go Back To Homepage
               </motion.button>
-              <motion.button
-                whileTap={{ scale: "0.95" }}
-                className="border border-white rounded-lg py-2 px-8"
-              >
-                View Verdict
-              </motion.button>
+              <Link to={"/courtroom-ai/verdict"}>
+                <motion.button
+                  whileTap={{ scale: "0.95" }}
+                  className="border border-white rounded-lg py-2 px-8 text-white"
+                >
+                  View Verdict
+                </motion.button>
+              </Link>
             </div>
           </div>
         </div>
