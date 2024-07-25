@@ -37,7 +37,8 @@ const CourtroomArgument = () => {
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
   const [selectedUserArgumentContent, setSelectedUserArgumentContent] =
     useState(null);
-  const [loading, setLoading] = useState(false);
+  const [aiJudgeLoading, setAiJudgeLoading] = useState(true);
+  const [aiLawyerLoading, setAiLawyerLoading] = useState(true);
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
 
   const currentUser = useSelector((state) => state.user.user);
@@ -88,11 +89,13 @@ const CourtroomArgument = () => {
   const handleArgumentSelect = (index, x) => {
     setSelectedUserArgument(index);
     setSelectedUserArgumentContent(x);
-    setLoading(true);
+    setAiJudgeLoading(true);
+    setAiLawyerLoading(true);
     const { laywerArgument, judgeArgument } = RetieveDetails(index);
     setLawyerArgument(laywerArgument);
     setJudgeArgument(judgeArgument);
-    setLoading(false);
+    setAiJudgeLoading(false);
+    setAiLawyerLoading(false);
 
     // api call here
   };
@@ -119,7 +122,8 @@ const CourtroomArgument = () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
 
-    setLoading(true);
+    setAiJudgeLoading(true);
+    setAiLawyerLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -132,14 +136,17 @@ const CourtroomArgument = () => {
 
     console.log(inserUserArgument.data.data.argumentIndex.argument_index);
 
-    setLoading(true);
+    setAiJudgeLoading(true);
+    setAiLawyerLoading(true);
+
     await GenerateDetails(
       inserUserArgument.data.data.argumentIndex.argument_index
     );
 
     // console.log(laywerArgument, judgeArgument);
 
-    setLoading(false);
+    setAiJudgeLoading(false);
+    setAiLawyerLoading(false);
 
     //clear input text
     setAddArgumentInputText(null);
@@ -174,7 +181,7 @@ const CourtroomArgument = () => {
           {/* topContainer */}
           {/* <div className="grid grid-cols-2 p-2"> */}
           {/* top left Cont */}
-          {loading ? (
+          {aiJudgeLoading ? (
             <div
               className="bg-[#033E40] h-[300px]"
               style={{
@@ -222,7 +229,7 @@ const CourtroomArgument = () => {
             </div>
           )}
           {/* top right cont */}
-          {loading ? (
+          {aiLawyerLoading ? (
             <div
               className="bg-[#033E40] h-[300px]"
               style={{
