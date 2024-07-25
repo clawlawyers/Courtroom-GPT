@@ -8,6 +8,7 @@ import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -29,6 +30,8 @@ import { useSelector } from "react-redux";
 // ];
 
 const CourtroomArgument = () => {
+  const navigate = useNavigate();
+
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [lawyerArgument, setLawyerArgument] = useState("");
@@ -37,7 +40,8 @@ const CourtroomArgument = () => {
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
   const [selectedUserArgumentContent, setSelectedUserArgumentContent] =
     useState(null);
-  const [loading, setLoading] = useState(false);
+  const [aiJudgeLoading, setAiJudgeLoading] = useState(false);
+  const [aiLawyerLoading, setAiLawyerLoading] = useState(false);
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
 
   const currentUser = useSelector((state) => state.user.user);
@@ -70,34 +74,46 @@ const CourtroomArgument = () => {
   };
 
   const RetieveDetails = async (index) => {
-    const laywerArgument = await axios.post(
+    setAiLawyerLoading(true);
+    let laywerArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
     );
-    const judgeArgument = await axios.post(
+
+    laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    setLawyerArgument(laywerArgument);
+
+    setAiLawyerLoading(false);
+
+    setAiJudgeLoading(true);
+
+    let judgeArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/judge`,
       { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
     );
 
-    return {
-      laywerArgument: laywerArgument.data.data.lawyerArguemnt.counter_argument,
-      judgeArgument: judgeArgument.data.data.judgeArguemnt.judgement,
-    };
+    judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
+    setJudgeArgument(judgeArgument);
+
+    setAiJudgeLoading(false);
   };
 
-  const handleArgumentSelect = (index, x) => {
+  const handleArgumentSelect = async (index, x) => {
     setSelectedUserArgument(index);
     setSelectedUserArgumentContent(x);
-    setLoading(true);
-    const { laywerArgument, judgeArgument } = RetieveDetails(index);
-    setLawyerArgument(laywerArgument);
-    setJudgeArgument(judgeArgument);
-    setLoading(false);
+    await RetieveDetails(index);
 
     // api call here
   };
 
+  const handleVerdict = () => {
+    //verdict api call
+
+    navigate("/courtroom-ai/verdict");
+  };
+
   const GenerateDetails = async (index) => {
+    setAiLawyerLoading(true);
     let laywerArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Generate", argument_index: index }
@@ -105,6 +121,9 @@ const CourtroomArgument = () => {
 
     laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
     setLawyerArgument(laywerArgument);
+    setAiLawyerLoading(false);
+
+    setAiJudgeLoading(true);
 
     let judgeArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/judge`,
@@ -113,13 +132,15 @@ const CourtroomArgument = () => {
 
     judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
     setJudgeArgument(judgeArgument);
+    setAiJudgeLoading(false);
   };
 
   const handleAddArgument = async () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
 
-    setLoading(true);
+    setAiJudgeLoading(true);
+    setAiLawyerLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -132,14 +153,17 @@ const CourtroomArgument = () => {
 
     console.log(inserUserArgument.data.data.argumentIndex.argument_index);
 
-    setLoading(true);
+    setAiJudgeLoading(true);
+    setAiLawyerLoading(true);
+
     await GenerateDetails(
       inserUserArgument.data.data.argumentIndex.argument_index
     );
 
     // console.log(laywerArgument, judgeArgument);
 
-    setLoading(false);
+    setAiJudgeLoading(false);
+    setAiLawyerLoading(false);
 
     //clear input text
     setAddArgumentInputText(null);
@@ -174,7 +198,7 @@ const CourtroomArgument = () => {
           {/* topContainer */}
           {/* <div className="grid grid-cols-2 p-2"> */}
           {/* top left Cont */}
-          {loading ? (
+          {aiJudgeLoading ? (
             <div
               className="bg-[#033E40] h-[300px]"
               style={{
@@ -222,7 +246,7 @@ const CourtroomArgument = () => {
             </div>
           )}
           {/* top right cont */}
-          {loading ? (
+          {aiLawyerLoading ? (
             <div
               className="bg-[#033E40] h-[300px]"
               style={{
@@ -447,6 +471,8 @@ const CourtroomArgument = () => {
               <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
             </motion.button>
             <motion.button
+              whileTap={{ scale: "0.95" }}
+              onClick={handleVerdict}
               className="flex-1 my-2"
               style={{
                 display: "flex",
@@ -461,7 +487,7 @@ const CourtroomArgument = () => {
                 color: "white",
               }}
             >
-              <h2 style={{ fontSize: "15px", margin: "0" }}>Reset Your Case</h2>
+              <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
             </motion.button>
           </div>
         </div>
