@@ -102,7 +102,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         formData.append("file", file);
         formData.append("userId", currentUser.userId);
 
-        console.log(currentUser.userId);
+        console.log(currentUser);
 
         try {
           const response = await axios.post(
