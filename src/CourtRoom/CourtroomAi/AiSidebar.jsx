@@ -14,6 +14,7 @@ import assistantLogo from "../../assets/images/virtualAssistant.gif";
 import searchIcon from "../../assets/images/assistantSearch.gif";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
+import countDown from "../../assets/images/countdown.gif";
 
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
@@ -33,31 +34,40 @@ const AiSidebar = () => {
   const [aiIconHover, setAiIconHover] = useState(false);
   const [assistantQuery, setAssistantQuery] = useState("");
   const [showAssistant, setShowAssistant] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  // console.log(timeLeft);
+
+  const [minutes, setMinutes] = useState(
+    parseInt(60 - new Date().getMinutes())
+  );
+  console.log(minutes);
+  const [seconds, setSeconds] = useState(
+    parseInt(60 - new Date().getSeconds())
+  );
+  const [countdownOver, setCountDownOver] = useState(false);
 
   useEffect(() => {
     setText(overViewDetails);
   }, [overViewDetails]);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date();
-
-      const minutesLeft = 60 - now.getMinutes() - 1;
-      const secondsLeft = 60 - now.getSeconds();
-
-      setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
-    };
-
-    calculateTimeLeft();
-
-    const timer = setInterval(() => {
-      calculateTimeLeft();
+    const countdown = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      } else if (seconds === 0 && minutes > 0) {
+        setMinutes(minutes - 1);
+        setSeconds(59);
+      } else {
+        clearInterval(countdown);
+      }
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+    return () => clearInterval(countdown);
+  }, [minutes, seconds]);
+
+  useEffect(() => {
+    if (minutes < 1 && seconds === 0) {
+      setCountDownOver(true);
+    }
+  }, [minutes, seconds]);
 
   const handleExit = () => {
     navigate("/court-room");
@@ -129,14 +139,15 @@ const AiSidebar = () => {
           </div>
           <div
             className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-            style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
+            style={{ borderColor: minutes < 5 ? "red" : "white" }}
           >
             <h1 className="text-sm m-0">Time Remaining:</h1>
             <h1
               className="text-sm m-0 font-semibold"
-              style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
+              style={{ color: minutes < 5 ? "red" : "#008080" }}
             >
-              {timeLeft.minutes} : {timeLeft.seconds}
+              {minutes.toString().padStart(2, "0")}:
+              {seconds.toString().padStart(2, "0")}
             </h1>
           </div>
         </div>
@@ -516,6 +527,52 @@ const AiSidebar = () => {
               <button onClick={handleSave} style={{ borderRadius: "10px" }}>
                 Save
               </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      {countdownOver ? (
+        <div
+          style={{
+            width: "100%",
+            height: "105%",
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            className="flex flex-col justify-center gap-20 p-5"
+            style={{
+              background: "linear-gradient(to right,#0e1118,#008080)",
+              height: "450px",
+              width: "900px",
+              border: "4px solid red",
+              borderRadius: "10px",
+            }}
+          >
+            <div className="flex flex-col justify-center items-center gap-10">
+              <img className="w-28 h-28" alt="clock" src={countDown} />
+              <h1 className="text-3xl">Your Courtroom Time is Over</h1>
+            </div>
+            <div className="flex justify-between">
+              <motion.button
+                whileTap={{ scale: "0.95" }}
+                className="border border-white rounded-lg py-2 px-8"
+              >
+                Go Back To Homepage
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: "0.95" }}
+                className="border border-white rounded-lg py-2 px-8"
+              >
+                View Verdict
+              </motion.button>
             </div>
           </div>
         </div>
