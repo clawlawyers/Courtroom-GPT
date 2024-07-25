@@ -6,6 +6,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const BookNow = () => {
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
@@ -29,7 +30,7 @@ const BookNow = () => {
 
   console.log(scheduledSlots);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formattedBookings = scheduledSlots.map((booking) => {
@@ -58,8 +59,18 @@ const BookNow = () => {
       slots: formattedBookings, // Add scheduledSlots to bookingData
     };
     console.log("Booking Data:", bookingData);
-    loadRazorpay(bookingData);
-    //TODO : backend post request
+    const respos = await axios.post(
+      `${NODE_API_ENDPOINT}/courtroom/book-courtroom-validation`,
+      {
+        ...bookingData,
+      }
+    );
+    if (respos.data.data.data === "Slot can be book") {
+      loadRazorpay(bookingData);
+    } else {
+      toast.error("same number or email not allowed at same time slot");
+    }
+    // TODO : backend post request
   };
 
   const loadRazorpay = async (bookingData) => {
