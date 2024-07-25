@@ -93,6 +93,7 @@
   padding: 15px;
   width: 70%;
   border-radius: 10px;
+  color: black;
 }
 .forms input[type="password"] {
   background-color:transparent;
@@ -100,13 +101,16 @@
   width: 100%;
   border-radius: 10px;
   border:none;
-  color:"black"
+  color: black;
+
 }
 .forms input[type="email"] {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 15px;
   width: 70%;
   border-radius: 10px;
+  color: black;
+
 }
 
 .forms button {

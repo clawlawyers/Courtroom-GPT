@@ -55,7 +55,7 @@ const UploadDoc = () => {
       ) : (
         <div
           onClick={handleClick}
-          className={`${Styles.uploadButton} ${
+          className={` ${Styles.uploadButton} ${
             error ? Styles.errorBoundary : ""
           }`}
         >

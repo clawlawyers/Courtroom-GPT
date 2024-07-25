@@ -156,6 +156,7 @@ const BookNow = () => {
           <form className={styles.forms} onSubmit={handleSubmit}>
             <h2>Enter your Details</h2>
             <input
+            
               type="text"
               id="name"
               name="name"
