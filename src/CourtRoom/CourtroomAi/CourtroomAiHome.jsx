@@ -123,7 +123,7 @@ const CourtroomAiHome = () => {
                   color: overviewText === null ? "gray" : "white",
                 }}
               >
-                Fight Yourself
+                {overviewText === null ? "Fight Yourself" : "Add Argument"}
               </h2>
             </motion.button>
           </Link>

@@ -570,6 +570,7 @@ const AiSidebar = () => {
               </motion.button>
               <Link to={"/courtroom-ai/verdict"}>
                 <motion.button
+                  onClick={() => setCountDownOver(false)}
                   whileTap={{ scale: "0.95" }}
                   className="border border-white rounded-lg py-2 px-8 text-white"
                 >
