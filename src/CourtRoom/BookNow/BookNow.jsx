@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CalendarComponent from "../../components/DateTime/Calendar";
 import styles from "../BookNow/BookNow.module.css";
 import image from "../../assets/images/courtroomPhoto.png";
@@ -27,6 +27,17 @@ const BookNow = () => {
     const newValue = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: newValue });
   };
+
+  useEffect(() => {
+    const getBookingDetails = async () => {
+      const details = await axios.get(
+        `${NODE_API_ENDPOINT}/courtroom/book-courtroom`
+      );
+
+      console.log(details.data);
+    };
+    getBookingDetails();
+  }, []);
 
   console.log(scheduledSlots);
 
@@ -167,7 +178,6 @@ const BookNow = () => {
           <form className={styles.forms} onSubmit={handleSubmit}>
             <h2>Enter your Details</h2>
             <input
-            
               type="text"
               id="name"
               name="name"
