@@ -8,6 +8,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+
+
 const BookNow = () => {
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const [loading, setLoading] = useState(false);
@@ -28,16 +30,7 @@ const BookNow = () => {
     setFormData({ ...formData, [name]: newValue });
   };
 
-  useEffect(() => {
-    const getBookingDetails = async () => {
-      const details = await axios.get(
-        `${NODE_API_ENDPOINT}/courtroom/book-courtroom`
-      );
-
-      console.log(details.data);
-    };
-    getBookingDetails();
-  }, []);
+  
 
   console.log(scheduledSlots);
 

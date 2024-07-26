@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,6 +9,20 @@ import { useDispatch } from "react-redux";
 import { addSelectedTime } from "../../features/bookCourtRoom/selectedDatesTimesSlice";
 import toast from "react-hot-toast";
 import "./DateTime.module.css";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+import axios from "axios";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+
+// Styled component for PickersDay
+const StyledPickersDay = styled(PickersDay)`
+  ${(props) => `
+    color: ${props.isBooked ? "white" : "inherit"}; // Change text color for booked dates
+    background-color: ${props.isBooked ? "darkred" : "transparent"}; // Change background color for booked dates
+    &:hover {
+      border: 1px solid ${props.isBooked ? "darkred" : "#00ffa3"}; // Change border color for hovered dates
+    }
+  `}
+`;
 
 const Container = styled.div`
   background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
@@ -46,7 +60,7 @@ const CalendarWrapper = styled.div`
   .custom-calendar {
     transform: scale(1.7);
     transform-origin: center;
-    
+
     @media (max-width: 768px) {
       transform: scale(1.3);
     }
@@ -58,6 +72,44 @@ const CalendarWrapper = styled.div`
 `;
 
 const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
+  const [bookedDates, setBookedDates] = useState([]);
+
+  useEffect(() => {
+    const getBookingDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${NODE_API_ENDPOINT}/courtroom/book-courtroom`
+        );
+        const bookedDatesData = response.data;
+
+        // Extract dates from the API response
+        const formattedBookedDates = bookedDatesData.map((slot) =>
+          dayjs(slot._id.date).format("YYYY-MM-DD")
+        );
+        setBookedDates(formattedBookedDates);
+      } catch (error) {
+        console.error("Error fetching booking details:", error);
+      }
+    };
+    getBookingDetails();
+  }, []);
+
+  function ServerDay(props) {
+    const { day, outsideCurrentMonth, ...other } = props;
+    const isBooked = bookedDates.includes(day.format("YYYY-MM-DD"));
+    const isSelected = !outsideCurrentMonth && bookedDates.indexOf(day.format("YYYY-MM-DD")) >= 0;
+
+    return (
+      <StyledPickersDay
+        {...other}
+        outsideCurrentMonth={outsideCurrentMonth}
+        isBooked={isBooked}
+        isSelected={isSelected}
+        day={day}
+      />
+    );
+  }
+
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
 
@@ -94,33 +146,44 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
           <Container>
             <CalendarWrapper>
               <DateCalendar
+                slots={{
+                  day: (props) => (
+                    <ServerDay {...props} bookedDates={bookedDates} />
+                  ),
+                }}
                 className="custom-calendar"
                 onChange={handleDateChange}
                 minDate={minDate}
                 maxDate={maxDate}
-                shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(), "day")}
+                shouldDisableDate={(date) =>
+                  dayjs(date).isBefore(dayjs(), "day")
+                }
                 views={["day"]}
                 sx={{
                   color: "white",
                   marginTop: "50px",
-                  '& .MuiPickersDay-root': {
-                    color: 'white', // Color for the date numbers
+                  "& .MuiPickersDay-root": {
+                    color: "white",
+                    backgroundColor: ({ bookedDates }) =>
+                      // bookedDates.includes(dayjs(props.date).format("YYYY-MM-DD")) ? "darkred" : "transparent",
+                    console.log(bookedDates)
                   },
-                  '& .MuiPickersDay-root.Mui-selected': {
-                    backgroundColor: '#00ffa3', // Background color for selected date
-                    color: 'black', // Text color for selected date
+                  
+                  "& .MuiPickersDay-root.Mui-selected": {
+                    backgroundColor: "#00ffa3", // Background color for selected date
+                    color: "black", // Text color for selected date
                   },
-                  '& .MuiPickersDay-root:hover': {
-                    border:"1px solid #00ffa3" // Background color for hovered date
+                  "& .MuiPickersDay-root:hover": {
+                    border: "1px solid #00ffa3", // Border color for hovered date
                   },
-                  '& .MuiPickersDay-today': {
-                    borderColor: 'white', // Border color for today's date
+                  "& .MuiPickersDay-today": {
+                    borderColor: "white", // Border color for today's date
                   },
-                  '& .MuiTypography-root': {
-                    color: 'white', // Color for the month/year text
+                  "& .MuiTypography-root": {
+                    color: "white", // Color for the month/year text
                   },
-                  '& .MuiSvgIcon-root': {
-                    color: 'white', // Color for the navigation arrows
+                  "& .MuiSvgIcon-root": {
+                    color: "white", // Color for the navigation arrows
                   },
                 }}
               />
