@@ -11,8 +11,7 @@ import {
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import aiAssistant from "../../assets/images/aiAssistant.png";
 import assistantLogo from "../../assets/images/virtualAssistant.gif";
-import aiAssistantLoading from "../../assets/images/aiAssistantLoading.gif";
-import aiAssistantIcon from "../../assets/images/aiAssistant2.png";
+import aiAssistantLoader from "../../assets/images/aiAssistantLoading.gif";
 import assistantIcon2 from "../../assets/images/assistantIcon2.png";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
@@ -25,54 +24,69 @@ const dialogText =
 const aiSuggestion =
   "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.";
 
+const TimerComponent = React.memo(() => {
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const minutesLeft = 60 - now.getMinutes() - 1;
+      const secondsLeft = 60 - now.getSeconds();
+      setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
+    };
+
+    calculateTimeLeft(); // Initial call
+
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, []); // Empty dependency array
+
+  return (
+    <div
+      className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
+      style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
+    >
+      <h1 className="text-sm m-0">Time Remaining:</h1>
+      <h1
+        className="text-sm m-0 font-semibold"
+        style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
+      >
+        {timeLeft.minutes} : {timeLeft.seconds}
+      </h1>
+    </div>
+  );
+});
+
 const AiSidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const overViewDetails = useSelector((state) => state.user.caseOverview);
   const currentUser = useSelector((state) => state.user.user);
-
+  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
   const [editDialog, setEditDialog] = useState(false);
   const [text, setText] = useState("");
   const [aiIconHover, setAiIconHover] = useState(false);
-  const [assistantQuery, setAssistantQuery] = useState("");
   const [showAssistant, setShowAssistant] = useState(false);
-
-  const [minutes, setMinutes] = useState(
-    parseInt(60 - new Date().getMinutes())
-  );
-  const [seconds, setSeconds] = useState(
-    parseInt(60 - new Date().getSeconds())
-  );
   const [countdownOver, setCountDownOver] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  const [AiQuestions, setAiQuestions] = useState("");
-  // console.log(timeLeft);
+  const [AiQuestions, setAiQuestions] = useState(null);
+  console.log(AiQuestions);
+  const [aiAssistantLoading, setAiAssistantLoading] = useState(true);
+  const [slotIntervalTimer, setSlotIntervalTimer] = useState(null);
 
   useEffect(() => {
     setText(overViewDetails);
-  }, [overViewDetails]);
+    setSlotIntervalTimer(slotTimeInterval);
+  }, [overViewDetails, slotTimeInterval]);
 
   useEffect(() => {
-    const countdown = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(seconds - 1);
-      } else if (seconds === 0 && minutes > 0) {
-        setMinutes(minutes - 1);
-        setSeconds(59);
-      } else {
-        clearInterval(countdown);
-      }
-    }, 1000);
-
-    return () => clearInterval(countdown);
-  }, [minutes, seconds]);
-
-  useEffect(() => {
-    if (minutes < 1 && seconds === 0) {
+    if (new Date().getHours() > slotIntervalTimer + 1) {
       setCountDownOver(true);
+    } else {
+      setCountDownOver(false);
     }
-  }, [minutes, seconds]);
+  }, [slotIntervalTimer]);
 
   const handleExit = () => {
     navigate("/court-room");
@@ -106,6 +120,7 @@ const AiSidebar = () => {
   };
 
   const getAiQuestions = async () => {
+    setAiAssistantLoading(true);
     try {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
@@ -119,8 +134,10 @@ const AiSidebar = () => {
       setAiQuestions(
         response.data.data.hallucinationQuestions.assistant_questions
       );
+      setAiAssistantLoading(false);
     } catch (error) {
       console.error("Error fetching AI questions:", error);
+      setAiAssistantLoading(false);
     }
   };
 
@@ -149,19 +166,7 @@ const AiSidebar = () => {
               </h1>
             </div>
           </div>
-          <div
-            className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-            style={{ borderColor: minutes < 5 ? "red" : "white" }}
-          >
-            <h1 className="text-sm m-0">Time Remaining:</h1>
-            <h1
-              className="text-sm m-0 font-semibold"
-              style={{ color: minutes < 5 ? "red" : "#008080" }}
-            >
-              {minutes.toString().padStart(2, "0")}:
-              {seconds.toString().padStart(2, "0")}
-            </h1>
-          </div>
+          <TimerComponent />
         </div>
         {/* bottom container */}
         <div className="bg-[#008080] p-4 h-2/3 border-2 border-black rounded flex flex-col justify-between">
@@ -286,13 +291,23 @@ const AiSidebar = () => {
                     </svg>
                   </div>
                 </div>
-                <div className="m-4">
-                  <textarea
-                    readOnly
-                    className="w-full h-[260px] p-2 bg-transparent text-black focus:outline-none cursor-default"
-                    value={aiSuggestion}
-                  />
-                </div>
+                {aiAssistantLoading ? (
+                  <div className="flex justify-center items-center p-[5em]">
+                    <img
+                      className="h-32 w-32"
+                      alt="loader"
+                      src={aiAssistantLoader}
+                    />
+                  </div>
+                ) : (
+                  <div className="m-4">
+                    <textarea
+                      readOnly
+                      className="w-full h-[350px] p-2 bg-transparent text-black focus:outline-none cursor-default"
+                      value={AiQuestions}
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               ""
