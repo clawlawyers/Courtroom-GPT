@@ -57,11 +57,12 @@ const CourtroomArgument = () => {
     setEditValue(e.target.value);
   };
 
-  const handleSave = (index) => {
+  const handleSave = async (index) => {
     const updatedArguments = [...userArgument];
     updatedArguments[index] = editValue;
     setEditIndex(null);
     setEditValue("");
+    await RetieveDetails(index);
   };
 
   const handleSwap = () => {
