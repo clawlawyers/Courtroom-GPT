@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,36 +9,12 @@ import { useDispatch } from "react-redux";
 import { addSelectedTime } from "../../features/bookCourtRoom/selectedDatesTimesSlice";
 import toast from "react-hot-toast";
 import "./DateTime.module.css";
-import { PickersDay } from "@mui/x-date-pickers/PickersDay";
-import axios from "axios";
+import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import Badge from '@mui/material/Badge';
+import { useEffect } from "react";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
-
-// Styled component for PickersDay
-const StyledPickersDay = styled(PickersDay)`
-  ${(props) => `
-    color: ${props.isBooked ? "white" : "inherit"}; // Change text color for booked dates
-    background-color: ${
-      props.isDisabled
-        ? "gray"
-        : props.isBooked
-        ? props.isHighlyBooked
-          ? "red"
-          : props.isPartiallyBooked
-          ? "yellow"
-          : "transparent"
-        : "transparent"
-    }; // Change background color based on booking status
-    &:hover {
-      border: 1px solid ${
-        props.isDisabled
-          ? "gray"
-          : props.isBooked
-          ? "red"
-          : "#00ffa3"
-      }; // Change border color for hovered dates
-    }
-  `}
-`;
+import axios from "axios";
+import Tooltip from '@mui/material/Tooltip';
 
 const Container = styled.div`
   background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
@@ -76,7 +52,7 @@ const CalendarWrapper = styled.div`
   .custom-calendar {
     transform: scale(1.7);
     transform-origin: center;
-
+    
     @media (max-width: 768px) {
       transform: scale(1.3);
     }
@@ -88,55 +64,63 @@ const CalendarWrapper = styled.div`
 `;
 
 const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
-  const [bookedDates, setBookedDates] = useState({});
-  const [selectedDates, setSelectedDates] = useState([]);
-  const [selectedTimes, setSelectedTimes] = useState([]);
-  const dispatch = useDispatch();
+  const [bookedDates, setBookedDates] = useState([]);
 
   useEffect(() => {
     const getBookingDetails = async () => {
       try {
-        const response = await axios.get(
-          `${NODE_API_ENDPOINT}/courtroom/book-courtroom`
-        );
+        const response = await axios.get(`${NODE_API_ENDPOINT}/courtroom/book-courtroom`);
         const bookedDatesData = response.data;
-
-        // Create a map to count slots for each date
-        const dateCountMap = bookedDatesData.reduce((acc, slot) => {
-          const dateKey = dayjs(slot._id.date).format("YYYY-MM-DD");
-          acc[dateKey] = (acc[dateKey] || 0) + 1;
-          return acc;
-        }, {});
-
-        setBookedDates(dateCountMap);
+  
+       
+        // Extract dates from the API response
+        const formattedBookedDates = bookedDatesData.map(slot => dayjs(slot._id.date).format("YYYY-MM-DD"));
+        setBookedDates(formattedBookedDates);
       } catch (error) {
         console.error("Error fetching booking details:", error);
       }
     };
     getBookingDetails();
   }, []);
-
   function ServerDay(props) {
-    const { day, outsideCurrentMonth, ...other } = props;
-    const dateKey = day.format("YYYY-MM-DD");
-    const bookings = bookedDates[dateKey] || 0;
-    const isBooked = bookings > 0;
-    const isDisabled = bookings >= 5;
-    const isHighlyBooked = bookings >= 4;
-    const isPartiallyBooked = bookings > 2;
-
+    const { highlightedDays = [], day, outsideCurrentMonth, bookedDates, ...other } = props;
+  
+    // Get the count of booked slots for the current day
+    const formattedDay = dayjs(day).format("YYYY-MM-DD");
+    const count = bookedDates.filter(date => date === formattedDay).length;
+  
+    const isSelected = !outsideCurrentMonth && highlightedDays.includes(day.date());
+    const isBooked = bookedDates.includes(formattedDay);
+    console.log(count)
+    let badgeContent;
+    if (count >= 4) {
+      badgeContent = '🔴'; // Emoji for more than 4 slots
+    } else if (count >= 2) {
+      badgeContent = '🟡'; // Emoji for more than 2 slots
+    } 
+  
+    // Tooltip text
+    const tooltipText = count >= 2 ? 'Filling fast' : count === 4 ? 'Only one seat left' : "";
+  
     return (
-      <StyledPickersDay
-        {...other}
-        outsideCurrentMonth={outsideCurrentMonth}
-        isBooked={isBooked}
-        isDisabled={isDisabled}
-        isHighlyBooked={isHighlyBooked}
-        isPartiallyBooked={isPartiallyBooked}
-        day={day}
-      />
+      <Tooltip title={tooltipText} arrow>
+        <Badge
+          key={day.toString()}
+          overlap="circular"
+          badgeContent={badgeContent}
+        >
+          <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+        </Badge>
+      </Tooltip>
     );
   }
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedTimes, setSelectedTimes] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const minDate = dayjs().startOf("month");
+  const maxDate = dayjs().add(1, "month").endOf("month");
 
   const handleDateChange = (date) => {
     setSelectedDates([...selectedDates, date]);
@@ -159,53 +143,46 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     dispatch(addSelectedTime(newSlot));
   };
 
-  const minDate = dayjs().startOf("month");
-  const maxDate = dayjs().add(1, "month").endOf("month");
-
   return (
     <main className="flex w-full flex-col justify-center items-center gap-[70px]">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <section className="flex w-full flex-row justify-center items-center gap-[70px] h-[70vh]">
           <Container>
             <CalendarWrapper>
-              <DateCalendar
-                slots={{
-                  day: (props) => (
-                    <ServerDay {...props} bookedDates={bookedDates} />
-                  ),
-                }}
-                className="custom-calendar"
-                onChange={handleDateChange}
-                minDate={minDate}
-                maxDate={maxDate}
-                shouldDisableDate={(date) =>
-                  bookedDates[dayjs(date).format("YYYY-MM-DD")] >= 5 || dayjs(date).isBefore(dayjs(), "day")
-                }
-                views={["day"]}
-                sx={{
-                  color: "white",
-                  marginTop: "50px",
-                  "& .MuiPickersDay-root": {
-                    color: "white",
-                  },
-                  "& .MuiPickersDay-root.Mui-selected": {
-                    backgroundColor: "#00ffa3", // Background color for selected date
-                    color: "black", // Text color for selected date
-                  },
-                  "& .MuiPickersDay-root:hover": {
-                    border: "1px solid #00ffa3", // Border color for hovered date
-                  },
-                  "& .MuiPickersDay-today": {
-                    borderColor: "white", // Border color for today's date
-                  },
-                  "& .MuiTypography-root": {
-                    color: "white", // Color for the month/year text
-                  },
-                  "& .MuiSvgIcon-root": {
-                    color: "white", // Color for the navigation arrows
-                  },
-                }}
-              />
+            <DateCalendar
+  slots={{
+    day: (props) => <ServerDay {...props} bookedDates={bookedDates} />,
+  }}
+  className="custom-calendar"
+  onChange={handleDateChange}
+  minDate={minDate}
+  maxDate={maxDate}
+  shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(), "day")}
+  views={["day"]}
+  sx={{
+    color: "white",
+    marginTop: "50px",
+    '& .MuiPickersDay-root': {
+      color: 'white', // Color for the date numbers
+    },
+    '& .MuiPickersDay-root.Mui-selected': {
+      backgroundColor: '#00ffa3', // Background color for selected date
+      color: 'black', // Text color for selected date
+    },
+    '& .MuiPickersDay-root:hover': {
+      border:"1px solid #00ffa3" // Background color for hovered date
+    },
+    '& .MuiPickersDay-today': {
+      borderColor: 'white', // Border color for today's date
+    },
+    '& .MuiTypography-root': {
+      color: 'white', // Color for the month/year text
+    },
+    '& .MuiSvgIcon-root': {
+      color: 'white', // Color for the navigation arrows
+    },
+  }}
+/>
             </CalendarWrapper>
           </Container>
           <div className="border-2 border-white p-1 rounded-md bg-gradient-to-r from-teal-600 to-cyan-500">
