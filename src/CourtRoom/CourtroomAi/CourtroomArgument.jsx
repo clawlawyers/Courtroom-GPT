@@ -60,6 +60,7 @@ const CourtroomArgument = () => {
   const handleSave = async (index) => {
     const updatedArguments = [...userArgument];
     updatedArguments[index] = editValue;
+    setUserArgument(updatedArguments);
     setEditIndex(null);
     setEditValue("");
     await RetieveDetails(index);
@@ -154,8 +155,8 @@ const CourtroomArgument = () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
 
-    setAiJudgeLoading(true);
-    setAiLawyerLoading(true);
+    // setAiJudgeLoading(true);
+    // setAiLawyerLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -183,6 +184,9 @@ const CourtroomArgument = () => {
     //clear input text
     setAddArgumentInputText(null);
   };
+
+  console.log(lawyerArgument);
+  console.log(judgeArgument);
 
   // useEffect(() => {
   //   const getDraft = async () => {
@@ -433,7 +437,7 @@ const CourtroomArgument = () => {
                         fontSize: "15px",
                         padding: "15px",
                         lineHeight: "25px",
-
+                        width: "100%",
                         wordSpacing: "4px",
                       }}
                     >

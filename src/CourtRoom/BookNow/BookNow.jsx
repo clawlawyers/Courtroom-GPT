@@ -130,7 +130,7 @@ const BookNow = () => {
               data
             );
             alert(result.data.status);
-            navigate("/");
+            navigate("/confirm-booking");
           },
 
           theme: {
