@@ -9,6 +9,7 @@ import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Markdown from "react-markdown";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -152,7 +153,7 @@ const CourtroomArgument = () => {
       }
     );
 
-    console.log(inserUserArgument.data.data.argumentIndex.argument_index);
+    // console.log(inserUserArgument.data.data.argumentIndex.argument_index);
 
     setAiJudgeLoading(true);
     setAiLawyerLoading(true);
@@ -247,9 +248,10 @@ const CourtroomArgument = () => {
                     fontSize: "15px",
                     lineHeight: "25px",
                     wordSpacing: "4px",
+                    padding: "0px 10px",
                   }}
                 >
-                  {judgeArgument}
+                  <Markdown>{judgeArgument}</Markdown>
                 </p>
               </div>
             </div>
@@ -304,9 +306,10 @@ const CourtroomArgument = () => {
                     fontSize: "15px",
                     lineHeight: "25px",
                     wordSpacing: "4px",
+                    padding: "0px 10px",
                   }}
                 >
-                  {lawyerArgument}
+                  <Markdown>{lawyerArgument}</Markdown>
                 </p>
               </div>
               <motion.div

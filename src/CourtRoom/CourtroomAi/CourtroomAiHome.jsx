@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 const CourtroomAiHome = () => {
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const isUploaded = localStorage.getItem("FileUploaded") === "true";
-  console.log(isUploaded);
+  // console.log(isUploaded);
 
   const [overviewText, setOverViewText] = useState(null);
 
@@ -44,37 +44,53 @@ const CourtroomAiHome = () => {
           whileHover={{ scale: isUploaded ? "1.01" : "1" }}
           className="m-2.5 bg-[#033E40] rounded-lg"
         >
-          <h1
+          <p
             whileHover={{ scale: "1.01" }}
-            className="text-sm p-4 text-center"
+            className="text-sm p-4"
+            style={{
+              lineHeight: "22px",
+              wordSpacing: "2px",
+            }}
           >
             in publishing and graphic design, Lorem ipsum is a placeholder text
             commonly used to demonstrate the visual form of a document or a
             typeface without relying on meaningful content. Lorem ipsum may be
             used as a placeholder before the final copy is available
-          </h1>
+          </p>
         </motion.div>
         <motion.div
           whileHover={{ scale: isUploaded ? "0.98" : "1" }}
           className="m-2.5 bg-[#033E40] rounded-lg"
         >
-          <h1 className="text-sm p-4 text-center">
+          <p
+            className="text-sm m-0 p-4"
+            style={{
+              lineHeight: "22px",
+              wordSpacing: "2px",
+            }}
+          >
             in publishing and graphic design, Lorem ipsum is a placeholder text
             commonly used to demonstrate the visual form of a document or a
             typeface without relying on meaningful content. Lorem ipsum may be
             used as a placeholder before the final copy is available
-          </h1>
+          </p>
         </motion.div>
         <motion.div
           whileHover={{ scale: isUploaded ? "1.01" : "1" }}
           className="m-2.5 bg-[#033E40] rounded-lg"
         >
-          <h1 className="text-sm p-4 text-center">
+          <p
+            className="text-sm p-4"
+            style={{
+              lineHeight: "22px",
+              wordSpacing: "2px",
+            }}
+          >
             in publishing and graphic design, Lorem ipsum is a placeholder text
             commonly used to demonstrate the visual form of a document or a
             typeface without relying on meaningful content. Lorem ipsum may be
             used as a placeholder before the final copy is available
-          </h1>
+          </p>
         </motion.div>
       </div>
       <div className="w-full px-3 grid grid-cols-[65%_35%] items-center">
@@ -94,7 +110,10 @@ const CourtroomAiHome = () => {
           />
         </div>
         <div className="flex">
-          <Link className="flex-1 flex justify-center items-center gap-1 my-2 p-[10px]">
+          <Link
+            to={overviewText !== null ? "/courtroom-ai/arguments" : "#"}
+            className="flex-1 flex justify-center items-center gap-1 my-2 p-[10px]"
+          >
             <motion.button
               whileTap={{ scale: "0.95" }}
               className="flex-1 my-2"

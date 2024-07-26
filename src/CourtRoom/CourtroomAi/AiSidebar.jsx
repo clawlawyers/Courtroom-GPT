@@ -11,10 +11,13 @@ import {
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import aiAssistant from "../../assets/images/aiAssistant.png";
 import assistantLogo from "../../assets/images/virtualAssistant.gif";
-import searchIcon from "../../assets/images/assistantSearch.gif";
+import aiAssistantLoading from "../../assets/images/aiAssistantLoading.gif";
+import aiAssistantIcon from "../../assets/images/aiAssistant2.png";
+import assistantIcon2 from "../../assets/images/assistantIcon2.png";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import countDown from "../../assets/images/countdown.gif";
+import Markdown from "react-markdown";
 
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
@@ -38,7 +41,6 @@ const AiSidebar = () => {
   const [minutes, setMinutes] = useState(
     parseInt(60 - new Date().getMinutes())
   );
-  console.log(minutes);
   const [seconds, setSeconds] = useState(
     parseInt(60 - new Date().getSeconds())
   );
@@ -136,13 +138,15 @@ const AiSidebar = () => {
               <motion.button
                 whileTap={{ scale: "0.95" }}
                 onClick={() => setEditDialog(true)}
-                className="border border-[#00FFA3] rounded-lg p-1 px-2"
+                className="border-2 border-[#00FFA3] rounded-lg p-1 px-2"
               >
                 Edit
               </motion.button>
             </div>
             <div className="h-[50px] overflow-hidden">
-              <h1 className="text-sm m-0 py-2">{overViewDetails}</h1>
+              <h1 className="text-sm m-0 py-2">
+                <Markdown>{overViewDetails}</Markdown>
+              </h1>
             </div>
           </div>
           <div
@@ -232,9 +236,10 @@ const AiSidebar = () => {
           </div>
           <div className="pt-3 flex justify-end cursor-pointer relative">
             <motion.img
+              className="h-14 w-14"
               whileTap={{ scale: "0.95" }}
               alt="assistant"
-              src={aiAssistant}
+              src={showAssistant ? assistantIcon2 : aiAssistant}
               onHoverStart={() => setAiIconHover(true)}
               onHoverEnd={() => setAiIconHover(false)}
               onClick={() => {
@@ -243,7 +248,7 @@ const AiSidebar = () => {
               }}
             />
             {aiIconHover ? (
-              <h1 className="absolute text-xs right-14 top-5 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+              <h1 className="absolute text-xs right-16 top-7 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
                 CLAW AI Assistant
               </h1>
             ) : (
@@ -253,11 +258,6 @@ const AiSidebar = () => {
               <div
                 className="absolute -right-[620px] -top-56 z-10 
             bg-[#eeeeee] w-[600px] border-8 border-white rounded-xl shadow-inner"
-                style={
-                  {
-                    // boxShadow: "inset 0 0 10px 0px rgba(0, 0, 0, 0.3)",
-                  }
-                }
               >
                 <div className="flex justify-between items-center shadow-md">
                   <div className="flex items-center">
@@ -266,12 +266,12 @@ const AiSidebar = () => {
                       CLAW AI Assistant
                     </h1>
                   </div>
-                  <div>
+                  <div className="pr-5">
                     <svg
                       onClick={() => setShowAssistant(false)}
-                      width="30"
-                      height="30"
-                      fill="red"
+                      width="35"
+                      height="35"
+                      fill="#008080"
                       clip-rule="evenodd"
                       fill-rule="evenodd"
                       stroke-linejoin="round"
@@ -286,42 +286,10 @@ const AiSidebar = () => {
                     </svg>
                   </div>
                 </div>
-                <div className="mx-4 my-3 shadow-md relative">
-                  <input
-                    className="w-full py-3 pl-14 rounded-lg border-2 border-[#008080] text-black"
-                    placeholder="Enter Case Details for AI Assistant to help you"
-                    value={assistantQuery}
-                    onChange={(e) => setAssistantQuery(e.target.value)}
-                  />
-                  <img
-                    className="absolute top-2 left-3 w-10 h-10"
-                    src={searchIcon}
-                    alt="search"
-                  />
-                  <svg
-                    className="absolute top-4 right-3"
-                    onClick={() => setAssistantQuery("")}
-                    width="30"
-                    height="30"
-                    fill="#008080"
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 8.933-2.721-2.722c-.146-.146-.339-.219-.531-.219-.404 0-.75.324-.75.749 0 .193.073.384.219.531l2.722 2.722-2.728 2.728c-.147.147-.22.34-.22.531 0 .427.35.75.751.75.192 0 .384-.073.53-.219l2.728-2.728 2.729 2.728c.146.146.338.219.53.219.401 0 .75-.323.75-.75 0-.191-.073-.384-.22-.531l-2.727-2.728 2.717-2.717c.146-.147.219-.338.219-.531 0-.425-.346-.75-.75-.75-.192 0-.385.073-.531.22z"
-                      fill-rule="nonzero"
-                    />
-                  </svg>
-                </div>
-                <hr className="border-t-4 border-white" />
                 <div className="m-4">
-                  <h1 className="text-lg text-black">Suggested :</h1>
                   <textarea
-                    className="w-full h-[260px] p-2 bg-transparent text-black focus:border-white"
+                    readOnly
+                    className="w-full h-[260px] p-2 bg-transparent text-black focus:outline-none cursor-default"
                     value={aiSuggestion}
                   />
                 </div>
