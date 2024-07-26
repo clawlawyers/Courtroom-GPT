@@ -17,9 +17,25 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 const StyledPickersDay = styled(PickersDay)`
   ${(props) => `
     color: ${props.isBooked ? "white" : "inherit"}; // Change text color for booked dates
-    background-color: ${props.isBooked ? "darkred" : "transparent"}; // Change background color for booked dates
+    background-color: ${
+      props.isDisabled
+        ? "gray"
+        : props.isBooked
+        ? props.isHighlyBooked
+          ? "red"
+          : props.isPartiallyBooked
+          ? "yellow"
+          : "transparent"
+        : "transparent"
+    }; // Change background color based on booking status
     &:hover {
-      border: 1px solid ${props.isBooked ? "darkred" : "#00ffa3"}; // Change border color for hovered dates
+      border: 1px solid ${
+        props.isDisabled
+          ? "gray"
+          : props.isBooked
+          ? "red"
+          : "#00ffa3"
+      }; // Change border color for hovered dates
     }
   `}
 `;
@@ -72,7 +88,10 @@ const CalendarWrapper = styled.div`
 `;
 
 const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
-  const [bookedDates, setBookedDates] = useState([]);
+  const [bookedDates, setBookedDates] = useState({});
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedTimes, setSelectedTimes] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getBookingDetails = async () => {
@@ -82,11 +101,14 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
         );
         const bookedDatesData = response.data;
 
-        // Extract dates from the API response
-        const formattedBookedDates = bookedDatesData.map((slot) =>
-          dayjs(slot._id.date).format("YYYY-MM-DD")
-        );
-        setBookedDates(formattedBookedDates);
+        // Create a map to count slots for each date
+        const dateCountMap = bookedDatesData.reduce((acc, slot) => {
+          const dateKey = dayjs(slot._id.date).format("YYYY-MM-DD");
+          acc[dateKey] = (acc[dateKey] || 0) + 1;
+          return acc;
+        }, {});
+
+        setBookedDates(dateCountMap);
       } catch (error) {
         console.error("Error fetching booking details:", error);
       }
@@ -96,27 +118,25 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
 
   function ServerDay(props) {
     const { day, outsideCurrentMonth, ...other } = props;
-    const isBooked = bookedDates.includes(day.format("YYYY-MM-DD"));
-    const isSelected = !outsideCurrentMonth && bookedDates.indexOf(day.format("YYYY-MM-DD")) >= 0;
+    const dateKey = day.format("YYYY-MM-DD");
+    const bookings = bookedDates[dateKey] || 0;
+    const isBooked = bookings > 0;
+    const isDisabled = bookings >= 5;
+    const isHighlyBooked = bookings >= 4;
+    const isPartiallyBooked = bookings > 2;
 
     return (
       <StyledPickersDay
         {...other}
         outsideCurrentMonth={outsideCurrentMonth}
         isBooked={isBooked}
-        isSelected={isSelected}
+        isDisabled={isDisabled}
+        isHighlyBooked={isHighlyBooked}
+        isPartiallyBooked={isPartiallyBooked}
         day={day}
       />
     );
   }
-
-  const [selectedDates, setSelectedDates] = useState([]);
-  const [selectedTimes, setSelectedTimes] = useState([]);
-
-  const dispatch = useDispatch();
-
-  const minDate = dayjs().startOf("month");
-  const maxDate = dayjs().add(1, "month").endOf("month");
 
   const handleDateChange = (date) => {
     setSelectedDates([...selectedDates, date]);
@@ -139,6 +159,9 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     dispatch(addSelectedTime(newSlot));
   };
 
+  const minDate = dayjs().startOf("month");
+  const maxDate = dayjs().add(1, "month").endOf("month");
+
   return (
     <main className="flex w-full flex-col justify-center items-center gap-[70px]">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -156,7 +179,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 minDate={minDate}
                 maxDate={maxDate}
                 shouldDisableDate={(date) =>
-                  dayjs(date).isBefore(dayjs(), "day")
+                  bookedDates[dayjs(date).format("YYYY-MM-DD")] >= 5 || dayjs(date).isBefore(dayjs(), "day")
                 }
                 views={["day"]}
                 sx={{
@@ -164,11 +187,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                   marginTop: "50px",
                   "& .MuiPickersDay-root": {
                     color: "white",
-                    backgroundColor: ({ bookedDates }) =>
-                      // bookedDates.includes(dayjs(props.date).format("YYYY-MM-DD")) ? "darkred" : "transparent",
-                    console.log(bookedDates)
                   },
-                  
                   "& .MuiPickersDay-root.Mui-selected": {
                     backgroundColor: "#00ffa3", // Background color for selected date
                     color: "black", // Text color for selected date

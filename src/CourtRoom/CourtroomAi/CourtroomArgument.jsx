@@ -76,17 +76,32 @@ const CourtroomArgument = () => {
 
     console.log(swapedData);
     const newUserArgument = swapedData.data.data.changeState.argument; // in array format
-    const newLayerArgument = swapedData.data.data.changeState.counter_argument; // in array format
-    console.log(newUserArgument, newLayerArgument);
+    const newLawyerArgument = swapedData.data.data.changeState.counter_argument; // in array format
+    console.log(newUserArgument, newLawyerArgument);
 
-    // if (selectedUserArgument !== null) {
-    //   setLawyerArgument(selectedUserArgumentContent);
-    // } else {
-    //   const swapArgument = userArgument[userArgument.length - 1];
-    //   setLawyerArgument(swapArgument);
-    // }
-    // setSelectedUserArgument(null);
-    // setSelectedUserArgumentContent(null);
+    if (selectedUserArgument !== null) {
+      //swap user arguments a/c to selected index
+      const userArguments = [...userArgument];
+      userArguments[selectedUserArgument] =
+        newUserArgument[selectedUserArgument];
+
+      //swap lawyer argument a/c to selected index
+      const swapLawyerArgument = newLawyerArgument[selectedUserArgument];
+
+      setUserArgument(userArguments);
+      setLawyerArgument(swapLawyerArgument);
+    } else {
+      const swapArgument = newUserArgument[newUserArgument.length - 1];
+      const updatedArguments = [...userArgument];
+      updatedArguments[updatedArguments.length - 1] = swapArgument;
+      setUserArgument(updatedArguments);
+
+      const swapLawyerArgument =
+        newLawyerArgument[newLawyerArgument.length - 1];
+      setLawyerArgument(swapLawyerArgument);
+    }
+    setSelectedUserArgument(null);
+    setSelectedUserArgumentContent(null);
   };
 
   const RetieveDetails = async (index) => {
@@ -155,8 +170,8 @@ const CourtroomArgument = () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
 
-    // setAiJudgeLoading(true);
-    // setAiLawyerLoading(true);
+    setAiJudgeLoading(true);
+    setAiLawyerLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -185,8 +200,8 @@ const CourtroomArgument = () => {
     setAddArgumentInputText(null);
   };
 
-  console.log(lawyerArgument);
-  console.log(judgeArgument);
+  // console.log(lawyerArgument);
+  // console.log(judgeArgument);
 
   // useEffect(() => {
   //   const getDraft = async () => {
@@ -260,7 +275,7 @@ const CourtroomArgument = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    lineHeight: "25px",
+                    lineHeight: "20px",
                     wordSpacing: "4px",
                     padding: "0px 10px",
                   }}
@@ -318,7 +333,7 @@ const CourtroomArgument = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    lineHeight: "25px",
+                    lineHeight: "20px",
                     wordSpacing: "4px",
                     padding: "0px 10px",
                   }}
@@ -421,7 +436,7 @@ const CourtroomArgument = () => {
                           padding: "15px",
                           borderRadius: "10px",
                           width: "100%",
-                          lineHeight: "25px",
+                          lineHeight: "20px",
 
                           wordSpacing: "4px",
                         }}
@@ -436,7 +451,7 @@ const CourtroomArgument = () => {
                         margin: "0",
                         fontSize: "15px",
                         padding: "15px",
-                        lineHeight: "25px",
+                        lineHeight: "20px",
                         width: "100%",
                         wordSpacing: "4px",
                       }}
