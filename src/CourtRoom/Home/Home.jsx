@@ -43,13 +43,13 @@ function Home() {
 
   return (
     <motion.div
-      whileHover="hover"
-      onHoverStart={() => setSubmitHover(true)}
-      onHoverEnd={() => setSubmitHover(false)}
+      // whileHover="hover"
+      // onHoverStart={() => setSubmitHover(true)}
+      // onHoverEnd={() => setSubmitHover(false)}
       className=""
     >
       {/* top container */}
-      <div className="md:grid md:grid-cols-2 items-center px-2 md:px-28">
+      <div className="md:grid md:grid-cols-2 items-center px-2 md:px-28 pt-5">
         <div className="pl-28">
           <h1 className="px-5 text-start">What is Courtroom ?</h1>
           <br />
@@ -169,10 +169,10 @@ function Home() {
         <div className="">
           <motion.img
             initial={{ x: "100%" }}
-            variants={{
-              hover: { x: "0%" },
-            }}
-            // whileHover={{ x: "0%" }}
+            // variants={{
+            //   hover: { x: "0%" },
+            // }}
+            whileInView={{ x: "0%" }}
             transition={{ type: "spring", stiffness: 120, damping: 10 }}
             alt="court-room"
             className="h-full w-full"
@@ -186,7 +186,7 @@ function Home() {
         </div>
       </div>
       {/* 2nd container */}
-      <div className="grid grid-cols-3 m-5 p-10">
+      <div className="grid grid-cols-3 m-5 px-10 py-28">
         <motion.div
           initial={{ x: ["100%"] }}
           whileInView={{ x: "0%" }}

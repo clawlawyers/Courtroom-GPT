@@ -9,6 +9,7 @@ import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Markdown from "react-markdown";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -46,31 +47,46 @@ const CourtroomArgument = () => {
 
   const currentUser = useSelector((state) => state.user.user);
 
-  const handleEdit = (index) => {
+  const handleEdit = (e, index) => {
+    e.stopPropagation();
     setEditIndex(index);
     setEditValue(userArgument[index]);
   };
 
-  const handleChange = (e) => {
+  const handleEditArgumentText = (e) => {
     setEditValue(e.target.value);
   };
 
-  const handleSave = (index) => {
+  const handleSave = async (index) => {
     const updatedArguments = [...userArgument];
     updatedArguments[index] = editValue;
+    setUserArgument(updatedArguments);
     setEditIndex(null);
     setEditValue("");
+    await RetieveDetails(index);
   };
 
-  const handleSwap = () => {
-    if (selectedUserArgument !== null) {
-      setLawyerArgument(selectedUserArgumentContent);
-    } else {
-      const swapArgument = userArgument[userArgument.length - 1];
-      setLawyerArgument(swapArgument);
-    }
-    setSelectedUserArgument(null);
-    setSelectedUserArgumentContent(null);
+  const handleSwap = async () => {
+    const swapedData = await axios.post(
+      `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
+      {
+        user_id: currentUser.userId,
+      }
+    );
+
+    console.log(swapedData);
+    const newUserArgument = swapedData.data.data.changeState.argument; // in array format
+    const newLayerArgument = swapedData.data.data.changeState.counter_argument; // in array format
+    console.log(newUserArgument, newLayerArgument);
+
+    // if (selectedUserArgument !== null) {
+    //   setLawyerArgument(selectedUserArgumentContent);
+    // } else {
+    //   const swapArgument = userArgument[userArgument.length - 1];
+    //   setLawyerArgument(swapArgument);
+    // }
+    // setSelectedUserArgument(null);
+    // setSelectedUserArgumentContent(null);
   };
 
   const RetieveDetails = async (index) => {
@@ -139,8 +155,8 @@ const CourtroomArgument = () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
 
-    setAiJudgeLoading(true);
-    setAiLawyerLoading(true);
+    // setAiJudgeLoading(true);
+    // setAiLawyerLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -151,7 +167,7 @@ const CourtroomArgument = () => {
       }
     );
 
-    console.log(inserUserArgument.data.data.argumentIndex.argument_index);
+    // console.log(inserUserArgument.data.data.argumentIndex.argument_index);
 
     setAiJudgeLoading(true);
     setAiLawyerLoading(true);
@@ -241,7 +257,16 @@ const CourtroomArgument = () => {
                   overflowY: "scroll",
                 }}
               >
-                <h1 style={{ fontSize: "15px" }}>{judgeArgument}</h1>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    lineHeight: "25px",
+                    wordSpacing: "4px",
+                    padding: "0px 10px",
+                  }}
+                >
+                  <Markdown>{judgeArgument}</Markdown>
+                </p>
               </div>
             </div>
           )}
@@ -290,7 +315,16 @@ const CourtroomArgument = () => {
                   overflowY: "scroll",
                 }}
               >
-                <h1 style={{ fontSize: "15px" }}>{lawyerArgument}</h1>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    lineHeight: "25px",
+                    wordSpacing: "4px",
+                    padding: "0px 10px",
+                  }}
+                >
+                  <Markdown>{lawyerArgument}</Markdown>
+                </p>
               </div>
               <motion.div
                 className="py-2"
@@ -365,6 +399,7 @@ const CourtroomArgument = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
+                  pointerEvents: "all",
                   border:
                     selectedUserArgument === index
                       ? "1px solid #00ffa3"
@@ -375,57 +410,81 @@ const CourtroomArgument = () => {
                   cursor: "pointer",
                 }}
               >
-                {editIndex === index ? (
-                  <textarea
-                    className="text-black"
-                    style={{
-                      margin: "0",
-                      fontSize: "15px",
-                      padding: "15px",
-                      borderRadius: "10px",
-                      width: "100%",
-                    }}
-                    value={editValue}
-                    onChange={handleChange}
-                  />
-                ) : (
-                  <h1
-                    style={{ margin: "0", fontSize: "15px", padding: "15px" }}
-                  >
-                    {x}
-                  </h1>
-                )}
-                {editIndex === index ? (
-                  <button
-                    onClick={() => handleSave(index)}
-                    style={{ borderRadius: "10px", margin: "5px" }}
-                  >
-                    Save
-                  </button>
-                ) : (
-                  <div>
-                    <svg
-                      onClick={() => editIndex !== index && handleEdit(index)}
-                      style={{
-                        cursor: "pointer",
-                        width: "24px",
-                        height: "24px",
-                      }}
-                      fill="white"
-                      clip-rule="evenodd"
-                      fill-rule="evenodd"
-                      stroke-linejoin="round"
-                      stroke-miterlimit="2"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
-                        fill-rule="nonzero"
+                <div className="flex items-center w-full pointer-events-auto">
+                  {editIndex === index ? (
+                    <div className="w-full">
+                      <textarea
+                        className="text-black"
+                        style={{
+                          margin: "0",
+                          fontSize: "15px",
+                          padding: "15px",
+                          borderRadius: "10px",
+                          width: "100%",
+                          lineHeight: "25px",
+
+                          wordSpacing: "4px",
+                        }}
+                        value={editValue}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={handleEditArgumentText}
                       />
-                    </svg>
-                  </div>
-                )}
+                    </div>
+                  ) : (
+                    <p
+                      style={{
+                        margin: "0",
+                        fontSize: "15px",
+                        padding: "15px",
+                        lineHeight: "25px",
+                        width: "100%",
+                        wordSpacing: "4px",
+                      }}
+                    >
+                      {x}
+                    </p>
+                  )}
+                  {editIndex === index ? (
+                    <motion.button
+                      whileTap={{ scale: "0.95" }}
+                      className="border-2 border-[#00ffa3] rounded-lg p-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSave(index);
+                      }}
+                      style={{ margin: "5px" }}
+                    >
+                      Save
+                    </motion.button>
+                  ) : (
+                    <div
+                      onClick={(e) =>
+                        editIndex !== index && handleEdit(e, index)
+                      }
+                    >
+                      <motion.svg
+                        whileTap={{ scale: "0.95" }}
+                        style={{
+                          cursor: "pointer",
+                          width: "24px",
+                          height: "24px",
+                        }}
+                        fill="white"
+                        clip-rule="evenodd"
+                        fill-rule="evenodd"
+                        stroke-linejoin="round"
+                        stroke-miterlimit="2"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
+                          fill-rule="nonzero"
+                        />
+                      </motion.svg>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
