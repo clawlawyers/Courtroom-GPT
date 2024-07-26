@@ -141,6 +141,22 @@ const AiSidebar = () => {
     }
   };
 
+  useEffect(() => {
+    const getDraft = async () => {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        {
+          user_id: currentUser.userId,
+        }
+      );
+
+      console.log(response.data.data.draft.detailed_draft);
+    };
+    if (currentUser.userId) {
+      getDraft();
+    }
+  }, [currentUser.userId]);
+
   return (
     <>
       <div className="flex flex-col gap-3 h-full py-3 pl-3">

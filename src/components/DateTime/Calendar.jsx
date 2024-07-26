@@ -103,7 +103,6 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 sx={{
                   color: "white",
                   marginTop: "50px",
-                  fontWeight:"800",
                   '& .MuiPickersDay-root': {
                     color: 'white', // Color for the date numbers
                   },
@@ -112,7 +111,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                     color: 'black', // Text color for selected date
                   },
                   '& .MuiPickersDay-root:hover': {
-                    backgroundColor: '#008080', // Background color for hovered date
+                    border:"1px solid #00ffa3" // Background color for hovered date
                   },
                   '& .MuiPickersDay-today': {
                     borderColor: 'white', // Border color for today's date

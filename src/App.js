@@ -22,6 +22,7 @@ import Verdict from "./CourtRoom/CourtroomAi/Verdict.jsx";
 import Contact from "./CourtRoom/ContactUs/Contact.jsx";
 import { retrieveCourtroomAuth } from "./features/bookCourtRoom/LoginReducreSlice.js";
 import FooterBanner from "./FooterBanner/FooterBanner.jsx";
+import ConfirmBooking from "./CourtRoom/BookNow/ConfirmBooking.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -101,6 +102,10 @@ function App() {
         {
           path: "/book-now",
           element: <BookNow />,
+        },
+        {
+          path: "/confirm-booking",
+          element: <ConfirmBooking />,
         },
         {
           path: "/contact",
