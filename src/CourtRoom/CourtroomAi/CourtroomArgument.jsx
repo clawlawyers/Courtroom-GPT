@@ -66,15 +66,27 @@ const CourtroomArgument = () => {
     await RetieveDetails(index);
   };
 
-  const handleSwap = () => {
-    if (selectedUserArgument !== null) {
-      setLawyerArgument(selectedUserArgumentContent);
-    } else {
-      const swapArgument = userArgument[userArgument.length - 1];
-      setLawyerArgument(swapArgument);
-    }
-    setSelectedUserArgument(null);
-    setSelectedUserArgumentContent(null);
+  const handleSwap = async () => {
+    const swapedData = await axios.post(
+      `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
+      {
+        user_id: currentUser.userId,
+      }
+    );
+
+    console.log(swapedData);
+    const newUserArgument = swapedData.data.data.changeState.argument; // in array format
+    const newLayerArgument = swapedData.data.data.changeState.counter_argument; // in array format
+    console.log(newUserArgument, newLayerArgument);
+
+    // if (selectedUserArgument !== null) {
+    //   setLawyerArgument(selectedUserArgumentContent);
+    // } else {
+    //   const swapArgument = userArgument[userArgument.length - 1];
+    //   setLawyerArgument(swapArgument);
+    // }
+    // setSelectedUserArgument(null);
+    // setSelectedUserArgumentContent(null);
   };
 
   const RetieveDetails = async (index) => {
@@ -143,8 +155,8 @@ const CourtroomArgument = () => {
     setUserArgument([...userArgument, addArgumentInputText]);
     //api calls here
 
-    setAiJudgeLoading(true);
-    setAiLawyerLoading(true);
+    // setAiJudgeLoading(true);
+    // setAiLawyerLoading(true);
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -173,8 +185,8 @@ const CourtroomArgument = () => {
     setAddArgumentInputText(null);
   };
 
-  // console.log(lawyerArgument);
-  // console.log(judgeArgument);
+  console.log(lawyerArgument);
+  console.log(judgeArgument);
 
   // useEffect(() => {
   //   const getDraft = async () => {
