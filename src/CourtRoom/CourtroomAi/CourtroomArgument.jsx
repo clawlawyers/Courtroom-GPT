@@ -275,7 +275,7 @@ const CourtroomArgument = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    lineHeight: "25px",
+                    lineHeight: "20px",
                     wordSpacing: "4px",
                     padding: "0px 10px",
                   }}
@@ -333,7 +333,7 @@ const CourtroomArgument = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    lineHeight: "25px",
+                    lineHeight: "20px",
                     wordSpacing: "4px",
                     padding: "0px 10px",
                   }}
@@ -436,7 +436,7 @@ const CourtroomArgument = () => {
                           padding: "15px",
                           borderRadius: "10px",
                           width: "100%",
-                          lineHeight: "25px",
+                          lineHeight: "20px",
 
                           wordSpacing: "4px",
                         }}
@@ -451,7 +451,7 @@ const CourtroomArgument = () => {
                         margin: "0",
                         fontSize: "15px",
                         padding: "15px",
-                        lineHeight: "25px",
+                        lineHeight: "20px",
                         width: "100%",
                         wordSpacing: "4px",
                       }}

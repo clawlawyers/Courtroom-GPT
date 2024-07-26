@@ -71,7 +71,6 @@ const AiSidebar = () => {
   const [showAssistant, setShowAssistant] = useState(false);
   const [countdownOver, setCountDownOver] = useState(false);
   const [AiQuestions, setAiQuestions] = useState(null);
-  console.log(AiQuestions);
   const [aiAssistantLoading, setAiAssistantLoading] = useState(true);
   const [slotIntervalTimer, setSlotIntervalTimer] = useState(null);
 
