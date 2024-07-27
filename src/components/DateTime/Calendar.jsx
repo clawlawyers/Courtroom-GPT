@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -11,10 +11,10 @@ import toast from "react-hot-toast";
 import "./DateTime.module.css";
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import Badge from '@mui/material/Badge';
-import { useEffect } from "react";
+import { Tooltip } from '@mui/material';
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
-import Tooltip from '@mui/material/Tooltip';
+import { CloseOutlined } from "@mui/icons-material";
 
 const Container = styled.div`
   background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
@@ -65,14 +65,15 @@ const CalendarWrapper = styled.div`
 
 const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
   const [bookedDates, setBookedDates] = useState([]);
-
+  const [bookingData, setBookingData] = useState([]);
+  
   useEffect(() => {
     const getBookingDetails = async () => {
       try {
         const response = await axios.get(`${NODE_API_ENDPOINT}/courtroom/book-courtroom`);
         const bookedDatesData = response.data;
-  
-       
+        setBookingData(bookedDatesData);
+        
         // Extract dates from the API response
         const formattedBookedDates = bookedDatesData.map(slot => dayjs(slot._id.date).format("YYYY-MM-DD"));
         setBookedDates(formattedBookedDates);
@@ -82,6 +83,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     };
     getBookingDetails();
   }, []);
+  
   function ServerDay(props) {
     const { highlightedDays = [], day, outsideCurrentMonth, bookedDates, ...other } = props;
   
@@ -91,7 +93,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
   
     const isSelected = !outsideCurrentMonth && highlightedDays.includes(day.date());
     const isBooked = bookedDates.includes(formattedDay);
-    console.log(count)
+  
     let badgeContent;
     if (count >= 4) {
       badgeContent = '🔴'; // Emoji for more than 4 slots
@@ -114,15 +116,17 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
       </Tooltip>
     );
   }
+  
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimes, setSelectedTimes] = useState([]);
-
   const dispatch = useDispatch();
 
   const minDate = dayjs().startOf("month");
   const maxDate = dayjs().add(1, "month").endOf("month");
 
   const handleDateChange = (date) => {
+    
+    localStorage.setItem("SelectedDate", dayjs(date).format("YYYY-MM-DD"));
     setSelectedDates([...selectedDates, date]);
     setSelectedTimes([]); // Reset selected times when date changes
     dispatch(addSelectedTime({ date: date.format("YYYY-MM-DD"), time: null }));
@@ -143,46 +147,51 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     dispatch(addSelectedTime(newSlot));
   };
 
+  const handleRemoveSlot = (index) => {
+    const updatedSlots = scheduledSlots.filter((_, i) => i !== index);
+    setScheduledSlots(updatedSlots);
+  };
+
   return (
     <main className="flex w-full flex-col justify-center items-center gap-[70px]">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <section className="flex w-full flex-row justify-center items-center gap-[70px] h-[70vh]">
           <Container>
             <CalendarWrapper>
-            <DateCalendar
-  slots={{
-    day: (props) => <ServerDay {...props} bookedDates={bookedDates} />,
-  }}
-  className="custom-calendar"
-  onChange={handleDateChange}
-  minDate={minDate}
-  maxDate={maxDate}
-  shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(), "day")}
-  views={["day"]}
-  sx={{
-    color: "white",
-    marginTop: "50px",
-    '& .MuiPickersDay-root': {
-      color: 'white', // Color for the date numbers
-    },
-    '& .MuiPickersDay-root.Mui-selected': {
-      backgroundColor: '#00ffa3', // Background color for selected date
-      color: 'black', // Text color for selected date
-    },
-    '& .MuiPickersDay-root:hover': {
-      border:"1px solid #00ffa3" // Background color for hovered date
-    },
-    '& .MuiPickersDay-today': {
-      borderColor: 'white', // Border color for today's date
-    },
-    '& .MuiTypography-root': {
-      color: 'white', // Color for the month/year text
-    },
-    '& .MuiSvgIcon-root': {
-      color: 'white', // Color for the navigation arrows
-    },
-  }}
-/>
+              <DateCalendar
+                slots={{
+                  day: (props) => <ServerDay {...props} bookedDates={bookedDates} />,
+                }}
+                className="custom-calendar"
+                onChange={handleDateChange}
+                minDate={minDate}
+                maxDate={maxDate}
+                shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(), "day")}
+                views={["day"]}
+                sx={{
+                  color: "white",
+                  marginTop: "50px",
+                  '& .MuiPickersDay-root': {
+                    color: 'white', // Color for the date numbers
+                  },
+                  '& .MuiPickersDay-root.Mui-selected': {
+                    backgroundColor: '#00ffa3', // Background color for selected date
+                    color: 'black', // Text color for selected date
+                  },
+                  '& .MuiPickersDay-root:hover': {
+                    border: "1px solid #00ffa3" // Background color for hovered date
+                  },
+                  '& .MuiPickersDay-today': {
+                    borderColor: 'white', // Border color for today's date
+                  },
+                  '& .MuiTypography-root': {
+                    color: 'white', // Color for the month/year text
+                  },
+                  '& .MuiSvgIcon-root': {
+                    color: 'white', // Color for the navigation arrows
+                  },
+                }}
+              />
             </CalendarWrapper>
           </Container>
           <div className="border-2 border-white p-1 rounded-md bg-gradient-to-r from-teal-600 to-cyan-500">
@@ -192,6 +201,8 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
             <TimePickerValue
               selectedTimes={selectedTimes}
               setSelectedTimes={setSelectedTimes}
+              bookingData={bookingData}
+              selectedDate={selectedDates}
             />
           </div>
         </section>
@@ -232,12 +243,13 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 padding: "10px",
                 borderRadius: "5px",
                 gap: "20px",
+                flexWrap: "wrap"
               }}
             >
               {scheduledSlots.map((slot, index) => (
                 <div
                   key={index}
-                  className="flex flex-row p-2 w-fit h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5 my-2"
+                  className="flex flex-row p-2 w-fit h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5 my-2 relative"
                 >
                   {new Date(slot.date).toLocaleDateString("en-US", {
                     day: "numeric",
@@ -245,6 +257,21 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                   })}
                   {","}
                   {slot.time}
+                  <button
+                    onClick={() => handleRemoveSlot(index)}
+                    style={{
+                    
+                      top: "0",
+                     
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "white",
+                      
+                    }}
+                  >
+                    <CloseOutlined />
+                  </button>
                 </div>
               ))}
             </div>

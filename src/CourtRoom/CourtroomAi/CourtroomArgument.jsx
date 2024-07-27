@@ -428,7 +428,7 @@ const [dialogContent,setDialogContent] = useState("I find the same nonsense with
                     className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-black"
                    
                   >
-                    {dialogContent}
+                    {potentialObjections}
                   </button>
                   <p>Some text inside the dialog</p>
                 </div>
