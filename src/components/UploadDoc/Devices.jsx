@@ -16,11 +16,13 @@ import { useDispatch } from "react-redux";
 import { setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-
+import uploadImage from "../../assets/images/uploading.gif"
+import analyzingImage from "../../assets/images/analyzing.gif"
 const Devices = ({ uploadedFile, setUploadedFile }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.user);
+  console.log(currentUser);
 
   const [uploading, setUploading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
@@ -33,23 +35,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [files, setFile] = useState(null);
   const [inputText, setInputText] = useState("");
   // console.log(inputText);
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: upload,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
-  const analyzeLottie = {
-    loop: true,
-    autoplay: true,
-    animationData: analyze,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+ 
 
   const handleChange = (e) => {
     console.log("Textarea changed:", e.target.value);
@@ -65,7 +51,11 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         case_overview: inputText,
       });
       dispatch(setOverview(inputText));
-      handleDialogClose();
+      setUploading(false);
+      setAnalyzing(false);
+      setUploadComplete(false);
+      setPreviewContent("");
+      navigate("/courtroom-ai/");
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -102,7 +92,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         formData.append("file", file);
         formData.append("userId", currentUser.userId);
 
-        console.log(currentUser.userId);
+        console.log(currentUser);
 
         try {
           const response = await axios.post(
@@ -177,11 +167,11 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   };
 
   const handleDialogClose = () => {
+    dispatch(setOverview(""));
     setUploading(false);
     setAnalyzing(false);
     setUploadComplete(false);
     setPreviewContent("");
-    navigate("/courtroom-ai/");
   };
 
   return (
@@ -251,21 +241,22 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         text={uploading || analyzing ? "" : previewContent}
         inputText={inputText}
         setInputText={setInputText}
-        buttonText={`${uploadComplete ? "Save" : ""}`}
+        buttonText={`${uploadComplete ? "" : ""}`}
         onButtonClick={handleSave}
-        lottieOptions={
-          uploading ? defaultOptions : analyzing ? analyzeLottie : ""
+        image={
+          uploading ? uploadImage : analyzing ? analyzingImage : "" 
         }
       >
         {uploading && (
-          <Lottie options={defaultOptions} height={250} width={250} />
+          <img className="h-20 w-20" src={uploadImage} alt="uploading" />
         )}
         {analyzing && (
-          <Lottie options={analyzeLottie} height={250} width={250} />
+          <img className="fit-content" src={analyzingImage} alt="uploading" />
+
         )}
         {uploadComplete && (
           <textarea
-            className="w-full h-40 p-2.5 mb-4 text-black rounded-md resize-none"
+            className="w-full h-64  p-2.5 mb-4 text-black rounded-md "
             value={caseOverview}
             onChange={handleChange}
           />

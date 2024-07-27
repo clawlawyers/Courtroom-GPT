@@ -33,7 +33,7 @@ const Contact = () => {
           />
         </div>
         <form style={{ position: "relative" }} onSubmit={handleSave}>
-          <div className="m-28">
+          <div className="mx-32">
             <div
               className="bg-gradient-to-br from-[#025555] to-[#028f8f] p-3"
               style={{
@@ -84,44 +84,45 @@ const Contact = () => {
                   onChange={(e) => setQuery(e.target.value)}
                 />
               </div>
-              <div className="flex justify-between items-center mx-2 mb-3">
-                <div className="flex gap-2 items-start">
-                  <h2 className="text-lg m-0 text-white leading-none">
-                    Preferred Contact Mode :{" "}
-                  </h2>
-                  <div className="flex flex-col gap-1">
-                    <div className="w-full flex gap-1">
-                      <input
-                        type="radio"
-                        value="email"
-                        checked={contactMode === "email"}
-                        onChange={(e) => setContactMode(e.target.value)}
-                        className=""
-                      />
-                      <h1 className="m-0 text-sm text-white">via E-Mail</h1>
-                    </div>
-                    <div className="w-full flex gap-1">
-                      <input
-                        type="radio"
-                        value="call"
-                        checked={contactMode === "call"}
-                        onChange={(e) => setContactMode(e.target.value)}
-                        className=""
-                      />
-                      <h1 className="m-0 text-sm text-white">via Call</h1>
-                    </div>
+              <div
+                className="flex justify-center items-center mb-3 gap-3"
+                style={{ wordSpacing: "2px" }}
+              >
+                <h2 className="text-lg m-0 text-white leading-none">
+                  Preferred Contact Mode :{" "}
+                </h2>
+                <div className="flex gap-3">
+                  <div className="flex gap-1">
+                    <input
+                      type="radio"
+                      value="email"
+                      checked={contactMode === "email"}
+                      onChange={(e) => setContactMode(e.target.value)}
+                      className=""
+                    />
+                    <h1 className="m-0 text-lg text-white">via E-Mail</h1>
+                  </div>
+                  <div className="flex gap-1">
+                    <input
+                      type="radio"
+                      value="call"
+                      checked={contactMode === "call"}
+                      onChange={(e) => setContactMode(e.target.value)}
+                      className=""
+                    />
+                    <h1 className="m-0 text-lg text-white">via Call</h1>
                   </div>
                 </div>
-                <div>
-                  <motion.button
-                    whileTap={{ scale: "0.95" }}
-                    type="submit"
-                    style={{ border: "2px solid white" }}
-                    className="px-24 py-2 rounded-md bg-transparent text-white text-xl font-bold"
-                  >
-                    Send
-                  </motion.button>
-                </div>
+              </div>
+              <div className="w-full">
+                <motion.button
+                  whileTap={{ scale: "0.95" }}
+                  type="submit"
+                  style={{ border: "2px solid white" }}
+                  className="w-full px-24 py-2 rounded-md bg-transparent text-white text-xl font-bold flex justify-center"
+                >
+                  Send
+                </motion.button>
               </div>
             </div>
           </div>
