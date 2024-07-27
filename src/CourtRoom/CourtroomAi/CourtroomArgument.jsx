@@ -33,7 +33,9 @@ import Markdown from "react-markdown";
 const CourtroomArgument = () => {
   const navigate = useNavigate();
 
-const [dialogContent,setDialogContent] = useState("I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product");
+  const [dialogContent, setDialogContent] = useState(
+    "I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product"
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -109,14 +111,15 @@ const [dialogContent,setDialogContent] = useState("I find the same nonsense with
 
   const RetieveDetails = async (index) => {
     setAiLawyerLoading(true);
-    let laywerArgument = await axios.post(
+    const laywerArgument1 = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
     );
 
-    laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    const laywerArgument =
+      laywerArgument1.data.data.lawyerArguemnt.counter_argument;
     const objection =
-      laywerArgument.data.data.lawyerArguemnt.potential_objection;
+      laywerArgument1.data.data.lawyerArguemnt.potential_objection;
     setLawyerArgument(laywerArgument);
     setPotentialObjections(objection);
     setAiLawyerLoading(false);
@@ -157,14 +160,15 @@ const [dialogContent,setDialogContent] = useState("I find the same nonsense with
 
   const GenerateDetails = async (index) => {
     setAiLawyerLoading(true);
-    let laywerArgument = await axios.post(
+    const laywerArgument1 = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Generate", argument_index: index }
     );
 
-    laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    const laywerArgument =
+      laywerArgument1.data.data.lawyerArguemnt.counter_argument;
     const objection =
-      laywerArgument.data.data.lawyerArguemnt.potential_objection;
+      laywerArgument1.data.data.lawyerArguemnt.potential_objection;
     setLawyerArgument(laywerArgument);
     setPotentialObjections(objection);
     setAiLawyerLoading(false);
@@ -418,16 +422,11 @@ const [dialogContent,setDialogContent] = useState("I find the same nonsense with
               <button
                 className="bg-red-500 text-white w-5 h-5  rounded-full"
                 onClick={isDialogOpen ? closeDialog : openDialog}
-              >
-                
-              </button>
+              ></button>
 
               {isDialogOpen && (
                 <div className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
-                  <button
-                    className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-black"
-                   
-                  >
+                  <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-black">
                     {dialogContent}
                   </button>
                   <p>Some text inside the dialog</p>
