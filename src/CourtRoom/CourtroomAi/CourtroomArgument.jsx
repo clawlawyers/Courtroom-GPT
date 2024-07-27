@@ -44,6 +44,7 @@ const CourtroomArgument = () => {
   const [aiJudgeLoading, setAiJudgeLoading] = useState(false);
   const [aiLawyerLoading, setAiLawyerLoading] = useState(false);
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
+  const [potentialObjections, setPotentialObjections] = useState("");
 
   const currentUser = useSelector((state) => state.user.user);
 
@@ -112,8 +113,10 @@ const CourtroomArgument = () => {
     );
 
     laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    const objection =
+      laywerArgument.data.data.lawyerArguemnt.potential_objection;
     setLawyerArgument(laywerArgument);
-
+    setPotentialObjections(objection);
     setAiLawyerLoading(false);
 
     setAiJudgeLoading(true);
@@ -151,7 +154,10 @@ const CourtroomArgument = () => {
     );
 
     laywerArgument = laywerArgument.data.data.lawyerArguemnt.counter_argument;
+    const objection =
+      laywerArgument.data.data.lawyerArguemnt.potential_objection;
     setLawyerArgument(laywerArgument);
+    setPotentialObjections(objection);
     setAiLawyerLoading(false);
 
     setAiJudgeLoading(true);

@@ -123,6 +123,7 @@ const BookNow = () => {
               razorpay_signature: response.razorpay_signature,
               _id,
               bookingData,
+              amount,
             };
 
             const result = await axios.post(
