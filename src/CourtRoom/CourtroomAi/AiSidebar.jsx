@@ -20,6 +20,7 @@ import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import countDown from "../../assets/images/countdown.gif";
 import Markdown from "react-markdown";
+import toast from "react-hot-toast";
 
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
@@ -229,9 +230,53 @@ const AiSidebar = () => {
   }, [currentUser.userId]);
 
   const downloadCaseHistory = async () => {
-    await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/downloadhistory`, {
-      user_id: currentUser.userId,
-    });
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
+        {
+          user_id: currentUser.userId,
+        },
+        {
+          responseType: "blob", // Important
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `case_history_${currentUser.userId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
+  };
+
+  const downloadSessionCaseHistory = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
+        {
+          user_id: currentUser.userId,
+        },
+        {
+          responseType: "blob", // Important
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `case_session_history_${currentUser.userId}.pdf`
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {}
   };
 
   return (
@@ -281,7 +326,10 @@ const AiSidebar = () => {
               }}
             >
               <div>
-                <h1 style={{ fontSize: "15px", margin: "0" }}>
+                <h1
+                  style={{ fontSize: "15px", margin: "0" }}
+                  onClick={() => downloadSessionCaseHistory()}
+                >
                   Download Session History
                 </h1>
               </div>
