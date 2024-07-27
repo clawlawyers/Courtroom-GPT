@@ -63,13 +63,13 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  height:70vh;
+  height:80vh;
   background-color: rgba(255, 255, 255, 0.3);
 }
 
 .formContainer img {
   border-radius: 0% !important;
-  height: 70vh !important;
+  height: 80vh !important;
   width: 30% !important;
 }
 .forms {
