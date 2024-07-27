@@ -116,6 +116,7 @@ const BookNow = () => {
               razorpay_signature: response.razorpay_signature,
               _id,
               bookingData,
+              amount,
             };
 
             const result = await axios.post(
@@ -146,7 +147,7 @@ const BookNow = () => {
     <div className={styles.topContainer}>
       <h1
         style={{
-          padding: "20px",
+          
           fontWeight: 800,
         }}
       >

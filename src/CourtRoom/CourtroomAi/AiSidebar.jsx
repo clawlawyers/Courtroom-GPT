@@ -229,6 +229,12 @@ const AiSidebar = () => {
     }
   }, [currentUser.userId]);
 
+  const downloadCaseHistory = async () => {
+    await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/downloadhistory`, {
+      user_id: currentUser.userId,
+    });
+  };
+
   return (
     <>
       <div className="flex flex-col gap-3 h-full py-3 pl-3">
@@ -309,7 +315,10 @@ const AiSidebar = () => {
               }}
             >
               <div>
-                <h1 style={{ fontSize: "15px", margin: "0" }}>
+                <h1
+                  style={{ fontSize: "15px", margin: "0" }}
+                  onClick={() => downloadCaseHistory}
+                >
                   Download Case History
                 </h1>
               </div>
