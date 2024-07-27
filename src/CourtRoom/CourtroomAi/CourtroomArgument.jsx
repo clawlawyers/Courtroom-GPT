@@ -33,6 +33,8 @@ import Markdown from "react-markdown";
 const CourtroomArgument = () => {
   const navigate = useNavigate();
 
+const [dialogContent,setDialogContent] = useState("I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [lawyerArgument, setLawyerArgument] = useState("");
@@ -135,6 +137,13 @@ const CourtroomArgument = () => {
     await RetieveDetails(index);
 
     // api call here
+  };
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
   };
 
   const handleVerdict = () => {
@@ -396,112 +405,138 @@ const CourtroomArgument = () => {
             />
             <h1 style={{ fontSize: "20px", margin: "0" }}>User Argument</h1>
           </div>
-          <div
-            className="h-[200px]"
-            style={{
-              margin: "10px",
-              overflow: "hidden",
-              overflowY: "scroll",
-            }}
-          >
-            {userArgument.map((x, index) => (
-              <div
-                onClick={() => {
-                  handleArgumentSelect(index, x);
-                }}
-                key={index}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  pointerEvents: "all",
-                  border:
-                    selectedUserArgument === index
-                      ? "1px solid #00ffa3"
-                      : "1px solid white",
-                  borderRadius: "10px",
-                  padding: "5px",
-                  margin: "5px",
-                  cursor: "pointer",
-                }}
+
+          <div className="w-full flex flex-row-reverse pr-3 items-center h-[200px]  ">
+            <div className="relative">
+              {/* Existing components */}
+              <button
+                className="bg-red-500 text-white w-5 h-5  rounded-full"
+                onClick={isDialogOpen ? closeDialog : openDialog}
               >
-                <div className="flex items-center w-full pointer-events-auto">
-                  {editIndex === index ? (
-                    <div className="w-full">
-                      <textarea
-                        className="text-black"
+                
+              </button>
+
+              {isDialogOpen && (
+                <div className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
+                  <button
+                    className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-black"
+                   
+                  >
+                    {dialogContent}
+                  </button>
+                  <p>Some text inside the dialog</p>
+                </div>
+              )}
+            </div>
+            <div
+              className="h-[200px]"
+              style={{
+                width: "100%",
+                margin: "10px",
+                overflow: "hidden",
+                overflowY: "scroll",
+              }}
+            >
+              {userArgument.map((x, index) => (
+                <div
+                  onClick={() => {
+                    handleArgumentSelect(index, x);
+                  }}
+                  key={index}
+                  style={{
+                    width: "99%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    pointerEvents: "all",
+                    border:
+                      selectedUserArgument === index
+                        ? "1px solid #00ffa3"
+                        : "1px solid white",
+                    borderRadius: "10px",
+                    padding: "5px",
+                    margin: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <div className="flex items-center w-full pointer-events-auto">
+                    {editIndex === index ? (
+                      <div className="w-full">
+                        <textarea
+                          className="text-black"
+                          style={{
+                            margin: "0",
+                            fontSize: "15px",
+                            padding: "15px",
+                            borderRadius: "10px",
+                            width: "100%",
+                            lineHeight: "20px",
+
+                            wordSpacing: "4px",
+                          }}
+                          value={editValue}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={handleEditArgumentText}
+                        />
+                      </div>
+                    ) : (
+                      <p
                         style={{
                           margin: "0",
                           fontSize: "15px",
                           padding: "15px",
-                          borderRadius: "10px",
-                          width: "100%",
                           lineHeight: "20px",
-
+                          width: "100%",
                           wordSpacing: "4px",
                         }}
-                        value={editValue}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={handleEditArgumentText}
-                      />
-                    </div>
-                  ) : (
-                    <p
-                      style={{
-                        margin: "0",
-                        fontSize: "15px",
-                        padding: "15px",
-                        lineHeight: "20px",
-                        width: "100%",
-                        wordSpacing: "4px",
-                      }}
-                    >
-                      {x}
-                    </p>
-                  )}
-                  {editIndex === index ? (
-                    <motion.button
-                      whileTap={{ scale: "0.95" }}
-                      className="border-2 border-[#00ffa3] rounded-lg p-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSave(index);
-                      }}
-                      style={{ margin: "5px" }}
-                    >
-                      Save
-                    </motion.button>
-                  ) : (
-                    <div
-                      onClick={(e) =>
-                        editIndex !== index && handleEdit(e, index)
-                      }
-                    >
-                      <motion.svg
-                        whileTap={{ scale: "0.95" }}
-                        style={{
-                          cursor: "pointer",
-                          width: "24px",
-                          height: "24px",
-                        }}
-                        fill="white"
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                        stroke-linejoin="round"
-                        stroke-miterlimit="2"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path
-                          d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
-                          fill-rule="nonzero"
-                        />
-                      </motion.svg>
-                    </div>
-                  )}
+                        {x}
+                      </p>
+                    )}
+                    {editIndex === index ? (
+                      <motion.button
+                        whileTap={{ scale: "0.95" }}
+                        className="border-2 border-[#00ffa3] rounded-lg p-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSave(index);
+                        }}
+                        style={{ margin: "5px" }}
+                      >
+                        Save
+                      </motion.button>
+                    ) : (
+                      <div
+                        onClick={(e) =>
+                          editIndex !== index && handleEdit(e, index)
+                        }
+                      >
+                        <motion.svg
+                          whileTap={{ scale: "0.95" }}
+                          style={{
+                            cursor: "pointer",
+                            width: "24px",
+                            height: "24px",
+                          }}
+                          fill="white"
+                          clip-rule="evenodd"
+                          fill-rule="evenodd"
+                          stroke-linejoin="round"
+                          stroke-miterlimit="2"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
+                            fill-rule="nonzero"
+                          />
+                        </motion.svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

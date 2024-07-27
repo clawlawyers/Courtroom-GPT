@@ -146,7 +146,7 @@ const BookNow = () => {
     <div className={styles.topContainer}>
       <h1
         style={{
-          padding: "20px",
+          
           fontWeight: 800,
         }}
       >
