@@ -78,7 +78,7 @@ function App() {
   const CourtRoomLayout = () => {
     return (
       <div>
-        <div className="py-20">
+        <div className="pt-20">
           <Outlet />
         </div>
         <FooterBanner />
