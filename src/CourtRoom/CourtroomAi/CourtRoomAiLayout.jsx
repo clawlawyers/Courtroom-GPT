@@ -7,18 +7,27 @@ import Styles from "./CourtroomAiLayout.module.css";
 import splashVideo from "../../assets/images/door open.mp4";
 import splashImage from "../../assets/images/splashImage.png";
 import LogoSplash from "../../assets/images/logoSplash.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
-  // console.log(user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(retrieveCourtroomAuth());
+  }, []);
+
+  if (!currentUser) {
+    navigate("/");
+  }
 
   const [showSplash, setShowSplash] = useState(
     !localStorage.getItem("hasSeenSplash")
   );
   const [videoStarted, setVideoStarted] = useState(false);
-  const navi = useNavigate();
 
   useEffect(() => {
     if (!showSplash) {
@@ -44,12 +53,6 @@ const CourtRoomAiLayout = () => {
     setShowSplash(true);
     setVideoStarted(false);
   };
-
-  // useEffect(() => {
-  //   if (!currentUser.userId) {
-  //     navi("/");
-  //   }
-  // }, [currentUser.userId, navi]);
 
   return (
     <div className="">
@@ -87,7 +90,7 @@ const CourtRoomAiLayout = () => {
           )}
         </div>
       ) : (
-        <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118] overflow-hidden">
+        <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
           <AiSidebar />
           <div className="flex flex-col">
             <div className="m-3.5 border-2 border-black bg-[#008080] rounded flex flex-col h-full">

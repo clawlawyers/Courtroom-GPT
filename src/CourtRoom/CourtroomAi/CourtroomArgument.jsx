@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import aiJudge from "../../assets/images/aiJudge.png";
 import aiLawyer from "../../assets/images/aiLawyer.png";
 import userIcon from "../../assets/images/userArgument.png";
@@ -51,6 +51,7 @@ const CourtroomArgument = () => {
   const [potentialObjections, setPotentialObjections] = useState("");
 
   const currentUser = useSelector((state) => state.user.user);
+  const lastItemRef = useRef(null);
 
   const handleEdit = (e, index) => {
     e.stopPropagation();
@@ -250,6 +251,12 @@ const CourtroomArgument = () => {
       getHistory();
     }
   }, [currentUser.userId]);
+
+  useEffect(() => {
+    if (lastItemRef.current) {
+      lastItemRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [userArgument]);
 
   return (
     <div className="flex flex-col justify-between h-full">
@@ -459,6 +466,7 @@ const CourtroomArgument = () => {
                     handleArgumentSelect(index, x);
                   }}
                   key={index}
+                  ref={index === userArgument.length - 1 ? lastItemRef : null}
                   style={{
                     width: "99%",
                     display: "flex",
@@ -562,6 +570,7 @@ const CourtroomArgument = () => {
           <div className="py-2 pr-2">
             <input
               value={addArgumentInputText !== null ? addArgumentInputText : ""}
+              disabled={aiJudgeLoading || aiLawyerLoading}
               onChange={(e) => setAddArgumentInputText(e.target.value)}
               className="w-full text-black"
               style={{

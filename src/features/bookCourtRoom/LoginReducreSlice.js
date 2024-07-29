@@ -31,7 +31,7 @@ export const retrieveCourtroomAuth = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: {},
+    user: "",
     caseOverview: "",
   },
   reducers: {
