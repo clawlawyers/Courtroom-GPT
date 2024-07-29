@@ -72,7 +72,7 @@ function App() {
   // this should be run only once per application lifetime
   useEffect(() => {
     // store.dispatch(retrieveAuth());
-    // store.dispatch(retrieveCourtroomAuth());
+    store.dispatch(retrieveCourtroomAuth());
   }, []);
 
   const CourtRoomLayout = () => {

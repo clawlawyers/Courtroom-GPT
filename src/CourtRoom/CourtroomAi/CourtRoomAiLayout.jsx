@@ -16,11 +16,12 @@ const CourtRoomAiLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(retrieveCourtroomAuth());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(retrieveCourtroomAuth());
+  // }, []);
 
   if (!currentUser) {
+    console.log("rendered");
     navigate("/");
   }
 
