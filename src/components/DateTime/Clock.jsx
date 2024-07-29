@@ -71,6 +71,7 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
     const getBookingDetails = async () => {
       try {
         const response = await axios.get(`${NODE_API_ENDPOINT}/courtroom/book-courtroom`);
+        console.log(response)
         const bookedDatesData = response.data;
         console.log(bookedDatesData);
         // Convert server data to a more accessible format

@@ -128,7 +128,8 @@ const BookNow = () => {
               data
             );
             alert(result.data.status);
-            navigate("/confirm-booking");
+            //TODO: add a confirm booking page before calling razorpay API
+            navigate("/login");
           },
 
           theme: {
@@ -161,16 +162,19 @@ const BookNow = () => {
         scheduledSlots={scheduledSlots}
         setScheduledSlots={setScheduledSlots}
       />
+      
+
+      <section className={styles.formContainer}>
       {errorState ? (
             <div
               style={{
                 position: "absolute",
                 // backgroundColor: "rgba(0, 0, 0, 0.1)",
                 backdropFilter: "blur(3px)",
-                top: "0px",
-                left: "-115px",
-                width: "110%",
-                height: "95%",
+                bottom: 0,
+                
+                width: "50%",
+                height: "100%",
                 borderRadius: "10px",
                 display: "flex",
                 justifyContent: "center",
@@ -182,8 +186,8 @@ const BookNow = () => {
                   background: "white",
                   border: "2px solid black",
                   borderRadius: "10px",
-                  width: "90%",
-                  padding: "20px 15px",
+                  width: "50%",
+                  
                 }}
               >
                 <div
@@ -233,8 +237,6 @@ const BookNow = () => {
               </div>
             </div>
           ):"" }
-
-      <section className={styles.formContainer}>
         <img src={image} alt="" />
         <div
           style={{
@@ -245,7 +247,9 @@ const BookNow = () => {
             width: "70%",
           }}
         >
+
           <form className={styles.forms} onSubmit={handleSubmit}>
+          
             <h2>Enter your Details</h2>
             <input
               type="text"
@@ -342,6 +346,7 @@ const BookNow = () => {
             >
               Proceed for Payment
             </button>
+            
           </form>
         </div>
       </section>

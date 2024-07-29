@@ -13,10 +13,11 @@ const Verdict = () => {
   const [verdict, setVerdict] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [pages, setPages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getVerdict = async () => {
+      setLoading(true);
       try {
         const response = await axios.post(
           `${NODE_API_ENDPOINT}/courtroom/api/rest`,
@@ -31,10 +32,10 @@ const Verdict = () => {
       } catch (error) {
         console.error("Error fetching verdict:", error);
       } finally {
-        if(verdict)
-          {
+        
+          
             setLoading(false);
-          }
+          
       }
     };
 
