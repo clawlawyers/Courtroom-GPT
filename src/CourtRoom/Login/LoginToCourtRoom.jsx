@@ -22,6 +22,7 @@ function LoginToCourtRoom() {
   const [password, setPassword] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   // const currentUser = useSelector((state) => state.user.user);
+  const currentUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
   const loginTime = new Date().toISOString();
@@ -83,6 +84,12 @@ function LoginToCourtRoom() {
         toast.error(error.message);
       });
   };
+
+  useEffect(() => {
+    if (currentUser.userId) {
+      navigate("/courtroom-ai");
+    }
+  }, [currentUser.userId, navigate]);
 
   return (
     <div className="flex flex-col justify-center items-center">

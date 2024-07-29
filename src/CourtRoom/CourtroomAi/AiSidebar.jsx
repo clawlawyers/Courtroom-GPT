@@ -279,6 +279,23 @@ const AiSidebar = () => {
     } catch (error) {}
   };
 
+  useEffect(() => {
+    const caseOverview = async () => {
+      const caseOverview = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
+        {
+          user_id: currentUser.userId,
+        }
+      );
+      console.log(caseOverview.data.data.case_overview);
+      dispatch(setOverview(caseOverview.data.data.case_overview));
+    };
+
+    if (currentUser.userId) {
+      caseOverview();
+    }
+  }, [currentUser.userId, dispatch]);
+
   return (
     <>
       <div className="flex flex-col gap-3 h-full py-3 pl-3">
