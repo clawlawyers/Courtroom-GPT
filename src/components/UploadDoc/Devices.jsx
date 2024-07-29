@@ -16,8 +16,8 @@ import { useDispatch } from "react-redux";
 import { setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import uploadImage from "../../assets/images/uploading.gif"
-import analyzingImage from "../../assets/images/analyzing.gif"
+import uploadImage from "../../assets/images/uploading.gif";
+import analyzingImage from "../../assets/images/analyzing.gif";
 const Devices = ({ uploadedFile, setUploadedFile }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -35,7 +35,6 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [files, setFile] = useState(null);
   const [inputText, setInputText] = useState("");
   // console.log(inputText);
- 
 
   const handleChange = (e) => {
     console.log("Textarea changed:", e.target.value);
@@ -55,7 +54,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
-      navigate("/courtroom-ai/");
+      navigate("/courtroom-ai/arguments");
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -243,16 +242,13 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         setInputText={setInputText}
         buttonText={`${uploadComplete ? "" : ""}`}
         onButtonClick={handleSave}
-        image={
-          uploading ? uploadImage : analyzing ? analyzingImage : "" 
-        }
+        image={uploading ? uploadImage : analyzing ? analyzingImage : ""}
       >
         {uploading && (
           <img className="h-20 w-20" src={uploadImage} alt="uploading" />
         )}
         {analyzing && (
           <img className="fit-content" src={analyzingImage} alt="uploading" />
-
         )}
         {uploadComplete && (
           <textarea

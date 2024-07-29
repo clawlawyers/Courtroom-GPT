@@ -557,7 +557,7 @@ const AiSidebar = () => {
                     Old Case Search
                   </h1>
                 </motion.div>
-                <Link to={"/courtroom-ai/upload"}>
+                <Link to={"/courtroom-ai"}>
                   <motion.div
                     whileTap={{ scale: "0.95" }}
                     whileHover={{ scale: "1.01" }}

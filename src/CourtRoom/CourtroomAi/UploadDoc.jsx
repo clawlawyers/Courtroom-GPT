@@ -37,7 +37,7 @@ const UploadDoc = () => {
   };
 
   return (
-    <section className={Styles.topContainer}>
+    <section className={Styles.topContainer} style={{ padding: "20px" }}>
       {ChooseDevice ? (
         <motion.div
           className={Styles.device}
@@ -63,7 +63,7 @@ const UploadDoc = () => {
         </div>
       )}
 
-      <div className="w-full py-2 px-3 grid grid-cols-[65%_35%]">
+      {/* <div className="w-full py-2 px-3 grid grid-cols-[65%_35%]">
         <div className="py-2 pr-2">
           <input
             className="w-full"
@@ -131,7 +131,7 @@ const UploadDoc = () => {
             </h2>
           </motion.button>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };

@@ -119,15 +119,15 @@ function App() {
       children: [
         {
           path: "",
-          element: <CourtroomAiHome />,
+          element: <UploadDoc />,
         },
+        // {
+        //   path: "",
+        //   element: <CourtroomAiHome />,
+        // },
         {
           path: "/courtroom-ai/arguments",
           element: <CourtroomArgument />,
-        },
-        {
-          path: "/courtroom-ai/upload",
-          element: <UploadDoc />,
         },
         {
           path: "/courtroom-ai/verdict",
