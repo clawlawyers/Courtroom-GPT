@@ -8,15 +8,17 @@ import splashVideo from "../../assets/images/door open.mp4";
 import splashImage from "../../assets/images/splashImage.png";
 import LogoSplash from "../../assets/images/logoSplash.png";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CourtRoomAiLayout = () => {
-  // const user = useSelector((state)=> state.auth.user);
+  const currentUser = useSelector((state) => state.user.user);
   // console.log(user);
 
   const [showSplash, setShowSplash] = useState(
     !localStorage.getItem("hasSeenSplash")
   );
   const [videoStarted, setVideoStarted] = useState(false);
+  const navi = useNavigate();
 
   useEffect(() => {
     if (!showSplash) {
@@ -42,6 +44,12 @@ const CourtRoomAiLayout = () => {
     setShowSplash(true);
     setVideoStarted(false);
   };
+
+  // useEffect(() => {
+  //   if (!currentUser.userId) {
+  //     navi("/");
+  //   }
+  // }, [currentUser.userId, navi]);
 
   return (
     <div className="">

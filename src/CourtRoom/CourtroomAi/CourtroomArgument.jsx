@@ -63,12 +63,19 @@ const CourtroomArgument = () => {
   };
 
   const handleSave = async (index) => {
+    if (userArgument[index] === editValue) {
+      console.log("No change in argument");
+      setEditIndex(null);
+      setEditValue("");
+      return;
+    }
     const updatedArguments = [...userArgument];
     updatedArguments[index] = editValue;
     setUserArgument(updatedArguments);
     setEditIndex(null);
     setEditValue("");
-    await RetieveDetails(index);
+
+    await GenerateDetails(index);
   };
 
   const handleSwap = async () => {
@@ -96,10 +103,10 @@ const CourtroomArgument = () => {
       setUserArgument(userArguments);
       setLawyerArgument(swapLawyerArgument);
     } else {
-      const swapArgument = newUserArgument[newUserArgument.length - 1];
-      const updatedArguments = [...userArgument];
-      updatedArguments[updatedArguments.length - 1] = swapArgument;
-      setUserArgument(updatedArguments);
+      // const swapArgument = newUserArgument[newUserArgument.length - 1];
+      // const updatedArguments = [...userArgument];
+      // updatedArguments[updatedArguments.length - 1] = swapArgument;
+      setUserArgument(newUserArgument);
 
       const swapLawyerArgument =
         newLawyerArgument[newLawyerArgument.length - 1];
@@ -160,6 +167,7 @@ const CourtroomArgument = () => {
 
   const GenerateDetails = async (index) => {
     setAiLawyerLoading(true);
+
     const laywerArgument1 = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
       { user_id: currentUser.userId, action: "Generate", argument_index: index }
@@ -219,26 +227,29 @@ const CourtroomArgument = () => {
     setAddArgumentInputText(null);
   };
 
-  // console.log(lawyerArgument);
-  // console.log(judgeArgument);
+  useEffect(() => {
+    const getHistory = async () => {
+      const history = await axios.get(
+        `${NODE_API_ENDPOINT}/courtroom/${currentUser.userId}/getHistory`
+      );
 
-  // useEffect(() => {
-  //   const getDraft = async () => {
-  //     const response = await axios.post(
-  //       `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-  //       {
-  //         user_id: currentUser.userId,
-  //       }
-  //     );
-  //     setUserArgument(...response.data.data.draft.argument);
-  //     setLawyerArgument(response.data.data.draft.counter_argument[2]);
-  //     setLawyerArgument(response.data.data.draft.judgement[2]);
-  //   };
-  //   if (currentUser.userId) {
-  //     getDraft();
-  //   }
-  //   getDraft();
-  // }, []);
+      setUserArgument(history.data.data.caseHistory.argument);
+      const lawyerArrLen =
+        history.data.data.caseHistory.counter_argument.length;
+      setLawyerArgument(
+        history.data.data.caseHistory.counter_argument[lawyerArrLen - 1]
+      );
+
+      const judgeArrLen = history.data.data.caseHistory.judgement.length;
+      setJudgeArgument(
+        history.data.data.caseHistory.judgement[judgeArrLen - 1]
+      );
+    };
+
+    if (currentUser.userId) {
+      getHistory();
+    }
+  }, [currentUser.userId]);
 
   return (
     <div className="flex flex-col justify-between h-full">
