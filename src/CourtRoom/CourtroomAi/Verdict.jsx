@@ -6,25 +6,37 @@ import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
+import LoadingDialog from "../../components/LoadingDialog";
 
 const Verdict = () => {
   const currentUser = useSelector((state) => state.user.user);
   const [verdict, setVerdict] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [pages, setPages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getVerdict = async () => {
-      const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/rest`,
-        {
-          user_id: currentUser.userId,
-        }
-      );
-      const verdictText = response.data.data.restDetail.verdict;
-      console.log(verdictText);
-      setVerdict(verdictText);
-      setPages(splitTextIntoPages(verdictText, 500));
+      setLoading(true);
+      try {
+        const response = await axios.post(
+          `${NODE_API_ENDPOINT}/courtroom/api/rest`,
+          {
+            user_id: currentUser.userId,
+          }
+        );
+        const verdictText = response.data.data.restDetail.verdict;
+        console.log("verdict text is",verdictText);
+        setVerdict(verdictText);
+        setPages(splitTextIntoPages(verdictText, 500));
+      } catch (error) {
+        console.error("Error fetching verdict:", error);
+      } finally {
+        
+          
+            setLoading(false);
+          
+      }
     };
 
     if (currentUser.userId) {
@@ -66,61 +78,69 @@ const Verdict = () => {
 
   return (
     <main className="flex flex-row justify-center items-center h-full w-full py-10 space-x-4">
-      <div className="flex justify-center items-center w-10">
-        {currentPage > 0 && (
-          <motion.button
-            whileTap={{ scale: "0.9" }}
-            className="border-2 border-white p-2 rounded-full"
-            onClick={handlePreviousPage}
-          >
-            <ArrowLeft />
-          </motion.button>
-        )}
-      </div>
-      <section className="bg-[#7ebab2] w-2/5 flex flex-col h-full justify-start items-center rounded-md shadow-lg shadow-neutral-800 relative">
-        <div className="flex flex-col justify-center items-center">
-          <img
-            src={verdictLogo}
-            className="w-max h-max object-cover"
-            alt="verdict"
-          />
-          <img className="w-24" src={logo} alt="logo" />
+      {loading ? (
+        <div className="flex justify-center items-center h-full w-full">
+          <LoadingDialog />
         </div>
-        <section className="px-5 pb-5 flex flex-col h-full justify-between items-center relative">
-          <motion.div
-            key={currentPage}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.5 }}
-            className="w-full h-full overflow-hidden"
-          >
-            <p className="text-lg text-black mt-5 whitespace-pre-line">
-              {pages[currentPage]}
-            </p>
-          </motion.div>
-
-          <div className="flex flex-row w-full justify-end items-center mt-5">
-            <motion.button
-              whileTap={{ scale: "0.9" }}
-              className="border-2 border-white p-2 rounded-lg"
-            >
-              Download
-            </motion.button>
+      ) : (
+        <>
+          <div className="flex justify-center items-center w-10">
+            {currentPage > 0 && (
+              <motion.button
+                whileTap={{ scale: "0.9" }}
+                className="border-2 border-white p-2 rounded-full"
+                onClick={handlePreviousPage}
+              >
+                <ArrowLeft />
+              </motion.button>
+            )}
           </div>
-        </section>
-      </section>
-      <div className="flex justify-center items-center w-10">
-        {currentPage < pages.length - 1 && (
-          <motion.button
-            whileTap={{ scale: "0.9" }}
-            className="border-2 border-white p-2 rounded-full"
-            onClick={handleNextPage}
-          >
-            <ArrowRight />
-          </motion.button>
-        )}
-      </div>
+          <section className="bg-[#7ebab2] w-2/5 flex flex-col h-full justify-start items-center rounded-md shadow-lg shadow-neutral-800 relative">
+            <div className="flex flex-col justify-center items-center">
+              <img
+                src={verdictLogo}
+                className="w-max h-max object-cover"
+                alt="verdict"
+              />
+              <img className="w-24" src={logo} alt="logo" />
+            </div>
+            <section className="px-5 pb-5 flex flex-col h-full justify-between items-center relative">
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+                className="w-full h-full overflow-hidden"
+              >
+                <p className="text-lg text-black mt-5 whitespace-pre-line">
+                  {pages[currentPage]}
+                </p>
+              </motion.div>
+
+              <div className="flex flex-row w-full justify-end items-center mt-5">
+                <motion.button
+                  whileTap={{ scale: "0.9" }}
+                  className="border-2 border-white p-2 rounded-lg"
+                >
+                  Download
+                </motion.button>
+              </div>
+            </section>
+          </section>
+          <div className="flex justify-center items-center w-10">
+            {currentPage < pages.length - 1 && (
+              <motion.button
+                whileTap={{ scale: "0.9" }}
+                className="border-2 border-white p-2 rounded-full"
+                onClick={handleNextPage}
+              >
+                <ArrowRight />
+              </motion.button>
+            )}
+          </div>
+        </>
+      )}
     </main>
   );
 };
