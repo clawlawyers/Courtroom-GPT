@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
-import { ArrowRight } from "@mui/icons-material";
+import { ArrowRight, Download } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import {
   logout,
@@ -655,7 +655,7 @@ const AiSidebar = () => {
   <div
     style={{
       width: "100%",
-      height: "105%",
+      height: "100%",
       position: "absolute",
       backgroundColor: "rgba(0, 0, 0, 0.1)",
       backdropFilter: "blur(3px)",
@@ -667,7 +667,7 @@ const AiSidebar = () => {
     }}
   >
     <div
-      className="h-fit rounded-md border-2 border-white"
+      className="h-fit w-2/3 rounded-md border-2 border-white"
       style={{
         background: "linear-gradient(to right,#0e1118,#008080)",
       }}
@@ -693,20 +693,11 @@ const AiSidebar = () => {
           />
         </svg>
       </div>
-      <div className="m-0 flex flex-column justify-center items-center">
-        <div className="flex flex-row justify-between items-center w-full gap-5">
-          <div className="flex flex-row justify-center py-5 w-full items-center">
-            <button
-              onClick={handlePrevious}
-              className="p-2 mx-2 bg-white text-black rounded-full"
-              style={{
-                visibility: currentPage === 0 ? "hidden" : "visible",
-              }}
-              disabled={currentPage === 0}
-            >
-              <ArrowLeft />
-            </button>
-            <div className="flex flex-col w-[30vw] bg-white text-black h-[70vh] overflow-y-auto">
+      <div className="m-0 h-2/3 flex flex-column justify-center items-center">
+        <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
+          <div className="flex h-full  flex-row justify-center w-full items-center">
+            
+            <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
               <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                 <p className="uppercase font-bold my-2 w-full ">
                   First Draft Preview
@@ -715,7 +706,7 @@ const AiSidebar = () => {
                   <div className="h-1 bg-neutral-900 w-2/3" />
                   <div className="bg-neutral-900 rounded-md">
                     <img
-                      className="w-[44px] h-[29px]"
+                      className="w-[5vw] h-[29px]"
                       src={logo}
                       alt="logo"
                     />
@@ -727,23 +718,18 @@ const AiSidebar = () => {
                 value={firstDraft}
                 onChange={(e) => setFirstDraft(e.target.value)}
               />
-              <div className="text-right p-1 mx-2 font-semibold">
-                Page {currentPage + 1}
-              </div>
+             
             </div>
-            <button
-              onClick={handleNext}
-              className="p-2 mx-2 bg-white text-black rounded-full"
-              style={{
-                visibility: currentPage === pages.length - 1 ? "hidden" : "visible",
-              }}
-              disabled={currentPage === pages.length - 1}
-            >
-              <ArrowRight />
-            </button>
+           
           </div>
-          <div className="h-[70vh] w-1 bg-neutral-200/40" />
-          <div className="flex flex-col w-full gap-2 "></div>
+          <div className="h-[80vh] w-1 bg-neutral-200/40" />
+          <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
+           <div className="flex flex-col w-full gap-2">
+           <img className="" src={logo} alt="logo" />
+            <h1 className="uppercase text-center font-bold">First draft preview</h1>
+           </div>
+            <button className="border border-white rounded-md p-3 justify-end"><Download /> Download</button>
+          </div>
         </div>
       </div>
     </div>
