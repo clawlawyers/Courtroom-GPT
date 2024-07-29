@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,20 +17,19 @@ import axios from "axios";
 import { CloseOutlined } from "@mui/icons-material";
 
 const Container = styled.div`
-  background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
-  border-radius: 10px;
-  border: 2px solid white;
+ 
+  
   padding: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 65vh;
+  height:60vh;
   width: 60%;
   max-width: 570px;
-  max-height: 60vh;
+  max-height: 65vh;
   font-weight: 900;
   color: white;
-  box-shadow: 2px 4px 10px black;
+
 
   @media (max-width: 768px) {
     height: 90vw;
@@ -45,15 +44,19 @@ const Container = styled.div`
 `;
 
 const CalendarWrapper = styled.div`
+  border-radius: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
-
+  
+  
   .custom-calendar {
-    transform: scale(1.7);
+    background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
+ 
     transform-origin: center;
-    
-    @media (max-width: 768px) {
+    border-radius: 10px;
+    border: 2px solid white;
+    @media (max-width: 768px ) and (max-height:812px) {
       transform: scale(1.3);
     }
 
@@ -64,8 +67,30 @@ const CalendarWrapper = styled.div`
 `;
 
 const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
+  const calendarRef = useRef();
   const [bookedDates, setBookedDates] = useState([]);
   const [bookingData, setBookingData] = useState([]);
+  useEffect(() => {
+    const updateScale = () => {
+      const viewportWidth = window.innerWidth;
+      let scale;
+
+      if (viewportWidth <= 480) {
+        scale = 1;
+      } else if (viewportWidth <= 768) {
+        scale = 1.2;
+      } else {
+        scale = 1.5;
+      }
+
+      calendarRef.current.style.transform = `scale(${scale})`;
+    };
+
+    window.addEventListener('resize', updateScale);
+    updateScale(); // Initial scale update
+
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
   
   useEffect(() => {
     const getBookingDetails = async () => {
@@ -157,7 +182,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <section className="flex w-full flex-row justify-center items-center gap-[70px] h-[70vh]">
           <Container>
-            <CalendarWrapper>
+            <CalendarWrapper ref={calendarRef} className="custom-calendar" >
               <DateCalendar
                 slots={{
                   day: (props) => <ServerDay {...props} bookedDates={bookedDates} />,
@@ -169,8 +194,10 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 shouldDisableDate={(date) => dayjs(date).isBefore(dayjs(), "day")}
                 views={["day"]}
                 sx={{
+
+
                   color: "white",
-                  marginTop: "50px",
+                  
                   '& .MuiPickersDay-root': {
                     color: 'white', // Color for the date numbers
                   },
@@ -243,13 +270,13 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 padding: "10px",
                 borderRadius: "5px",
                 gap: "20px",
-                flexWrap: "wrap"
+                flexWrap: "wrap",
               }}
             >
               {scheduledSlots.map((slot, index) => (
                 <div
                   key={index}
-                  className="flex flex-row p-2 w-fit h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5 my-2 relative"
+                  className="flex flex-row p-2 w-fit h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5 my-2 relative overflow-x-auto"
                 >
                   {new Date(slot.date).toLocaleDateString("en-US", {
                     day: "numeric",
