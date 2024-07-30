@@ -14,6 +14,12 @@ import { useSelector } from "react-redux";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 function LoginToCourtRoom() {
+  const currentUser = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+
+  if (currentUser) {
+    navigate("/courtroom-ai");
+  }
   const [isHovered, setIsHovered] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [errorState, setErrorState] = useState(false);
@@ -33,7 +39,6 @@ function LoginToCourtRoom() {
       clearInterval(timer);
     };
   }, [currentTime]);
-  const navigate = useNavigate();
   // const currentTime = new Date();
 
   // Import the action creator from the slice

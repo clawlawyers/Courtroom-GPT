@@ -7,11 +7,23 @@ import Styles from "./CourtroomAiLayout.module.css";
 import splashVideo from "../../assets/images/door open.mp4";
 import splashImage from "../../assets/images/splashImage.png";
 import LogoSplash from "../../assets/images/logoSplash.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const CourtRoomAiLayout = () => {
-  // const user = useSelector((state)=> state.auth.user);
-  // console.log(user);
+  const currentUser = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(retrieveCourtroomAuth());
+  // }, []);
+
+  if (!currentUser) {
+    console.log("rendered");
+    navigate("/");
+  }
 
   const [showSplash, setShowSplash] = useState(
     !localStorage.getItem("hasSeenSplash")
@@ -79,9 +91,9 @@ const CourtRoomAiLayout = () => {
           )}
         </div>
       ) : (
-        <div className="min-h-screen grid grid-cols-1 md:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
+        <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
           <AiSidebar />
-          <div className="flex flex-col w-full h-full">
+          <div className="flex flex-col">
             <div className="m-3.5 border-2 border-black bg-[#008080] rounded flex flex-col h-full">
               <Outlet />
             </div>

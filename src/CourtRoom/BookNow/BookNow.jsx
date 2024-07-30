@@ -8,15 +8,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-
-
 const BookNow = () => {
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const [loading, setLoading] = useState(false);
   const [scheduledSlots, setScheduledSlots] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
-  const [errorData,setErrorData] = useState([]);
-  const [errorState,setErrorState] = useState(false);
+  const [errorData, setErrorData] = useState("");
+  const [errorState, setErrorState] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,8 +29,6 @@ const BookNow = () => {
     const newValue = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: newValue });
   };
-
-  
 
   console.log(scheduledSlots);
 
@@ -75,7 +71,7 @@ const BookNow = () => {
       loadRazorpay(bookingData);
     } else {
       setErrorState(true);
-      setErrorData("same number or email not allowed at same time slot")
+      setErrorData("same number or email not allowed at same time slot");
       toast.error("same number or email not allowed at same time slot");
     }
     // TODO : backend post request
@@ -152,8 +148,8 @@ const BookNow = () => {
     <div className={styles.topContainer}>
       <h1
         style={{
-          
           fontWeight: 800,
+          paddingBottom:"40px",
         }}
       >
         Book your Court Room
@@ -162,81 +158,8 @@ const BookNow = () => {
         scheduledSlots={scheduledSlots}
         setScheduledSlots={setScheduledSlots}
       />
-      
 
       <section className={styles.formContainer}>
-      {errorState ? (
-            <div
-              style={{
-                position: "absolute",
-                // backgroundColor: "rgba(0, 0, 0, 0.1)",
-                backdropFilter: "blur(3px)",
-                bottom: 0,
-                
-                width: "50%",
-                height: "100%",
-                borderRadius: "10px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  background: "white",
-                  border: "2px solid black",
-                  borderRadius: "10px",
-                  width: "50%",
-                  
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <svg
-                    onClick={() => {
-                      setErrorState(false);
-                      setErrorData([]);
-                    }}
-                    style={{ cursor: "pointer" }}
-                    width="24"
-                    height="24"
-                    stroke="#008080"
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                      fill-rule="nonzero"
-                    />
-                  </svg>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <h1
-                    style={{ margin: "0", fontSize: "20px", color: "#008080" }}
-                  >
-                    {errorData[0]}
-                  </h1>
-                  <p style={{ color: "gray" }}>{errorData[1]}</p>
-                </div>
-              </div>
-            </div>
-          ):"" }
         <img src={image} alt="" />
         <div
           style={{
@@ -247,9 +170,7 @@ const BookNow = () => {
             width: "70%",
           }}
         >
-
           <form className={styles.forms} onSubmit={handleSubmit}>
-          
             <h2>Enter your Details</h2>
             <input
               type="text"
@@ -346,9 +267,49 @@ const BookNow = () => {
             >
               Proceed for Payment
             </button>
-            
           </form>
         </div>
+        {errorState ? (
+          <div
+            className="absolute w-full h-full flex items-center justify-center"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              backdropFilter: "blur(5px)",
+            }}
+          >
+            <div className="border-2 border-red-500 rounded-lg bg-white flex flex-col ">
+              <div className="flex justify-end p-2">
+                <svg
+                  onClick={() => {
+                    setErrorState(false);
+                    setErrorData("");
+                  }}
+                  style={{ cursor: "pointer" }}
+                  width="24"
+                  height="24"
+                  stroke="red"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+              </div>
+
+              <p className="text-black text-lg font-semibold p-5">
+                Same number or email not allowed at same time slot
+              </p>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
       </section>
     </div>
   );

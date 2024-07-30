@@ -5,7 +5,6 @@
   justify-content: center;
   /* padding: 20px; */
   width: 100%;
-  
 }
 
 .headerText {
@@ -58,12 +57,13 @@
 }
 /* CSS */
 .formContainer {
+  position: relative;
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  height:80vh;
+  height: 80vh;
   background-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -76,12 +76,11 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
- 
-  width:70%;
+
+  width: 70%;
   justify-content: center;
   align-items: center;
   height: 70vh;
- 
 }
 .forms h2 {
   font-weight: 800;
@@ -96,13 +95,12 @@
   color: black;
 }
 .forms input[type="password"] {
-  background-color:transparent;
+  background-color: transparent;
   padding: 15px;
   width: 100%;
   border-radius: 10px;
-  border:none;
+  border: none;
   color: black;
-
 }
 .forms input[type="email"] {
   background-color: rgba(255, 255, 255, 0.8);
@@ -110,7 +108,6 @@
   width: 70%;
   border-radius: 10px;
   color: black;
-
 }
 
 .forms button {
@@ -118,23 +115,19 @@
   border: 1px solid white;
   border-radius: 3px;
 }
-.checkboxContainer
-{
+.checkboxContainer {
   display: flex;
   flex-direction: row;
   gap: 10px;
   align-items: center;
   width: 70%;
 }
-.checkboxContainer input[type="checkbox"]
-{
+.checkboxContainer input[type="checkbox"] {
   background-color: white;
   height: 20px;
   width: 20px;
   cursor: pointer;
 }
-.checkboxContainer input[type="checkbox"]:checked
-{
+.checkboxContainer input[type="checkbox"]:checked {
   background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
-  
 }

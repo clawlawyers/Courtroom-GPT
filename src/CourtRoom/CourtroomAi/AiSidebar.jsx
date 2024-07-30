@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
-import { ArrowRight } from "@mui/icons-material";
+import { ArrowRight, Download } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import {
   logout,
@@ -84,11 +84,11 @@ const AiSidebar = () => {
   };
 
   // Update pages when inputText changes
-  useEffect(() => {
-    const newPages = getPages(inputText);
-    setPages(newPages);
-    setCurrentText(newPages[currentPage] || "");
-  }, [inputText]);
+  // useEffect(() => {
+  //   const newPages = getPages(inputText);
+  //   setPages(newPages);
+  //   setCurrentText(newPages[currentPage] || "");
+  // }, [inputText]);
 
   // Update inputText when pages change
   useEffect(() => {
@@ -279,16 +279,41 @@ const AiSidebar = () => {
     } catch (error) {}
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-3 h-full py-3 pl-3">
         {/* top container */}
-        <div className="bg-[#008080] p-4 border-2 border-black rounded h-1/3 gap-4 flex flex-col justify-between ">
+        <div className="bg-[#008080] pt-1 px-4 pb-4 border-2 border-black rounded h-1/3 gap-2 flex flex-col justify-between ">
           <div>
+            <motion.div
+              className="max-w-fit rounded-lg flex gap-2 items-center py-2 cursor-pointer"
+              whileTap={{ scale: "0.95" }}
+            >
+              <svg
+                className="h-7 w-7"
+                fill="#C5C5C5"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m10.978 14.999v3.251c0 .412-.335.75-.752.75-.188 0-.375-.071-.518-.206-1.775-1.685-4.945-4.692-6.396-6.069-.2-.189-.312-.452-.312-.725 0-.274.112-.536.312-.725 1.451-1.377 4.621-4.385 6.396-6.068.143-.136.33-.207.518-.207.417 0 .752.337.752.75v3.251h9.02c.531 0 1.002.47 1.002 1v3.998c0 .53-.471 1-1.002 1z"
+                  fill-rule="nonzero"
+                />
+              </svg>
+              <p className="m-0" onClick={handleGoBack}>
+                Go Back
+              </p>
+            </motion.div>
             <div className="flex flex-row justify-between items-center ">
-              <h1 className="text-[#00FFA3] text-[18px] m-0">
-                Case Details :{" "}
-              </h1>
+              <p className="text-[#00FFA3] text-[18px] m-0">Case Details : </p>
 
               <motion.button
                 whileTap={{ scale: "0.95" }}
@@ -532,7 +557,7 @@ const AiSidebar = () => {
                     Old Case Search
                   </h1>
                 </motion.div>
-                <Link to={"/courtroom-ai/upload"}>
+                <Link to={"/courtroom-ai"}>
                   <motion.div
                     whileTap={{ scale: "0.95" }}
                     whileHover={{ scale: "1.01" }}
@@ -627,189 +652,164 @@ const AiSidebar = () => {
       </div>
 
       {firstDraftDialog ? (
-        <div
-          style={{
-            width: "100%",
-            height: "105%",
-            position: "absolute",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(3px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "start",
-            zIndex: "3",
-            paddingTop: "30px",
-          }}
+  <div
+    style={{
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      backdropFilter: "blur(3px)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "start",
+      zIndex: "3",
+      paddingTop: "30px",
+    }}
+  >
+    <div
+      className="h-fit w-2/3 rounded-md border-2 border-white"
+      style={{
+        background: "linear-gradient(to right,#0e1118,#008080)",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <svg
+          onClick={() => setFirstDraftDialog(false)}
+          style={{ margin: "20px", cursor: "pointer" }}
+          width="30"
+          height="30"
+          fill="white"
+          stroke="white"
+          clip-rule="evenodd"
+          fill-rule="evenodd"
+          stroke-linejoin="round"
+          stroke-miterlimit="2"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <div
-            className="h-fit rounded-md border-2 border-white "
-            style={{
-              background: "linear-gradient(to right,#0e1118,#008080)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <svg
-                onClick={() => setFirstDraftDialog(false)}
-                style={{ margin: "20px", cursor: "pointer" }}
-                width="30"
-                height="30"
-                fill="white"
-                stroke="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                  fill-rule="nonzero"
-                />
-              </svg>
-            </div>
-            <div
-              style={{
-                margin: "0px ",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <div className="flex flex-row justify-between items-center w-full gap-5">
-                <div className="flex flex-row justify-center py-5 w-full items-center">
-                  <button
-                    onClick={handlePrevious}
-                    className="p-2 mx-2 bg-white text-black rounded-full"
-                    style={{
-                      visibility: currentPage === 0 ? "hidden" : "visible",
-                    }}
-                    disabled={currentPage === 0}
-                  >
-                    <ArrowLeft />
-                  </button>
-                  <div className="flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto">
-                    <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
-                      <p className="uppercase font-bold my-2 w-full ">
-                        First Draft Preview
-                      </p>
-                      <div className="flex flex-row w-full items-center">
-                        <div className="h-1 bg-neutral-900 w-2/3" />
-                        <div className="bg-neutral-900 rounded-md">
-                          <img
-                            className="w-[44px] h-[29px]"
-                            src={logo}
-                            alt="logo"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <textarea
-                      className="w-full h-full p-2.5 mb-4 text-black resize-none"
-                      value={firstDraft}
-                      onChange={handleTextChange}
-                      readOnly={!isEditing}
+          <path
+            d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+            fill-rule="nonzero"
+          />
+        </svg>
+      </div>
+      <div className="m-0 h-2/3 flex flex-column justify-center items-center">
+        <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
+          <div className="flex h-full  flex-row justify-center w-full items-center">
+            
+            <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
+              <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
+                <p className="uppercase font-bold my-2 w-full ">
+                  First Draft Preview
+                </p>
+                <div className="flex flex-row w-full items-center">
+                  <div className="h-1 bg-neutral-900 w-2/3" />
+                  <div className="bg-neutral-900 rounded-md">
+                    <img
+                      className="w-[5vw] h-[29px]"
+                      src={logo}
+                      alt="logo"
                     />
-                    <div className="text-right p-1 mx-2 font-semibold">
-                      Page {currentPage + 1}
-                    </div>
                   </div>
-                  <button
-                    onClick={handleNext}
-                    className={`p-2 mx-2 bg-white text-black rounded-full`}
-                    style={{
-                      visibility:
-                        currentPage === pages.length - 1 ? "hidden" : "visible",
-                    }}
-                    disabled={currentPage === pages.length - 1}
-                  >
-                    <ArrowRight />
-                  </button>
                 </div>
-                <div className="h-[70vh] w-1 bg-neutral-200/40" />
-                <div className="flex flex-col w-full gap-2 "></div>
               </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
-
-      {editDialog ? (
-        <div
-          style={{
-            width: "100%",
-            height: "105%",
-            position: "absolute",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(3px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "3",
-          }}
-        >
-          <div
-            style={{
-              background: "linear-gradient(to right,#0e1118,#008080)",
-              height: "450px",
-              width: "900px",
-              border: "2px solid white",
-              borderRadius: "10px",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <svg
-                onClick={() => setEditDialog(false)}
-                style={{ margin: "20px", cursor: "pointer" }}
-                width="30"
-                height="30"
-                fill="white"
-                stroke="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                  fill-rule="nonzero"
-                />
-              </svg>
-            </div>
-            <div
-              style={{
-                margin: "0px 30px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <h1 style={{ margin: "0", fontSize: "20px" }}>
-                Document Preview
-              </h1>
               <textarea
-                style={{
-                  margin: "20px 0px",
-                  height: "260px",
-                  padding: "10px",
-                  color: "black",
-                }}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
+                className="w-full h-full p-2.5 mb-4 text-black resize-none"
+                value={firstDraft}
+                onChange={(e) => setFirstDraft(e.target.value)}
               />
+             
             </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={handleSave} style={{ borderRadius: "10px" }}>
-                Save
-              </button>
-            </div>
+           
+          </div>
+          <div className="h-[80vh] w-1 bg-neutral-200/40" />
+          <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
+           <div className="flex flex-col w-full gap-2">
+           <img className="" src={logo} alt="logo" />
+            <h1 className="uppercase text-center font-bold">First draft preview</h1>
+           </div>
+            <button className="border border-white rounded-md p-3 justify-end"><Download /> Download</button>
           </div>
         </div>
-      ) : (
-        ""
-      )}
+      </div>
+    </div>
+  </div>
+) : null}
+
+{editDialog ? (
+  <div
+    style={{
+      width: "100%",
+      height: "105%",
+      position: "absolute",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      backdropFilter: "blur(3px)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: "3",
+    }}
+  >
+    <div
+      style={{
+        background: "linear-gradient(to right,#0e1118,#008080)",
+        height: "450px",
+        width: "900px",
+        border: "2px solid white",
+        borderRadius: "10px",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <svg
+          onClick={() => setEditDialog(false)}
+          style={{ margin: "20px", cursor: "pointer" }}
+          width="30"
+          height="30"
+          fill="white"
+          stroke="white"
+          clip-rule="evenodd"
+          fill-rule="evenodd"
+          stroke-linejoin="round"
+          stroke-miterlimit="2"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+            fill-rule="nonzero"
+          />
+        </svg>
+      </div>
+      <div
+        style={{
+          margin: "0px 30px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <h1 style={{ margin: "0", fontSize: "20px" }}>
+          Document Preview
+        </h1>
+        <textarea
+          style={{
+            margin: "20px 0px",
+            height: "260px",
+            padding: "10px",
+            color: "black",
+          }}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <button onClick={handleSave} style={{ borderRadius: "10px" }}>
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+) : null}
+
       {countdownOver ? (
         <div
           style={{

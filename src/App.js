@@ -71,7 +71,7 @@ function App() {
 
   // this should be run only once per application lifetime
   useEffect(() => {
-    store.dispatch(retrieveAuth());
+    // store.dispatch(retrieveAuth());
     store.dispatch(retrieveCourtroomAuth());
   }, []);
 
@@ -119,15 +119,15 @@ function App() {
       children: [
         {
           path: "",
-          element: <CourtroomAiHome />,
+          element: <UploadDoc />,
         },
+        // {
+        //   path: "",
+        //   element: <CourtroomAiHome />,
+        // },
         {
           path: "/courtroom-ai/arguments",
           element: <CourtroomArgument />,
-        },
-        {
-          path: "/courtroom-ai/upload",
-          element: <UploadDoc />,
         },
         {
           path: "/courtroom-ai/verdict",

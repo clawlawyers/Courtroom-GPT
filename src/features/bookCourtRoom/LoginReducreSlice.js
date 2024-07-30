@@ -31,7 +31,7 @@ export const retrieveCourtroomAuth = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: {},
+    user: "",
     caseOverview: "",
   },
   reducers: {
@@ -41,7 +41,7 @@ const userSlice = createSlice({
       localStorage.setItem("courtroom-auth", JSON.stringify(user));
     },
     logout(state) {
-      state.user = {};
+      state.user = "";
       localStorage.removeItem("courtroom-auth");
     },
     setOverview(state, action) {
