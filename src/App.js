@@ -23,6 +23,7 @@ import Contact from "./CourtRoom/ContactUs/Contact.jsx";
 import { retrieveCourtroomAuth } from "./features/bookCourtRoom/LoginReducreSlice.js";
 import FooterBanner from "./FooterBanner/FooterBanner.jsx";
 import ConfirmBooking from "./CourtRoom/BookNow/ConfirmBooking.jsx";
+import NewLayout from "./CourtRoom/CourtroomAi/NewLayout.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -132,6 +133,10 @@ function App() {
         {
           path: "/courtroom-ai/verdict",
           element: <Verdict />,
+        },
+        {
+          path: "/courtroom-ai/layout",
+          element: <NewLayout />,
         },
       ],
     },
