@@ -360,8 +360,8 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 </div>
               </div>
             </section> */}
-            <div className="w-4/5 bg-white py-3 rounded-lg">
-              <div className="slider-container">
+            <div className="w-4/5 bg-white min-h-22 py-3 rounded-lg">
+              <div className="slider-container min-h-20 gap-3">
                 <Slider {...settings}>
                   {scheduledSlots.map((slot, index) => (
                     <div
