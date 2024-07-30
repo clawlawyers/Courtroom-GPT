@@ -449,7 +449,7 @@ const CourtroomArgument = () => {
                     {aiLawyerLoading ? <p>Loading</p> :potentialObjections }
                     
                   </button>
-                  <p>Some text inside the dialog</p>
+                  
                 </div>
               )}
             </div>

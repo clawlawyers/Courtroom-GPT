@@ -293,8 +293,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 <ArrowLeft />
               </div>
               <div
-              className="p-12"
-                ref={scrollContainerRef}
+                className="py-12 overscroll-y-none"
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -302,17 +301,21 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                   alignItems: "center",
                   border: "3px solid teal",
                   backgroundColor: "white",
-                  width: "50vw",
-                  height: "80px",
+                  width: "70vw",
+                  height:"fit-content",
                   borderRadius: "5px",
                   gap: "20px",
-                  overflowX: "auto",
+                  overflowX: "hidden",
+                  
                 }}
               >
+               
+                <div className="flex  flex-row bg-transparent overflow-x-auto gap-3 px-2 overflow-y-hidden"  ref={scrollContainerRef} >
+
                 {scheduledSlots.map((slot, index) => (
                   <div
                     key={index}
-                    className="flex flex-row items-center justify-center p-2 h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5  "
+                    className="flex flex-row items-center text-sm justify-center w-full p-2  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white   "
                   >
                     {new Date(slot.date).toLocaleDateString("en-US", {
                       day: "numeric",
@@ -323,17 +326,19 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                     <button
                       onClick={() => handleRemoveSlot(index)}
                       style={{
+                        position:"relative",
                         top: "0",
                         background: "transparent",
                         border: "none",
                         cursor: "pointer",
                         color: "white",
                       }}
-                    >
+                      >
                       <CloseOutlined />
                     </button>
                   </div>
                 ))}
+                </div>
               </div>
               <div className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2" onClick={scrollRight}>
                 <ArrowRight />
