@@ -213,7 +213,18 @@ const AiSidebar = () => {
   };
 
   useEffect(() => {
-    const getDraft = async () => {
+    const getDraftAndOverview = async () => {
+      const overView = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
+        {
+          user_id: currentUser.userId,
+        }
+      );
+
+      console.log(overView.data.data.case_overview);
+
+      dispatch(setOverview(overView.data.data.case_overview));
+
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
         {
@@ -225,7 +236,9 @@ const AiSidebar = () => {
       setFirstDraft(response.data.data.draft.detailed_draft);
     };
     if (currentUser.userId) {
-      getDraft();
+      getDraftAndOverview();
+
+      console.log(currentUser.userId);
     }
   }, [currentUser.userId]);
 

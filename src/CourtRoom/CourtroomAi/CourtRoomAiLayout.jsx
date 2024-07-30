@@ -20,6 +20,8 @@ const CourtRoomAiLayout = () => {
   //   dispatch(retrieveCourtroomAuth());
   // }, []);
 
+  console.log(currentUser);
+
   if (!currentUser) {
     console.log("rendered");
     navigate("/");
