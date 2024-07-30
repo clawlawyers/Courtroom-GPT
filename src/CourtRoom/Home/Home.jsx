@@ -529,7 +529,8 @@ function Home() {
         </div>
       </div>
 
-      <div style={{ display: "grid", placeItems: "center", marginTop: "80px" }}>
+             
+      <div style={{ display: "grid", placeItems: "center", marginTop: "80px" ,  paddingBottom:"80px", }}>
         <motion.div
           className={Styles.third}
           style={{
@@ -555,6 +556,7 @@ function Home() {
               height: "100%",
               zIndex: 1,
               background: "white",
+
             }}
           />
           <div

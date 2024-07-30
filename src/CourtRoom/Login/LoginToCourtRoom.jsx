@@ -335,7 +335,7 @@ function LoginToCourtRoom() {
       {/* bottom cont */}
       <div
         className="w-full"
-        style={{ display: "grid", placeItems: "center", marginTop: "80px" }}
+        style={{ display: "grid", placeItems: "center", marginTop: "80px" , paddingBottom:"80px" }}
       >
         <motion.div
           className={Styles.third}
