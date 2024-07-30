@@ -128,11 +128,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     const isBooked = bookedDates.includes(formattedDay);
 
     let badgeContent;
-    if (count >= 4) {
-      badgeContent = "🔴"; // Emoji for more than 4 slots
-    } else if (count >= 2) {
-      badgeContent = "🟡"; // Emoji for more than 2 slots
-    }
+    
 
     // Tooltip text
     const tooltipText =
@@ -307,7 +303,6 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                   backgroundColor: "white",
                   width: "50vw",
                   height: "80px",
-                 
                   borderRadius: "5px",
                   gap: "20px",
                   overflowX: "auto",

@@ -168,10 +168,11 @@ const BookNow = () => {
             justifyContent: "center",
             alignItems: "center",
             width: "70%",
+            height:"100%"
           }}
         >
-          <form className={styles.forms} onSubmit={handleSubmit}>
-            <h2>Enter your Details</h2>
+          <form className={`${styles.forms} gap-4 lg:gap-5`} onSubmit={handleSubmit}>
+          <h2 className="font-bold " style={{fontSize: 'clamp(3rem, 2vw, 1.5rem)'}}>Enter your Details</h2>
             <input
               type="text"
               id="name"

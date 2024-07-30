@@ -127,9 +127,7 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
     });
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  
 
   return (
     <Container>
@@ -139,7 +137,7 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
 
         // Get booking count for this hour
         const bookingCount = bookingData[hour] || 0;
-
+       
         return (
           <Button
             key={index}

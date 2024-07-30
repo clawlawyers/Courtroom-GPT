@@ -437,6 +437,7 @@ const CourtroomArgument = () => {
           <div className="w-full flex flex-row-reverse pr-3 items-center h-[200px]  ">
             <div className="relative">
               {/* Existing components */}
+              
               <button
                 className="bg-red-500 text-white w-5 h-5  rounded-full"
                 onClick={isDialogOpen ? closeDialog : openDialog}
@@ -444,8 +445,9 @@ const CourtroomArgument = () => {
 
               {isDialogOpen && (
                 <div className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
-                  <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-black">
-                    {dialogContent}
+                  <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
+                    {aiLawyerLoading ? <p>Loading</p> :potentialObjections }
+                    
                   </button>
                   <p>Some text inside the dialog</p>
                 </div>

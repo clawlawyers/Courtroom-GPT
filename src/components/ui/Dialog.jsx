@@ -55,12 +55,12 @@ const Dialog = ({
 
   // Update inputText when pages change
   useEffect(() => {
-    setInputText(pages.join(''));
+    setInputText(pages.join(""));
   }, [pages]);
 
   const handlePrevious = () => {
     if (currentPage > 0) {
-      setPages(pages => {
+      setPages((pages) => {
         const updatedPages = [...pages];
         updatedPages[currentPage] = currentText;
         return updatedPages;
@@ -72,7 +72,7 @@ const Dialog = ({
 
   const handleNext = () => {
     if (currentPage < pages.length - 1) {
-      setPages(pages => {
+      setPages((pages) => {
         const updatedPages = [...pages];
         updatedPages[currentPage] = currentText;
         return updatedPages;
@@ -170,7 +170,11 @@ const Dialog = ({
                 >
                   <ArrowLeft />
                 </button>
-                <div className={`${isEditing ? "border-4  border-teal-400" : "border-none"} rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}>
+                <div
+                  className={`${
+                    isEditing ? "border-4  border-teal-400" : "border-none"
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                >
                   <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
                       Document Preview
@@ -200,7 +204,8 @@ const Dialog = ({
                   onClick={handleNext}
                   className={`p-2 mx-2 bg-white text-black rounded-full`}
                   style={{
-                    visibility: currentPage === pages.length - 1 ? "hidden" : "visible",
+                    visibility:
+                      currentPage === pages.length - 1 ? "hidden" : "visible",
                   }}
                   disabled={currentPage === pages.length - 1}
                 >
@@ -208,23 +213,25 @@ const Dialog = ({
                 </button>
               </div>
               <div className="h-[70vh] w-1 bg-neutral-200/40" />
-              <div className="flex flex-col w-full gap-2 ">
-                <img src={logo} alt="logo" />
-                <div className="flex flex-col w-full justify-center items-center gap-5">
-                  <div className="w-full flex flex-row gap-10">
+              <div className="flex flex-col w-full h-[70vh] justify-between">
+                <div className="w-full h-fit flex flex-row justify-center items-center">
+                  <img src={logo} className="h-96 w-96" alt="logo" />
+                </div>
+                <div className="flex flex-col w-full justify-center items-center gap-4">
+                  <div className="flex flex-row justify-between gap-2">
                     <Button
-                      className="w-full lowercase border-2 text-sm border-white text-white"
+                      className="lowercase border-2 text-sm border-white text-white"
                       variant="outlined"
                       onClick={onClose} // Modify if needed
                     >
                       Upload a Document
                     </Button>
                     <Button
-                      className="text-white text-sm w-full border-2 border-white"
+                      className="text-white text-sm border-2 border-white"
                       variant="outlined"
                       onClick={handleEditToggle}
                     >
-                      {isEditing ? 'Save Changes' : 'Edit current document'}
+                      {isEditing ? "Save Changes" : "Edit current document"}
                     </Button>
                   </div>
                   <Button
