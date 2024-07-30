@@ -282,6 +282,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
               justifyContent: "center",
               alignItems: "center",
               padding: "60px",
+              flexWrap:"wrap"
             }}
           >
             <h3>Scheduled Slots:</h3>
@@ -311,7 +312,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 {scheduledSlots.map((slot, index) => (
                   <div
                     key={index}
-                    className="flex flex-row items-center justify-center p-2 w-44 h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5  "
+                    className="flex flex-row items-center justify-center p-2 h-max rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white gap-5  "
                   >
                     {new Date(slot.date).toLocaleDateString("en-US", {
                       day: "numeric",

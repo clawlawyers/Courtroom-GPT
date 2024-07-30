@@ -187,7 +187,20 @@ const AiSidebar = () => {
     setEditDialog(false);
   };
   const handleFirstDraft = async () => {
-    setFirstDraftDialog(true);
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        {
+          user_id: currentUser.userId,
+        }
+      );
+
+      console.log("response is ", response.data.data.draft.detailed_draft);
+      setFirstDraft(response.data.data.draft.detailed_draft);
+      setFirstDraftDialog(true);
+    } catch (error) {
+      toast.error("Error in getting first draft");
+    }
   };
 
   const getAiQuestions = async () => {
@@ -213,24 +226,28 @@ const AiSidebar = () => {
   };
 
   useEffect(() => {
-    const getDraft = async () => {
-      const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+    const getOverview = async () => {
+      const overView = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
         {
           user_id: currentUser.userId,
         }
       );
 
-      console.log("response is ", response.data.data.draft.detailed_draft);
-      setFirstDraft(response.data.data.draft.detailed_draft);
+      console.log(overView.data.data.case_overview);
+
+      dispatch(setOverview(overView.data.data.case_overview));
     };
     if (currentUser.userId) {
-      getDraft();
+      getOverview();
+
+      console.log(currentUser.userId);
     }
   }, [currentUser.userId]);
 
   const downloadCaseHistory = async () => {
     try {
+      await saveHistory();
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
         {
@@ -256,6 +273,8 @@ const AiSidebar = () => {
 
   const downloadSessionCaseHistory = async () => {
     try {
+      await saveHistory();
+
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
         {

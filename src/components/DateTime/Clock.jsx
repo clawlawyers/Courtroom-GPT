@@ -30,24 +30,25 @@ const Button = styled.button`
     `}
 
   ${(props) => {
-    if (props.bookingCount >= 3) {
+    if (props.bookingCount === 3) {
       return css`
         background-color: red;
-        
       `;
     } else if (props.bookingCount === 2) {
       return css`
-        background-color: orange;
-        
-
-      `;
-    } else if (props.bookingCount === 1) {
-      return css`
         background-color: yellow;
-        color:black;
-
       `;
-    } else {
+    }
+    else if(props.bookingCount >=4)
+      {
+        return css`
+        opacity:0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+      `;
+      } 
+    
+    else {
       return css`
         background-color: transparent;
       `;
@@ -74,19 +75,17 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
         console.log(response)
         const bookedDatesData = response.data;
         console.log(bookedDatesData);
+
         // Convert server data to a more accessible format
         const dateHourMap = bookedDatesData.reduce((acc, slot) => {
           const date = dayjs(slot._id.date).format("YYYY-MM-DD");
           const hour = slot._id.hour;
-          
+          const bookingCount = slot.bookingCount;  // Assuming slot has bookingCount
+          console.log(date, bookingCount);
           if (!acc[date]) {
             acc[date] = {};
           }
-          if (!acc[date][hour]) {
-            acc[date][hour] = 0;
-          }
-          acc[date][hour] += 1;
-         
+          acc[date][hour] = bookingCount;
           return acc;
         }, {});
 
@@ -106,7 +105,8 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
 
     getBookingDetails();
   }, [storedSelectedDate]);
-  console.log("Booking datat ius",bookingData)
+
+  console.log("Booking data is", bookingData);
 
   const times = Array.from({ length: 24 }, (_, i) => {
     const hour = i < 10 ? `0${i}` : i;
@@ -127,14 +127,12 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
     });
   };
 
-  
-
   return (
     <Container>
       {times.map((time, index) => {
         // Extract hour from time
         const hour = parseInt(time.split(":")[0], 10);
-
+      
         // Get booking count for this hour
         const bookingCount = bookingData[hour] || 0;
        
