@@ -84,6 +84,7 @@ const Dialog = ({
 
   const handleTextChange = (e) => {
     setCurrentText(e.target.value);
+    setInputText(e.target.value);
   };
 
   const handleEditToggle = () => {
@@ -169,7 +170,7 @@ const Dialog = ({
                 >
                   <ArrowLeft />
                 </button>
-                <div className="flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto">
+                <div className={`${isEditing ? "border-4  border-teal-400" : "border-none"} rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}>
                   <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
                       Document Preview
@@ -186,7 +187,7 @@ const Dialog = ({
                     </div>
                   </div>
                   <textarea
-                    className="w-full h-full p-2.5 mb-4 text-black resize-none"
+                    className="w-full h-full p-2.5 mb-4 text-black resize-none border-none"
                     value={currentText}
                     onChange={handleTextChange}
                     readOnly={!isEditing}

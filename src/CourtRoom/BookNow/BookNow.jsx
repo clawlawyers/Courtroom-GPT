@@ -149,6 +149,7 @@ const BookNow = () => {
       <h1
         style={{
           fontWeight: 800,
+          paddingBottom:"40px",
         }}
       >
         Book your Court Room

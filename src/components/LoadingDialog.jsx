@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
+import aiAssistantLoader from "../assets/images/aiAssistantLoading.gif";
 
 const LoadingDialog = () => {
  
@@ -10,12 +11,8 @@ const LoadingDialog = () => {
       <div
         className="bg-gradient-to-r from-[#0e1118] to-[#008080] h-[50vh] w-[50%] border border-white rounded-md p-4 relative"
       >
-        {/* Close Button */}
-      
-
-        {/* Dialog Content */}
         <div className="flex flex-col h-full w-full justify-center items-center">
-          <CircularProgress  />
+          <img src={aiAssistantLoader} alt="loader" />
         </div>
       </div>
     </div>
