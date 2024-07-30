@@ -13,6 +13,7 @@ import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducre
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
