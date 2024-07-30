@@ -18,3 +18,12 @@ export const splitContentIntoPages = (text, maxWordsPerPage) => {
 
   return pages;
 };
+export function MultipleItems() {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3
+  };
+}
