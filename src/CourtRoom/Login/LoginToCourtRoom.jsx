@@ -15,11 +15,15 @@ import { useSelector } from "react-redux";
 
 function LoginToCourtRoom() {
   const currentUser = useSelector((state) => state.user.user);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
 
-  if (currentUser) {
+  if (currentUser && caseOverView === "") {
     navigate("/courtroom-ai");
+  } else if (currentUser && caseOverView !== "") {
+    navigate("/courtroom-ai/arguments");
   }
+
   const [isHovered, setIsHovered] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [errorState, setErrorState] = useState(false);
