@@ -23,13 +23,20 @@ const CourtRoomAiLayout = () => {
 
   console.log(currentUser);
 
-  if (!currentUser) {
-    console.log("rendered");
+  // useEffect(() => {
+  if (currentUser === "") {
     navigate("/");
   }
+  // }, [currentUser]);
+
+  useEffect(() => {
+    if (caseOverView !== "") {
+      navigate("/courtroom-ai/arguments");
+    }
+  }, [caseOverView]);
 
   const [showSplash, setShowSplash] = useState(true);
-  
+
   const [videoStarted, setVideoStarted] = useState(false);
 
   // useEffect(() => {
@@ -79,7 +86,12 @@ const CourtRoomAiLayout = () => {
           {!videoStarted && (
             <div className="z-2 flex flex-col gap-10 mt-5 w-full h-screen justify-center items-center">
               <img className="h-max w-max" src={LogoSplash} alt="" />
-              <button className="hover:scale-110 delay-500 animate shadow-lg shadow-neutral-800 p-2 bg-gradient-to-r from-teal-800 to-teal-400 border-white rounded-md" onClick={handleEnterCourtroom}>Enter Courtroom</button>
+              <button
+                className="hover:scale-110 delay-500 animate shadow-lg shadow-neutral-800 p-2 bg-gradient-to-r from-teal-800 to-teal-400 border-white rounded-md"
+                onClick={handleEnterCourtroom}
+              >
+                Enter Courtroom
+              </button>
             </div>
           )}
           {videoStarted && (

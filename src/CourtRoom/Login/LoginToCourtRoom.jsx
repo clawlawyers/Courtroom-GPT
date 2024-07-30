@@ -13,6 +13,26 @@ import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
+const TimerComponent = React.memo(() => {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [currentTime]);
+
+  return (
+    <h1 style={{ fontSize: "20px" }}>
+      {currentTime.getHours()}:{currentTime.getMinutes()}:
+      {currentTime.getSeconds()}
+    </h1>
+  );
+});
+
 function LoginToCourtRoom() {
   const currentUser = useSelector((state) => state.user.user);
   const caseOverView = useSelector((state) => state.user.caseOverview);
@@ -30,20 +50,10 @@ function LoginToCourtRoom() {
   const [errorData, setErrorData] = useState([]);
   const [phone, setPhone] = useState(null);
   const [password, setPassword] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
   // const currentUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
   const loginTime = new Date().toISOString();
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [currentTime]);
-  // const currentTime = new Date();
 
   // Import the action creator from the slice
 
@@ -222,10 +232,11 @@ function LoginToCourtRoom() {
                 >
                   <div style={{ display: "flex", fontSize: "5px" }}>
                     <h1 style={{ fontSize: "20px" }}>Current Time:</h1>
-                    <h1 style={{ fontSize: "20px" }}>
+                    {/* <h1 style={{ fontSize: "20px" }}>
                       {currentTime.getHours()}:{currentTime.getMinutes()}:
                       {currentTime.getSeconds()}
-                    </h1>
+                    </h1> */}
+                    <TimerComponent />
                   </div>
                   {/* <Link to={"/courtroom-ai"}> */}
                   <motion.button
@@ -335,7 +346,12 @@ function LoginToCourtRoom() {
       {/* bottom cont */}
       <div
         className="w-full"
-        style={{ display: "grid", placeItems: "center", marginTop: "80px" , paddingBottom:"80px" }}
+        style={{
+          display: "grid",
+          placeItems: "center",
+          marginTop: "80px",
+          paddingBottom: "80px",
+        }}
       >
         <motion.div
           className={Styles.third}

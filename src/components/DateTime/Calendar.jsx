@@ -16,6 +16,10 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { ArrowLeft, ArrowRight, CloseOutlined } from "@mui/icons-material";
 
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const Container = styled.div`
   padding: 15px;
   display: flex;
@@ -128,7 +132,6 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     const isBooked = bookedDates.includes(formattedDay);
 
     let badgeContent;
-    
 
     // Tooltip text
     const tooltipText =
@@ -202,7 +205,14 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     }
   };
 
-
+  const settings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    className: "px-2",
+  };
   return (
     <main className="flex w-full flex-col justify-center items-center gap-[70px]">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -282,70 +292,106 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
               justifyContent: "center",
               alignItems: "center",
               padding: "60px",
-              flexWrap:"wrap"
+              flexWrap: "wrap",
             }}
           >
-            <h3>Scheduled Slots:</h3>
-            <section className="flex flex-col justify-center items-center">
-            
-            <div className="bg-transparent w-full flex flex-row items-center justify-center gap-4">
-              <div className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2" onClick={scrollLeft}>
-                <ArrowLeft />
-              </div>
-              <div
-                className="py-12 overscroll-y-none"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  border: "3px solid teal",
-                  backgroundColor: "white",
-                  width: "70vw",
-                  height:"fit-content",
-                  borderRadius: "5px",
-                  gap: "20px",
-                  overflowX: "hidden",
-                  
-                }}
-              >
-               
-                <div className="flex  flex-row bg-transparent overflow-x-auto gap-3 px-2 overflow-y-hidden"  ref={scrollContainerRef} >
-
-                {scheduledSlots.map((slot, index) => (
+            <h3 className="mb-5">Scheduled Slots:</h3>
+            {/* <section className="flex flex-col justify-center items-center">
+              <div className="bg-transparent w-full flex flex-row items-center justify-center gap-4">
+                <div
+                  className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2"
+                  onClick={scrollLeft}
+                >
+                  <ArrowLeft />
+                </div>
+                <div
+                  className="py-12 overscroll-y-none"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    border: "3px solid teal",
+                    backgroundColor: "white",
+                    width: "70vw",
+                    height: "fit-content",
+                    borderRadius: "5px",
+                    gap: "20px",
+                    overflowX: "hidden",
+                  }}
+                >
                   <div
-                    key={index}
-                    className="flex flex-row items-center text-sm justify-center w-full p-2  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white   "
+                    className="flex  flex-row bg-transparent overflow-x-auto gap-3 px-2 overflow-y-hidden"
+                    ref={scrollContainerRef}
                   >
-                    {new Date(slot.date).toLocaleDateString("en-US", {
-                      day: "numeric",
-                      month: "long",
-                    })}
-                    {","}
-                    {slot.time}
-                    <button
-                      onClick={() => handleRemoveSlot(index)}
-                      style={{
-                        position:"relative",
-                        top: "0",
-                        background: "transparent",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "white",
-                      }}
-                      >
-                      <CloseOutlined />
-                    </button>
+                        {scheduledSlots.map((slot, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-row items-center text-sm justify-center w-full p-2  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white   "
+                          >
+                            {new Date(slot.date).toLocaleDateString("en-US", {
+                              day: "numeric",
+                              month: "long",
+                            })}
+                            {","}
+                            {slot.time}
+                            <button
+                              onClick={() => handleRemoveSlot(index)}
+                              style={{
+                                position: "relative",
+                                top: "0",
+                                background: "transparent",
+                                border: "none",
+                                cursor: "pointer",
+                                color: "white",
+                              }}
+                            >
+                              <CloseOutlined />
+                            </button>
+                          </div>
+                        ))}
                   </div>
-                ))}
+                </div>
+                <div
+                  className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2"
+                  onClick={scrollRight}
+                >
+                  <ArrowRight />
                 </div>
               </div>
-              <div className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2" onClick={scrollRight}>
-                <ArrowRight />
+            </section> */}
+            <div className="w-4/5 bg-white py-3 rounded-lg">
+              <div className="slider-container">
+                <Slider {...settings}>
+                  {scheduledSlots.map((slot, index) => (
+                    <div
+                      key={index}
+                      className="max-w-fit flex flex-row items-center text-sm justify-center p-3  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white"
+                    >
+                      {new Date(slot.date).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "long",
+                      })}
+                      {","}
+                      {slot.time}
+                      <button
+                        onClick={() => handleRemoveSlot(index)}
+                        style={{
+                          position: "relative",
+                          top: "0",
+                          background: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          color: "white",
+                        }}
+                      >
+                        <CloseOutlined />
+                      </button>
+                    </div>
+                  ))}
+                </Slider>
               </div>
             </div>
-            
-          </section>
           </div>
         </div>
       </LocalizationProvider>
