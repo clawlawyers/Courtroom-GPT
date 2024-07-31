@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import courtroomContact from "../../assets/images/courtroomContact.gif";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
 
 const Contact = () => {
   const [firstName, setFirstName] = useState("");
@@ -11,8 +13,54 @@ const Contact = () => {
   const [query, setQuery] = useState("");
   const [contactMode, setContactMode] = useState("");
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+
+    // Prepare the data to send
+    const data = {
+      firstName,
+      lastName,
+      email,
+      phoneNumber: phone,
+      preferredContactMode: contactMode,
+      businessName: business,
+      query,
+    };
+
+    try {
+      // Make the API request
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/add/ContactUsQuery`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        // Handle successful response
+        const result = await response.json();
+        toast.success("Your message has been sent successfully!");
+        // Reset the form
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhone("");
+        setBusiness("");
+        setQuery("");
+        setContactMode("");
+      } else {
+        // Handle server errors
+        const result = await response.json();
+        toast.error(result.message || "Failed to send the message.");
+      }
+    } catch (error) {
+      // Handle network or other errors
+      toast.error("An error occurred while sending your message.");
+    }
   };
 
   return (
