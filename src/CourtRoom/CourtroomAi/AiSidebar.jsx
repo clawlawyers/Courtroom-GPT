@@ -21,7 +21,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import countDown from "../../assets/images/countdown.gif";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
-
+import loader from "../../assets/images/aiAssistantLoading.gif";
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
 
@@ -135,6 +135,7 @@ const AiSidebar = () => {
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
+  const [firstDraftLoading, setFirsDraftLoading] = useState(false);
   const [text, setText] = useState("");
   const [aiIconHover, setAiIconHover] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
@@ -142,7 +143,7 @@ const AiSidebar = () => {
   const [AiQuestions, setAiQuestions] = useState(null);
   const [aiAssistantLoading, setAiAssistantLoading] = useState(true);
   const [slotIntervalTimer, setSlotIntervalTimer] = useState(null);
-
+  const [downloadCaseLoading , setDownloadCaseLoading] = useState(false);
   useEffect(() => {
     setText(overViewDetails);
     setSlotIntervalTimer(slotTimeInterval);
@@ -187,6 +188,9 @@ const AiSidebar = () => {
     setEditDialog(false);
   };
   const handleFirstDraft = async () => {
+    setFirsDraftLoading(true);
+    setFirstDraftDialog(true);
+
     try {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -197,9 +201,10 @@ const AiSidebar = () => {
 
       console.log("response is ", response.data.data.draft.detailed_draft);
       setFirstDraft(response.data.data.draft.detailed_draft);
-      setFirstDraftDialog(true);
     } catch (error) {
       toast.error("Error in getting first draft");
+    } finally {
+      setFirsDraftLoading(false);
     }
   };
 
@@ -246,6 +251,7 @@ const AiSidebar = () => {
   }, [currentUser.userId]);
 
   const downloadCaseHistory = async () => {
+    setDownloadCaseLoading(true);
     try {
       await saveHistory();
       const response = await axios.post(
@@ -268,6 +274,9 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error downloading case history:", error);
       toast.error("Error downloading case history");
+    }
+    finally{
+      setDownloadCaseLoading(false);
     }
   };
 
@@ -295,11 +304,40 @@ const AiSidebar = () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
   };
 
   const handleGoBack = () => {
     navigate(-1);
+  };
+
+  const dowloadFirstDraft = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        {
+          user_id: currentUser.userId,
+          data: firstDraft,
+        },
+        {
+          responseType: "blob", // Important
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `draft${currentUser.userId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
   };
 
   return (
@@ -391,6 +429,7 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
+            
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -402,8 +441,10 @@ const AiSidebar = () => {
                 color: "#008080",
                 border: "2px solid white",
                 borderRadius: "5px",
-                cursor: "pointer",
+                cursor: `${downloadCaseLoading ? "wait" : "pointer"}`,
+                
               }}
+              
             >
               <div>
                 <h1
@@ -680,79 +721,90 @@ const AiSidebar = () => {
             backdropFilter: "blur(3px)",
             display: "flex",
             justifyContent: "center",
-            alignItems: "start",
+            alignItems: "center",
             zIndex: "3",
             paddingTop: "30px",
           }}
         >
-          <div
-            className="h-fit w-2/3 rounded-md border-2 border-white"
-            style={{
-              background: "linear-gradient(to right,#0e1118,#008080)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <svg
-                onClick={() => setFirstDraftDialog(false)}
-                style={{ margin: "20px", cursor: "pointer" }}
-                width="30"
-                height="30"
-                fill="white"
-                stroke="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                  fill-rule="nonzero"
-                />
-              </svg>
+          {firstDraftLoading ? (
+            <div
+              className="border-2 border-white rounded-lg w-2/6 h-fit p-2 flex flex-row justify-center items-center"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+              }}
+            >
+              <img className="h-1/2 w-1/2" src={loader} alt="loader" />
             </div>
-            <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-              <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
-                <div className="flex h-full  flex-row justify-center w-full items-center">
-                  <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
-                    <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
-                      <p className="uppercase font-bold my-2 w-full ">
-                        First Draft Preview
-                      </p>
-                      <div className="flex flex-row w-full items-center">
-                        <div className="h-1 bg-neutral-900 w-2/3" />
-                        <div className="bg-neutral-900 rounded-md">
-                          <img
-                            className="w-[5vw] h-[29px]"
-                            src={logo}
-                            alt="logo"
-                          />
+          ) : (
+            <div
+              className="h-fit w-2/3 rounded-md border-2 border-white"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <svg
+                  onClick={() => setFirstDraftDialog(false)}
+                  style={{ margin: "20px", cursor: "pointer" }}
+                  width="30"
+                  height="30"
+                  fill="white"
+                  stroke="white"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+              </div>
+              <div className="m-0 h-2/3 flex flex-column justify-center items-center">
+                <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
+                  <div className="flex h-full  flex-row justify-center w-full items-center">
+                    <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
+                      <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
+                        <p className="uppercase font-bold my-2 w-full ">
+                          First Draft Preview
+                        </p>
+                        <div className="flex flex-row w-full items-center">
+                          <div className="h-1 bg-neutral-900 w-2/3" />
+                          <div className="bg-neutral-900 rounded-md">
+                            <img
+                              className="w-[5vw] h-[29px]"
+                              src={logo}
+                              alt="logo"
+                            />
+                          </div>
                         </div>
                       </div>
+                      <textarea
+                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
+                        value={firstDraft}
+                        onChange={(e) => setFirstDraft(e.target.value)}
+                      />
                     </div>
-                    <textarea
-                      className="w-full h-full p-2.5 mb-4 text-black resize-none"
-                      value={firstDraft}
-                      onChange={(e) => setFirstDraft(e.target.value)}
-                    />
                   </div>
-                </div>
-                <div className="h-[80vh] w-1 bg-neutral-200/40" />
-                <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
-                  <div className="flex flex-col w-full gap-2">
-                    <img className="" src={logo} alt="logo" />
-                    <h1 className="uppercase text-center font-bold">
-                      First draft preview
-                    </h1>
+                  <div className="h-[80vh] w-1 bg-neutral-200/40" />
+                  <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
+                    <div className="flex flex-col w-full gap-2">
+                      <img className="" src={logo} alt="logo" />
+                      <h1 className="uppercase text-center font-bold">
+                        First draft preview
+                      </h1>
+                    </div>
+                    <button onClick={()=> dowloadFirstDraft()} className="border border-white rounded-md p-3 justify-end">
+                      <Download /> Download
+                    </button>
                   </div>
-                  <button className="border border-white rounded-md p-3 justify-end">
-                    <Download /> Download
-                  </button>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       ) : null}
 
@@ -801,9 +853,11 @@ const AiSidebar = () => {
             <div className="m-0 h-2/3 flex flex-column justify-center items-center">
               <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
                 <div className="flex h-full  flex-row justify-center w-full items-center">
-                  <div  className={`${
-                    isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}>
+                  <div
+                    className={`${
+                      isEditing ? "border-4  border-teal-400" : "border-none"
+                    } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                  >
                     <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                       <p className="uppercase font-bold my-2 w-full ">
                         Edit Your Document
@@ -831,7 +885,10 @@ const AiSidebar = () => {
                 <div className="flex flex-col justify-between h-[80vh] py-20  w-full gap-4 ">
                   <div className="flex flex-col w-full gap-4">
                     <img className="" src={logo} alt="logo" />
-                    <h1 className="uppercase text-center font-bold text-4xl"> Edit Your Document</h1>
+                    <h1 className="uppercase text-center font-bold text-4xl">
+                      {" "}
+                      Edit Your Document
+                    </h1>
                   </div>
                   <div className="flex flex-col w-full  justify-between">
                     <div className="flex flex-col w-full justify-center items-center gap-4">
@@ -851,7 +908,6 @@ const AiSidebar = () => {
                           {isEditing ? "Save Changes" : "Edit current document"}
                         </Button>
                       </div>
-                      
                     </div>
                   </div>
                 </div>
