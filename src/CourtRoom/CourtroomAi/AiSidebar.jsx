@@ -685,44 +685,49 @@ const AiSidebar = () => {
             backdropFilter: "blur(3px)",
             display: "flex",
             justifyContent: "center",
-            alignItems: "start",
+            alignItems: "center",
             zIndex: "3",
             paddingTop: "30px",
           }}
         >
-          <div
-            className="h-fit w-2/3 rounded-md border-2 border-white"
-            style={{
-              background: "linear-gradient(to right,#0e1118,#008080)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <svg
-                onClick={() => setFirstDraftDialog(false)}
-                style={{ margin: "20px", cursor: "pointer" }}
-                width="30"
-                height="30"
-                fill="white"
-                stroke="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                  fill-rule="nonzero"
-                />
-              </svg>
+          {firstDraftLoading ? (
+            <div
+              className="border-2 border-white rounded-lg w-2/6 h-fit p-2 flex flex-row justify-center items-center"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+              }}
+            >
+              <img className="h-1/2 w-1/2" src={loader} alt="loader" />
             </div>
-            <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-              {firstDraftLoading ? (
-                <div className="flex h-full px-5 pb-5 flex-row justify-center items-center w-1/2 pb-5 ">
-                  <img src={loader} alt="loader" />
-                  </div>
-              ) : (
+          ) : (
+            <div
+              className="h-fit w-2/3 rounded-md border-2 border-white"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <svg
+                  onClick={() => setFirstDraftDialog(false)}
+                  style={{ margin: "20px", cursor: "pointer" }}
+                  width="30"
+                  height="30"
+                  fill="white"
+                  stroke="white"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+              </div>
+              <div className="m-0 h-2/3 flex flex-column justify-center items-center">
                 <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
                   <div className="flex h-full  flex-row justify-center w-full items-center">
                     <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
@@ -742,7 +747,7 @@ const AiSidebar = () => {
                         </div>
                       </div>
                       <textarea
-                        className="w-full h-full p-2.5 mb-4 text-black resize-none"
+                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
                         value={firstDraft}
                         onChange={(e) => setFirstDraft(e.target.value)}
                       />
@@ -761,9 +766,9 @@ const AiSidebar = () => {
                     </button>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : null}
 
