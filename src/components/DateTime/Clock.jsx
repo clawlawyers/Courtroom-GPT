@@ -22,6 +22,7 @@ const Button = styled.button`
   cursor: pointer;
   margin-bottom: 10px;
   text-align: left;
+  
 
   ${(props) =>
     props.isSelected &&

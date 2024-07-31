@@ -7,8 +7,11 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useDispatch } from 'react-redux';
+import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
 
 const BookNow = () => {
+  const dispatch = useDispatch();
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const [loading, setLoading] = useState(false);
   const [scheduledSlots, setScheduledSlots] = useState([]);
@@ -68,7 +71,9 @@ const BookNow = () => {
       }
     );
     if (respos.data.data.data === "Slot can be book") {
-      loadRazorpay(bookingData);
+      dispatch(setBookingData(bookingData));
+      navigate("/confirm-booking");
+      // loadRazorpay(bookingData);
     } else {
       setErrorState(true);
       setErrorData("same number or email not allowed at same time slot");
