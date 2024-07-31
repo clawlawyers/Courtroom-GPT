@@ -4,6 +4,9 @@ import feature1 from "../../assets/images/image 2.png";
 import feature2 from "../../assets/images/image 3.png";
 import feature3 from "../../assets/images/image 4.png";
 import laptop from "../../assets/images/image 1.png";
+import submitCase from "../../assets/images/submitCase.png";
+import argumentDraft from "../../assets/images/argumentDraft.png";
+import frameCase from "../../assets/images/frameCase.png";
 import plus from "../../assets/images/Group 53.png";
 import Styles from "./CourtRoomHome.module.css";
 import arrw from "../../assets/images/Vector 1.png";
@@ -276,7 +279,7 @@ function Home() {
         <div style={{ display: "grid", placeItems: "center" }}>
           <div style={{ height: "400px" }}>
             <img
-              alt="courtRoom Preiview"
+              alt="courtRoom Preview"
               src={laptop}
               style={{ borderRadius: 0, width: "100%", height: "100%" }}
             />
@@ -357,7 +360,7 @@ function Home() {
             <div style={{ height: "400px", width: "max-content" }}>
               <img
                 alt="courtRoom Preiview"
-                src={laptop}
+                src={submitCase}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
             </div>
@@ -375,7 +378,7 @@ function Home() {
             <div style={{ height: "400px", width: "max-content" }}>
               <img
                 alt="courtRoom Preiview"
-                src={laptop}
+                src={argumentDraft}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
             </div>
@@ -450,7 +453,7 @@ function Home() {
             <div style={{ height: "400px", width: "max-content" }}>
               <img
                 alt="courtRoom Preiview"
-                src={laptop}
+                src={frameCase}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
             </div>
