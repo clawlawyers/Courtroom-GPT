@@ -295,7 +295,36 @@ const AiSidebar = () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
+  };
+
+  const dowloadFirstDraft = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        {
+          user_id: currentUser.userId,
+          data: firstDraft,
+        },
+        {
+          responseType: "blob", // Important
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `draft${currentUser.userId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
   };
 
   const handleGoBack = () => {
@@ -746,7 +775,10 @@ const AiSidebar = () => {
                       First draft preview
                     </h1>
                   </div>
-                  <button className="border border-white rounded-md p-3 justify-end">
+                  <button
+                    className="border border-white rounded-md p-3 justify-end"
+                    onClick={() => dowloadFirstDraft()}
+                  >
                     <Download /> Download
                   </button>
                 </div>
@@ -801,9 +833,11 @@ const AiSidebar = () => {
             <div className="m-0 h-2/3 flex flex-column justify-center items-center">
               <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
                 <div className="flex h-full  flex-row justify-center w-full items-center">
-                  <div  className={`${
-                    isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}>
+                  <div
+                    className={`${
+                      isEditing ? "border-4  border-teal-400" : "border-none"
+                    } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                  >
                     <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                       <p className="uppercase font-bold my-2 w-full ">
                         Edit Your Document
@@ -831,7 +865,10 @@ const AiSidebar = () => {
                 <div className="flex flex-col justify-between h-[80vh] py-20  w-full gap-4 ">
                   <div className="flex flex-col w-full gap-4">
                     <img className="" src={logo} alt="logo" />
-                    <h1 className="uppercase text-center font-bold text-4xl"> Edit Your Document</h1>
+                    <h1 className="uppercase text-center font-bold text-4xl">
+                      {" "}
+                      Edit Your Document
+                    </h1>
                   </div>
                   <div className="flex flex-col w-full  justify-between">
                     <div className="flex flex-col w-full justify-center items-center gap-4">
@@ -851,7 +888,6 @@ const AiSidebar = () => {
                           {isEditing ? "Save Changes" : "Edit current document"}
                         </Button>
                       </div>
-                      
                     </div>
                   </div>
                 </div>
