@@ -134,10 +134,10 @@ function App() {
           path: "/courtroom-ai/verdict",
           element: <Verdict />,
         },
-        {
-          path: "/courtroom-ai/layout",
-          element: <NewLayout />,
-        },
+        // {
+        //   path: "/courtroom-ai/verdict",
+        //   element: <NewLayout />,
+        // },
       ],
     },
     {

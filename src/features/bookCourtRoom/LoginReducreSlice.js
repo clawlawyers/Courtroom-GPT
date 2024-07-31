@@ -32,7 +32,7 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: "",
-    caseOverview: "",
+    caseOverview: "NA",
   },
   reducers: {
     login(state, action) {

@@ -31,7 +31,6 @@ import Markdown from "react-markdown";
 // ];
 
 const CourtroomArgument = () => {
-
   const navigate = useNavigate();
 
   const [dialogContent, setDialogContent] = useState(
@@ -53,6 +52,7 @@ const CourtroomArgument = () => {
 
   const currentUser = useSelector((state) => state.user.user);
   const lastItemRef = useRef(null);
+  const editItemRef = useRef(null);
 
   const dialogRef = useRef(null);
 
@@ -276,177 +276,163 @@ const CourtroomArgument = () => {
   useEffect(() => {
     if (lastItemRef.current) {
       lastItemRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    } else if (editItemRef.current) {
+      editItemRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [userArgument]);
+
+  useEffect(() => {
+    if (editItemRef.current) {
+      editItemRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, [userArgument]);
 
   return (
-    <div className="flex flex-col justify-between h-full">
-      <div className="flex flex-col">
-        {/* top container */}
-        <div className="grid grid-cols-2">
-          {/* topContainer */}
-          {/* <div className="grid grid-cols-2 p-2"> */}
-          {/* top left Cont */}
-          {aiJudgeLoading ? (
+    <div className="flex flex-col p-3 h-screen gap-2">
+      {/* top container */}
+      <div className="grid grid-cols-2 h-[35vh] gap-2">
+        {/* top left Cont */}
+        {aiJudgeLoading ? (
+          <div
+            className="bg-[#033E40] overflow-auto border border-black"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "10px",
+            }}
+          >
+            <img alt="laoding" src={loader} className="w-28 h-28" />
+          </div>
+        ) : (
+          <div
+            className="bg-[#033E40] overflow-auto border border-black"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: "10px",
+            }}
+          >
+            <div className="px-3 pt-2 flex gap-2">
+              <img
+                style={{ width: "25px", height: "25px" }}
+                src={aiJudge}
+                alt="judge-icon"
+              />
+              <h1 style={{ fontSize: "20px", margin: "0" }}>AI Judge</h1>
+            </div>
             <div
-              className="bg-[#033E40] h-[300px]"
+              className="flex-1"
+              style={{
+                margin: "10px",
+                overflow: "auto",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "15px",
+                  lineHeight: "20px",
+                  wordSpacing: "4px",
+                  padding: "0px 10px",
+                }}
+              >
+                <Markdown>{judgeArgument}</Markdown>
+              </p>
+            </div>
+          </div>
+        )}
+        {/* top right cont */}
+        {aiLawyerLoading ? (
+          <div
+            className="bg-[#033E40] overflow-auto border border-black"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "10px",
+            }}
+          >
+            <img alt="laoding" src={loader} className="w-28 h-28" />
+          </div>
+        ) : (
+          <div className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black">
+            <div
+              className="h-[5vh]"
+              style={{ padding: "10px", display: "flex", gap: "10px" }}
+            >
+              <img
+                style={{ width: "25px", height: "25px" }}
+                src={aiLawyer}
+                alt="judge-icon"
+              />
+              <h1 style={{ fontSize: "20px", margin: "0" }}>AI Lawyer</h1>
+            </div>
+            <div
+              className="flex-1 overflow-auto"
+              style={{
+                margin: "15px",
+                overflow: "hidden",
+                overflowY: "scroll",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "15px",
+                  lineHeight: "20px",
+                  wordSpacing: "4px",
+                  padding: "0px 10px",
+                }}
+              >
+                <Markdown>{lawyerArgument}</Markdown>
+              </p>
+            </div>
+            <motion.div
+              className="h-[5vh]"
+              onClick={handleSwap}
+              whileTap={{ scale: "0.98" }}
               style={{
                 display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
+                justifyContent: "flex-end",
                 alignItems: "center",
-                margin: "5px",
-                borderRadius: "10px",
+                cursor: "pointer",
               }}
             >
-              <img alt="laoding" src={loader} className="w-28 h-28" />
-            </div>
-          ) : (
-            <div
-              className="bg-[#033E40] h-[300px]"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                margin: "5px",
-                borderRadius: "10px",
-              }}
-            >
-              <div
-                className=""
-                style={{ padding: "10px", display: "flex", gap: "10px" }}
+              <svg
+                width="20"
+                height="20"
+                stroke="white"
+                fill="white"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <img
-                  style={{ width: "25px", height: "25px" }}
-                  src={aiJudge}
-                  alt="judge-icon"
+                <path
+                  d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
+                  fill-rule="nonzero"
                 />
-                <h1 style={{ fontSize: "20px", margin: "0" }}>AI Judge</h1>
-              </div>
-              <div
-                className="h-full"
-                style={{
-                  margin: "15px",
-                  overflow: "hidden",
-                  overflowY: "scroll",
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: "15px",
-                    lineHeight: "20px",
-                    wordSpacing: "4px",
-                    padding: "0px 10px",
-                  }}
-                >
-                  <Markdown>{judgeArgument}</Markdown>
-                </p>
-              </div>
-            </div>
-          )}
-          {/* top right cont */}
-          {aiLawyerLoading ? (
-            <div
-              className="bg-[#033E40] h-[300px]"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                margin: "5px",
-                borderRadius: "10px",
-              }}
-            >
-              <img alt="laoding" src={loader} className="w-28 h-28" />
-            </div>
-          ) : (
-            <div
-              className="h-[300px]"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                background: "#033E40",
-                margin: "5px",
-                borderRadius: "10px",
-              }}
-            >
-              <div
-                className=""
-                style={{ padding: "10px", display: "flex", gap: "10px" }}
-              >
-                <img
-                  style={{ width: "25px", height: "25px" }}
-                  src={aiLawyer}
-                  alt="judge-icon"
-                />
-                <h1 style={{ fontSize: "20px", margin: "0" }}>AI Lawyer</h1>
-              </div>
-              <div
-                className="h-full"
-                style={{
-                  margin: "15px",
-                  overflow: "hidden",
-                  overflowY: "scroll",
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: "15px",
-                    lineHeight: "20px",
-                    wordSpacing: "4px",
-                    padding: "0px 10px",
-                  }}
-                >
-                  <Markdown>{lawyerArgument}</Markdown>
-                </p>
-              </div>
-              <motion.div
-                className="py-2"
-                onClick={handleSwap}
-                whileTap={{ scale: "0.98" }}
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  stroke="white"
-                  fill="white"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-                <h1 style={{ margin: "5px", fontSize: "15px" }}>
-                  Swap with AI Lawyer
-                </h1>
-              </motion.div>
-            </div>
-          )}
-          {/* </div> */}
-        </div>
-        {/* mid container */}
-        <div
-          className="m-2 flex-1"
-          style={{
-            background: "#033E40",
-            // margin: "0px 15px",
-            borderRadius: "10px",
-
-            //   overflow: "scroll",
-          }}
-        >
-          <div style={{ padding: "10px", display: "flex", gap: "10px" }}>
+              </svg>
+              <h1 style={{ margin: "5px", fontSize: "15px" }}>
+                Swap with AI Lawyer
+              </h1>
+            </motion.div>
+          </div>
+        )}
+      </div>
+      {/* mid container */}
+      <div
+        className="flex-1 overflow-auto border border-black"
+        style={{
+          background: "#033E40",
+          borderRadius: "10px",
+        }}
+      >
+        <div className="flex flex-col">
+          <div className="p-3 flex gap-2">
             <img
               style={{ width: "25px", height: "25px" }}
               src={userIcon}
@@ -454,62 +440,63 @@ const CourtroomArgument = () => {
             />
             <h1 style={{ fontSize: "20px", margin: "0" }}>User Argument</h1>
           </div>
+          <div className="flex-1 overflow-auto">
+            <div className="w-full flex flex-row-reverse pr-3 items-center">
+              <div className="relative">
+                {/* Existing components */}
 
-          <div className="w-full flex flex-row-reverse pr-3 items-center h-[200px]  ">
-            <div className="relative">
-              {/* Existing components */}
-              
-              <button
-                className="bg-red-500 text-white w-5 h-5  rounded-full"
-                onClick={isDialogOpen ? closeDialog : openDialog}
-              ></button>
+                <button
+                  className="bg-red-500 text-white w-5 h-5  rounded-full"
+                  onClick={isDialogOpen ? closeDialog : openDialog}
+                ></button>
 
-              {isDialogOpen && (
-                <div ref={dialogRef} className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
-                  <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
-                    {aiLawyerLoading ? <p>Loading</p> :potentialObjections }
-                    
-                  </button>
-                  
-                </div>
-              )}
-            </div>
-            <div
-              className="h-[200px]"
-              style={{
-                width: "100%",
-                margin: "10px",
-                overflow: "hidden",
-                overflowY: "scroll",
-              }}
-            >
-              {userArgument.map((x, index) => (
-                <div
-                  onClick={() => {
-                    handleArgumentSelect(index, x);
-                  }}
-                  key={index}
-                  ref={index === userArgument.length - 1 ? lastItemRef : null}
-                  style={{
-                    width: "99%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    pointerEvents: "all",
-                    border:
-                      selectedUserArgument === index
-                        ? "1px solid #00ffa3"
-                        : "1px solid white",
-                    borderRadius: "10px",
-                    padding: "5px",
-                    margin: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <div className="flex items-center w-full pointer-events-auto">
-                    {editIndex === index ? (
-                      <div className="w-full">
+                {isDialogOpen && (
+                  <div
+                    ref={dialogRef}
+                    className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg"
+                  >
+                    <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
+                      {aiLawyerLoading ? <p>Loading</p> : potentialObjections}
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div
+                className=""
+                style={{
+                  width: "100%",
+                  margin: "10px",
+                  overflow: "hidden",
+                  overflow: "auto",
+                }}
+              >
+                {userArgument.map((x, index) => (
+                  <div
+                    onClick={() => {
+                      handleArgumentSelect(index, x);
+                    }}
+                    key={index}
+                    ref={index === userArgument.length - 1 ? lastItemRef : null}
+                    style={{
+                      width: "99%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      pointerEvents: "all",
+                      border:
+                        selectedUserArgument === index
+                          ? "1px solid #00ffa3"
+                          : "1px solid white",
+                      borderRadius: "10px",
+                      padding: "5px",
+                      margin: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div className="flex items-center w-full pointer-events-auto">
+                      {editIndex === index ? (
                         <textarea
+                          ref={index === editIndex ? editItemRef : null}
                           className="text-black"
                           style={{
                             margin: "0",
@@ -518,135 +505,132 @@ const CourtroomArgument = () => {
                             borderRadius: "10px",
                             width: "100%",
                             lineHeight: "20px",
-
                             wordSpacing: "4px",
                           }}
                           value={editValue}
                           onClick={(e) => e.stopPropagation()}
                           onChange={handleEditArgumentText}
                         />
-                      </div>
-                    ) : (
-                      <p
-                        style={{
-                          margin: "0",
-                          fontSize: "15px",
-                          padding: "15px",
-                          lineHeight: "20px",
-                          width: "100%",
-                          wordSpacing: "4px",
-                        }}
-                      >
-                        {x}
-                      </p>
-                    )}
-                    {editIndex === index ? (
-                      <motion.button
-                        whileTap={{ scale: "0.95" }}
-                        className="border-2 border-[#00ffa3] rounded-lg p-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSave(index);
-                        }}
-                        style={{ margin: "5px" }}
-                      >
-                        Save
-                      </motion.button>
-                    ) : (
-                      <div
-                        onClick={(e) =>
-                          editIndex !== index && handleEdit(e, index)
-                        }
-                      >
-                        <motion.svg
-                          whileTap={{ scale: "0.95" }}
+                      ) : (
+                        <p
                           style={{
-                            cursor: "pointer",
-                            width: "24px",
-                            height: "24px",
+                            margin: "0",
+                            fontSize: "15px",
+                            padding: "15px",
+                            lineHeight: "20px",
+                            width: "100%",
+                            wordSpacing: "4px",
                           }}
-                          fill="white"
-                          clip-rule="evenodd"
-                          fill-rule="evenodd"
-                          stroke-linejoin="round"
-                          stroke-miterlimit="2"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
-                            fill-rule="nonzero"
-                          />
-                        </motion.svg>
-                      </div>
-                    )}
+                          {x}
+                        </p>
+                      )}
+                      {editIndex === index ? (
+                        <motion.button
+                          whileTap={{ scale: "0.95" }}
+                          className="border-2 border-[#00ffa3] rounded-lg p-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSave(index);
+                          }}
+                          style={{ margin: "5px" }}
+                        >
+                          Save
+                        </motion.button>
+                      ) : (
+                        <div
+                          onClick={(e) =>
+                            editIndex !== index && handleEdit(e, index)
+                          }
+                        >
+                          <motion.svg
+                            whileTap={{ scale: "0.95" }}
+                            style={{
+                              cursor: "pointer",
+                              width: "24px",
+                              height: "24px",
+                            }}
+                            fill="white"
+                            clip-rule="evenodd"
+                            fill-rule="evenodd"
+                            stroke-linejoin="round"
+                            stroke-miterlimit="2"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
+                              fill-rule="nonzero"
+                            />
+                          </motion.svg>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
       {/* bottom container */}
-      <div className="">
-        <div className="w-full py-2 px-3 grid grid-cols-[65%_35%]">
-          <div className="py-2 pr-2">
-            <input
-              value={addArgumentInputText !== null ? addArgumentInputText : ""}
-              disabled={aiJudgeLoading || aiLawyerLoading}
-              onChange={(e) => setAddArgumentInputText(e.target.value)}
-              className="w-full text-black"
-              style={{
-                border: "2px solid #00ffa3",
-                borderRadius: "20px",
-                padding: "10px",
-                // width: "600px",
-                cursor: "pointer",
-              }}
-              placeholder="Input Your Case Into The Courtroom"
-            />
-          </div>
-          <div className="flex gap-2">
-            <motion.button
-              whileTap={{ scale: "0.95" }}
-              onClick={handleAddArgument}
-              disabled={addArgumentInputText === null}
-              className="flex-1 my-2"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "5px",
-                border: "2px solid #00ffa3",
-                borderRadius: "20px",
-                background: "#008080",
-                padding: "10px",
-                cursor: "pointer",
-                color: "white",
-              }}
-            >
-              <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
-            </motion.button>
-            <motion.button
-              whileTap={{ scale: "0.95" }}
-              onClick={handleVerdict}
-              className="flex-1 my-2"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "5px",
-                border: "2px solid #00ffa3",
-                borderRadius: "20px",
-                background: "#008080",
-                padding: "10px",
-                cursor: "pointer",
-                color: "white",
-              }}
-            >
-              <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
-            </motion.button>
-          </div>
+      <div className="w-full grid grid-cols-[65%_35%] items-center">
+        <div className="pr-2">
+          <input
+            value={addArgumentInputText !== null ? addArgumentInputText : ""}
+            disabled={aiJudgeLoading || aiLawyerLoading}
+            onChange={(e) => setAddArgumentInputText(e.target.value)}
+            className="w-full text-black"
+            style={{
+              border: "2px solid #00ffa3",
+              borderRadius: "20px",
+              padding: "10px",
+              // width: "600px",
+              cursor: "pointer",
+            }}
+            placeholder="Input Your Case Into The Courtroom"
+          />
+        </div>
+        <div className="flex gap-2">
+          <motion.button
+            whileTap={{ scale: "0.95" }}
+            onClick={handleAddArgument}
+            disabled={addArgumentInputText === null}
+            className="flex-1 my-2"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "5px",
+              border: "2px solid #00ffa3",
+              borderRadius: "20px",
+              background: "#008080",
+              padding: "10px",
+              cursor: "pointer",
+              color: "white",
+            }}
+          >
+            <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: "0.95" }}
+            onClick={handleVerdict}
+            className="flex-1 my-2"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "5px",
+              border: "2px solid #00ffa3",
+              borderRadius: "20px",
+              background: "#008080",
+              padding: "10px",
+              cursor: "pointer",
+              color: "white",
+            }}
+          >
+            <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
+          </motion.button>
         </div>
       </div>
     </div>
