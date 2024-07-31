@@ -7,6 +7,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import LoadingDialog from "../../components/LoadingDialog";
+import toast from "react-hot-toast";
 
 const Verdict = () => {
   const currentUser = useSelector((state) => state.user.user);
@@ -26,16 +27,13 @@ const Verdict = () => {
           }
         );
         const verdictText = response.data.data.restDetail.verdict;
-        console.log("verdict text is",verdictText);
+        console.log("verdict text is", verdictText);
         setVerdict(verdictText);
         setPages(splitTextIntoPages(verdictText, 500));
       } catch (error) {
         console.error("Error fetching verdict:", error);
       } finally {
-        
-          
-            setLoading(false);
-          
+        setLoading(false);
       }
     };
 
@@ -49,7 +47,7 @@ const Verdict = () => {
     const pages = [];
     let currentPage = "";
 
-    words.forEach(word => {
+    words.forEach((word) => {
       if ((currentPage + word).length > maxChars) {
         pages.push(currentPage.trim());
         currentPage = "";
@@ -73,6 +71,33 @@ const Verdict = () => {
   const handlePreviousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const downloadVerdict = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        {
+          user_id: currentUser.userId,
+          data: verdict,
+          type: "Verdict",
+        },
+        {
+          responseType: "blob", // Important
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `verdict_${currentUser.userId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
     }
   };
 
@@ -122,6 +147,7 @@ const Verdict = () => {
                 <motion.button
                   whileTap={{ scale: "0.9" }}
                   className="border-2 border-white p-2 rounded-lg"
+                  onClick={() => downloadVerdict()}
                 >
                   Download
                 </motion.button>

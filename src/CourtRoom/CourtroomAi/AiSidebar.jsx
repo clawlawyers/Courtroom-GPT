@@ -317,6 +317,7 @@ const AiSidebar = () => {
         {
           user_id: currentUser.userId,
           data: firstDraft,
+          type: "first draft",
         },
         {
           responseType: "blob", // Important
@@ -326,7 +327,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `draft${currentUser.userId}.pdf`);
+      link.setAttribute("download", `draft_${currentUser.userId}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
