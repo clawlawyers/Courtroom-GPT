@@ -38,9 +38,9 @@ function LoginToCourtRoom() {
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
 
-  if (currentUser && caseOverView === "") {
+  if (currentUser && caseOverView === "NA") {
     navigate("/courtroom-ai");
-  } else if (currentUser && caseOverView !== "") {
+  } else if (currentUser && caseOverView !== "NA") {
     navigate("/courtroom-ai/arguments");
   }
 
