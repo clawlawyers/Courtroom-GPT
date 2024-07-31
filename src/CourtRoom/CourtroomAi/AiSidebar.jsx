@@ -174,20 +174,30 @@ const AiSidebar = () => {
   };
 
   const saveHistory = async () => {
-    if (overViewDetails !== "") {
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/history`, {
-        user_id: currentUser.userId,
-      });
+    try {
+      if (overViewDetails !== "NA") {
+        await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/history`, {
+          user_id: currentUser.userId,
+        });
+      }
+    } catch (error) {
+      toast.error("Error in saving history");
+      console.error("Error in saving history", error);
     }
   };
 
   const handleSave = async () => {
-    await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
-      user_id: currentUser.userId,
-      case_overview: text,
-    });
-    dispatch(setOverview(text));
-    setEditDialog(false);
+    try {
+      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
+        user_id: currentUser.userId,
+        case_overview: text,
+      });
+      dispatch(setOverview(text));
+      setEditDialog(false);
+    } catch (error) {
+      toast.error("Error in saving case");
+      console.error("Error in saving case", error);
+    }
   };
   const handleFirstDraft = async () => {
     setFirsDraftLoading(true);
@@ -234,16 +244,21 @@ const AiSidebar = () => {
 
   useEffect(() => {
     const getOverview = async () => {
-      const overView = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
-        {
-          user_id: currentUser.userId,
-        }
-      );
+      try {
+        const overView = await axios.post(
+          `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
+          {
+            user_id: currentUser.userId,
+          }
+        );
 
-      console.log(overView.data.data.case_overview);
+        console.log(overView.data.data.case_overview);
 
-      dispatch(setOverview(overView.data.data.case_overview));
+        dispatch(setOverview(overView.data.data.case_overview));
+      } catch (error) {
+        toast.error("Error in fetching case overview");
+        console.error("Error fetching case overview", error);
+      }
     };
     if (currentUser.userId) {
       getOverview();
@@ -325,6 +340,7 @@ const AiSidebar = () => {
         {
           user_id: currentUser.userId,
           data: firstDraft,
+          type: "First Draft",
         },
         {
           responseType: "blob", // Important
@@ -334,7 +350,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `draft${currentUser.userId}.pdf`);
+      link.setAttribute("download", `draft_${currentUser.userId}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
