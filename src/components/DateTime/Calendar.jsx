@@ -211,7 +211,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
-    className: "px-2",
+    className: "px-2 py-10",
   };
   return (
     <main className="flex w-full flex-col justify-center items-center gap-[70px]">
@@ -360,7 +360,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 </div>
               </div>
             </section> */}
-            <div className="w-4/5 bg-white min-h-22 py-3 rounded-lg">
+            <div className="w-4/5 bg-white min-h-22 rounded-lg">
               <div className="slider-container min-h-20 gap-3">
                 <Slider {...settings}>
                   {scheduledSlots.map((slot, index) => (
