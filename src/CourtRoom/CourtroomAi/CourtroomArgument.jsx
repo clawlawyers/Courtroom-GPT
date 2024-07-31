@@ -10,6 +10,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Markdown from "react-markdown";
+import toast from "react-hot-toast";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -31,7 +32,6 @@ import Markdown from "react-markdown";
 // ];
 
 const CourtroomArgument = () => {
-
   const navigate = useNavigate();
 
   const [dialogContent, setDialogContent] = useState(
@@ -101,69 +101,88 @@ const CourtroomArgument = () => {
   };
 
   const handleSwap = async () => {
-    const swapedData = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
-      {
-        user_id: currentUser.userId,
+    try {
+      const swapedData = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
+        {
+          user_id: currentUser.userId,
+        }
+      );
+
+      console.log(swapedData);
+      const newUserArgument = swapedData.data.data.changeState.argument; // in array format
+      const newLawyerArgument =
+        swapedData.data.data.changeState.counter_argument; // in array format
+      console.log(newUserArgument, newLawyerArgument);
+
+      if (selectedUserArgument !== null) {
+        //swap user arguments a/c to selected index
+        const userArguments = [...userArgument];
+        userArguments[selectedUserArgument] =
+          newUserArgument[selectedUserArgument];
+
+        //swap lawyer argument a/c to selected index
+        const swapLawyerArgument = newLawyerArgument[selectedUserArgument];
+
+        setUserArgument(userArguments);
+        setLawyerArgument(swapLawyerArgument);
+      } else {
+        // const swapArgument = newUserArgument[newUserArgument.length - 1];
+        // const updatedArguments = [...userArgument];
+        // updatedArguments[updatedArguments.length - 1] = swapArgument;
+        setUserArgument(newUserArgument);
+
+        const swapLawyerArgument =
+          newLawyerArgument[newLawyerArgument.length - 1];
+        setLawyerArgument(swapLawyerArgument);
       }
-    );
-
-    console.log(swapedData);
-    const newUserArgument = swapedData.data.data.changeState.argument; // in array format
-    const newLawyerArgument = swapedData.data.data.changeState.counter_argument; // in array format
-    console.log(newUserArgument, newLawyerArgument);
-
-    if (selectedUserArgument !== null) {
-      //swap user arguments a/c to selected index
-      const userArguments = [...userArgument];
-      userArguments[selectedUserArgument] =
-        newUserArgument[selectedUserArgument];
-
-      //swap lawyer argument a/c to selected index
-      const swapLawyerArgument = newLawyerArgument[selectedUserArgument];
-
-      setUserArgument(userArguments);
-      setLawyerArgument(swapLawyerArgument);
-    } else {
-      // const swapArgument = newUserArgument[newUserArgument.length - 1];
-      // const updatedArguments = [...userArgument];
-      // updatedArguments[updatedArguments.length - 1] = swapArgument;
-      setUserArgument(newUserArgument);
-
-      const swapLawyerArgument =
-        newLawyerArgument[newLawyerArgument.length - 1];
-      setLawyerArgument(swapLawyerArgument);
+      setSelectedUserArgument(null);
+      setSelectedUserArgumentContent(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error in saving the argument");
     }
-    setSelectedUserArgument(null);
-    setSelectedUserArgumentContent(null);
   };
 
   const RetieveDetails = async (index) => {
-    setAiLawyerLoading(true);
-    const laywerArgument1 = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
-      { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
-    );
+    try {
+      setAiLawyerLoading(true);
+      const laywerArgument1 = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
+        {
+          user_id: currentUser.userId,
+          action: "Retrieve",
+          argument_index: index,
+        }
+      );
 
-    const laywerArgument =
-      laywerArgument1.data.data.lawyerArguemnt.counter_argument;
-    const objection =
-      laywerArgument1.data.data.lawyerArguemnt.potential_objection;
-    setLawyerArgument(laywerArgument);
-    setPotentialObjections(objection);
-    setAiLawyerLoading(false);
+      const laywerArgument =
+        laywerArgument1.data.data.lawyerArguemnt.counter_argument;
+      const objection =
+        laywerArgument1.data.data.lawyerArguemnt.potential_objection;
+      setLawyerArgument(laywerArgument);
+      setPotentialObjections(objection);
+      setAiLawyerLoading(false);
 
-    setAiJudgeLoading(true);
+      setAiJudgeLoading(true);
 
-    let judgeArgument = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/judge`,
-      { user_id: currentUser.userId, action: "Retrieve", argument_index: index }
-    );
+      let judgeArgument = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/judge`,
+        {
+          user_id: currentUser.userId,
+          action: "Retrieve",
+          argument_index: index,
+        }
+      );
 
-    judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
-    setJudgeArgument(judgeArgument);
+      judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
+      setJudgeArgument(judgeArgument);
 
-    setAiJudgeLoading(false);
+      setAiJudgeLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in retrieving the argument");
+    }
   };
 
   const handleArgumentSelect = async (index, x) => {
@@ -188,84 +207,107 @@ const CourtroomArgument = () => {
   };
 
   const GenerateDetails = async (index) => {
-    setAiLawyerLoading(true);
+    try {
+      setAiLawyerLoading(true);
 
-    const laywerArgument1 = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
-      { user_id: currentUser.userId, action: "Generate", argument_index: index }
-    );
+      const laywerArgument1 = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
+        {
+          user_id: currentUser.userId,
+          action: "Generate",
+          argument_index: index,
+        }
+      );
 
-    const laywerArgument =
-      laywerArgument1.data.data.lawyerArguemnt.counter_argument;
-    const objection =
-      laywerArgument1.data.data.lawyerArguemnt.potential_objection;
-    setLawyerArgument(laywerArgument);
-    setPotentialObjections(objection);
-    setAiLawyerLoading(false);
+      const laywerArgument =
+        laywerArgument1.data.data.lawyerArguemnt.counter_argument;
+      const objection =
+        laywerArgument1.data.data.lawyerArguemnt.potential_objection;
+      setLawyerArgument(laywerArgument);
+      setPotentialObjections(objection);
+      setAiLawyerLoading(false);
 
-    setAiJudgeLoading(true);
+      setAiJudgeLoading(true);
 
-    let judgeArgument = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/judge`,
-      { user_id: currentUser.userId, action: "Generate", argument_index: index }
-    );
+      let judgeArgument = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/judge`,
+        {
+          user_id: currentUser.userId,
+          action: "Generate",
+          argument_index: index,
+        }
+      );
 
-    judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
-    setJudgeArgument(judgeArgument);
-    setAiJudgeLoading(false);
+      judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
+      setJudgeArgument(judgeArgument);
+      setAiJudgeLoading(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error in generating details");
+    }
   };
 
   const handleAddArgument = async () => {
-    setUserArgument([...userArgument, addArgumentInputText]);
-    //api calls here
+    try {
+      setUserArgument([...userArgument, addArgumentInputText]);
+      //api calls here
 
-    setAiJudgeLoading(true);
-    setAiLawyerLoading(true);
+      setAiJudgeLoading(true);
+      setAiLawyerLoading(true);
 
-    const inserUserArgument = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
-      {
-        user_id: currentUser.userId,
-        argument: addArgumentInputText,
-        argument_index: "NA",
-      }
-    );
+      const inserUserArgument = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
+        {
+          user_id: currentUser.userId,
+          argument: addArgumentInputText,
+          argument_index: "NA",
+        }
+      );
 
-    // console.log(inserUserArgument.data.data.argumentIndex.argument_index);
+      // console.log(inserUserArgument.data.data.argumentIndex.argument_index);
 
-    setAiJudgeLoading(true);
-    setAiLawyerLoading(true);
+      setAiJudgeLoading(true);
+      setAiLawyerLoading(true);
 
-    await GenerateDetails(
-      inserUserArgument.data.data.argumentIndex.argument_index
-    );
+      await GenerateDetails(
+        inserUserArgument.data.data.argumentIndex.argument_index
+      );
 
-    // console.log(laywerArgument, judgeArgument);
+      // console.log(laywerArgument, judgeArgument);
 
-    setAiJudgeLoading(false);
-    setAiLawyerLoading(false);
+      setAiJudgeLoading(false);
+      setAiLawyerLoading(false);
 
-    //clear input text
-    setAddArgumentInputText(null);
+      //clear input text
+      setAddArgumentInputText(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error in adding argument");
+    }
   };
 
   useEffect(() => {
     const getHistory = async () => {
-      const history = await axios.get(
-        `${NODE_API_ENDPOINT}/courtroom/${currentUser.userId}/getHistory`
-      );
+      try {
+        const history = await axios.get(
+          `${NODE_API_ENDPOINT}/courtroom/${currentUser.userId}/getHistory`
+        );
 
-      setUserArgument(history.data.data.caseHistory.argument);
-      const lawyerArrLen =
-        history.data.data.caseHistory.counter_argument.length;
-      setLawyerArgument(
-        history.data.data.caseHistory.counter_argument[lawyerArrLen - 1]
-      );
+        setUserArgument(history.data.data.caseHistory.argument);
+        const lawyerArrLen =
+          history.data.data.caseHistory.counter_argument.length;
+        setLawyerArgument(
+          history.data.data.caseHistory.counter_argument[lawyerArrLen - 1]
+        );
 
-      const judgeArrLen = history.data.data.caseHistory.judgement.length;
-      setJudgeArgument(
-        history.data.data.caseHistory.judgement[judgeArrLen - 1]
-      );
+        const judgeArrLen = history.data.data.caseHistory.judgement.length;
+        setJudgeArgument(
+          history.data.data.caseHistory.judgement[judgeArrLen - 1]
+        );
+      } catch (error) {
+        console.error(error);
+        toast.error("Error in fetching case history");
+      }
     };
 
     if (currentUser.userId) {
@@ -458,19 +500,20 @@ const CourtroomArgument = () => {
           <div className="w-full flex flex-row-reverse pr-3 items-center h-[200px]  ">
             <div className="relative">
               {/* Existing components */}
-              
+
               <button
                 className="bg-red-500 text-white w-5 h-5  rounded-full"
                 onClick={isDialogOpen ? closeDialog : openDialog}
               ></button>
 
               {isDialogOpen && (
-                <div ref={dialogRef} className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
+                <div
+                  ref={dialogRef}
+                  className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg"
+                >
                   <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
-                    {aiLawyerLoading ? <p>Loading</p> :potentialObjections }
-                    
+                    {aiLawyerLoading ? <p>Loading</p> : potentialObjections}
                   </button>
-                  
                 </div>
               )}
             </div>
