@@ -79,7 +79,7 @@ function App() {
   const CourtRoomLayout = () => {
     return (
       <div className="">
-        <div className="pt-20 h-full ">
+        <div className="h-full ">
           <Outlet />
         </div>
         <FooterBanner />

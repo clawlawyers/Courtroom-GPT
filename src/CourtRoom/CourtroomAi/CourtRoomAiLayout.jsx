@@ -30,7 +30,7 @@ const CourtRoomAiLayout = () => {
   // }, [currentUser]);
 
   useEffect(() => {
-    if (caseOverView !== "") {
+    if (caseOverView !== "NA") {
       navigate("/courtroom-ai/arguments");
     }
   }, [caseOverView]);
