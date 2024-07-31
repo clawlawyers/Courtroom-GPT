@@ -296,73 +296,10 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
             }}
           >
             <h3 className="mb-5">Scheduled Slots:</h3>
-            {/* <section className="flex flex-col justify-center items-center">
-              <div className="bg-transparent w-full flex flex-row items-center justify-center gap-4">
-                <div
-                  className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2"
-                  onClick={scrollLeft}
-                >
-                  <ArrowLeft />
-                </div>
-                <div
-                  className="py-12 overscroll-y-none"
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    border: "3px solid teal",
-                    backgroundColor: "white",
-                    width: "70vw",
-                    height: "fit-content",
-                    borderRadius: "5px",
-                    gap: "20px",
-                    overflowX: "hidden",
-                  }}
-                >
-                  <div
-                    className="flex  flex-row bg-transparent overflow-x-auto gap-3 px-2 overflow-y-hidden"
-                    ref={scrollContainerRef}
-                  >
-                        {scheduledSlots.map((slot, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-row items-center text-sm justify-center w-full p-2  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white   "
-                          >
-                            {new Date(slot.date).toLocaleDateString("en-US", {
-                              day: "numeric",
-                              month: "long",
-                            })}
-                            {","}
-                            {slot.time}
-                            <button
-                              onClick={() => handleRemoveSlot(index)}
-                              style={{
-                                position: "relative",
-                                top: "0",
-                                background: "transparent",
-                                border: "none",
-                                cursor: "pointer",
-                                color: "white",
-                              }}
-                            >
-                              <CloseOutlined />
-                            </button>
-                          </div>
-                        ))}
-                  </div>
-                </div>
-                <div
-                  className="bg-gradient-to-r from-teal-800 to-teal-400 rounded-full p-2"
-                  onClick={scrollRight}
-                >
-                  <ArrowRight />
-                </div>
-              </div>
-            </section> */}
-            <div className="w-4/5 bg-white min-h-22 rounded-lg">
-              <div className="slider-container min-h-20 gap-3">
-                <Slider {...settings}>
+           
+            <div className="w-4/6 bg-white min-h-14 rounded-lg">
+              <div className="slider-container min-h-14 gap-3">
+                <Slider {...settings} >
                   {scheduledSlots.map((slot, index) => (
                     <div
                       key={index}

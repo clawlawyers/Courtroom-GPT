@@ -31,6 +31,7 @@ import Markdown from "react-markdown";
 // ];
 
 const CourtroomArgument = () => {
+
   const navigate = useNavigate();
 
   const [dialogContent, setDialogContent] = useState(
@@ -52,6 +53,26 @@ const CourtroomArgument = () => {
 
   const currentUser = useSelector((state) => state.user.user);
   const lastItemRef = useRef(null);
+
+  const dialogRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (dialogRef.current && !dialogRef.current.contains(event.target)) {
+      closeDialog();
+    }
+  };
+
+  useEffect(() => {
+    if (isDialogOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDialogOpen]);
 
   const handleEdit = (e, index) => {
     e.stopPropagation();
@@ -444,7 +465,7 @@ const CourtroomArgument = () => {
               ></button>
 
               {isDialogOpen && (
-                <div className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
+                <div ref={dialogRef} className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg">
                   <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
                     {aiLawyerLoading ? <p>Loading</p> :potentialObjections }
                     

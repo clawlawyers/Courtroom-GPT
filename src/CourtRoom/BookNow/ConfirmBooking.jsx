@@ -83,11 +83,11 @@ const ConfirmBooking = () => {
   return (
     <div className="h-screen flex flex-col justify-start pt-20 w-full items-center align-middle">
       {/* Card Section */}
-      <section className="w-full h-max flex flex-row justify-start  items-center gap-20 px-40">
+      <section className="w-full h-max flex flex-row justify-start  items-start gap-20 px-40">
         {/* Card 1 */}
         <div className="p-4 border border-white w-2/3 h-max rounded-md bg-card-gradient flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <h3 className="font-semibold">Confirm your booking</h3>
+            <h3 className="font-bold">Confirm your booking</h3>
             <div className="h-0.5 bg-white w-full" />
           </div>
           <div className="mx-2">
@@ -97,6 +97,9 @@ const ConfirmBooking = () => {
             </p>
            
             <p >UserId: <span className="font-bold">{bookingData.name}</span></p>
+            <p >Email: <span className="font-bold">{bookingData.email}</span></p>
+            <p >Phone Number: <span className="font-bold">{bookingData.phoneNumber}</span></p>
+
           </div>
           <div className="h-0.5 bg-white w-full" />
           {/* Time Slot */}
