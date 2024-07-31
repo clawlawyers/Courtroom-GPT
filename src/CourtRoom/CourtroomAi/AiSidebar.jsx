@@ -21,7 +21,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import countDown from "../../assets/images/countdown.gif";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
-
+import loader from "../../assets/images/aiAssistantLoading.gif";
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
 
@@ -135,6 +135,7 @@ const AiSidebar = () => {
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
+  const [firstDraftLoading, setFirsDraftLoading] = useState(false);
   const [text, setText] = useState("");
   const [aiIconHover, setAiIconHover] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
@@ -187,6 +188,9 @@ const AiSidebar = () => {
     setEditDialog(false);
   };
   const handleFirstDraft = async () => {
+    setFirsDraftLoading(true);
+    setFirstDraftDialog(true);
+
     try {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -197,9 +201,10 @@ const AiSidebar = () => {
 
       console.log("response is ", response.data.data.draft.detailed_draft);
       setFirstDraft(response.data.data.draft.detailed_draft);
-      setFirstDraftDialog(true);
     } catch (error) {
       toast.error("Error in getting first draft");
+    } finally {
+      setFirsDraftLoading(false);
     }
   };
 
@@ -713,44 +718,50 @@ const AiSidebar = () => {
               </svg>
             </div>
             <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-              <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
-                <div className="flex h-full  flex-row justify-center w-full items-center">
-                  <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
-                    <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
-                      <p className="uppercase font-bold my-2 w-full ">
-                        First Draft Preview
-                      </p>
-                      <div className="flex flex-row w-full items-center">
-                        <div className="h-1 bg-neutral-900 w-2/3" />
-                        <div className="bg-neutral-900 rounded-md">
-                          <img
-                            className="w-[5vw] h-[29px]"
-                            src={logo}
-                            alt="logo"
-                          />
+              {firstDraftLoading ? (
+                <div className="flex h-full px-5 pb-5 flex-row justify-center items-center w-1/2 pb-5 ">
+                  <img src={loader} alt="loader" />
+                  </div>
+              ) : (
+                <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
+                  <div className="flex h-full  flex-row justify-center w-full items-center">
+                    <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
+                      <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
+                        <p className="uppercase font-bold my-2 w-full ">
+                          First Draft Preview
+                        </p>
+                        <div className="flex flex-row w-full items-center">
+                          <div className="h-1 bg-neutral-900 w-2/3" />
+                          <div className="bg-neutral-900 rounded-md">
+                            <img
+                              className="w-[5vw] h-[29px]"
+                              src={logo}
+                              alt="logo"
+                            />
+                          </div>
                         </div>
                       </div>
+                      <textarea
+                        className="w-full h-full p-2.5 mb-4 text-black resize-none"
+                        value={firstDraft}
+                        onChange={(e) => setFirstDraft(e.target.value)}
+                      />
                     </div>
-                    <textarea
-                      className="w-full h-full p-2.5 mb-4 text-black resize-none"
-                      value={firstDraft}
-                      onChange={(e) => setFirstDraft(e.target.value)}
-                    />
+                  </div>
+                  <div className="h-[80vh] w-1 bg-neutral-200/40" />
+                  <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
+                    <div className="flex flex-col w-full gap-2">
+                      <img className="" src={logo} alt="logo" />
+                      <h1 className="uppercase text-center font-bold">
+                        First draft preview
+                      </h1>
+                    </div>
+                    <button className="border border-white rounded-md p-3 justify-end">
+                      <Download /> Download
+                    </button>
                   </div>
                 </div>
-                <div className="h-[80vh] w-1 bg-neutral-200/40" />
-                <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
-                  <div className="flex flex-col w-full gap-2">
-                    <img className="" src={logo} alt="logo" />
-                    <h1 className="uppercase text-center font-bold">
-                      First draft preview
-                    </h1>
-                  </div>
-                  <button className="border border-white rounded-md p-3 justify-end">
-                    <Download /> Download
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -801,9 +812,11 @@ const AiSidebar = () => {
             <div className="m-0 h-2/3 flex flex-column justify-center items-center">
               <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
                 <div className="flex h-full  flex-row justify-center w-full items-center">
-                  <div  className={`${
-                    isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}>
+                  <div
+                    className={`${
+                      isEditing ? "border-4  border-teal-400" : "border-none"
+                    } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                  >
                     <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                       <p className="uppercase font-bold my-2 w-full ">
                         Edit Your Document
@@ -831,7 +844,10 @@ const AiSidebar = () => {
                 <div className="flex flex-col justify-between h-[80vh] py-20  w-full gap-4 ">
                   <div className="flex flex-col w-full gap-4">
                     <img className="" src={logo} alt="logo" />
-                    <h1 className="uppercase text-center font-bold text-4xl"> Edit Your Document</h1>
+                    <h1 className="uppercase text-center font-bold text-4xl">
+                      {" "}
+                      Edit Your Document
+                    </h1>
                   </div>
                   <div className="flex flex-col w-full  justify-between">
                     <div className="flex flex-col w-full justify-center items-center gap-4">
@@ -851,7 +867,6 @@ const AiSidebar = () => {
                           {isEditing ? "Save Changes" : "Edit current document"}
                         </Button>
                       </div>
-                      
                     </div>
                   </div>
                 </div>
