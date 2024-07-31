@@ -143,7 +143,7 @@ const AiSidebar = () => {
   const [AiQuestions, setAiQuestions] = useState(null);
   const [aiAssistantLoading, setAiAssistantLoading] = useState(true);
   const [slotIntervalTimer, setSlotIntervalTimer] = useState(null);
-
+  const [downloadCaseLoading , setDownloadCaseLoading] = useState(false);
   useEffect(() => {
     setText(overViewDetails);
     setSlotIntervalTimer(slotTimeInterval);
@@ -251,6 +251,7 @@ const AiSidebar = () => {
   }, [currentUser.userId]);
 
   const downloadCaseHistory = async () => {
+    setDownloadCaseLoading(true);
     try {
       await saveHistory();
       const response = await axios.post(
@@ -273,6 +274,9 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error downloading case history:", error);
       toast.error("Error downloading case history");
+    }
+    finally{
+      setDownloadCaseLoading(false);
     }
   };
 
@@ -300,11 +304,40 @@ const AiSidebar = () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
   };
 
   const handleGoBack = () => {
     navigate(-1);
+  };
+
+  const dowloadFirstDraft = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        {
+          user_id: currentUser.userId,
+          data: firstDraft,
+        },
+        {
+          responseType: "blob", // Important
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `draft${currentUser.userId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading case history:", error);
+      toast.error("Error downloading case history");
+    }
   };
 
   return (
@@ -396,6 +429,7 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
+            
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -407,8 +441,10 @@ const AiSidebar = () => {
                 color: "#008080",
                 border: "2px solid white",
                 borderRadius: "5px",
-                cursor: "pointer",
+                cursor: `${downloadCaseLoading ? "wait" : "pointer"}`,
+                
               }}
+              
             >
               <div>
                 <h1
@@ -761,7 +797,7 @@ const AiSidebar = () => {
                         First draft preview
                       </h1>
                     </div>
-                    <button className="border border-white rounded-md p-3 justify-end">
+                    <button onClick={()=> dowloadFirstDraft()} className="border border-white rounded-md p-3 justify-end">
                       <Download /> Download
                     </button>
                   </div>
