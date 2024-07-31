@@ -143,7 +143,8 @@ const AiSidebar = () => {
   const [AiQuestions, setAiQuestions] = useState(null);
   const [aiAssistantLoading, setAiAssistantLoading] = useState(true);
   const [slotIntervalTimer, setSlotIntervalTimer] = useState(null);
-  const [downloadCaseLoading , setDownloadCaseLoading] = useState(false);
+  const [downloadCaseLoading, setDownloadCaseLoading] = useState(false);
+  const [downloadSessionLoading, setDownloadSessionLoading] = useState(false);
   useEffect(() => {
     setText(overViewDetails);
     setSlotIntervalTimer(slotTimeInterval);
@@ -274,13 +275,13 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error downloading case history:", error);
       toast.error("Error downloading case history");
-    }
-    finally{
+    } finally {
       setDownloadCaseLoading(false);
     }
   };
 
   const downloadSessionCaseHistory = async () => {
+    setDownloadSessionLoading(true);
     try {
       await saveHistory();
 
@@ -307,6 +308,8 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error downloading case history:", error);
       toast.error("Error downloading case history");
+    } finally {
+      setDownloadSessionLoading(false);
     }
   };
 
@@ -404,7 +407,7 @@ const AiSidebar = () => {
                 border: "2px solid white",
                 borderRadius: "5px",
                 marginBottom: "10px",
-                cursor: "pointer",
+                cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
               }}
             >
               <div>
@@ -429,7 +432,6 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-            
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -442,9 +444,7 @@ const AiSidebar = () => {
                 border: "2px solid white",
                 borderRadius: "5px",
                 cursor: `${downloadCaseLoading ? "wait" : "pointer"}`,
-                
               }}
-              
             >
               <div>
                 <h1
@@ -797,7 +797,10 @@ const AiSidebar = () => {
                         First draft preview
                       </h1>
                     </div>
-                    <button onClick={()=> dowloadFirstDraft()} className="border border-white rounded-md p-3 justify-end">
+                    <button
+                      onClick={() => dowloadFirstDraft()}
+                      className="border border-white rounded-md p-3 justify-end"
+                    >
                       <Download /> Download
                     </button>
                   </div>
