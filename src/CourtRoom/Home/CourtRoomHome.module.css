@@ -1,5 +1,14 @@
+.mainContainer {
+  padding-top: 60px;
+  background: radial-gradient(circle at 50% 0%, #018585, transparent 20%),
+    radial-gradient(circle at 100% 35%, #351f58d0, transparent 45%),
+    radial-gradient(circle at 0% 50%, #351f58d0, transparent 20%),
+    radial-gradient(circle at 0% 80%, #018585, transparent 30%),
+    radial-gradient(circle at 100% 95%, #0e1118, transparent 10%);
+}
+
 .topContainer {
-  margin: 35px 150px;
+  padding: 35px 150px;
   display: grid;
   grid-template-columns: 50% 50%;
 }
@@ -33,7 +42,7 @@
 }
 
 .whyCourtRoom {
-  background-color: #018585;
+  background: linear-gradient(90deg, #018585, #0e5156 40%);
   display: flex;
   flex-direction: column;
   justify-content: center;

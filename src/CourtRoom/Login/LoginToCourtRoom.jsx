@@ -104,7 +104,14 @@ function LoginToCourtRoom() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div
+      className="flex flex-col justify-center items-center pt-14"
+      style={{
+        background: `radial-gradient(circle at 50% 0%, #018585, transparent 40%),
+      radial-gradient(circle at 100% 50%, #351f58d0, transparent 50%),
+      radial-gradient(circle at 0% 90%, #018585, transparent 60%)`,
+      }}
+    >
       {/* top cont */}
       <div className="grid grid-cols-2 items-center">
         <div>
@@ -117,15 +124,10 @@ function LoginToCourtRoom() {
         <form style={{ position: "relative" }} onSubmit={handleSave}>
           <div style={{ marginRight: "140px" }}>
             <div
-              className={`${
-                errorState
-                  ? "bg-slate-400"
-                  : "bg-gradient-to-br from-[#006E6E] to-[#09FFFF]"
-              }`}
               style={{
-                // background: errorState
-                //   ? "gray"
-                //   : "linear-gradient(to bottom, #006E6E, #09FFFF)",
+                background: errorState
+                  ? "gray"
+                  : "linear-gradient(135deg,#0e5156,#018585 90%)",
                 padding: "40px",
                 // border: "3px solid white",
                 border: errorState ? "3px solid red" : "3px solid white",

@@ -46,12 +46,12 @@ function Home() {
       // whileHover="hover"
       // onHoverStart={() => setSubmitHover(true)}
       // onHoverEnd={() => setSubmitHover(false)}
-      className=""
+      className={Styles.mainContainer}
     >
       {/* top container */}
       <div className="md:grid md:grid-cols-2 items-center px-2 md:px-28 pt-5">
         <div className="pl-28">
-          <h1 className="px-5 text-start">What is Courtroom ?</h1>
+          <h1 className="px-5 text-start font-bold">What is Courtroom ?</h1>
           <br />
           <div className="p-5">
             <div className="slider-container">
@@ -529,8 +529,14 @@ function Home() {
         </div>
       </div>
 
-             
-      <div style={{ display: "grid", placeItems: "center", marginTop: "80px" ,  paddingBottom:"80px", }}>
+      <div
+        style={{
+          display: "grid",
+          placeItems: "center",
+          marginTop: "80px",
+          paddingBottom: "80px",
+        }}
+      >
         <motion.div
           className={Styles.third}
           style={{
@@ -556,7 +562,6 @@ function Home() {
               height: "100%",
               zIndex: 1,
               background: "white",
-
             }}
           />
           <div
