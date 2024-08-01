@@ -4,9 +4,9 @@ import feature1 from "../../assets/images/image 2.png";
 import feature2 from "../../assets/images/image 3.png";
 import feature3 from "../../assets/images/image 4.png";
 import laptop from "../../assets/images/image 1.png";
-import submitCase from "../../assets/images/submitCase.png";
-import argumentDraft from "../../assets/images/argumentDraft.png";
-import frameCase from "../../assets/images/frameCase.png";
+import submitCase from "../../assets/images/SubmitYourCase.mp4";
+import argumentDraft from "../../assets/images/GetArgument.mp4";
+import frameCase from "../../assets/images/FrameYourCase.mp4";
 import plus from "../../assets/images/Group 53.png";
 import Styles from "./CourtRoomHome.module.css";
 import arrw from "../../assets/images/Vector 1.png";
@@ -357,11 +357,22 @@ function Home() {
           <div
             style={{ display: "grid", placeItems: "center", cursor: "pointer" }}
           >
-            <div style={{ height: "400px", width: "max-content" }}>
+            <div
+              className="relative"
+              style={{ height: "400px", width: "max-content" }}
+            >
               <img
                 alt="courtRoom Preiview"
-                src={submitCase}
+                src={laptop}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
+              />
+              <video
+                className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+                src={submitCase}
+                autoPlay
+                loop
+                muted
+                playsInline
               />
             </div>
           </div>
@@ -375,11 +386,22 @@ function Home() {
           transition={{ type: "spring", stiffness: 120, damping: 10 }}
         >
           <div style={{ display: "grid", placeItems: "center" }}>
-            <div style={{ height: "400px", width: "max-content" }}>
+            <div
+              className="relative"
+              style={{ height: "400px", width: "max-content" }}
+            >
               <img
                 alt="courtRoom Preiview"
-                src={argumentDraft}
+                src={laptop}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
+              />
+              <video
+                className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+                src={argumentDraft}
+                autoPlay
+                loop
+                muted
+                playsInline
               />
             </div>
           </div>
@@ -450,11 +472,22 @@ function Home() {
           transition={{ type: "spring", stiffness: 120, damping: 10 }}
         >
           <div style={{ display: "grid", placeItems: "center" }}>
-            <div style={{ height: "400px", width: "max-content" }}>
+            <div
+              className="relative"
+              style={{ height: "400px", width: "max-content" }}
+            >
               <img
                 alt="courtRoom Preiview"
-                src={frameCase}
+                src={laptop}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
+              />
+              <video
+                className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+                src={frameCase}
+                autoPlay
+                loop
+                muted
+                playsInline
               />
             </div>
           </div>
