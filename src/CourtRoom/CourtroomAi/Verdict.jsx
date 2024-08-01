@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import LoadingDialog from "../../components/LoadingDialog";
 import toast from "react-hot-toast";
+import "./sidebar.css";
 
 const Verdict = () => {
   const currentUser = useSelector((state) => state.user.user);
@@ -29,7 +30,7 @@ const Verdict = () => {
         const verdictText = response.data.data.restDetail.verdict;
         console.log("verdict text is", verdictText);
         setVerdict(verdictText);
-        setPages(splitTextIntoPages(verdictText, 500));
+        setPages(splitTextIntoPages(verdictText, 700));
       } catch (error) {
         console.error("Error fetching verdict:", error);
       } finally {
@@ -129,30 +130,29 @@ const Verdict = () => {
               />
               <img className="w-24" src={logo} alt="logo" />
             </div>
-            <section className="px-5 pb-5 flex flex-col h-full justify-between items-center relative">
+            <section className="px-4 flex flex-col h-full justify-between items-center relative overflow-auto scrollable-div cursor-default">
               <motion.div
                 key={currentPage}
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.5 }}
-                className="w-full h-full overflow-hidden"
+                className="w-full h-full"
               >
-                <p className="text-lg text-black mt-5 whitespace-pre-line">
+                <p className="text-sm text-black whitespace-pre-line">
                   {pages[currentPage]}
                 </p>
               </motion.div>
-
-              <div className="flex flex-row w-full justify-end items-center mt-5">
-                <motion.button
-                  whileTap={{ scale: "0.9" }}
-                  className="border-2 border-white p-2 rounded-lg"
-                  onClick={() => downloadVerdict()}
-                >
-                  Download
-                </motion.button>
-              </div>
             </section>
+            <div className="flex flex-row w-full justify-end items-center px-2 py-4">
+              <motion.button
+                whileTap={{ scale: "0.95" }}
+                className="border-2 border-white p-2 rounded-lg"
+                onClick={() => downloadVerdict()}
+              >
+                Download
+              </motion.button>
+            </div>
           </section>
           <div className="flex justify-center items-center w-10">
             {currentPage < pages.length - 1 && (
