@@ -57,7 +57,8 @@ const TimerComponent = React.memo(() => {
         className="text-sm m-0 font-semibold"
         style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
       >
-        {timeLeft.minutes} : {timeLeft.seconds}
+        {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
+        {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
       </h1>
     </div>
   );

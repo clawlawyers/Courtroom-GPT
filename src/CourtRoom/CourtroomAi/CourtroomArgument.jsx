@@ -638,7 +638,9 @@ const CourtroomArgument = () => {
           <motion.button
             whileTap={{ scale: "0.95" }}
             onClick={handleAddArgument}
-            disabled={addArgumentInputText === null}
+            disabled={
+              addArgumentInputText === null || aiJudgeLoading || aiLawyerLoading
+            }
             className="flex-1 my-2"
             style={{
               display: "flex",
