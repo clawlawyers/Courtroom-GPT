@@ -7,8 +7,9 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
+import { motion } from "framer-motion";
 
 const BookNow = () => {
   const dispatch = useDispatch();
@@ -151,33 +152,37 @@ const BookNow = () => {
 
   return (
     <div className={styles.topContainer}>
-      <h1
-        style={{
-          fontWeight: 800,
-          paddingBottom:"40px",
-        }}
-      >
-        Book your Court Room
-      </h1>
-      <CalendarComponent
-        scheduledSlots={scheduledSlots}
-        setScheduledSlots={setScheduledSlots}
-      />
-
-      <section className={styles.formContainer}>
-        <img src={image} alt="" />
-        <div
+      <div className="p-5">
+        <h1
           style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "70%",
-            height:"100%"
+            fontWeight: 800,
+            margin: "0",
           }}
         >
-          <form className={`${styles.forms} gap-4 lg:gap-5`} onSubmit={handleSubmit}>
-          <h2 className="font-bold " style={{fontSize: 'clamp(3rem, 2vw, 1.5rem)'}}>Enter your Details</h2>
+          Book your Court Room
+        </h1>
+      </div>
+      <div className=" w-full h-full">
+        <CalendarComponent
+          scheduledSlots={scheduledSlots}
+          setScheduledSlots={setScheduledSlots}
+        />
+      </div>
+
+      <div
+        // className={styles.formContainer}
+        className="w-full grid grid-cols-[30%_70%]"
+      >
+        <div className="">
+          <img src={image} alt="" />
+        </div>
+        <div className="flex flex-col gap-5 justify-center  items-center">
+          <h2 className="text-5xl font-bold ">Enter your Details</h2>
+          <form
+            // className={`${styles.forms} gap-4 lg:gap-5`}
+            className="w-full px-44 flex flex-col justify-center gap-4"
+            onSubmit={handleSubmit}
+          >
             <input
               type="text"
               id="name"
@@ -186,6 +191,7 @@ const BookNow = () => {
               value={formData.name}
               onChange={handleInputChange}
               required
+              className="p-3 rounded text-black"
             />
             <input
               type="email"
@@ -195,8 +201,9 @@ const BookNow = () => {
               value={formData.email}
               onChange={handleInputChange}
               required
+              className="p-3 rounded text-black"
             />
-            <div className="relative w-[70%] bg-white/80 rounded-[10px]">
+            <div className="relative bg-white rounded">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
@@ -205,7 +212,7 @@ const BookNow = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="text-black bg-transparent"
+                className="text-black bg-transparent w-full p-3 rounded"
               />
               <button
                 type="button"
@@ -239,7 +246,6 @@ const BookNow = () => {
               </button>
             </div>
             <input
-              className="text-black"
               type="text"
               id="contact"
               name="contact"
@@ -247,9 +253,10 @@ const BookNow = () => {
               value={formData.contact}
               onChange={handleInputChange}
               required
+              className="p-3 rounded text-black"
             />
 
-            <div className={styles.checkboxContainer}>
+            <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="record"
@@ -259,7 +266,8 @@ const BookNow = () => {
               />
               <label htmlFor="record">Record the CourtRoom</label>
             </div>
-            <button
+            <motion.button
+              whileTap={{ scale: "0.95" }}
               className=""
               type="submit"
               style={{
@@ -272,7 +280,7 @@ const BookNow = () => {
               }}
             >
               Proceed for Payment
-            </button>
+            </motion.button>
           </form>
         </div>
         {errorState ? (
@@ -316,7 +324,7 @@ const BookNow = () => {
         ) : (
           ""
         )}
-      </section>
+      </div>
     </div>
   );
 };

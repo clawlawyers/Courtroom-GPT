@@ -46,39 +46,38 @@ const Container = styled.div`
 
 const CalendarWrapper = styled.div`
   border-radius: 10px;
-  width: 100%;
+  width: fit-content;
   display: flex;
   justify-content: center;
-
   .custom-calendar {
     background: linear-gradient(100deg, #008080 0%, #15b3b3 100%);
-
-    transform-origin: center;
     border-radius: 10px;
     border: 2px solid white;
-    @media (max-width: 768px) and (max-height: 812px) {
-      transform: scale(1.3);
-    }
-
-    @media (max-width: 480px) {
-      transform: scale(1);
-    }
   }
 `;
+
+// @media (max-width: 768px) and (max-height: 812px) {
+//   transform: scale(1.3);
+// }
+
+// @media (max-width: 480px) {
+//   transform: scale(1);
+// }
 
 const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
   const scrollContainerRef = useRef(null);
   const calendarRef = useRef();
   const [bookedDates, setBookedDates] = useState([]);
   const [bookingData, setBookingData] = useState([]);
+
   useEffect(() => {
     const updateScale = () => {
-      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
       let scale;
 
-      if (viewportWidth <= 480) {
+      if (viewportHeight <= 480) {
         scale = 1;
-      } else if (viewportWidth <= 768) {
+      } else if (viewportHeight <= 768) {
         scale = 1.2;
       } else {
         scale = 1.5;
@@ -214,10 +213,10 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     className: "px-2 py-10",
   };
   return (
-    <main className="flex w-full flex-col justify-center items-center gap-[70px]">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <section className="flex w-full flex-row justify-center items-center gap-[70px] h-[70vh]">
-          <Container>
+    <div className="w-full h-full ">
+      <main className="w-full h-full flex  flex-col justify-center items-center gap-20">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className="flex w-full h-full justify-center items-center gap-24">
             <CalendarWrapper ref={calendarRef} className="custom-calendar">
               <DateCalendar
                 slots={{
@@ -258,81 +257,81 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                 }}
               />
             </CalendarWrapper>
-          </Container>
-          <div className="border-2 border-white p-1 rounded-md bg-gradient-to-r from-teal-600 to-cyan-500">
-            <h3 className="text-[1.2rem] p-1 text-center font-semibold">
-              Select Time:
-            </h3>
-            <TimePickerValue
-              selectedTimes={selectedTimes}
-              setSelectedTimes={setSelectedTimes}
-              bookingData={bookingData}
-              selectedDate={selectedDates}
-            />
+            <div className="border-2 border-white p-1 rounded-md bg-gradient-to-r from-teal-600 to-cyan-500">
+              <h3 className="text-lg p-1 text-center font-semibold">
+                Select Time:
+              </h3>
+              <TimePickerValue
+                selectedTimes={selectedTimes}
+                setSelectedTimes={setSelectedTimes}
+                bookingData={bookingData}
+                selectedDate={selectedDates}
+              />
+            </div>
           </div>
-        </section>
-        <div className="flex flex-col gap-5 w-full justify-center items-center">
-          <div className="w-full flex flex-row justify-center">
-            <button
-              className="w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 bg-gradient-to-r from-teal-800 to-teal-400 p-2 rounded-md font-semibold"
-              variant="contained"
-              color="primary"
-              onClick={addSlot}
-            >
-              Add to Slot
-            </button>
-          </div>
+          <div className="flex flex-col gap-5 w-full h-full justify-center items-center">
+            <div className="w-full flex flex-row justify-center">
+              <button
+                className="w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 bg-gradient-to-r from-teal-800 to-teal-400 p-2 rounded-md font-semibold"
+                variant="contained"
+                color="primary"
+                onClick={addSlot}
+              >
+                Add to Slot
+              </button>
+            </div>
 
-          <div
-            style={{
-              backgroundColor: "#000000a6",
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "60px",
-              flexWrap: "wrap",
-            }}
-          >
-            <h3 className="mb-5">Scheduled Slots:</h3>
-           
-            <div className="w-4/6 bg-white min-h-14 rounded-lg">
-              <div className="slider-container min-h-14 gap-3">
-                <Slider {...settings} >
-                  {scheduledSlots.map((slot, index) => (
-                    <div
-                      key={index}
-                      className="max-w-fit flex flex-row items-center text-sm justify-center p-3  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white"
-                    >
-                      {new Date(slot.date).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                      })}
-                      {","}
-                      {slot.time}
-                      <button
-                        onClick={() => handleRemoveSlot(index)}
-                        style={{
-                          position: "relative",
-                          top: "0",
-                          background: "transparent",
-                          border: "none",
-                          cursor: "pointer",
-                          color: "white",
-                        }}
+            <div
+              style={{
+                backgroundColor: "#000000a6",
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "60px",
+                flexWrap: "wrap",
+              }}
+            >
+              <h3 className="mb-5">Scheduled Slots:</h3>
+
+              <div className="w-5/6 bg-white min-h-14 rounded-lg">
+                <div className="slider-container min-h-14 gap-3">
+                  <Slider {...settings}>
+                    {scheduledSlots.map((slot, index) => (
+                      <div
+                        key={index}
+                        className="max-w-fit flex flex-row gap-2 items-center text-sm justify-center p-3  rounded-lg font-semibold bg-gradient-to-r from-teal-800 to-teal-400 text-white"
                       >
-                        <CloseOutlined />
-                      </button>
-                    </div>
-                  ))}
-                </Slider>
+                        {new Date(slot.date).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "long",
+                        })}
+                        {","}
+                        {slot.time}
+                        <button
+                          onClick={() => handleRemoveSlot(index)}
+                          style={{
+                            position: "relative",
+                            top: "0",
+                            background: "transparent",
+                            border: "none",
+                            cursor: "pointer",
+                            color: "white",
+                          }}
+                        >
+                          <CloseOutlined />
+                        </button>
+                      </div>
+                    ))}
+                  </Slider>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </LocalizationProvider>
-    </main>
+        </LocalizationProvider>
+      </main>
+    </div>
   );
 };
 
