@@ -365,10 +365,11 @@ const AiSidebar = () => {
     <>
       <div className="flex flex-col gap-3 h-screen py-3 pl-3">
         {/* top container */}
-        <div className="bg-[#008080] pt-1 px-4 pb-4 border-2 border-black rounded gap-2 flex flex-col">
+        <div className="bg-[#008080] h-[30vh] pt-1 px-4 pb-4 border-2 border-black rounded gap-2 flex flex-col">
           <motion.div
             className="max-w-fit rounded-lg flex gap-2 items-center py-2 cursor-pointer"
             whileTap={{ scale: "0.95" }}
+            onClick={handleGoBack}
           >
             <svg
               className="h-7 w-7"
@@ -385,9 +386,7 @@ const AiSidebar = () => {
                 fill-rule="nonzero"
               />
             </svg>
-            <p className="m-0" onClick={handleGoBack}>
-              Go Back
-            </p>
+            <p className="m-0">Go Back</p>
           </motion.div>
           <div className="flex-1  overflow-auto">
             <div className="flex flex-col gap-2">
@@ -415,8 +414,8 @@ const AiSidebar = () => {
         </div>
         {/* bottom container */}
         <div className="flex-1 overflow-auto scrollable-div relative">
-          <div className="bg-[#008080] p-4 border-2 border-black rounded flex flex-col justify-between">
-            <div>
+          <div className="bg-[#008080] h-screen p-4 border-2 border-black rounded flex flex-col justify-between">
+            <div className="h-[10%] pb-2">
               <motion.div
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
@@ -491,7 +490,7 @@ const AiSidebar = () => {
                 </div>
               </motion.div>
             </div>
-            <div className="pt-3 flex justify-end cursor-pointer relative">
+            <div className="pt-20 pb-10 h-[10%] flex justify-end cursor-pointer relative">
               <motion.img
                 className="h-14 w-14"
                 whileTap={{ scale: "0.95" }}
@@ -512,7 +511,7 @@ const AiSidebar = () => {
                 ""
               )}
             </div>
-            <div className="pb-10">
+            <div className=" flex-1">
               <div
                 style={{
                   display: "flex",
