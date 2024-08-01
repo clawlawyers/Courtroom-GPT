@@ -369,6 +369,7 @@ const AiSidebar = () => {
           <motion.div
             className="max-w-fit rounded-lg flex gap-2 items-center py-2 cursor-pointer"
             whileTap={{ scale: "0.95" }}
+            onClick={handleGoBack}
           >
             <svg
               className="h-7 w-7"
@@ -385,9 +386,7 @@ const AiSidebar = () => {
                 fill-rule="nonzero"
               />
             </svg>
-            <p className="m-0" onClick={handleGoBack}>
-              Go Back
-            </p>
+            <p className="m-0">Go Back</p>
           </motion.div>
           <div className="flex-1  overflow-auto">
             <div className="flex flex-col gap-2">
