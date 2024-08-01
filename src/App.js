@@ -24,6 +24,7 @@ import { retrieveCourtroomAuth } from "./features/bookCourtRoom/LoginReducreSlic
 import FooterBanner from "./FooterBanner/FooterBanner.jsx";
 import ConfirmBooking from "./CourtRoom/BookNow/ConfirmBooking.jsx";
 import NewLayout from "./CourtRoom/CourtroomAi/NewLayout.jsx";
+import Admin from "./CourtRoom/admin/Admin.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -95,6 +96,10 @@ function App() {
         {
           path: "",
           element: <CourtRoom />,
+        },
+        {
+          path:"/admin",
+          element:<Admin />,
         },
         {
           path: "/login",
