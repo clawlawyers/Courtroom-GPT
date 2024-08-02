@@ -57,7 +57,7 @@ const UserDialog = ({ onClose }) => {
 
   return (
     <div
-      className="w-1/2 h-max"
+      className="w-2/3 h-max"
       style={{
         position: "absolute",
         backgroundColor: "rgba(0, 0, 0, 0.1)",
