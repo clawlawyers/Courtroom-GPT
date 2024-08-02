@@ -245,6 +245,12 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
                   "& .MuiPickersDay-root:hover": {
                     border: "1px solid #00ffa3", // Background color for hovered date
                   },
+                  "& .MuiPickersDay-root.Mui-selected:focus": {
+                    backgroundColor: "#00ffa3",
+                  },
+                  "& .MuiPickersDay-root.Mui-selected:hover": {
+                    backgroundColor: "#00ffa3",
+                  },
                   "& .MuiPickersDay-today": {
                     borderColor: "white", // Border color for today's date
                   },

@@ -53,34 +53,34 @@ function Home() {
     >
       {/* top container */}
       <div className="md:grid md:grid-cols-2 items-center px-2 md:px-28 pt-5">
-        <div className="pl-28">
-          <h1 className="px-5 text-start font-bold">What is Courtroom ?</h1>
-          <br />
-          <div className="p-5">
+        <div className="w-full flex flex-col  pl-32  gap-14">
+          <h1 className="m-0 text-start text-5xl font-bold">
+            What is Courtroom ?
+          </h1>
+          <div className="">
             <div className="slider-container">
               <Slider {...settings}>
                 <div>
-                  <h3 className="text-[#B7B2B2]">
+                  <h3 className="text-[#B7B2B2] text-xl">
                     Experience the trailer of the case you are going to fight
                     tommorow
                   </h3>
                 </div>
                 <div>
-                  <h3 className="text-[#B7B2B2]">
+                  <h3 className="text-[#B7B2B2] text-xl">
                     Your mock trial before the real case begins
                   </h3>
                 </div>
                 <div>
-                  <h3 className="text-[#B7B2B2]">
+                  <h3 className="text-[#B7B2B2] text-xl">
                     Your case assistant who does everything you want
                   </h3>
                 </div>
               </Slider>
             </div>
           </div>
-          <br />
 
-          <div className="flex px-5 gap-5">
+          <div className="flex gap-5">
             <Link to="/book-now">
               <motion.button
                 style={{
