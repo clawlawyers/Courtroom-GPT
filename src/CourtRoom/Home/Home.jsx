@@ -7,6 +7,7 @@ import laptop from "../../assets/images/image 1.png";
 import submitCase from "../../assets/images/SubmitYourCase.mp4";
 import argumentDraft from "../../assets/images/GetArgument.mp4";
 import frameCase from "../../assets/images/FrameYourCase.mp4";
+import mainIntro from "../../assets/images/mainIntro.mp4";
 import plus from "../../assets/images/Group 53.png";
 import Styles from "./CourtRoomHome.module.css";
 import arrw from "../../assets/images/Vector 1.png";
@@ -277,11 +278,22 @@ function Home() {
           <img alt="plus" src={plus} style={{ width: 20, height: 20 }} />
         </div>
         <div style={{ display: "grid", placeItems: "center" }}>
-          <div style={{ height: "400px" }}>
+          <div
+            className="relative"
+            style={{ height: "400px", width: "max-content" }}
+          >
             <img
-              alt="courtRoom Preview"
+              alt="courtRoom Preiview"
               src={laptop}
               style={{ borderRadius: 0, width: "100%", height: "100%" }}
+            />
+            <video
+              className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+              src={mainIntro}
+              autoPlay
+              loop
+              muted
+              playsInline
             />
           </div>
         </div>
