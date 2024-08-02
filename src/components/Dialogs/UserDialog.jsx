@@ -1,4 +1,10 @@
-import { Add, PersonAdd, Close, ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import {
+  Add,
+  PersonAdd,
+  Close,
+  ArrowBackIos,
+  ArrowForwardIos,
+} from "@mui/icons-material";
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
@@ -46,10 +52,10 @@ const UserDialog = ({ onClose }) => {
   const onSubmit = (data) => {
     const formData = {
       ...data,
-      slots: addedSlots.map(slot => ({
+      slots: addedSlots.map((slot) => ({
         date: dayjs(slot.date).format("D MMMM YYYY"),
-        time: slot.time
-      }))
+        time: slot.time,
+      })),
     };
 
     console.log("User Data with Slots:", formData);
@@ -57,7 +63,7 @@ const UserDialog = ({ onClose }) => {
 
   return (
     <div
-      className="w-2/3 h-max"
+      className="w-full h-full"
       style={{
         position: "absolute",
         backgroundColor: "rgba(0, 0, 0, 0.1)",
@@ -71,7 +77,7 @@ const UserDialog = ({ onClose }) => {
       }}
     >
       <div
-        className="h-fit scale-75 w-2/3 rounded-xl border-2 border-white relative"
+        className=" scale-75 w-1/2 rounded-xl border-2 border-white "
         style={{
           background: "linear-gradient(to right,#0e1118,#008080)",
         }}
@@ -102,7 +108,7 @@ const UserDialog = ({ onClose }) => {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col justify-center items-center w-full py-5 px-5 h-fit"
+          className="flex flex-col justify-center items-center w-full py-5 px-5 h-full"
         >
           <label
             htmlFor="username"

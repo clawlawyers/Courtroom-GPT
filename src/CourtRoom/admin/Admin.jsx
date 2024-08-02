@@ -243,8 +243,9 @@ const Admin = () => {
     <div className="w-0.5 bg-neutral-400 h-3/4 rounded-md my-5" />
     {/* user panel */}
     <div className="flex flex-col justify-center h-full w-[80%] items-center px-20">
-      <div className="flex flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
-        {userAddDialog && <UserDialog onClose={handleClose} />}
+      <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
+        {userAddDialog && 
+          <UserDialog onClose={handleClose} />}
         <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
           {/* Export */}
           <div className="flex flex-row items-center gap-3 mb-4 lg:mb-0">
@@ -303,7 +304,7 @@ const Admin = () => {
         </div>
 
         {/* user lists */}
-        <div className="border-2 overflow-y-auto border-white w-full rounded-md">
+        <div className="border-2 overflow-y-auto overflow-x-auto border-white w-full rounded-md">
           <table className="w-full table-auto text-sm">
             <thead>
               <tr className="bg-teal-500">
