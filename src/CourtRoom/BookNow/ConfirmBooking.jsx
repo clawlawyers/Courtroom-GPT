@@ -3,15 +3,26 @@ import { useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  auth,
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "../../utils/firebase";
+import firebase from "firebase/app";
+
 const ConfirmBooking = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
-  const [hasFilled, setHasFilled] = useState(false);
+  // const [hasFilled, setHasFilled] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const bookingData = useSelector((state) => state?.booking?.bookingData);
   const slots = bookingData?.slots;
+  const [verificationId, setVerificationId] = useState("");
+
   // console.log(bookingData.phoneNumber);
 
   const handlePayment = async () => {
@@ -84,6 +95,48 @@ const ConfirmBooking = () => {
     document.body.appendChild(script);
   };
 
+  // const [phoneNumber, setPhoneNumber] = useState('');
+
+  const handleSendOTP = () => {
+    const recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        },
+      },
+      auth
+    );
+
+    signInWithPhoneNumber(
+      auth,
+      "+91" + bookingData?.phoneNumber,
+      recaptchaVerifier
+    )
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        alert("OTP sent!");
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+      });
+  };
+
+  const handleVerifyOTP = () => {
+    const credential = PhoneAuthProvider.credential(verificationId, otp);
+
+    signInWithCredential(auth, credential)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        alert("Phone number verified successfully!");
+      })
+      .catch((error) => {
+        console.error("Error during OTP verification:", error);
+      });
+  };
+
   return (
     <div className="flex flex-col p-5 w-full gap-2">
       <div className="mx-32 flex  justify-between items-center bg-[#303030] rounded border-2 border-[#018585]">
@@ -92,7 +145,12 @@ const ConfirmBooking = () => {
           <h2 className="font-bold m-0">{bookingData?.phoneNumber}</h2>
         </div>
         <div className="flex items-center gap-2">
-          <input placeholder="Enter OTP" className="p-2 rounded text-black" />
+          <input
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
+            className="p-2 rounded text-black"
+          />
           <div className="flex items-center gap-2 cursor-pointer">
             <svg
               className="w-5 h-5"
@@ -114,13 +172,20 @@ const ConfirmBooking = () => {
           </div>
         </div>
         <div className="flex gap-2 m-2">
-          <button className="border-2 border-white rounded p-2">
+          <button
+            className="border-2 border-white rounded p-2"
+            onClick={handleSendOTP}
+          >
             Send OTP
           </button>
           <button className="border-2 border-white rounded p-2">Resend</button>
-          <button className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2">
+          <button
+            className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2"
+            onClick={handleVerifyOTP}
+          >
             Verify OTP
           </button>
+          <div id="recaptcha-container"></div>
         </div>
       </div>
       {/* Card Section */}
@@ -136,11 +201,17 @@ const ConfirmBooking = () => {
             <p className="text-neutral-200 text-sm">
               Access to AI Powered CLAW courtroom
             </p>
-           
-            <p >UserId: <span className="font-bold">{bookingData.name}</span></p>
-            <p >Email: <span className="font-bold">{bookingData.email}</span></p>
-            <p >Phone Number: <span className="font-bold">{bookingData.phoneNumber}</span></p>
 
+            <p>
+              UserId: <span className="font-bold">{bookingData.name}</span>
+            </p>
+            <p>
+              Email: <span className="font-bold">{bookingData.email}</span>
+            </p>
+            <p>
+              Phone Number:{" "}
+              <span className="font-bold">{bookingData.phoneNumber}</span>
+            </p>
           </div>
           <div className="h-0.5 bg-white w-full" />
           {/* Time Slot */}
