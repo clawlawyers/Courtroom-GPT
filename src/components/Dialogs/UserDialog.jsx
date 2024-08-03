@@ -8,8 +8,14 @@ import {
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
-import { useDispatch } from 'react-redux';
-import { setUserData, addSlot, removeSlot } from '../../features/admin/courtroomAdminAddUserSlice';
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  setUserData,
+  addSlot,
+  removeSlot,
+} from "../../features/admin/courtroomAdminAddUserSlice";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
 
 const UserDialog = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -55,19 +61,42 @@ const UserDialog = ({ onClose }) => {
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formData = {
       ...data,
       slots: addedSlots.map((slot) => ({
         date: dayjs(slot.date).format("D MMMM YYYY"),
-        time: slot.time,
+        hour: parseInt(slot.time.split(':')),
       })),
     };
-    console.log(FormData)
-
-    dispatch(setUserData(formData));
 
     console.log("User Data with Slots:", formData);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/courtroom/admin/book-courtroom`,
+        {
+          name: formData.username,
+          phoneNumber: formData.phoneNumber,
+         
+          email: formData.email,
+          password: formData.password, // Add password field in your form if necessary
+          slots: formData.slots,
+          recording: true,
+        }
+      );
+
+      if (response.status === 201) {
+        console.log("User added successfully:", response.data);
+        dispatch(setUserData(formData));
+        // Optionally, show a success message or close the dialog
+        onClose();
+      } else {
+        console.error("Failed to add user:", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
   };
 
   return (
@@ -107,13 +136,28 @@ const UserDialog = ({ onClose }) => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col justify-center items-center w-full py-5 px-5 h-full"
         >
-          <label htmlFor="username" className="text-left self-start font-semibold">
+          <label
+            htmlFor="username"
+            className="text-left self-start font-semibold"
+          >
             Username
           </label>
           <input
             {...register("username", { required: true })}
             id="username"
             type="text"
+            className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
+          />
+          <label
+            htmlFor="password"
+            className="text-left self-start font-semibold"
+          >
+            Username
+          </label>
+          <input
+            {...register("password", { required: true })}
+            id="password"
+            type="password"
             className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
           />
 
@@ -128,7 +172,10 @@ const UserDialog = ({ onClose }) => {
           />
           {errors.email && <p>This field is required</p>}
 
-          <label htmlFor="phoneNumber" className="text-left self-start font-semibold">
+          <label
+            htmlFor="phoneNumber"
+            className="text-left self-start font-semibold"
+          >
             Phone Number
           </label>
           <input
@@ -150,7 +197,10 @@ const UserDialog = ({ onClose }) => {
 
           <div className="flex flex-wrap w-full items-center justify-between">
             <div className="flex flex-col">
-              <label htmlFor="Date" className="text-left self-start font-semibold">
+              <label
+                htmlFor="Date"
+                className="text-left self-start font-semibold"
+              >
                 Date
               </label>
               <input
@@ -162,7 +212,10 @@ const UserDialog = ({ onClose }) => {
               {errors.date && <p>This field is required</p>}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="Time" className="text-left self-start font-semibold">
+              <label
+                htmlFor="Time"
+                className="text-left self-start font-semibold"
+              >
                 Time
               </label>
               <input

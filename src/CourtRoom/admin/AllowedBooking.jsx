@@ -34,26 +34,35 @@ const AllowedBooking = () => {
   useEffect(() => {
     const FetchUserData = async () => {
       try {
-        const userData = await axios.get(
+        const response = await axios.get(
           `${NODE_API_ENDPOINT}/admin/allAllowedBooking`
         );
-        console.log(userData);
-        // setUserData(userData.data.data);
+  
+        const userDataObject = response.data.data;
+  
+        // Assuming userDataObject is an object where each key represents a user or booking
+        // Convert it to an array
+        const userDataArray = Object.values(userDataObject);
+  
+        console.log(userDataArray);
+        setUserData(userDataArray);
       } catch (error) {
         console.error("Error fetching user data", error);
         toast.error("Error fetching user data");
       }
     };
+  
     FetchUserData();
   }, []);
+  console.log(userData)
 
   const handleDelete = async (userId) => {
     try {
       await axios.delete(`${NODE_API_ENDPOINT}/admin/AllowedBooking/${userId}`);
       console.log("Booking deleted successfully");
-      setUserData((prevUserData) =>
-        prevUserData.filter((user) => user.userId !== userId)
-      );
+      // setUserData((prevUserData) =>
+      //   prevUserData.filter((user) => user.userId !== userId)
+      // );
     } catch (error) {
       console.error("Error deleting booking", error);
     }
@@ -80,9 +89,9 @@ const AllowedBooking = () => {
   };
 
   const handleDeleteSelected = () => {
-    setUserData((prevUserData) =>
-      prevUserData.filter((user) => !selectedUserIds.includes(user.userId))
-    );
+    // setUserData((prevUserData) =>
+    //   prevUserData.filter((user) => !selectedUserIds.includes(user.userId))
+    // );
     setSelectedUserIds([]); // Clear selected user IDs after deletion
   };
   return (
@@ -142,11 +151,14 @@ const AllowedBooking = () => {
                     <th className="p-2">End Hour</th>
                     <th className="p-2">Email</th>
                     <th className="p-2">Phone No</th>
+                    <th className="p-2"></th>
+                    <th className="p-2"></th>
+
                   </tr>
                 </thead>
                 <tbody>
                   {userData
-                    .filter((val) => {
+                    ?.filter((val) => {
                       if (searchTerm === "" && filterDate === "") {
                         return val;
                       } else if (
@@ -180,11 +192,17 @@ const AllowedBooking = () => {
                           />
                         </td>
 
-                        <td className="p-2">{user.date}</td>
-                        <td className="p-2">{user.time}</td>
-                        <td className="p-2">{user.name}</td>
-                        <td className="p-2">{user.email}</td>
-                        <td className="p-2">{user.phoneNo}</td>
+                        <td className="p-2">{user?.date}</td>
+                        <td className="p-2">{user?.StartHour}</td>
+                        <td className="p-2">{user?.EndHour}</td>
+                        <td className="p-2">{user?.email}</td>
+                        <td className="p-2">{user?.phoneNumber}</td>
+                        <td className="p-2">
+                          <Edit />
+                        </td>
+                        <td className="p-2 cursor-pointer">
+                          <Delete />
+                        </td>
                       </tr>
                     ))}
                 </tbody>
