@@ -5,7 +5,7 @@ import { useState } from "react";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
 import UserDialog from "../../components/Dialogs/UserDialog";
-const Admin = () => {
+const CourtRoomUsers = () => {
   const handleExport = () => {
     const csv = Papa.unparse(userData);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -234,15 +234,9 @@ const Admin = () => {
 
   return (
     <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
-    <div className="w-[20%] flex flex-col h-3/4 justify-center gap-4">
-      <h1 className="text-2xl text-center bg-teal-500 p-2 rounded-md shadow-md shadow-neutral-900">
-        Courtroom Users
-      </h1>
-      <h1 className="text-center text-2xl p-2 rounded-md">Time Slots</h1>
-    </div>
-    <div className="w-0.5 bg-neutral-400 h-3/4 rounded-md my-5" />
+    
     {/* user panel */}
-    <div className="flex flex-col justify-center h-full w-[80%] items-center px-20">
+    <div className="flex flex-col justify-center h-full w-full items-center px-20">
       <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
         {userAddDialog && 
           <UserDialog onClose={handleClose} />}
@@ -373,4 +367,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default CourtRoomUsers;
