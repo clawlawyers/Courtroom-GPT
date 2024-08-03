@@ -27,8 +27,17 @@ const TimerComponent = React.memo(() => {
 
   return (
     <h1 style={{ fontSize: "20px" }}>
-      {currentTime.getHours()}:{currentTime.getMinutes()}:
-      {currentTime.getSeconds()}
+      {currentTime.getHours() < 10
+        ? `0${currentTime.getHours()}`
+        : currentTime.getHours()}
+      :
+      {currentTime.getMinutes() < 10
+        ? `0${currentTime.getMinutes()}`
+        : currentTime.getMinutes()}
+      :
+      {currentTime.getSeconds() < 10
+        ? `0${currentTime.getSeconds()}`
+        : currentTime.getSeconds()}
     </h1>
   );
 });

@@ -3,10 +3,6 @@ import { useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "../../utils/firebase";
-import toast from "react-hot-toast";
-
 const ConfirmBooking = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
@@ -14,9 +10,9 @@ const ConfirmBooking = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
-  const bookingData = useSelector((state) => state.booking.bookingData);
-  const slots = bookingData.slots;
-  console.log(bookingData.phoneNumber);
+  const bookingData = useSelector((state) => state?.booking?.bookingData);
+  const slots = bookingData?.slots;
+  // console.log(bookingData.phoneNumber);
 
   const handlePayment = async () => {
     await loadRazorpay(bookingData);
@@ -143,7 +139,44 @@ const ConfirmBooking = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-start pt-20 w-full items-center align-middle">
+    <div className="flex flex-col p-5 w-full gap-2">
+      <div className="mx-32 flex  justify-between items-center bg-[#303030] rounded border-2 border-[#018585]">
+        <div className="pl-8 py-2 flex flex-col gap-0">
+          <p className="m-0">OTP sent to</p>
+          <h2 className="font-bold m-0">{bookingData?.phoneNumber}</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <input placeholder="Enter OTP" className="p-2 rounded text-black" />
+          <div className="flex items-center gap-2 cursor-pointer">
+            <svg
+              className="w-5 h-5"
+              stroke="#018585"
+              fill="#018585"
+              clip-rule="evenodd"
+              fill-rule="evenodd"
+              stroke-linejoin="round"
+              stroke-miterlimit="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m3.508 6.726c1.765-2.836 4.911-4.726 8.495-4.726 5.518 0 9.997 4.48 9.997 9.997 0 5.519-4.479 9.999-9.997 9.999-5.245 0-9.553-4.048-9.966-9.188-.024-.302.189-.811.749-.811.391 0 .715.3.747.69.351 4.369 4.012 7.809 8.47 7.809 4.69 0 8.497-3.808 8.497-8.499 0-4.689-3.807-8.497-8.497-8.497-3.037 0-5.704 1.597-7.206 3.995l1.991.005c.414 0 .75.336.75.75s-.336.75-.75.75h-4.033c-.414 0-.75-.336-.75-.75v-4.049c0-.414.336-.75.75-.75s.75.335.75.75z"
+                fill-rule="nonzero"
+              />
+            </svg>
+            <p className="m-0">Retry in 30 seconds</p>
+          </div>
+        </div>
+        <div className="flex gap-2 m-2">
+          <button className="border-2 border-white rounded p-2">
+            Send OTP
+          </button>
+          <button className="border-2 border-white rounded p-2">Resend</button>
+          <button className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2">
+            Verify OTP
+          </button>
+        </div>
+      </div>
       {/* Card Section */}
       <section className="w-full h-max flex flex-row justify-start  items-start gap-20 px-40">
         {/* Card 1 */}
@@ -157,17 +190,11 @@ const ConfirmBooking = () => {
             <p className="text-neutral-200 text-sm">
               Access to AI Powered CLAW courtroom
             </p>
+           
+            <p >UserId: <span className="font-bold">{bookingData.name}</span></p>
+            <p >Email: <span className="font-bold">{bookingData.email}</span></p>
+            <p >Phone Number: <span className="font-bold">{bookingData.phoneNumber}</span></p>
 
-            <p>
-              UserId: <span className="font-bold">{bookingData.name}</span>
-            </p>
-            <p>
-              Email: <span className="font-bold">{bookingData.email}</span>
-            </p>
-            <p>
-              Phone Number:{" "}
-              <span className="font-bold">{bookingData.phoneNumber}</span>
-            </p>
           </div>
           <div className="h-0.5 bg-white w-full" />
           {/* Time Slot */}
@@ -179,9 +206,9 @@ const ConfirmBooking = () => {
                   key={idx}
                   className="bg-slot-gradient flex flex-row flex-wrap  p-3 items-center align-baseline rounded-lg justify-center px-3 text-black font-bold text-xs"
                 >
-                  {idx.date}
+                  {idx?.date}
                   {" ,"}
-                  {idx.hour}:00
+                  {idx?.hour}:00
                 </div>
               ))}
             </div>
@@ -234,7 +261,7 @@ const ConfirmBooking = () => {
               Price per slot: <span className="text-lg">Rs. 100</span> /-
             </h3>
             <h3 className="font-bold text-lg">
-              No. of slots booked: {slots.length}
+              No. of slots booked: {slots?.length}
             </h3>
           </div>
           <div className="h-0.5 bg-white w-full" />
@@ -242,7 +269,7 @@ const ConfirmBooking = () => {
           {/* Amount to Pay */}
           <div className="flex flex-col w-full px-2">
             <p className="text-xl font-bold">
-              Amount to Pay: {100 * slots.length}
+              Amount to Pay: {100 * slots?.length}
             </p>
             <div className="flex flex-row w-full justify-end">
               <button

@@ -24,6 +24,7 @@ import { retrieveCourtroomAuth } from "./features/bookCourtRoom/LoginReducreSlic
 import FooterBanner from "./FooterBanner/FooterBanner.jsx";
 import ConfirmBooking from "./CourtRoom/BookNow/ConfirmBooking.jsx";
 import NewLayout from "./CourtRoom/CourtroomAi/NewLayout.jsx";
+import Admin from "./CourtRoom/admin/Admin.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -97,6 +98,10 @@ function App() {
           element: <CourtRoom />,
         },
         {
+          path:"/admin",
+          element:<Admin />,
+        },
+        {
           path: "/login",
           element: <LoginToCourtRoom />,
         },
@@ -134,10 +139,10 @@ function App() {
           path: "/courtroom-ai/verdict",
           element: <Verdict />,
         },
-        {
-          path: "/courtroom-ai/layout",
-          element: <NewLayout />,
-        },
+        // {
+        //   path: "/courtroom-ai/verdict",
+        //   element: <NewLayout />,
+        // },
       ],
     },
     {
