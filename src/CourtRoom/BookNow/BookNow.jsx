@@ -7,7 +7,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
 
 const BookNow = () => {
@@ -76,8 +76,8 @@ const BookNow = () => {
       // loadRazorpay(bookingData);
     } else {
       setErrorState(true);
-      setErrorData("same number or email not allowed at same time slot");
-      toast.error("same number or email not allowed at same time slot");
+      setErrorData(respos.data.data.data);
+      toast.error(respos.data.data.data);
     }
     // TODO : backend post request
   };
@@ -154,7 +154,7 @@ const BookNow = () => {
       <h1
         style={{
           fontWeight: 800,
-          paddingBottom:"40px",
+          paddingBottom: "40px",
         }}
       >
         Book your Court Room
@@ -173,11 +173,19 @@ const BookNow = () => {
             justifyContent: "center",
             alignItems: "center",
             width: "70%",
-            height:"100%"
+            height: "100%",
           }}
         >
-          <form className={`${styles.forms} gap-4 lg:gap-5`} onSubmit={handleSubmit}>
-          <h2 className="font-bold " style={{fontSize: 'clamp(3rem, 2vw, 1.5rem)'}}>Enter your Details</h2>
+          <form
+            className={`${styles.forms} gap-4 lg:gap-5`}
+            onSubmit={handleSubmit}
+          >
+            <h2
+              className="font-bold "
+              style={{ fontSize: "clamp(3rem, 2vw, 1.5rem)" }}
+            >
+              Enter your Details
+            </h2>
             <input
               type="text"
               id="name"
@@ -309,7 +317,7 @@ const BookNow = () => {
               </div>
 
               <p className="text-black text-lg font-semibold p-5">
-                Same number or email not allowed at same time slot
+                {errorData}
               </p>
             </div>
           </div>

@@ -3,8 +3,16 @@ import { useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../../utils/firebase";
+import toast from "react-hot-toast";
+
 const ConfirmBooking = () => {
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  const [hasFilled, setHasFilled] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [countryCode, setCountryCode] = useState("+91");
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const bookingData = useSelector((state) => state.booking.bookingData);
   const slots = bookingData.slots;
@@ -12,6 +20,60 @@ const ConfirmBooking = () => {
 
   const handlePayment = async () => {
     await loadRazorpay(bookingData);
+  };
+
+  const generateRecaptcha = () => {
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+      size: "invisible",
+      callback: (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+      },
+    });
+  };
+
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    setHasFilled(true);
+    generateRecaptcha();
+    let appVerifier = window.recaptchaVerifier;
+    signInWithPhoneNumber(auth, countryCode + phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const verifyOtp = async (e) => {
+    e.preventDefault();
+    // setIsLoading(true);
+
+    try {
+      if (otp.length === 6) {
+        const confirmationResult = window.confirmationResult;
+        const result = await confirmationResult.confirm(otp);
+        const { uid, phoneNumber } = result.user;
+        toast.success(`${phoneNumber} verified`);
+        // const response = await fetch(`${NODE_API_ENDPOINT}/client/verify`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     phoneNumber: phoneNumber.slice(3),
+        //     verified: true,
+        //   }),
+        // });
+        // console.log(response);
+        // const { data } = await response.json();
+        // console.log(data);
+        // const userMongoId = data.mongoId;
+      } else throw new Error("Otp length should be of 6");
+    } catch (error) {
+      toast.error(error.message);
+      // setError(error.message || "Invalid Otp!");
+    } finally {
+      // setIsLoading(false);
+    }
   };
 
   const loadRazorpay = async (bookingData) => {
@@ -95,11 +157,17 @@ const ConfirmBooking = () => {
             <p className="text-neutral-200 text-sm">
               Access to AI Powered CLAW courtroom
             </p>
-           
-            <p >UserId: <span className="font-bold">{bookingData.name}</span></p>
-            <p >Email: <span className="font-bold">{bookingData.email}</span></p>
-            <p >Phone Number: <span className="font-bold">{bookingData.phoneNumber}</span></p>
 
+            <p>
+              UserId: <span className="font-bold">{bookingData.name}</span>
+            </p>
+            <p>
+              Email: <span className="font-bold">{bookingData.email}</span>
+            </p>
+            <p>
+              Phone Number:{" "}
+              <span className="font-bold">{bookingData.phoneNumber}</span>
+            </p>
           </div>
           <div className="h-0.5 bg-white w-full" />
           {/* Time Slot */}
@@ -110,19 +178,47 @@ const ConfirmBooking = () => {
                 <div
                   key={idx}
                   className="bg-slot-gradient flex flex-row flex-wrap  p-3 items-center align-baseline rounded-lg justify-center px-3 text-black font-bold text-xs"
-                  
                 >
                   {idx.date}
                   {" ,"}
                   {idx.hour}:00
                 </div>
               ))}
-              
             </div>
             <div className="w-full flex flex-row justify-end">
-            <button onClick={()=> navigate("/book-now")} className="border-2 font-semibold border-white rounded-md p-2">
+              <button
+                onClick={() => navigate("/book-now")}
+                className="border-2 font-semibold border-white rounded-md p-2"
+              >
                 Reschedule
               </button>
+              <div>
+                {hasFilled ? (
+                  <form onSubmit={verifyOtp}>
+                    <input
+                      style={{ color: "black" }}
+                      id="otp"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      required
+                    />
+                    <label htmlFor="otp"></label>
+                    <button>verify</button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleSendOtp}>
+                    <input
+                      style={{ color: "black" }}
+                      id="mobileNum"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                    />
+                    <label htmlFor="mobileNum"></label>
+                    <button>send otp</button>
+                  </form>
+                )}
+              </div>
             </div>
           </div>
         </div>
