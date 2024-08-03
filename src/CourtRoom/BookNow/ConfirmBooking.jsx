@@ -22,60 +22,6 @@ const ConfirmBooking = () => {
     await loadRazorpay(bookingData);
   };
 
-  const generateRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-      size: "invisible",
-      callback: (response) => {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-      },
-    });
-  };
-
-  const handleSendOtp = (e) => {
-    e.preventDefault();
-    setHasFilled(true);
-    generateRecaptcha();
-    let appVerifier = window.recaptchaVerifier;
-    signInWithPhoneNumber(auth, countryCode + phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const verifyOtp = async (e) => {
-    e.preventDefault();
-    // setIsLoading(true);
-
-    try {
-      if (otp.length === 6) {
-        const confirmationResult = window.confirmationResult;
-        const result = await confirmationResult.confirm(otp);
-        const { uid, phoneNumber } = result.user;
-        toast.success(`${phoneNumber} verified`);
-        // const response = await fetch(`${NODE_API_ENDPOINT}/client/verify`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     phoneNumber: phoneNumber.slice(3),
-        //     verified: true,
-        //   }),
-        // });
-        // console.log(response);
-        // const { data } = await response.json();
-        // console.log(data);
-        // const userMongoId = data.mongoId;
-      } else throw new Error("Otp length should be of 6");
-    } catch (error) {
-      toast.error(error.message);
-      // setError(error.message || "Invalid Otp!");
-    } finally {
-      // setIsLoading(false);
-    }
-  };
-
   const loadRazorpay = async (bookingData) => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -192,33 +138,6 @@ const ConfirmBooking = () => {
               >
                 Reschedule
               </button>
-              <div>
-                {hasFilled ? (
-                  <form onSubmit={verifyOtp}>
-                    <input
-                      style={{ color: "black" }}
-                      id="otp"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      required
-                    />
-                    <label htmlFor="otp"></label>
-                    <button>verify</button>
-                  </form>
-                ) : (
-                  <form onSubmit={handleSendOtp}>
-                    <input
-                      style={{ color: "black" }}
-                      id="mobileNum"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      required
-                    />
-                    <label htmlFor="mobileNum"></label>
-                    <button>send otp</button>
-                  </form>
-                )}
-              </div>
             </div>
           </div>
         </div>
