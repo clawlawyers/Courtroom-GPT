@@ -1,6 +1,9 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import UserDialog from "../../components/Dialogs/UserDialog";
 import { Add, Delete, Edit } from "@mui/icons-material";
+import axios from "axios";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+import toast from "react-hot-toast";
 
 const AllowedBooking = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,7 +12,7 @@ const AllowedBooking = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [userData, setUserData] = useState([]);
-  const [deleteDialog, setDeleteDialog] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -26,6 +29,54 @@ const AllowedBooking = () => {
         return prevSelectedUserIds.filter((id) => id !== userId);
       }
     });
+  };
+
+  useEffect(() => {
+    const FetchUserData = async () => {
+      try {
+        const userData = await axios.get(
+          `${NODE_API_ENDPOINT}/admin/allAllowedBooking`
+        );
+        console.log(userData);
+        // setUserData(userData.data.data);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+        toast.error("Error fetching user data");
+      }
+    };
+    FetchUserData();
+  }, []);
+
+  const handleDelete = async (userId) => {
+    try {
+      await axios.delete(`${NODE_API_ENDPOINT}/admin/AllowedBooking/${userId}`);
+      console.log("Booking deleted successfully");
+      setUserData((prevUserData) =>
+        prevUserData.filter((user) => user.userId !== userId)
+      );
+    } catch (error) {
+      console.error("Error deleting booking", error);
+    }
+  };
+
+  const handleEdit = async (userId, updatedData) => {
+    // Implement your logic for editing user here
+    try {
+      // Implement your logic for editing user here
+      await axios.patch(`${NODE_API_ENDPOINT}/admin/AllowedBooking/${userId}`, {
+        ...updatedData,
+      });
+      console.log("Booking deleted successfully");
+      console.log("User edited successfully");
+      // Update the user data in the state after editing
+      // const updatedUserData = userData.map((user) =>
+      //   user.userId === userId? {...user, /* update user properties here */ } : user
+      // );
+      // setUserData(updatedUserData);
+    } catch (error) {
+      console.error("Error editing user", error);
+      toast.error("Error editing user");
+    }
   };
 
   const handleDeleteSelected = () => {
