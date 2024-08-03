@@ -193,7 +193,8 @@ const CourtroomArgument = () => {
 
     // api call here
   };
-  const openDialog = () => {
+  const openDialog = (e) => {
+    e.stopPropagation();
     setIsDialogOpen(true);
   };
 
@@ -485,25 +486,6 @@ const CourtroomArgument = () => {
           </div>
           <div className="flex-1 overflow-auto">
             <div className="w-full flex flex-row-reverse pr-3 items-center">
-              <div className="relative">
-                {/* Existing components */}
-
-                <button
-                  className="bg-red-500 text-white w-5 h-5  rounded-full"
-                  onClick={isDialogOpen ? closeDialog : openDialog}
-                ></button>
-
-                {isDialogOpen && (
-                  <div
-                    ref={dialogRef}
-                    className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg"
-                  >
-                    <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
-                      {aiLawyerLoading ? <p>Loading</p> : potentialObjections}
-                    </button>
-                  </div>
-                )}
-              </div>
               <div
                 className=""
                 style={{
@@ -524,6 +506,7 @@ const CourtroomArgument = () => {
                       width: "99%",
                       display: "flex",
                       alignItems: "center",
+                      gap: "4px",
                       justifyContent: "space-between",
                       pointerEvents: "all",
                       border:
@@ -606,6 +589,27 @@ const CourtroomArgument = () => {
                               fill-rule="nonzero"
                             />
                           </motion.svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center">
+                      <button
+                        className="bg-red-500 text-white w-5 h-5  rounded-full"
+                        onClick={isDialogOpen ? closeDialog : openDialog}
+                      ></button>
+
+                      {isDialogOpen && (
+                        <div
+                          ref={dialogRef}
+                          className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg"
+                        >
+                          <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
+                            {aiLawyerLoading ? (
+                              <p>Loading</p>
+                            ) : (
+                              potentialObjections
+                            )}
+                          </button>
                         </div>
                       )}
                     </div>

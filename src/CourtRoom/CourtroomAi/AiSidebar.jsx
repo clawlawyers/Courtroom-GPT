@@ -53,7 +53,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
     if (slotTimeInterval < new Date().getHours()) {
       setCountDownOver(true);
     }
-  }, [slotTimeInterval]);
+  });
 
   return (
     <>
