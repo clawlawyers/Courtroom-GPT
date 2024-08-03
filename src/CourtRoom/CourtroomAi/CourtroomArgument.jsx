@@ -50,6 +50,7 @@ const CourtroomArgument = () => {
   const [aiLawyerLoading, setAiLawyerLoading] = useState(false);
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
   const [potentialObjections, setPotentialObjections] = useState("");
+  const [objectionIndex, setObjectionIndex] = useState("");
 
   const currentUser = useSelector((state) => state.user.user);
   const lastItemRef = useRef(null);
@@ -193,10 +194,10 @@ const CourtroomArgument = () => {
 
     // api call here
   };
-  const openDialog = (e) => {
-    e.stopPropagation();
-    setIsDialogOpen(true);
-  };
+  // const openDialog = (e) => {
+  //   e.stopPropagation();
+  //   setIsDialogOpen(true);
+  // };
 
   const closeDialog = () => {
     setIsDialogOpen(false);
@@ -505,6 +506,7 @@ const CourtroomArgument = () => {
                     style={{
                       width: "99%",
                       display: "flex",
+                      position: "relative",
                       alignItems: "center",
                       gap: "4px",
                       justifyContent: "space-between",
@@ -595,19 +597,23 @@ const CourtroomArgument = () => {
                     <div className="flex items-center">
                       <button
                         className="bg-red-500 text-white w-5 h-5  rounded-full"
-                        onClick={isDialogOpen ? closeDialog : openDialog}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsDialogOpen(true);
+                          setObjectionIndex(index);
+                        }}
                       ></button>
 
-                      {isDialogOpen && (
+                      {isDialogOpen && index === objectionIndex && (
                         <div
                           ref={dialogRef}
-                          className="absolute top-12 w-48  right-0 h-48 bg-white p-4 rounded shadow-lg"
+                          className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-10 p-4 rounded shadow-lg"
                         >
-                          <button className="absolute top-0 h-40 overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
+                          <button className="top-0 h-full overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
                             {aiLawyerLoading ? (
                               <p>Loading</p>
                             ) : (
-                              potentialObjections
+                              <p className="">{potentialObjections}</p>
                             )}
                           </button>
                         </div>
