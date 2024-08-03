@@ -33,10 +33,10 @@ const AllowedBooking = () => {
     setSelectedUserIds([]); // Clear selected user IDs after deletion
   };
   return (
-    <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
+    <section className="h-screen w-full flex flex-row justify-center items-center gap-5 py-5">
     
     {/* user panel */}
-    <div className="flex flex-col justify-center h-full w-full items-center px-20">
+    <div className="flex flex-col justify-center h-full w-full items-center">
       <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
         {userAddDialog && 
           <UserDialog onClose={handleClose} />}
