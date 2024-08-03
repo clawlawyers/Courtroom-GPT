@@ -9,7 +9,7 @@ const AllowedBooking = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [userData, setUserData] = useState([]);
-  const [deleteDialog, setDeleteDialog] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);

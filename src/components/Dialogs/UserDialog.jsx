@@ -63,6 +63,7 @@ const UserDialog = ({ onClose }) => {
         time: slot.time,
       })),
     };
+    console.log(FormData)
 
     dispatch(setUserData(formData));
 
