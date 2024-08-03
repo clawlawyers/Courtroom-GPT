@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 const ConfirmBooking = () => {
   const navigate = useNavigate();
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
-  const bookingData = useSelector((state) => state.booking.bookingData);
-  const slots = bookingData.slots;
-  console.log(bookingData.phoneNumber);
+  const bookingData = useSelector((state) => state?.booking?.bookingData);
+  const slots = bookingData?.slots;
+  // console.log(bookingData.phoneNumber);
 
   const handlePayment = async () => {
     await loadRazorpay(bookingData);
@@ -155,9 +155,9 @@ const ConfirmBooking = () => {
                   key={idx}
                   className="bg-slot-gradient flex flex-row flex-wrap  p-3 items-center align-baseline rounded-lg justify-center px-3 text-black font-bold text-xs"
                 >
-                  {idx.date}
+                  {idx?.date}
                   {" ,"}
-                  {idx.hour}:00
+                  {idx?.hour}:00
                 </div>
               ))}
             </div>
@@ -183,7 +183,7 @@ const ConfirmBooking = () => {
               Price per slot: <span className="text-lg">Rs. 100</span> /-
             </h3>
             <h3 className="font-bold text-lg">
-              No. of slots booked: {slots.length}
+              No. of slots booked: {slots?.length}
             </h3>
           </div>
           <div className="h-0.5 bg-white w-full" />
@@ -191,7 +191,7 @@ const ConfirmBooking = () => {
           {/* Amount to Pay */}
           <div className="flex flex-col w-full px-2">
             <p className="text-xl font-bold">
-              Amount to Pay: {100 * slots.length}
+              Amount to Pay: {100 * slots?.length}
             </p>
             <div className="flex flex-row w-full justify-end">
               <button
