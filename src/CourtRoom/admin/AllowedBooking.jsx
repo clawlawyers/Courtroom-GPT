@@ -37,13 +37,13 @@ const AllowedBooking = () => {
         const response = await axios.get(
           `${NODE_API_ENDPOINT}/admin/allAllowedBooking`
         );
-  
+
         const userDataObject = response.data.data;
-  
+
         // Assuming userDataObject is an object where each key represents a user or booking
         // Convert it to an array
         const userDataArray = Object.values(userDataObject);
-  
+
         console.log(userDataArray);
         setUserData(userDataArray);
       } catch (error) {
@@ -51,10 +51,10 @@ const AllowedBooking = () => {
         toast.error("Error fetching user data");
       }
     };
-  
+
     FetchUserData();
   }, []);
-  console.log(userData)
+  console.log(userData);
 
   const handleDelete = async (userId) => {
     try {
@@ -153,7 +153,6 @@ const AllowedBooking = () => {
                     <th className="p-2">Phone No</th>
                     <th className="p-2"></th>
                     <th className="p-2"></th>
-
                   </tr>
                 </thead>
                 <tbody>

@@ -66,7 +66,7 @@ const UserDialog = ({ onClose }) => {
       ...data,
       slots: addedSlots.map((slot) => ({
         date: dayjs(slot.date).format("D MMMM YYYY"),
-        hour: parseInt(slot.time.split(':')),
+        hour: parseInt(slot.time.split(":")),
       })),
     };
 
@@ -74,11 +74,11 @@ const UserDialog = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/courtroom/admin/book-courtroom`,
+        `http://localhost:8000/api/v1/courtroom/book-courtroom`,
         {
           name: formData.username,
           phoneNumber: formData.phoneNumber,
-         
+
           email: formData.email,
           password: formData.password, // Add password field in your form if necessary
           slots: formData.slots,
