@@ -152,7 +152,7 @@ const UserDialog = ({ onClose }) => {
             htmlFor="password"
             className="text-left self-start font-semibold"
           >
-            Username
+            Password
           </label>
           <input
             {...register("password", { required: true })}
