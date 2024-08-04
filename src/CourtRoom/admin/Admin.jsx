@@ -1,4 +1,4 @@
-import { Add, Delete, Edit, Share } from "@mui/icons-material";
+import { Add, Delete, Edit, Share, Check } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import Papa from "papaparse";
@@ -13,17 +13,31 @@ const CourtRoomUsers = () => {
   const [filterDate, setFilterDate] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
-  const [deleteDialog,setDeleteDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const [deleteUserIds, setDeleteUserIds] = useState([]);
-  const [deleteFlag,setDeleteFlag] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    date: "",
+    time: "",
+    name: "",
+    email: "",
+    phoneNumber: "",
+    recording: false,
+  });
+
   useEffect(() => {
     const getAllData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/admin/allCourtRoomData");
+        const res = await axios.get(
+          "http://localhost:8000/api/v1/admin/allCourtRoomData"
+        );
         const fetchedData = res.data.data;
 
         // Filter the data to include only users with courtroomBookings[0]._id
-        const filteredData = fetchedData.filter(user => user?.courtroomBookings.some(booking => booking?._id));
+        const filteredData = fetchedData.filter((user) =>
+          user?.courtroomBookings.some((booking) => booking?._id)
+        );
 
         console.log(filteredData);
         setUserData(filteredData);
@@ -83,40 +97,57 @@ const CourtRoomUsers = () => {
     });
   };
 
-  const handleDeleteUser = async (userId, bookingId) => {
-    
-    setDeleteUserIds(userId);
+  const handleDeleteUser = (userId, bookingId) => {
+    const user = userData
+      .flatMap((user) => user.courtroomBookings)
+      .find((booking) => booking._id === userId);
+    setDeleteUserIds({ userId, bookingId });
+    setUserToDelete(user);
+    setDeleteDialog(true);
+  };
+
+  const confirmDeleteUser = async (user) => {
+    setUserToDelete(user);
+    const { userId, bookingId } = deleteUserIds;
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`);
+      const res = await axios.delete(
+        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+      );
       console.log("User Deleted", res);
 
-      // Remove the deleted user from the state
       setUserData((prevUserData) =>
         prevUserData.map((user) => ({
           ...user,
-          courtroomBookings: user.courtroomBookings.filter((booking) => booking._id !== userId)
+          courtroomBookings: user.courtroomBookings.filter(
+            (booking) => booking._id !== userId
+          ),
         }))
       );
+
+      setDeleteDialog(false);
     } catch (e) {
       console.log(e);
     }
-    
   };
+
   const handleDeleteSelected = async () => {
     try {
       // Assuming you have a way to get bookingId from user data or selectedUserIds
       const deletePromises = selectedUserIds.map((userId) => {
-        const user = userData.flatMap(user => user.courtroomBookings)
-                                .find(booking => booking._id === userId);
+        const user = userData
+          .flatMap((user) => user.courtroomBookings)
+          .find((booking) => booking._id === userId);
         const bookingId = user?.bookingId; // Modify if needed based on your data structure
-  
-        return axios.delete(`http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`);
+
+        return axios.delete(
+          `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+        );
       });
-  
+
       await Promise.all(deletePromises);
-  
+
       console.log("Selected Users Deleted");
-  
+
       // Update the state to remove deleted users
       setUserData((prevUserData) =>
         prevUserData.map((user) => ({
@@ -126,19 +157,64 @@ const CourtRoomUsers = () => {
           ),
         }))
       );
-  
+
       // Clear the selected user IDs after deletion
       setSelectedUserIds([]);
-  
     } catch (e) {
       console.log("Error deleting selected users:", e);
     }
   };
-  
+
+  const handleEdit = (booking, user) => {
+    setEditingUserId(booking._id);
+    setEditFormData({
+      date: user.date,
+      time: user.hour,
+      name: booking.name,
+      email: booking.email,
+      phoneNumber: booking.phoneNumber,
+      recording: booking.recording,
+    });
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === "checkbox" ? checked : value;
+    setEditFormData({ ...editFormData, [name]: fieldValue });
+  };
+
+  const handleEditConfirm = async (bookingId, userId) => {
+    try {
+      // Make a request to update the user data
+      const res = await axios.put(
+        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`,
+        editFormData
+      );
+      console.log("User updated", res.data);
+
+      // Update the state with the new data
+      setUserData((prevUserData) =>
+        prevUserData.map((user) => ({
+          ...user,
+          date: user._id === userId ? editFormData.date : user.date,
+          hour: user._id === userId ? editFormData.time : user.hour,
+          courtroomBookings: user.courtroomBookings.map((booking) =>
+            booking._id === userId
+              ? { ...booking, ...editFormData }
+              : booking
+          ),
+        }))
+      );
+
+      setEditingUserId(null);
+    } catch (e) {
+      console.error("Error updating user data:", e);
+    }
+  };
 
   return (
     <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
-      <div className="flex flex-col justify-center h-full w-full items-center px-20">
+      <div className="flex flex-col justify-center h-full w-full items-center ">
         <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
           {userAddDialog && (
             <UserDialog onClose={handleClose} isOpen={userAddDialog} />
@@ -176,15 +252,12 @@ const CourtRoomUsers = () => {
               </button>
 
               <button
-                // onClick={handleDeleteSelected}
+                onClick={handleDeleteSelected}
                 className={`bg-card-gradient shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
                   selectedUserIds.length === 0 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={selectedUserIds.length === 0}
               >
-                <div>
-                  <Delete />
-                </div>
                 <div className="font-semibold">
                   Delete ({selectedUserIds.length})
                 </div>
@@ -222,10 +295,15 @@ const CourtRoomUsers = () => {
                       return true;
                     } else if (
                       (searchTerm === "" ||
-                        user.courtroomBookings.some((booking) =>
-                          booking.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          booking.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          booking.phoneNumber.includes(searchTerm)
+                        user.courtroomBookings.some(
+                          (booking) =>
+                            booking.name
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            booking.email
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            booking.phoneNumber.includes(searchTerm)
                         )) &&
                       (filterDate === "" || user.date === filterDate)
                     ) {
@@ -243,22 +321,110 @@ const CourtRoomUsers = () => {
                           <input
                             type="checkbox"
                             onChange={(e) =>
-                              handleCheckboxChange(booking._id, e.target.checked)
+                              handleCheckboxChange(
+                                booking._id,
+                                e.target.checked
+                              )
                             }
                           />
                         </td>
 
-                        <td className="p-2">{user.date}</td>
-                        <td className="p-2">{user.hour}</td>
-                        <td className="p-2">{booking.name}</td>
-                        <td className="p-2">{booking.email}</td>
-                        <td className="p-2">{booking.phoneNumber}</td>
-                        <td className="p-2">{booking.recording ? "true" : "false"}</td>
-                        <td className="p-2">{booking._id}</td>
                         <td className="p-2">
-                          <Edit />
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="date"
+                              name="date"
+                              value={editFormData.date}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            user.date
+                          )}
                         </td>
-                        <td className="p-2 cursor-pointer" onClick={() => handleDeleteUser(booking?._id, user?._id)}>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="time"
+                              name="time"
+                              value={editFormData.time}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            user.hour
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="text"
+                              name="name"
+                              value={editFormData.name}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            booking.name
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="email"
+                              name="email"
+                              value={editFormData.email}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            booking.email
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="text"
+                              name="phoneNumber"
+                              value={editFormData.phoneNumber}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            booking.phoneNumber
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="checkbox"
+                              name="recording"
+                              checked={editFormData.recording}
+                              onChange={handleEditFormChange}
+                              className="focus:outline-none"
+                            />
+                          ) : (
+                            booking.recording ? "true" : "false"
+                          )}
+                        </td>
+                        <td className="p-2">{booking._id}</td>
+                        <td className="p-2 cursor-pointer">
+                          {editingUserId === booking._id ? (
+                            <Check
+                              onClick={() =>
+                                handleEditConfirm(booking.bookingId, booking._id)
+                              }
+                            />
+                          ) : (
+                            <Edit onClick={() => handleEdit(booking, user)} />
+                          )}
+                        </td>
+                        <td
+                          className="p-2 cursor-pointer"
+                          onClick={() =>
+                            handleDeleteUser(booking?._id, user?._id)
+                          }
+                        >
                           <Delete />
                         </td>
                       </tr>
@@ -268,68 +434,72 @@ const CourtRoomUsers = () => {
             </table>
           </div>
         </div>
-        {deleteDialog ? (
-            <div
-              className="py-3"
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                left: "0",
-                right: "0",
-                // backgroundColor: "rgba(0, 0, 0, 0.1)",
-                backdropFilter: "blur(3px)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: "10",
-              }}
-            >
-              <div className="m-32 w-full flex flex-col border-4 border-red-600 rounded bg-gradient-to-r from-[#008080] to-[#003131]">
-                <div className="p-3 flex w-full justify-between items-center">
-                  <h5 className="m-0 px-1 font-bold">
-                    Proceed with Deleting User ?
-                  </h5>
-                  <svg
-                    className="h-10 w-10"
-                    fill="white"
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    stroke-linejoin="round"
-                    stroke-miterlimit="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                      fill-rule="nonzero"
-                    />
-                  </svg>
-                </div>
-                <div className="px-4 flex flex-col gap-1">
-                  <p className="text-white m-0">
-                    User Name: <span className="text-gray-400">{deleteUserIds?.name}</span>
-                  </p>
-                  <p className="text-white m-0">
-                    Email: <span className="text-gray-400">john@gmail.com</span>
-                  </p>
-                  <p className="text-white m-0">
-                    Date: <span className="text-gray-400">12 August</span>
-                  </p>
-                  <p className="text-white m-0">
-                    Time: <span className="text-gray-400">13:00</span>
-                  </p>
-                </div>
-                <div className="flex justify-end p-2 ">
-                  <button onClick={()=>setDeleteFlag(true)} className="bg-gradient-to-r from-[#008080] to-[#003131] border-2 border-white rounded py-2 px-3">
-                    Delete
-                  </button>
-                </div>
+
+        {deleteDialog && userToDelete && (
+          <div
+            className="py-3"
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              left: "0",
+              right: "0",
+              backdropFilter: "blur(3px)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "10",
+            }}
+          >
+            <div className="m-32 w-2/3 flex flex-col border-4 border-red-600 rounded bg-gradient-to-r from-[#008080] to-[#003131]">
+              <div className="p-3 flex w-full justify-between items-center">
+                <h5 className="m-0 px-1 font-bold">
+                  Proceed with Deleting User?
+                </h5>
+                <svg
+                  className="h-10 w-10 cursor-pointer"
+                  fill="white"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
+                  strokeLinejoin="round"
+                  strokeMiterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  onClick={() => setDeleteDialog(false)}
+                >
+                  <path
+                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm4.292 6.707c-.391-.391-1.024-.391-1.415 0l-2.877 2.877-2.877-2.877c-.391-.391-1.024-.391-1.415 0-.391.391-.391 1.024 0 1.415l2.878 2.878-2.878 2.878c-.391.391-.391 1.024 0 1.415.391.391 1.024.391 1.415 0l2.877-2.878 2.877 2.878c.391.391 1.024.391 1.415 0 .391-.391.391-1.024 0-1.415l-2.878-2.878 2.878-2.878c.391-.391.391-1.024 0-1.415z"
+                    fillRule="nonzero"
+                  />
+                </svg>
+              </div>
+
+              <div className="px-4 mb-4">
+                <p>
+                  <strong>Name:</strong> {userToDelete.name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {userToDelete.email}
+                </p>
+                <p>
+                  <strong>Phone No:</strong> {userToDelete.phoneNumber}
+                </p>
+                <p>
+                  <strong>Record:</strong>{" "}
+                  {userToDelete.recording ? "true" : "false"}
+                </p>
+              </div>
+              <div className="w-full p-3 px-10 flex justify-end items-center">
+                <button
+                  className="flex justify-center items-center px-4 p-2 text-center bg-white text-teal-700 border-2 border-white rounded font-bold"
+                  onClick={() => confirmDeleteUser(userToDelete)}
+                >
+                  Yes
+                </button>
               </div>
             </div>
-          ) : (
-            ""
-          )}
+          </div>
+        )}
       </div>
     </section>
   );

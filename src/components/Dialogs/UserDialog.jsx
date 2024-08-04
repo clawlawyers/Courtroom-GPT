@@ -78,7 +78,6 @@ const UserDialog = ({ onClose }) => {
         {
           name: formData.username,
           phoneNumber: formData.phoneNumber,
-
           email: formData.email,
           password: formData.password, // Add password field in your form if necessary
           slots: formData.slots,
@@ -115,7 +114,7 @@ const UserDialog = ({ onClose }) => {
       }}
     >
       <div
-        className="scale-75 w-1/2 rounded-xl border-2 border-white"
+        className="scale-75 w-2/3 rounded-xl border-2 border-white"
         style={{
           background: "linear-gradient(to right,#0e1118,#008080)",
         }}
