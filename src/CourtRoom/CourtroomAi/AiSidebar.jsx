@@ -83,7 +83,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: "10",
+            zIndex: "20",
           }}
         >
           <div
@@ -736,7 +736,7 @@ const AiSidebar = () => {
                 background: "linear-gradient(to right,#0e1118,#008080)",
               }}
             >
-              <img className="h-1/2 w-1/2" src={loader} alt="loader" />
+              <img className="h-40 w-40 my-10" src={loader} alt="loader" />
             </div>
           ) : (
             <div
@@ -926,7 +926,7 @@ const AiSidebar = () => {
         <div
           // md:left-[28rem] md:top-32
           // bg-[#eeeeee]
-          className="absolute flex  h-screen items-center left-1/4 overflow-auto
+          className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               "
         >
           <div className="bg-[#eeeeee] border-8 border-white rounded-xl shadow-inner">

@@ -30,7 +30,7 @@ const Verdict = () => {
         const verdictText = response.data.data.restDetail.verdict;
         console.log("verdict text is", verdictText);
         setVerdict(verdictText);
-        setPages(splitTextIntoPages(verdictText, 700));
+        setPages(splitTextIntoPages(verdictText, 1000));
       } catch (error) {
         console.error("Error fetching verdict:", error);
       } finally {
@@ -130,7 +130,7 @@ const Verdict = () => {
               />
               <img className="w-24" src={logo} alt="logo" />
             </div>
-            <section className="px-4 flex flex-col h-full justify-between items-center relative overflow-auto scrollable-div cursor-default">
+            <section className="px-4 flex flex-col h-full justify-between items-center relative overflow-auto  cursor-default">
               <motion.div
                 key={currentPage}
                 initial={{ opacity: 0, x: 50 }}
