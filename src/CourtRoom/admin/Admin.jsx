@@ -115,7 +115,7 @@ const CourtRoomUsers = () => {
     const { userId, bookingId } = deleteUserIds;
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+        `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`
       );
       console.log("User Deleted", res);
 
@@ -146,7 +146,7 @@ setIsLoading(false);
         const bookingId = user?.bookingId; // Modify if needed based on your data structure
 
         return axios.delete(
-          `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+          `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`
         );
       });
 
@@ -205,9 +205,7 @@ setIsLoading(false);
           date: user._id === userId ? editFormData.date : user.date,
           hour: user._id === userId ? editFormData.time : user.hour,
           courtroomBookings: user.courtroomBookings.map((booking) =>
-            booking._id === userId
-              ? { ...booking, ...editFormData }
-              : booking
+            booking._id === userId ? { ...booking, ...editFormData } : booking
           ),
         }))
       );
@@ -268,7 +266,9 @@ setIsLoading(false);
               <button
                 onClick={handleDeleteSelected}
                 className={`bg-card-gradient shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
-                  selectedUserIds.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                  selectedUserIds.length === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
                 disabled={selectedUserIds.length === 0}
               >
@@ -417,8 +417,10 @@ setIsLoading(false);
                               onChange={handleEditFormChange}
                               className="focus:outline-none"
                             />
+                          ) : booking.recording ? (
+                            "true"
                           ) : (
-                            booking.recording ? "true" : "false"
+                            "false"
                           )}
                         </td>
                         <td className="p-2">{booking._id}</td>
@@ -426,7 +428,10 @@ setIsLoading(false);
                           {editingUserId === booking._id ? (
                             <Check
                               onClick={() =>
-                                handleEditConfirm(booking.bookingId, booking._id)
+                                handleEditConfirm(
+                                  booking.bookingId,
+                                  booking._id
+                                )
                               }
                             />
                           ) : (
