@@ -5,6 +5,7 @@ import Papa from "papaparse";
 import { saveAs } from "file-saver";
 import UserDialog from "../../components/Dialogs/UserDialog";
 import axios from "axios";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
 
 const CourtRoomUsers = () => {
   const [userData, setUserData] = useState([]);
@@ -30,7 +31,7 @@ const CourtRoomUsers = () => {
     const getAllData = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/v1/admin/allCourtRoomData"
+          `${NODE_API_ENDPOINT}/admin/allCourtRoomData`
         );
         const fetchedData = res.data.data;
 
@@ -111,7 +112,7 @@ const CourtRoomUsers = () => {
     const { userId, bookingId } = deleteUserIds;
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+        `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`
       );
       console.log("User Deleted", res);
 
@@ -140,7 +141,7 @@ const CourtRoomUsers = () => {
         const bookingId = user?.bookingId; // Modify if needed based on your data structure
 
         return axios.delete(
-          `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+          `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`
         );
       });
 
@@ -187,7 +188,7 @@ const CourtRoomUsers = () => {
     try {
       // Make a request to update the user data
       const res = await axios.put(
-        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`,
+        `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`,
         editFormData
       );
       console.log("User updated", res.data);
@@ -199,9 +200,7 @@ const CourtRoomUsers = () => {
           date: user._id === userId ? editFormData.date : user.date,
           hour: user._id === userId ? editFormData.time : user.hour,
           courtroomBookings: user.courtroomBookings.map((booking) =>
-            booking._id === userId
-              ? { ...booking, ...editFormData }
-              : booking
+            booking._id === userId ? { ...booking, ...editFormData } : booking
           ),
         }))
       );
@@ -254,7 +253,9 @@ const CourtRoomUsers = () => {
               <button
                 onClick={handleDeleteSelected}
                 className={`bg-card-gradient shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
-                  selectedUserIds.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                  selectedUserIds.length === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
                 disabled={selectedUserIds.length === 0}
               >
@@ -403,8 +404,10 @@ const CourtRoomUsers = () => {
                               onChange={handleEditFormChange}
                               className="focus:outline-none"
                             />
+                          ) : booking.recording ? (
+                            "true"
                           ) : (
-                            booking.recording ? "true" : "false"
+                            "false"
                           )}
                         </td>
                         <td className="p-2">{booking._id}</td>
@@ -412,7 +415,10 @@ const CourtRoomUsers = () => {
                           {editingUserId === booking._id ? (
                             <Check
                               onClick={() =>
-                                handleEditConfirm(booking.bookingId, booking._id)
+                                handleEditConfirm(
+                                  booking.bookingId,
+                                  booking._id
+                                )
                               }
                             />
                           ) : (

@@ -74,7 +74,7 @@ const UserDialog = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/courtroom/book-courtroom`,
+        `${NODE_API_ENDPOINT}/courtroom/book-courtroom`,
         {
           name: formData.username,
           phoneNumber: formData.phoneNumber,
