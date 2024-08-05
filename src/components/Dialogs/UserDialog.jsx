@@ -8,10 +8,20 @@ import {
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  setUserData,
+  addSlot,
+  removeSlot,
+} from "../../features/admin/courtroomAdminAddUserSlice";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
 
 const UserDialog = ({ onClose }) => {
+  const dispatch = useDispatch();
   const [addedSlots, setAddedSlots] = useState([]);
   const slotsContainerRef = useRef(null);
+
   const {
     register,
     handleSubmit,
@@ -26,6 +36,7 @@ const UserDialog = ({ onClose }) => {
     if (date && time) {
       const newSlot = { date, time };
       setAddedSlots((prevSlots) => [...prevSlots, newSlot]);
+      dispatch(addSlot(newSlot));
     }
   };
 
@@ -33,6 +44,7 @@ const UserDialog = ({ onClose }) => {
     setAddedSlots((prevSlots) =>
       prevSlots.filter((_, index) => index !== indexToRemove)
     );
+    dispatch(removeSlot(indexToRemove));
   };
 
   const handleScrollLeft = () => {
@@ -49,16 +61,41 @@ const UserDialog = ({ onClose }) => {
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formData = {
       ...data,
       slots: addedSlots.map((slot) => ({
         date: dayjs(slot.date).format("D MMMM YYYY"),
-        time: slot.time,
+        hour: parseInt(slot.time.split(":")),
       })),
     };
 
     console.log("User Data with Slots:", formData);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/courtroom/book-courtroom`,
+        {
+          name: formData.username,
+          phoneNumber: formData.phoneNumber,
+          email: formData.email,
+          password: formData.password, // Add password field in your form if necessary
+          slots: formData.slots,
+          recording: true,
+        }
+      );
+
+      if (response.status === 201) {
+        console.log("User added successfully:", response.data);
+        dispatch(setUserData(formData));
+        // Optionally, show a success message or close the dialog
+        onClose();
+      } else {
+        console.error("Failed to add user:", response.data);
+      }
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
   };
 
   return (
@@ -77,7 +114,7 @@ const UserDialog = ({ onClose }) => {
       }}
     >
       <div
-        className=" scale-75 w-1/2 rounded-xl border-2 border-white "
+        className="scale-75 w-2/3 rounded-xl border-2 border-white"
         style={{
           background: "linear-gradient(to right,#0e1118,#008080)",
         }}
@@ -85,25 +122,13 @@ const UserDialog = ({ onClose }) => {
         <div className="flex flex-row justify-between items-center border-b-2 border-white">
           <h4 className="text-center mx-10">New User Details</h4>
           <div className="flex justify-end">
-            <svg
+            <Close
               onClick={onClose}
               style={{ margin: "20px", cursor: "pointer" }}
               width="30"
               height="30"
               fill="white"
-              stroke="white"
-              clipRule="evenodd"
-              fillRule="evenodd"
-              strokeLinejoin="round"
-              strokeMiterlimit="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                fillRule="nonzero"
-              />
-            </svg>
+            />
           </div>
         </div>
         <form
@@ -120,6 +145,18 @@ const UserDialog = ({ onClose }) => {
             {...register("username", { required: true })}
             id="username"
             type="text"
+            className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
+          />
+          <label
+            htmlFor="password"
+            className="text-left self-start font-semibold"
+          >
+            Password
+          </label>
+          <input
+            {...register("password", { required: true })}
+            id="password"
+            type="password"
             className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
           />
 
@@ -193,9 +230,7 @@ const UserDialog = ({ onClose }) => {
               onClick={handleAddSlots}
               className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
             >
-              <div>
-                <Add />
-              </div>
+              <Add />
               <div className="font-semibold">Add Slot</div>
             </button>
           </div>
@@ -209,7 +244,7 @@ const UserDialog = ({ onClose }) => {
               className="cursor-pointer text-white z-10 absolute left-0"
             />
             <div
-              className="bg-white w-full items-center rounded-md border border-neutral-800   h-20 flex flex-nowrap overflow-x-auto scrollbar-hide mx-4"
+              className="bg-white w-full items-center rounded-md border border-neutral-800 h-20 flex flex-nowrap overflow-x-auto scrollbar-hide mx-4"
               ref={slotsContainerRef}
             >
               {addedSlots.map((slot, index) => (
@@ -237,9 +272,7 @@ const UserDialog = ({ onClose }) => {
               type="submit"
               className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
             >
-              <div>
-                <PersonAdd />
-              </div>
+              <PersonAdd />
               <div className="font-semibold">Add User</div>
             </button>
           </div>

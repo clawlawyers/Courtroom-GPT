@@ -5,6 +5,10 @@ import { useState } from "react";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
 import UserDialog from "../../components/Dialogs/UserDialog";
+import { useEffect } from "react";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AllowedLogin = () => {
   const handleExport = () => {
@@ -13,177 +17,49 @@ const AllowedLogin = () => {
     saveAs(blob, "userData.csv");
   };
   // dummy data
-  const [userData, setUserData] = useState([
-    {
-      date: "2022-01-10",
-      time: "12:00",
-      name: "John Doe",
-      email: "musharafz2k3@gmail.com",
-      phoneNo: "123-456-7890",
-      rec: "No",
-      userId: "user1",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user2",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user3",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user4",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user5",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user6",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user7",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user8",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user9",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user10",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user11",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user12",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user13",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user14",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user15",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user16",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user17",
-    },
-    {
-      date: "2022-01-02",
-      time: "13:00",
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      phoneNo: "098-765-4321",
-      rec: "yes",
-      userId: "user18",
-    },
-    // Add more users as needed
-  ]);
+  const [userData, setUserData] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [userAddDialog, setUserDialog] = useState(false);
   const [filterDate, setFilterDate] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+
+  useEffect(() => {
+    const FetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `${NODE_API_ENDPOINT}/admin/getAllallowedLogin`
+        );
+    
+        const userDataObject = response.data.data;
+        console.log(userDataObject);
+        
+        // Flatten the data: each booking will become an individual item in the array
+        const flattenedData = Object.values(userDataObject).flatMap(user => 
+          user.courtroomBookings.map(booking => ({
+            ...user,
+            name: booking.name,
+            email: booking.email,
+            phoneNumber: booking.phoneNumber,
+            recording: booking.recording ? "true" : "false",
+            userId: booking._id,
+          }))
+        );
+    
+        console.log(flattenedData);
+        setUserData(flattenedData);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+        toast.error("Error fetching user data");
+      }
+    };
+  
+    FetchUserData();
+  }, []);
+  
+
+
   const handleFilter = () => {
     // Set the filterDate state based on the selected date input
     // This will trigger the filtering of user data based on the date
@@ -347,11 +223,11 @@ const AllowedLogin = () => {
                       </td>
 
                       <td className="p-2">{user.date}</td>
-                      <td className="p-2">{user.time}</td>
+                      <td className="p-2">{user.hour}</td>
                       <td className="p-2">{user.name}</td>
                       <td className="p-2">{user.email}</td>
-                      <td className="p-2">{user.phoneNo}</td>
-                      <td className="p-2">{user.rec}</td>
+                      <td className="p-2">{user.phoneNumber}</td>
+                      <td className="p-2">{user.recording}</td>
                       <td className="p-2">{user.userId}</td>
                       <td className="p-2">
                         <Edit />
