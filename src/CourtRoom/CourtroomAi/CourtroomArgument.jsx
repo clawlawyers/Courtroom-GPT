@@ -594,7 +594,7 @@ const CourtroomArgument = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center relative">
                       <button
                         className="bg-red-500 text-white w-5 h-5  rounded-full"
                         onClick={(e) => {

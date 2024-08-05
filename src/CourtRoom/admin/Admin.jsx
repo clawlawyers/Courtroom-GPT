@@ -112,7 +112,7 @@ const CourtRoomUsers = () => {
     const { userId, bookingId } = deleteUserIds;
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+        `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`
       );
       console.log("User Deleted", res);
 
@@ -141,7 +141,7 @@ const CourtRoomUsers = () => {
         const bookingId = user?.bookingId; // Modify if needed based on your data structure
 
         return axios.delete(
-          `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`
+          `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`
         );
       });
 

@@ -74,11 +74,10 @@ const UserDialog = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/courtroom/book-courtroom`,
+        `${NODE_API_ENDPOINT}/courtroom/book-courtroom`,
         {
           name: formData.username,
           phoneNumber: formData.phoneNumber,
-
           email: formData.email,
           password: formData.password, // Add password field in your form if necessary
           slots: formData.slots,
@@ -115,7 +114,7 @@ const UserDialog = ({ onClose }) => {
       }}
     >
       <div
-        className="scale-75 w-1/2 rounded-xl border-2 border-white"
+        className="scale-75 w-2/3 rounded-xl border-2 border-white"
         style={{
           background: "linear-gradient(to right,#0e1118,#008080)",
         }}
@@ -152,7 +151,7 @@ const UserDialog = ({ onClose }) => {
             htmlFor="password"
             className="text-left self-start font-semibold"
           >
-            Username
+            Password
           </label>
           <input
             {...register("password", { required: true })}
