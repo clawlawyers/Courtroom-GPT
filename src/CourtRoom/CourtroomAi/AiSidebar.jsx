@@ -83,7 +83,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: "10",
+            zIndex: "20",
           }}
         >
           <div
@@ -926,7 +926,7 @@ const AiSidebar = () => {
         <div
           // md:left-[28rem] md:top-32
           // bg-[#eeeeee]
-          className="absolute flex  h-screen items-center left-1/4 overflow-auto
+          className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               "
         >
           <div className="bg-[#eeeeee] border-8 border-white rounded-xl shadow-inner">
