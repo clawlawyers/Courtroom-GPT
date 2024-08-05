@@ -736,7 +736,7 @@ const AiSidebar = () => {
                 background: "linear-gradient(to right,#0e1118,#008080)",
               }}
             >
-              <img className="h-1/2 w-1/2" src={loader} alt="loader" />
+              <img className="h-40 w-40 my-10" src={loader} alt="loader" />
             </div>
           ) : (
             <div
