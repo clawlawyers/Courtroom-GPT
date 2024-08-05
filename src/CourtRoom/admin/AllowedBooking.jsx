@@ -1,20 +1,22 @@
 import { React, useEffect, useState } from "react";
 import UserDialog from "../../components/Dialogs/UserDialog";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Check, Delete, Edit } from "@mui/icons-material";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import toast from "react-hot-toast";
 import AllowedDialog from "../../components/Dialogs/AllowedDialog";
 import dayjs from "dayjs";
+
 const AllowedBooking = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [userAddDialog, setUserDialog] = useState(false);
   const [filterDate, setFilterDate] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [userData, setUserData] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editedUserData, setEditedUserData] = useState({});
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -57,15 +59,18 @@ const AllowedBooking = () => {
 
     FetchUserData();
   }, []);
+
   console.log(userData);
 
   const handleDelete = async (userId) => {
     try {
       await axios.delete(`${NODE_API_ENDPOINT}/admin/AllowedBooking/${userId}`);
       console.log("Booking deleted successfully");
+
       setUserData((prevUserData) =>
-        prevUserData.filter((user) => user.userId !== userId)
+        prevUserData.filter((user) => user._id !== userId)
       );
+      toast.success("Booking deleted successfully");
     } catch (error) {
       console.error("Error deleting booking", error);
       toast.error("Error deleting booking");
@@ -85,18 +90,66 @@ const AllowedBooking = () => {
     setUserToDelete(null);
   };
 
-  const handleDeleteSelected = () => {
-    setUserData((prevUserData) =>
-      prevUserData.filter((user) => !selectedUserIds.includes(user.userId))
-    );
-    setSelectedUserIds([]); // Clear selected user IDs after deletion
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(
+        selectedUserIds.map((userId) =>
+          axios.delete(`${NODE_API_ENDPOINT}/admin/AllowedBooking/${userId}`)
+        )
+      );
+
+      setUserData((prevUserData) =>
+        prevUserData.filter((user) => !selectedUserIds.includes(user._id))
+      );
+
+      toast.success("Selected bookings deleted successfully");
+    } catch (error) {
+      console.error("Error deleting selected bookings", error);
+      toast.error("Error deleting selected bookings");
+    } finally {
+      setSelectedUserIds([]); // Clear selected user IDs after deletion
+    }
+  };
+
+  const handleEdit = (user) => {
+    setEditingUserId(user._id);
+    setEditedUserData(user);
+  };
+
+  const handleSave = async () => {
+    try {
+      await axios.patch(
+        `${NODE_API_ENDPOINT}/admin/AllowedBooking/${editingUserId}`,
+        editedUserData
+      );
+
+      setUserData((prevUserData) =>
+        prevUserData.map((user) =>
+          user._id === editingUserId ? editedUserData : user
+        )
+      );
+      toast.success("Booking updated successfully");
+    } catch (error) {
+      console.error("Error updating booking", error);
+      toast.error("Error updating booking");
+    } finally {
+      setEditingUserId(null);
+      setEditedUserData({});
+    }
+  };
+
+  const handleInputChange = (e, field) => {
+    setEditedUserData({
+      ...editedUserData,
+      [field]: e.target.value,
+    });
   };
 
   return (
     <>
       <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
         {/* user panel */}
-        <div className="flex flex-col justify-center h-full w-full items-center  relative">
+        <div className="flex flex-col justify-center h-full w-full items-center relative">
           <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
             {userAddDialog && <AllowedDialog onClose={handleClose} />}
             <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
@@ -114,7 +167,7 @@ const AllowedBooking = () => {
 
                 <button
                   onClick={handleDeleteSelected}
-                  className={`bg-card-gradient  shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
+                  className={`bg-card-gradient shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
                     selectedUserIds.length === 0
                       ? "opacity-50 cursor-not-allowed"
                       : ""
@@ -143,12 +196,15 @@ const AllowedBooking = () => {
               <table className="w-full table-auto text-sm">
                 <thead>
                   <tr className="bg-teal-500">
-                    <th className="p-2">Select</th>
-                    <th className="p-2">Date</th>
-                    <th className="p-2">Start Hour</th>
-                    <th className="p-2">End Hour</th>
-                    <th className="p-2">Email</th>
-                    <th className="p-2">Phone No</th>
+                    <th className="p-2 ">Select</th>
+                    <th className="p-2 text-center">Date</th>
+                    <th className="p-2 text-center">Start Hour</th>
+                    <th className="p-2 text-center">End Hour</th>
+                    <th className="p-2 text-center">Email</th>
+                    <th className="p-2 text-center">Phone No</th>
+                    <th className="p-2 text-center">Total Slots</th>
+                    <th className="p-2 text-center">Booked Slots</th>
+
                     <th className="p-2"></th>
                     <th className="p-2"></th>
                   </tr>
@@ -171,44 +227,141 @@ const AllowedBooking = () => {
                     })
                     .map((user) => (
                       <tr
-                        key={user.userId}
+                        key={user._id}
                         className="hover:bg-black/50 transition-all duration-300 border-b border-white"
                       >
                         <td className="p-2">
                           <input
                             type="checkbox"
                             onChange={(e) =>
-                              handleCheckboxChange(
-                                user.userId,
-                                e.target.checked
-                              )
+                              handleCheckboxChange(user._id, e.target.checked)
                             }
                           />
                         </td>
-                        <td className="p-2">
-                          {dayjs(user?.date).format("YYYY-MM-DD")}
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="date"
+                              value={editedUserData.date}
+                              onChange={(e) => handleInputChange(e, "date")}
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            dayjs(user?.date).format("YYYY-MM-DD")
+                          )}
                         </td>
-                        <td className="p-2">{user?.StartHour}</td>
-                        <td className="p-2">{user?.EndHour}</td>
-                        <td className="p-2">{user?.email}</td>
-                        <td className="p-2">{user?.phoneNumber}</td>
-                        <td className="p-2">
-                          <Edit />
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="text"
+                              value={editedUserData.StartHour}
+                              onChange={(e) =>
+                                handleInputChange(e, "startHour")
+                              }
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            user?.StartHour
+                          )}
                         </td>
-                        <td
-                          onClick={() => confirmDelete(user)}
-                          className="p-2 cursor-pointer"
-                        >
-                          <Delete />
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="text"
+                              value={editedUserData.EndHour}
+                              onChange={(e) => handleInputChange(e, "endHour")}
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            user?.EndHour
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="text"
+                              value={editedUserData.email}
+                              onChange={(e) => handleInputChange(e, "email")}
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            user?.email
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="text"
+                              value={editedUserData.phoneNumber}
+                              onChange={(e) =>
+                                handleInputChange(e, "phoneNumber")
+                              }
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            user?.phoneNumber
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="text"
+                              value={editedUserData.totalSlots}
+                              onChange={(e) =>
+                                handleInputChange(e, "totalSlots")
+                              }
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            user?.totalSlots
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="text"
+                              value={editedUserData.bookedSlots}
+                              onChange={(e) =>
+                                handleInputChange(e, "bookedSlots")
+                              }
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            user?.bookedSlots
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <button
+                              onClick={handleSave}
+                              className="bg-green-500 hover:bg-green-600 text-white font-semibold px-2 py-1 rounded"
+                            >
+                              Save
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleEdit(user)}
+                              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-2 py-1 rounded"
+                            >
+                              <Edit />
+                            </button>
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          <button
+                            onClick={() => confirmDelete(user)}
+                            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-2 py-1 rounded"
+                          >
+                            <Delete />
+                          </button>
                         </td>
                       </tr>
                     ))}
+                    
                 </tbody>
               </table>
             </div>
-          </div>
-
-          {deleteDialog && userToDelete && (
+            {deleteDialog && userToDelete && (
             <div
               className="py-3"
               style={{
@@ -249,14 +402,12 @@ const AllowedBooking = () => {
 
                 <div className="flex flex-col px-10">
                   <div>
-                    
                     <p>
                       <span className="font-bold">Email:</span>{" "}
                       {userToDelete.email}
                     </p>
                   </div>
                   <div>
-                   
                     <p>
                       <span className="font-bold">Phone Number:</span>{" "}
                       {userToDelete.phoneNumber}
@@ -274,6 +425,7 @@ const AllowedBooking = () => {
               </div>
             </div>
           )}
+          </div>
         </div>
       </section>
     </>

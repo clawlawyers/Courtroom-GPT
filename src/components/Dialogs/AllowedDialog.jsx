@@ -14,8 +14,6 @@ const AllowedDialog = ({ onClose }) => {
   const onSubmit = async (data) => {
     const formData = {
         ...data,
-        bookedSlots: 0,
-        totalSlots: 0,
       };
       console.log(formData);
 
@@ -160,6 +158,36 @@ const AllowedDialog = ({ onClose }) => {
                 className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
               />
               {errors.EndHour && <p>This field is required</p>}
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="totalSlots"
+                className="text-left self-start font-semibold"
+              >
+                Total Slots
+              </label>
+              <input
+                {...register("totalSlots", { required: true })}
+                id="totalSlots"
+                type="text"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+              />
+              {errors.totalSlots && <p>This field is required</p>}
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="bookedSlots"
+                className="text-left self-start font-semibold"
+              >
+                Booked Slots
+              </label>
+              <input
+                {...register("bookedSlots", { required: true })}
+                id="bookedSlots"
+                type="text"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+              />
+              {errors.bookedSlots && <p>This field is required</p>}
             </div>
           </div>
 
