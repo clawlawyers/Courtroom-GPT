@@ -10,6 +10,7 @@ import {
   signInWithCredential,
   signInWithPhoneNumber,
 } from "../../utils/firebase";
+import { motion } from "framer-motion";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const ConfirmBooking = () => {
   const bookingData = useSelector((state) => state?.booking?.bookingData);
   const slots = bookingData?.slots;
   const [verificationId, setVerificationId] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
 
   // console.log(bookingData.phoneNumber);
 
@@ -96,7 +98,17 @@ const ConfirmBooking = () => {
 
   // const [phoneNumber, setPhoneNumber] = useState('');
 
+  const handleDisableButton = () => {
+    if (isDisabled) return;
+
+    setIsDisabled(true);
+    setTimeout(() => {
+      setIsDisabled(false);
+    }, 30000);
+  };
+
   const handleSendOTP = () => {
+    handleDisableButton();
     console.log("sendOTP");
     const recaptchaVerifier = new RecaptchaVerifier(
       auth,
@@ -172,13 +184,19 @@ const ConfirmBooking = () => {
           </div>
         </div>
         <div className="flex gap-2 m-2">
-          <button
-            className="border-2 border-white rounded p-2"
+          <motion.button
+            whileTap={{ scale: "0.95" }}
+            disabled={isDisabled}
+            className="border-2 rounded p-2"
+            style={{
+              borderColor: isDisabled ? "black" : "white",
+              color: isDisabled ? "black" : "white",
+              cursor: isDisabled ? "not-allowed" : "pointer",
+            }}
             onClick={handleSendOTP}
           >
             Send OTP
-          </button>
-          <button className="border-2 border-white rounded p-2">Resend</button>
+          </motion.button>
           <button
             className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2"
             onClick={handleVerifyOTP}
