@@ -23,6 +23,7 @@ const ConfirmBooking = () => {
   const slots = bookingData?.slots;
   const [verificationId, setVerificationId] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const [proceedToPayment, setProceedToPayment] = useState(false);
 
   // console.log(bookingData.phoneNumber);
 
@@ -138,14 +139,17 @@ const ConfirmBooking = () => {
 
   const handleVerifyOTP = () => {
     const credential = PhoneAuthProvider.credential(verificationId, otp);
+    localStorage.setItem("loginOtp", otp);
 
     signInWithCredential(auth, credential)
       .then((userCredential) => {
         const user = userCredential.user;
         alert("Phone number verified successfully!");
+        setProceedToPayment(true);
       })
       .catch((error) => {
         console.error("Error during OTP verification:", error);
+        setProceedToPayment(false);
       });
   };
 
@@ -199,7 +203,7 @@ const ConfirmBooking = () => {
           </motion.button>
           <button
             className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2"
-            onClick={handleVerifyOTP}
+            onClick={() => handleVerifyOTP()}
           >
             Verify OTP
           </button>
@@ -281,8 +285,14 @@ const ConfirmBooking = () => {
             </p>
             <div className="flex flex-row w-full justify-end">
               <button
+                disabled={!proceedToPayment}
                 onClick={handlePayment}
                 className="border-2 font-semibold border-white rounded-md p-2"
+                style={{
+                  borderColor: !proceedToPayment ? "grey" : "white",
+                  color: !proceedToPayment ? "grey" : "white",
+                  cursor: !proceedToPayment ? "not-allowed" : "pointer",
+                }}
               >
                 Proceed to Payment
               </button>
