@@ -16,8 +16,9 @@ import {
   removeSlot,
 } from "../../features/admin/courtroomAdminAddUserSlice";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
-
-const UserDialog = ({ onClose }) => {
+import toast  from "react-hot-toast";
+const UserDialog = ({ onClose,setUserData }) => {
+  
   const dispatch = useDispatch();
   const [addedSlots, setAddedSlots] = useState([]);
   const slotsContainerRef = useRef(null);
@@ -87,9 +88,14 @@ const UserDialog = ({ onClose }) => {
 
       if (response.status === 201) {
         console.log("User added successfully:", response.data);
+       
+         
+      
         dispatch(setUserData(formData));
         // Optionally, show a success message or close the dialog
+        toast.success("User Added successfully");
         onClose();
+        
       } else {
         console.error("Failed to add user:", response.data);
       }

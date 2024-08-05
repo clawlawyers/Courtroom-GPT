@@ -229,7 +229,7 @@ setIsLoading(false);
       <div className="flex flex-col justify-center h-full w-full items-center ">
         <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
           {userAddDialog && (
-            <UserDialog onClose={handleClose} isOpen={userAddDialog} />
+            <UserDialog onClose={handleClose} userDataset={setUserData} isOpen={userAddDialog} />
           )}
           <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
             <div className="flex flex-row items-center gap-3 mb-4 lg:mb-0">

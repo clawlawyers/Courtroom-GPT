@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import UserDialog from "../../components/Dialogs/UserDialog";
-import { Add, Check, Delete, Edit } from "@mui/icons-material";
+import { Add, Check, CheckCircle, CheckCircleOutline, Delete, Edit } from "@mui/icons-material";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import toast from "react-hot-toast";
@@ -334,14 +334,14 @@ const AllowedBooking = () => {
                           {editingUserId === user._id ? (
                             <button
                               onClick={handleSave}
-                              className="bg-green-500 hover:bg-green-600 text-white font-semibold px-2 py-1 rounded"
+                              className=" text-white font-semibold px-2 py-1 rounded"
                             >
-                              Save
+                              <CheckCircleOutline />
                             </button>
                           ) : (
                             <button
                               onClick={() => handleEdit(user)}
-                              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-2 py-1 rounded"
+                              className=" text-white font-semibold px-2 py-1 rounded"
                             >
                               <Edit />
                             </button>
@@ -350,7 +350,7 @@ const AllowedBooking = () => {
                         <td className="p-2 text-center">
                           <button
                             onClick={() => confirmDelete(user)}
-                            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-2 py-1 rounded"
+                            className=" text-white font-semibold px-2 py-1 rounded"
                           >
                             <Delete />
                           </button>
