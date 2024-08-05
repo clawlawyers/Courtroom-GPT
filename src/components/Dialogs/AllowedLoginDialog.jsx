@@ -73,7 +73,7 @@ import {
       console.log("User Data with Slots:", formData);
       try {
         const response = await axios.post(
-          `${NODE_API_ENDPOINT}/admin/book-courtroom`,
+          `${NODE_API_ENDPOINT}/admin/admin/book-courtroom`,
           {
             name: formData.username,
             phoneNumber: formData.phoneNumber,

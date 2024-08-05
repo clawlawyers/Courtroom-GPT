@@ -55,17 +55,17 @@ const AllowedLogin = () => {
     FetchUserData();
   }, [flag]);
 
-  const handleDelete = async (userId) => {
-    setFlag(true);
+  const handleDelete = async (bookingId,userId) => {
+    
     try {
-      await axios.delete(`${NODE_API_ENDPOINT}/admin/AllowedLogin/${userId}`);
+      await axios.delete(`${NODE_API_ENDPOINT}/admin/allowedLogin/${bookingId}/users/${userId}`);
       setUserData((prevUserData) => prevUserData.filter((user) => user.userId !== userId));
       toast.success("User deleted successfully");
     } catch (error) {
       console.error("Error deleting user", error);
       toast.error("Error deleting user");
     } finally {
-      setFlag(false);
+      
       setDeleteDialog(false);
       setUserToDelete(null);
     }
@@ -232,61 +232,76 @@ const AllowedLogin = () => {
 
           {deleteDialog && userToDelete && (
             <div
-              className="py-3"
-              style={{
-                width: "100%",
-                height: "fit-content",
-                paddingTop: "10px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px",
-                  background: "white",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  borderRadius: "10px",
-                }}
-              >
-                <h4
-                  style={{
-                    color: "#F56565",
-                    marginBottom: "10px",
-                  }}
+            className="py-3"
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              left: "0",
+              right: "0",
+              backdropFilter: "blur(3px)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "10",
+            }}
+          >
+            <div className="m-32 w-2/3 flex flex-col border-4 border-red-600 rounded bg-gradient-to-r from-[#008080] to-[#003131]">
+              <div className="p-3 flex w-full justify-between items-center">
+                <h5 className="m-0 px-1 font-bold">
+                  Proceed with Deleting User?
+                </h5>
+                <svg
+                  className="h-10 w-10 cursor-pointer"
+                  fill="white"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
+                  strokeLinejoin="round"
+                  strokeMiterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  onClick={cancelDelete}
                 >
-                  Are you sure you want to delete {userToDelete.name}?
-                </h4>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-                  <button
-                    onClick={() => handleDelete(userToDelete.userId)}
-                    style={{
-                      padding: "8px 16px",
-                      backgroundColor: "#E53E3E",
-                      color: "white",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={cancelDelete}
-                    style={{
-                      padding: "8px 16px",
-                      backgroundColor: "#4299E1",
-                      color: "white",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    Cancel
-                  </button>
+                  <path
+                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm4.292 6.707c-.391-.391-1.024-.391-1.415 0l-2.877 2.877-2.877-2.877c-.391-.391-1.024-.391-1.415 0-.391.391-.391 1.024 0 1.415l2.878 2.878-2.878 2.878c-.391.391-.391 1.024 0 1.415.391.391 1.024.391 1.415 0l2.877-2.878 2.877 2.878c.391.391 1.024.391 1.415 0 .391-.391.391-1.024 0-1.415l-2.878-2.878 2.878-2.878c.391-.391.391-1.024 0-1.415z"
+                    fillRule="nonzero"
+                  />
+                </svg>
+              </div>
+
+              <div className="flex flex-col px-10">
+                <div>
+                  
+                  <p>
+                    <span className="font-bold">Username:</span>{" "}
+                    {userToDelete.name}
+                  </p>
+                </div>
+                <div>
+                  
+                  <p>
+                    <span className="font-bold">Email:</span>{" "}
+                    {userToDelete.email}
+                  </p>
+                </div>
+                <div>
+                 
+                  <p>
+                    <span className="font-bold">Phone Number:</span>{" "}
+                    {userToDelete.phoneNumber}
+                  </p>
                 </div>
               </div>
+              <div className="w-full p-3 px-10 flex justify-end items-center">
+                <button
+                  className="flex justify-center items-center px-4 p-2 text-center bg-white text-teal-700 border-2 border-white rounded font-bold"
+                  onClick={() => handleDelete(userToDelete._id ,userToDelete.userId)}
+                >
+                  Confirm
+                </button>
+              </div>
             </div>
+          </div>
           )}
         </div>
       </div>
