@@ -1,42 +1,38 @@
 import { Add, Delete, Edit, Share } from "@mui/icons-material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { useState } from "react";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
 import UserDialog from "../../components/Dialogs/UserDialog";
-import { useEffect } from "react";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
+import AllowedLoginDialog from "../../components/Dialogs/AllowedLoginDialog";
 
 const AllowedLogin = () => {
-  const handleExport = () => {
-    const csv = Papa.unparse(userData);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    saveAs(blob, "userData.csv");
-  };
-  // dummy data
   const [userData, setUserData] = useState([]);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [userAddDialog, setUserDialog] = useState(false);
   const [filterDate, setFilterDate] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [flag,setFlag] = useState(false);
+  const handleClose = () => {
+    setUserDialog(false);
+  }
 
   useEffect(() => {
+  
+
     const FetchUserData = async () => {
+      setFlag(true);
       try {
-        const response = await axios.get(
-          `${NODE_API_ENDPOINT}/admin/getAllallowedLogin`
-        );
-    
+        const response = await axios.get(`${NODE_API_ENDPOINT}/admin/getAllallowedLogin`);
         const userDataObject = response.data.data;
-        console.log(userDataObject);
-        
-        // Flatten the data: each booking will become an individual item in the array
-        const flattenedData = Object.values(userDataObject).flatMap(user => 
+
+        const flattenedData = Object.values(userDataObject).flatMap(user =>
           user.courtroomBookings.map(booking => ({
             ...user,
             name: booking.name,
@@ -46,50 +42,59 @@ const AllowedLogin = () => {
             userId: booking._id,
           }))
         );
-    
         console.log(flattenedData);
+
         setUserData(flattenedData);
       } catch (error) {
         console.error("Error fetching user data", error);
         toast.error("Error fetching user data");
       }
+      setFlag(false);
     };
-  
+
     FetchUserData();
-  }, []);
-  
+  }, [flag]);
 
+  const handleDelete = async (userId) => {
+    setFlag(true);
+    try {
+      await axios.delete(`${NODE_API_ENDPOINT}/admin/AllowedLogin/${userId}`);
+      setUserData((prevUserData) => prevUserData.filter((user) => user.userId !== userId));
+      toast.success("User deleted successfully");
+    } catch (error) {
+      console.error("Error deleting user", error);
+      toast.error("Error deleting user");
+    } finally {
+      setFlag(false);
+      setDeleteDialog(false);
+      setUserToDelete(null);
+    }
+  };
 
-  const handleFilter = () => {
-    // Set the filterDate state based on the selected date input
-    // This will trigger the filtering of user data based on the date
-    const handleFilter = () => {
-      // Toggle sort order between ascending and descending
-      const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-      setSortOrder(newSortOrder);
+  const confirmDelete = (user) => {
+    setUserToDelete(user);
+    setDeleteDialog(true);
+  };
 
-      // Sort userData based on the selected order
-      const sortedData = [...userData].sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        if (newSortOrder === "asc") {
-          return dateA - dateB;
-        } else {
-          return dateB - dateA;
-        }
-      });
+  const cancelDelete = () => {
+    setDeleteDialog(false);
+    setUserToDelete(null);
+  };
 
-      // Update the user data with the sorted data
-    };
+  const handleExport = () => {
+    const csv = Papa.unparse(userData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "userData.csv");
   };
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleClose = () => {
-    setUserDialog(false);
+  const handleFilter = () => {
+    // Implement filtering logic here
   };
+
   const handleCheckboxChange = (userId, isChecked) => {
     setSelectedUserIds((prevSelectedUserIds) => {
       if (isChecked) {
@@ -101,18 +106,16 @@ const AllowedLogin = () => {
   };
 
   const handleDeleteSelected = () => {
-    setUserData((prevUserData) =>
-      prevUserData.filter((user) => !selectedUserIds.includes(user.userId))
-    );
+    setUserData((prevUserData) => prevUserData.filter((user) => !selectedUserIds.includes(user.userId)));
     setSelectedUserIds([]); // Clear selected user IDs after deletion
   };
 
   return (
     <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
       {/* user panel */}
-      <div className="flex flex-col justify-center h-full w-full items-center px-20">
+      <div className="flex flex-col justify-center h-full w-full items-center ">
         <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
-          {userAddDialog && <UserDialog onClose={handleClose} />}
+          {userAddDialog && <AllowedLoginDialog onClose={handleClose} />}
           <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
             {/* Export */}
             <div className="flex flex-row items-center gap-3 mb-4 lg:mb-0">
@@ -120,9 +123,7 @@ const AllowedLogin = () => {
                 onClick={handleExport}
                 className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
               >
-                <div>
-                  <Share />
-                </div>
+                <div><Share /></div>
                 <div className="font-semibold">Export</div>
               </button>
 
@@ -130,9 +131,7 @@ const AllowedLogin = () => {
                 onClick={() => setUserDialog(true)}
                 className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
               >
-                <div>
-                  <Add />
-                </div>
+                <div><Add /></div>
                 <div className="font-semibold">Add User</div>
               </button>
 
@@ -140,27 +139,19 @@ const AllowedLogin = () => {
                 onClick={handleFilter}
                 className="bg-transparent border-2 border-teal-500 shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center"
               >
-                <div>
-                  <FilterAltIcon />
-                </div>
+                <div><FilterAltIcon /></div>
                 <div className="font-semibold">Filter</div>
               </button>
 
               <button
                 onClick={handleDeleteSelected}
-                className={`bg-card-gradient  shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
-                  selectedUserIds.length === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
+                className={`bg-card-gradient shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
+                  selectedUserIds.length === 0 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={selectedUserIds.length === 0}
               >
-                <div>
-                  <Delete />
-                </div>
-                <div className="font-semibold">
-                  Delete ({selectedUserIds.length})
-                </div>
+                <div><Delete /></div>
+                <div className="font-semibold">Delete ({selectedUserIds.length})</div>
               </button>
             </div>
             <input
@@ -192,21 +183,17 @@ const AllowedLogin = () => {
               <tbody>
                 {userData
                   .filter((val) => {
-                    if (searchTerm === "" && filterDate === "") {
+                    if (searchTerm === "") {
                       return val;
                     } else if (
-                      (searchTerm === "" ||
-                        val.name
-                          .toLowerCase()
-                          .includes(searchTerm.toLowerCase()) ||
-                        val.email
-                          .toLowerCase()
-                          .includes(searchTerm.toLowerCase()) ||
-                        val.phoneNo.includes(searchTerm)) &&
-                      (filterDate === "" || val.date === filterDate)
+                      val.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      val.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      val.phoneNumber.includes(searchTerm) ||
+                      val.date.includes(searchTerm)
                     ) {
                       return val;
                     }
+                    return null;
                   })
                   .map((user) => (
                     <tr
@@ -221,7 +208,6 @@ const AllowedLogin = () => {
                           }
                         />
                       </td>
-
                       <td className="p-2">{user.date}</td>
                       <td className="p-2">{user.hour}</td>
                       <td className="p-2">{user.name}</td>
@@ -232,7 +218,10 @@ const AllowedLogin = () => {
                       <td className="p-2">
                         <Edit />
                       </td>
-                      <td className="p-2">
+                      <td
+                        onClick={() => confirmDelete(user)}
+                        className="p-2 cursor-pointer"
+                      >
                         <Delete />
                       </td>
                     </tr>
@@ -240,6 +229,65 @@ const AllowedLogin = () => {
               </tbody>
             </table>
           </div>
+
+          {deleteDialog && userToDelete && (
+            <div
+              className="py-3"
+              style={{
+                width: "100%",
+                height: "fit-content",
+                paddingTop: "10px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "20px",
+                  background: "white",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  borderRadius: "10px",
+                }}
+              >
+                <h4
+                  style={{
+                    color: "#F56565",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Are you sure you want to delete {userToDelete.name}?
+                </h4>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+                  <button
+                    onClick={() => handleDelete(userToDelete.userId)}
+                    style={{
+                      padding: "8px 16px",
+                      backgroundColor: "#E53E3E",
+                      color: "white",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={cancelDelete}
+                    style={{
+                      padding: "8px 16px",
+                      backgroundColor: "#4299E1",
+                      color: "white",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

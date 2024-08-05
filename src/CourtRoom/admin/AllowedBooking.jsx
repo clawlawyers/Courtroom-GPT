@@ -96,7 +96,7 @@ const AllowedBooking = () => {
     <>
       <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
         {/* user panel */}
-        <div className="flex flex-col justify-center h-full w-full items-center px-20 relative">
+        <div className="flex flex-col justify-center h-full w-full items-center  relative">
           <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
             {userAddDialog && <AllowedDialog onClose={handleClose} />}
             <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
@@ -160,13 +160,10 @@ const AllowedBooking = () => {
                         return val;
                       } else if (
                         (searchTerm === "" ||
-                          val.name
-                            .toLowerCase()
-                            .includes(searchTerm.toLowerCase()) ||
                           val.email
                             .toLowerCase()
                             .includes(searchTerm.toLowerCase()) ||
-                          val.phoneNo.includes(searchTerm)) &&
+                          val.phoneNumber.includes(searchTerm)) &&
                         (filterDate === "" || val.date === filterDate)
                       ) {
                         return val;

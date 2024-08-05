@@ -18,6 +18,7 @@ const CourtRoomUsers = () => {
   const [deleteUserIds, setDeleteUserIds] = useState([]);
   const [userToDelete, setUserToDelete] = useState(null);
   const [editingUserId, setEditingUserId] = useState(null);
+  const [loading,setIsLoading] = useState(false);
   const [editFormData, setEditFormData] = useState({
     date: "",
     time: "",
@@ -30,6 +31,7 @@ const CourtRoomUsers = () => {
   useEffect(() => {
     const getAllData = async () => {
       try {
+        setIsLoading(true);
         const res = await axios.get(
           `${NODE_API_ENDPOINT}/admin/allCourtRoomData`
         );
@@ -45,8 +47,8 @@ const CourtRoomUsers = () => {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+      setIsLoading(false);
     };
-
     getAllData();
   }, []);
 
@@ -108,6 +110,7 @@ const CourtRoomUsers = () => {
   };
 
   const confirmDeleteUser = async (user) => {
+    setIsLoading(true);
     setUserToDelete(user);
     const { userId, bookingId } = deleteUserIds;
     try {
@@ -125,10 +128,12 @@ const CourtRoomUsers = () => {
         }))
       );
 
-      setDeleteDialog(false);
+      
     } catch (e) {
       console.log(e);
     }
+    setDeleteDialog(false);
+setIsLoading(false);
   };
 
   const handleDeleteSelected = async () => {
@@ -212,6 +217,14 @@ const CourtRoomUsers = () => {
       console.error("Error updating user data:", e);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-white text-2xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
