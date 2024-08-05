@@ -5,6 +5,7 @@ import Papa from "papaparse";
 import { saveAs } from "file-saver";
 import UserDialog from "../../components/Dialogs/UserDialog";
 import axios from "axios";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
 
 const CourtRoomUsers = () => {
   const [userData, setUserData] = useState([]);
@@ -30,7 +31,7 @@ const CourtRoomUsers = () => {
     const getAllData = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/v1/admin/allCourtRoomData"
+          `${NODE_API_ENDPOINT}/admin/allCourtRoomData`
         );
         const fetchedData = res.data.data;
 
@@ -187,7 +188,7 @@ const CourtRoomUsers = () => {
     try {
       // Make a request to update the user data
       const res = await axios.put(
-        `http://localhost:8000/api/v1/admin/bookings/${bookingId}/users/${userId}`,
+        `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}`,
         editFormData
       );
       console.log("User updated", res.data);
