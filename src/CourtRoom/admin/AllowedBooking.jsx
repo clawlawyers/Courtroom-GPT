@@ -49,7 +49,6 @@ const AllowedBooking = () => {
         // Convert it to an array
         const userDataArray = Object.values(userDataObject);
 
-        console.log(userDataArray);
         setUserData(userDataArray);
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -58,7 +57,7 @@ const AllowedBooking = () => {
     };
 
     FetchUserData();
-  }, []);
+  }, );
 
   console.log(userData);
 

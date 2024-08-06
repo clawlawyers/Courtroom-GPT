@@ -16,8 +16,9 @@ import {
     removeSlot,
   } from "../../features/admin/courtroomAdminAddUserSlice";
   import { NODE_API_ENDPOINT } from "../../utils/utils";
-  
+  import {useNavigate} from "react-router-dom"
   const AllowedLoginDialog = ({ onClose }) => {
+    let navigate = useNavigate()
     const dispatch = useDispatch();
     const [addedSlots, setAddedSlots] = useState([]);
     const slotsContainerRef = useRef(null);
@@ -88,13 +89,18 @@ import {
           console.log("User added successfully:", response.data);
           dispatch(setUserData(formData));
           // Optionally, show a success message or close the dialog
+        
+           
+          
           onClose();
+          
         } else {
           console.error("Failed to add user:", response.data);
         }
       } catch (error) {
         console.error("Error adding user:", error);
       }
+      
   
       
     };

@@ -17,12 +17,13 @@ import {
 } from "../../features/admin/courtroomAdminAddUserSlice";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import toast  from "react-hot-toast";
-const UserDialog = ({ onClose,setUserData }) => {
+import { CircularProgress } from "@mui/material";
+const UserDialog = ({ onClose,onUserAdd }) => {
   
   const dispatch = useDispatch();
   const [addedSlots, setAddedSlots] = useState([]);
   const slotsContainerRef = useRef(null);
-
+  const[btnLoading , setBtnLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -63,6 +64,7 @@ const UserDialog = ({ onClose,setUserData }) => {
   };
 
   const onSubmit = async (data) => {
+    setBtnLoading(true);
     const formData = {
       ...data,
       slots: addedSlots.map((slot) => ({
@@ -92,6 +94,8 @@ const UserDialog = ({ onClose,setUserData }) => {
          
       
         dispatch(setUserData(formData));
+        onUserAdd(formData);
+
         // Optionally, show a success message or close the dialog
         toast.success("User Added successfully");
         onClose();
@@ -101,6 +105,9 @@ const UserDialog = ({ onClose,setUserData }) => {
       }
     } catch (error) {
       console.error("Error adding user:", error);
+    }
+    finally{
+      setBtnLoading(false);
     }
   };
 
@@ -125,6 +132,7 @@ const UserDialog = ({ onClose,setUserData }) => {
           background: "linear-gradient(to right,#0e1118,#008080)",
         }}
       >
+        
         <div className="flex flex-row justify-between items-center border-b-2 border-white">
           <h4 className="text-center mx-10">New User Details</h4>
           <div className="flex justify-end">
@@ -276,9 +284,9 @@ const UserDialog = ({ onClose,setUserData }) => {
           <div className="flex flex-row justify-end pt-6 w-full">
             <button
               type="submit"
-              className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
+              className={`${btnLoading ? "opacity-75 cursor-progress" : "opacity-100 cursor-pointer"} bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center`}
             >
-              <PersonAdd />
+              {btnLoading ? <CircularProgress className="h-5 w-5" /> : <PersonAdd />}
               <div className="font-semibold">Add User</div>
             </button>
           </div>

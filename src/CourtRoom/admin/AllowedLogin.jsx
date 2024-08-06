@@ -1,4 +1,4 @@
-import { Add, Delete, Edit, Share } from "@mui/icons-material";
+import { Add, Delete, Edit, Share, Save } from "@mui/icons-material";
 import React, { useState, useEffect } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import Papa from "papaparse";
@@ -8,6 +8,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import AllowedLoginDialog from "../../components/Dialogs/AllowedLoginDialog";
+import { useSelector } from "react-redux";
 
 const AllowedLogin = () => {
   const [userData, setUserData] = useState([]);
@@ -18,22 +19,24 @@ const AllowedLogin = () => {
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-  const [flag,setFlag] = useState(false);
+  const [editableUserId, setEditableUserId] = useState(null);
+  const [flag, setFlag] = useState(false);
+
   const handleClose = () => {
     setUserDialog(false);
-  }
+  };
 
   useEffect(() => {
-  
-
     const FetchUserData = async () => {
       setFlag(true);
       try {
-        const response = await axios.get(`${NODE_API_ENDPOINT}/admin/getAllallowedLogin`);
+        const response = await axios.get(
+          `${NODE_API_ENDPOINT}/admin/getAllallowedLogin`
+        );
         const userDataObject = response.data.data;
 
-        const flattenedData = Object.values(userDataObject).flatMap(user =>
-          user.courtroomBookings.map(booking => ({
+        const flattenedData = Object.values(userDataObject).flatMap((user) =>
+          user.courtroomBookings.map((booking) => ({
             ...user,
             name: booking.name,
             email: booking.email,
@@ -42,7 +45,6 @@ const AllowedLogin = () => {
             userId: booking._id,
           }))
         );
-        console.log(flattenedData);
 
         setUserData(flattenedData);
       } catch (error) {
@@ -53,19 +55,21 @@ const AllowedLogin = () => {
     };
 
     FetchUserData();
-  }, [flag]);
+  }, []);
 
-  const handleDelete = async (bookingId,userId) => {
-    
+  const handleDelete = async (bookingId, userId) => {
     try {
-      await axios.delete(`${NODE_API_ENDPOINT}/admin/allowedLogin/${bookingId}/users/${userId}`);
-      setUserData((prevUserData) => prevUserData.filter((user) => user.userId !== userId));
+      await axios.delete(
+        `${NODE_API_ENDPOINT}/admin/allowedLogin/${bookingId}/users/${userId}`
+      );
+      setUserData((prevUserData) =>
+        prevUserData.filter((user) => user.userId !== userId)
+      );
       toast.success("User deleted successfully");
     } catch (error) {
       console.error("Error deleting user", error);
       toast.error("Error deleting user");
     } finally {
-      
       setDeleteDialog(false);
       setUserToDelete(null);
     }
@@ -106,24 +110,58 @@ const AllowedLogin = () => {
   };
 
   const handleDeleteSelected = () => {
-    setUserData((prevUserData) => prevUserData.filter((user) => !selectedUserIds.includes(user.userId)));
+    setUserData((prevUserData) =>
+      prevUserData.filter((user) => !selectedUserIds.includes(user.userId))
+    );
     setSelectedUserIds([]); // Clear selected user IDs after deletion
+  };
+
+  const toggleEdit = (userId) => {
+    if (editableUserId === userId) {
+      setEditableUserId(null); // Stop editing if clicked again
+    } else {
+      setEditableUserId(userId); // Start editing this row
+    }
+  };
+
+  const handleInputChange = (userId, field, value) => {
+    setUserData((prevUserData) =>
+      prevUserData.map((user) =>
+        user.userId === userId ? { ...user, [field]: value } : user
+      )
+    );
+  };
+
+  const handleSave = async (user) => {
+    try {
+      await axios.put(
+        `${NODE_API_ENDPOINT}/admin/allowedLogin/users/${user.userId}`,
+        user
+      );
+      console.log(user.hour);
+      toast.success("User data updated successfully");
+    } catch (error) {
+      console.error("Error updating user data", error);
+      toast.error("Error updating user data");
+    } finally {
+      setEditableUserId(null); // Exit edit mode
+    }
   };
 
   return (
     <section className="h-screen w-full flex flex-row justify-center items-center gap-5 p-5">
-      {/* user panel */}
       <div className="flex flex-col justify-center h-full w-full items-center ">
         <div className="flex relative flex-col rounded-lg h-full bg-black/30 w-full gap-3 p-3 shadow-md">
           {userAddDialog && <AllowedLoginDialog onClose={handleClose} />}
           <div className="flex flex-col lg:flex-row w-full justify-between gap-2 items-start">
-            {/* Export */}
             <div className="flex flex-row items-center gap-3 mb-4 lg:mb-0">
               <button
                 onClick={handleExport}
                 className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
               >
-                <div><Share /></div>
+                <div>
+                  <Share />
+                </div>
                 <div className="font-semibold">Export</div>
               </button>
 
@@ -131,7 +169,9 @@ const AllowedLogin = () => {
                 onClick={() => setUserDialog(true)}
                 className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
               >
-                <div><Add /></div>
+                <div>
+                  <Add />
+                </div>
                 <div className="font-semibold">Add User</div>
               </button>
 
@@ -139,19 +179,27 @@ const AllowedLogin = () => {
                 onClick={handleFilter}
                 className="bg-transparent border-2 border-teal-500 shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center"
               >
-                <div><FilterAltIcon /></div>
+                <div>
+                  <FilterAltIcon />
+                </div>
                 <div className="font-semibold">Filter</div>
               </button>
 
               <button
                 onClick={handleDeleteSelected}
                 className={`bg-card-gradient shadow-lg space-x-3 p-2 px-2 rounded-md shadow-black text-white flex items-center ${
-                  selectedUserIds.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+                  selectedUserIds.length === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
                 disabled={selectedUserIds.length === 0}
               >
-                <div><Delete /></div>
-                <div className="font-semibold">Delete ({selectedUserIds.length})</div>
+                <div>
+                  <Delete />
+                </div>
+                <div className="font-semibold">
+                  Delete ({selectedUserIds.length})
+                </div>
               </button>
             </div>
             <input
@@ -163,7 +211,6 @@ const AllowedLogin = () => {
             />
           </div>
 
-          {/* user lists */}
           <div className="border-2 overflow-y-auto overflow-x-auto border-white w-full rounded-md">
             <table className="w-full table-auto text-sm">
               <thead>
@@ -186,8 +233,12 @@ const AllowedLogin = () => {
                     if (searchTerm === "") {
                       return val;
                     } else if (
-                      val.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      val.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      val.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      val.email
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
                       val.phoneNumber.includes(searchTerm) ||
                       val.date.includes(searchTerm)
                     ) {
@@ -198,38 +249,155 @@ const AllowedLogin = () => {
                   .map((user) => (
                     <tr
                       key={user.userId}
-                      className="hover:bg-black/50 transition-all duration-300 border-b border-white"
+                      className="bg-gray-900 border-b border-teal-600"
                     >
-                      <td className="p-2">
+                      <td className="p-2 text-center">
                         <input
                           type="checkbox"
+                          checked={selectedUserIds.includes(user.userId)}
                           onChange={(e) =>
                             handleCheckboxChange(user.userId, e.target.checked)
                           }
                         />
                       </td>
-                      <td className="p-2">{user.date}</td>
-                      <td className="p-2">{user.hour}</td>
-                      <td className="p-2">{user.name}</td>
-                      <td className="p-2">{user.email}</td>
-                      <td className="p-2">{user.phoneNumber}</td>
-                      <td className="p-2">{user.recording}</td>
-                      <td className="p-2">{user.userId}</td>
-                      <td className="p-2">
-                        <Edit />
+                      <td className="p-2 ">
+                        {editableUserId === user.userId ? (
+                          <input
+                            type="text"
+                            value={user.date}
+                            onChange={(e) =>
+                              handleInputChange(
+                                user.userId,
+                                "date",
+                                e.target.value
+                              )
+                            }
+                            className="w-full bg-transparent border-b-2 border-teal-500 outline-none"
+                          />
+                        ) : (
+                          user.date
+                        )}
                       </td>
-                      <td
-                        onClick={() => confirmDelete(user)}
-                        className="p-2 cursor-pointer"
-                      >
-                        <Delete />
+                      <td className="p-2 ">
+                        {editableUserId === user.userId ? (
+                          <select
+                            value={user.hour}
+                            onChange={(e) =>
+                              handleInputChange(
+                                user.userId,
+                                "hour",
+                                e.target.value
+                              )
+                            }
+                            className="w-full text-white rounded-md bg-neutral-800 border-b-2 border-teal-500 outline-none"
+                          >
+                            <option value="">--Select hour--</option>
+                            {[...Array(24).keys()].map((hour) => (
+                              <option key={hour} value={hour}>
+                                {hour.toString().padStart(2, "0")}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          user.hour
+                        )}
+                      </td>
+                      <td className="p-2">
+                        {editableUserId === user.userId ? (
+                          <input
+                            type="text"
+                            value={user.name}
+                            onChange={(e) =>
+                              handleInputChange(
+                                user.userId,
+                                "name",
+                                e.target.value
+                              )
+                            }
+                            className="w-full bg-transparent border-b-2 border-teal-500 outline-none"
+                          />
+                        ) : (
+                          user.name
+                        )}
+                      </td>
+                      <td className="p-2 ">
+                        {editableUserId === user.userId ? (
+                          <input
+                            type="text"
+                            value={user.email}
+                            onChange={(e) =>
+                              handleInputChange(
+                                user.userId,
+                                "email",
+                                e.target.value
+                              )
+                            }
+                            className="w-full bg-transparent border-b-2 border-teal-500 outline-none"
+                          />
+                        ) : (
+                          user.email
+                        )}
+                      </td>
+                      <td className="p-2 ">
+                        {editableUserId === user.userId ? (
+                          <input
+                            type="text"
+                            value={user.phoneNumber}
+                            onChange={(e) =>
+                              handleInputChange(
+                                user.userId,
+                                "phoneNumber",
+                                e.target.value
+                              )
+                            }
+                            className="w-full bg-transparent border-b-2 border-teal-500 outline-none"
+                          />
+                        ) : (
+                          user.phoneNumber
+                        )}
+                      </td>
+                      <td className="p-2 ">
+                        {editableUserId === user.userId ? (
+                          <select
+                            value={user.recording}
+                            onChange={(e) =>
+                              handleInputChange(
+                                user.userId,
+                                "recording",
+                                e.target.value
+                              )
+                            }
+                            className="w-full bg-transparent border-b-2 border-teal-500 outline-none"
+                          >
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                          </select>
+                        ) : (
+                          user.recording
+                        )}
+                      </td>
+                      <td className="p-2 ">{user.userId}</td>
+                      <td className="p-2 ">
+                        {editableUserId === user.userId ? (
+                          <button onClick={() => handleSave(user)}>
+                            <Save className="text-green-500 cursor-pointer" />
+                          </button>
+                        ) : (
+                          <button onClick={() => toggleEdit(user.userId)}>
+                            <Edit className="text-yellow-500 cursor-pointer" />
+                          </button>
+                        )}
+                      </td>
+                      <td className="p-2 ">
+                        <button onClick={() => confirmDelete(user)}>
+                          <Delete className="text-red-500 cursor-pointer" />
+                        </button>
                       </td>
                     </tr>
                   ))}
               </tbody>
             </table>
           </div>
-
           {deleteDialog && userToDelete && (
             <div
             className="py-3"
