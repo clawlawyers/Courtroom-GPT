@@ -138,7 +138,16 @@ const AllowedLogin = () => {
         `${NODE_API_ENDPOINT}/admin/allowedLogin/users/${user.userId}`,
         user
       );
-      console.log(user.hour);
+      
+      // const res2= await axios.put(
+      //   `${NODE_API_ENDPOINT}/admin/allowedLogin/${user._id}/users/${user.userId}/slot`,
+      //   {
+      //     newDate:user.date,
+      //     newHour : user.hour,
+      //   }
+      // )
+      console.log(user.date,user.hour)
+
       toast.success("User data updated successfully");
     } catch (error) {
       console.error("Error updating user data", error);
@@ -263,7 +272,7 @@ const AllowedLogin = () => {
                       <td className="p-2 ">
                         {editableUserId === user.userId ? (
                           <input
-                            type="text"
+                            type="date"
                             value={user.date}
                             onChange={(e) =>
                               handleInputChange(
