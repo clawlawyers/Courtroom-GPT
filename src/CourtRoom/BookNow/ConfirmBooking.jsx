@@ -10,7 +10,7 @@ import {
   signInWithCredential,
   signInWithPhoneNumber,
 } from "../../utils/firebase";
-import firebase from "firebase/app";
+import { motion } from "framer-motion";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ const ConfirmBooking = () => {
   const bookingData = useSelector((state) => state?.booking?.bookingData);
   const slots = bookingData?.slots;
   const [verificationId, setVerificationId] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [proceedToPayment, setProceedToPayment] = useState(false);
 
   // console.log(bookingData.phoneNumber);
 
@@ -97,7 +99,18 @@ const ConfirmBooking = () => {
 
   // const [phoneNumber, setPhoneNumber] = useState('');
 
+  const handleDisableButton = () => {
+    if (isDisabled) return;
+
+    setIsDisabled(true);
+    setTimeout(() => {
+      setIsDisabled(false);
+    }, 30000);
+  };
+
   const handleSendOTP = () => {
+    handleDisableButton();
+    console.log("sendOTP");
     const recaptchaVerifier = new RecaptchaVerifier(
       auth,
       "recaptcha-container",
@@ -126,14 +139,17 @@ const ConfirmBooking = () => {
 
   const handleVerifyOTP = () => {
     const credential = PhoneAuthProvider.credential(verificationId, otp);
+    localStorage.setItem("loginOtp", otp);
 
     signInWithCredential(auth, credential)
       .then((userCredential) => {
         const user = userCredential.user;
         alert("Phone number verified successfully!");
+        setProceedToPayment(true);
       })
       .catch((error) => {
         console.error("Error during OTP verification:", error);
+        setProceedToPayment(false);
       });
   };
 
@@ -172,16 +188,22 @@ const ConfirmBooking = () => {
           </div>
         </div>
         <div className="flex gap-2 m-2">
-          <button
-            className="border-2 border-white rounded p-2"
+          <motion.button
+            whileTap={{ scale: "0.95" }}
+            disabled={isDisabled}
+            className="border-2 rounded p-2"
+            style={{
+              borderColor: isDisabled ? "black" : "white",
+              color: isDisabled ? "black" : "white",
+              cursor: isDisabled ? "not-allowed" : "pointer",
+            }}
             onClick={handleSendOTP}
           >
             Send OTP
-          </button>
-          <button className="border-2 border-white rounded p-2">Resend</button>
+          </motion.button>
           <button
             className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2"
-            onClick={handleVerifyOTP}
+            onClick={() => handleVerifyOTP()}
           >
             Verify OTP
           </button>
@@ -263,8 +285,14 @@ const ConfirmBooking = () => {
             </p>
             <div className="flex flex-row w-full justify-end">
               <button
+                disabled={!proceedToPayment}
                 onClick={handlePayment}
                 className="border-2 font-semibold border-white rounded-md p-2"
+                style={{
+                  borderColor: !proceedToPayment ? "grey" : "white",
+                  color: !proceedToPayment ? "grey" : "white",
+                  cursor: !proceedToPayment ? "not-allowed" : "pointer",
+                }}
               >
                 Proceed to Payment
               </button>
