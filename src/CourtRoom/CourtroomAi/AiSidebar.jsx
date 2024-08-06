@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../assets/images/claw-login.png";
 import Styles from "./AiSidebar.module.css";
-import "./sidebar.css";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +82,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: "10",
+            zIndex: "20",
           }}
         >
           <div
@@ -421,7 +420,7 @@ const AiSidebar = () => {
         {/* top container */}
         <div className="bg-[#008080] h-[30vh] pt-1 px-4 pb-4 border-2 border-black rounded gap-2 flex flex-col">
           <motion.div
-            className="max-w-fit rounded-lg flex gap-2 items-center py-2 cursor-pointer"
+            className="max-w-fit rounded-lg flex gap-2 items-center pt-2 cursor-pointer"
             whileTap={{ scale: "0.95" }}
             onClick={handleGoBack}
           >
@@ -467,7 +466,7 @@ const AiSidebar = () => {
           <TimerComponent ExitToCourtroom={ExitToCourtroom} />
         </div>
         {/* bottom container */}
-        <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-2 gap-2 justify-between">
+        <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="">
             <motion.div
               whileTap={{ scale: "0.95" }}
@@ -736,7 +735,7 @@ const AiSidebar = () => {
                 background: "linear-gradient(to right,#0e1118,#008080)",
               }}
             >
-              <img className="h-1/2 w-1/2" src={loader} alt="loader" />
+              <img className="h-40 w-40 my-10" src={loader} alt="loader" />
             </div>
           ) : (
             <div
@@ -813,7 +812,6 @@ const AiSidebar = () => {
           )}
         </div>
       ) : null}
-
       {editDialog ? (
         <div
           style={{
@@ -926,7 +924,7 @@ const AiSidebar = () => {
         <div
           // md:left-[28rem] md:top-32
           // bg-[#eeeeee]
-          className="absolute flex  h-screen items-center left-1/4 overflow-auto
+          className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               "
         >
           <div className="bg-[#eeeeee] border-8 border-white rounded-xl shadow-inner">
