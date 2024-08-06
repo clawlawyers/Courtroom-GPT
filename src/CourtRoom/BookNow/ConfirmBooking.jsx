@@ -23,7 +23,7 @@ const ConfirmBooking = () => {
   const slots = bookingData?.slots;
   const [verificationId, setVerificationId] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
-  const [proceedToPayment, setProceedToPayment] = useState(false);
+  const [proceedToPayment, setProceedToPayment] = useState(true);
 
   // console.log(bookingData.phoneNumber);
 
