@@ -1,6 +1,13 @@
 import { React, useEffect, useState } from "react";
 import UserDialog from "../../components/Dialogs/UserDialog";
-import { Add, Check, CheckCircle, CheckCircleOutline, Delete, Edit } from "@mui/icons-material";
+import {
+  Add,
+  Check,
+  CheckCircle,
+  CheckCircleOutline,
+  Delete,
+  Edit,
+} from "@mui/icons-material";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import toast from "react-hot-toast";
@@ -57,7 +64,7 @@ const AllowedBooking = () => {
     };
 
     FetchUserData();
-  }, );
+  });
 
   console.log(userData);
 
@@ -143,6 +150,7 @@ const AllowedBooking = () => {
       [field]: e.target.value,
     });
   };
+  
 
   return (
     <>
@@ -196,7 +204,9 @@ const AllowedBooking = () => {
                 <thead>
                   <tr className="bg-teal-500">
                     <th className="p-2 ">Select</th>
-                    <th className="p-2 text-center">Date</th>
+                    <th className="p-2 text-center">Start Date</th>
+                    <th className="p-2 text-center">End Date</th>
+
                     <th className="p-2 text-center">Start Hour</th>
                     <th className="p-2 text-center">End Hour</th>
                     <th className="p-2 text-center">Email</th>
@@ -241,21 +251,35 @@ const AllowedBooking = () => {
                           {editingUserId === user._id ? (
                             <input
                               type="date"
-                              value={editedUserData.date}
-                              onChange={(e) => handleInputChange(e, "date")}
+                              value={editedUserData.StartDate || ""}
+                              onChange={(e) =>
+                                handleInputChange(e, "StartDate")
+                              }
                               className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
                             />
                           ) : (
-                            dayjs(user?.date).format("YYYY-MM-DD")
+                            dayjs(user?.StartDate).format("YYYY-MM-DD")
+                          )}
+                        </td>
+                        <td className="p-2 text-center">
+                          {editingUserId === user._id ? (
+                            <input
+                              type="date"
+                              value={editedUserData.EndDate || ""}
+                              onChange={(e) => handleInputChange(e, "EndDate")}
+                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
+                            />
+                          ) : (
+                            dayjs(user?.EndDate).format("YYYY-MM-DD")
                           )}
                         </td>
                         <td className="p-2 text-center">
                           {editingUserId === user._id ? (
                             <input
                               type="text"
-                              value={editedUserData.StartHour}
+                              value={editedUserData.StartHour || ""}
                               onChange={(e) =>
-                                handleInputChange(e, "startHour")
+                                handleInputChange(e, "StartHour")
                               }
                               className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
                             />
@@ -267,14 +291,15 @@ const AllowedBooking = () => {
                           {editingUserId === user._id ? (
                             <input
                               type="text"
-                              value={editedUserData.EndHour}
-                              onChange={(e) => handleInputChange(e, "endHour")}
+                              value={editedUserData.EndHour || ""}
+                              onChange={(e) => handleInputChange(e, "EndHour")}
                               className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
                             />
                           ) : (
                             user?.EndHour
                           )}
                         </td>
+
                         <td className="p-2 text-center">
                           {editingUserId === user._id ? (
                             <input
@@ -356,74 +381,73 @@ const AllowedBooking = () => {
                         </td>
                       </tr>
                     ))}
-                    
                 </tbody>
               </table>
             </div>
             {deleteDialog && userToDelete && (
-            <div
-              className="py-3"
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                left: "0",
-                right: "0",
-                backdropFilter: "blur(3px)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: "10",
-              }}
-            >
-              <div className="m-32 w-2/3 flex flex-col border-4 border-red-600 rounded bg-gradient-to-r from-[#008080] to-[#003131]">
-                <div className="p-3 flex w-full justify-between items-center">
-                  <h5 className="m-0 px-1 font-bold">
-                    Proceed with Deleting User?
-                  </h5>
-                  <svg
-                    className="h-10 w-10 cursor-pointer"
-                    fill="white"
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                    strokeLinejoin="round"
-                    strokeMiterlimit="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    onClick={cancelDelete}
-                  >
-                    <path
-                      d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm4.292 6.707c-.391-.391-1.024-.391-1.415 0l-2.877 2.877-2.877-2.877c-.391-.391-1.024-.391-1.415 0-.391.391-.391 1.024 0 1.415l2.878 2.878-2.878 2.878c-.391.391-.391 1.024 0 1.415.391.391 1.024.391 1.415 0l2.877-2.878 2.877 2.878c.391.391 1.024.391 1.415 0 .391-.391.391-1.024 0-1.415l-2.878-2.878 2.878-2.878c.391-.391.391-1.024 0-1.415z"
-                      fillRule="nonzero"
-                    />
-                  </svg>
-                </div>
+              <div
+                className="py-3"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  left: "0",
+                  right: "0",
+                  backdropFilter: "blur(3px)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: "10",
+                }}
+              >
+                <div className="m-32 w-2/3 flex flex-col border-4 border-red-600 rounded bg-gradient-to-r from-[#008080] to-[#003131]">
+                  <div className="p-3 flex w-full justify-between items-center">
+                    <h5 className="m-0 px-1 font-bold">
+                      Proceed with Deleting User?
+                    </h5>
+                    <svg
+                      className="h-10 w-10 cursor-pointer"
+                      fill="white"
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      strokeLinejoin="round"
+                      strokeMiterlimit="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={cancelDelete}
+                    >
+                      <path
+                        d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm4.292 6.707c-.391-.391-1.024-.391-1.415 0l-2.877 2.877-2.877-2.877c-.391-.391-1.024-.391-1.415 0-.391.391-.391 1.024 0 1.415l2.878 2.878-2.878 2.878c-.391.391-.391 1.024 0 1.415.391.391 1.024.391 1.415 0l2.877-2.878 2.877 2.878c.391.391 1.024.391 1.415 0 .391-.391.391-1.024 0-1.415l-2.878-2.878 2.878-2.878c.391-.391.391-1.024 0-1.415z"
+                        fillRule="nonzero"
+                      />
+                    </svg>
+                  </div>
 
-                <div className="flex flex-col px-10">
-                  <div>
-                    <p>
-                      <span className="font-bold">Email:</span>{" "}
-                      {userToDelete.email}
-                    </p>
+                  <div className="flex flex-col px-10">
+                    <div>
+                      <p>
+                        <span className="font-bold">Email:</span>{" "}
+                        {userToDelete.email}
+                      </p>
+                    </div>
+                    <div>
+                      <p>
+                        <span className="font-bold">Phone Number:</span>{" "}
+                        {userToDelete.phoneNumber}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p>
-                      <span className="font-bold">Phone Number:</span>{" "}
-                      {userToDelete.phoneNumber}
-                    </p>
+                  <div className="w-full p-3 px-10 flex justify-end items-center">
+                    <button
+                      className="flex justify-center items-center px-4 p-2 text-center bg-white text-teal-700 border-2 border-white rounded font-bold"
+                      onClick={() => handleDelete(userToDelete._id)}
+                    >
+                      Confirm
+                    </button>
                   </div>
-                </div>
-                <div className="w-full p-3 px-10 flex justify-end items-center">
-                  <button
-                    className="flex justify-center items-center px-4 p-2 text-center bg-white text-teal-700 border-2 border-white rounded font-bold"
-                    onClick={() => handleDelete(userToDelete._id)}
-                  >
-                    Confirm
-                  </button>
                 </div>
               </div>
-            </div>
-          )}
+            )}
           </div>
         </div>
       </section>
