@@ -13,15 +13,14 @@ const AllowedDialog = ({ onClose }) => {
 
   const onSubmit = async (data) => {
     const formData = {
-        ...data,
-      };
-      console.log(formData);
+      ...data,
+    };
+    console.log(formData);
 
-      
-      formData.startHour = parseInt(formData.startHour.split(':')[0], 10);
-      formData.EndHour = parseInt(formData.EndHour.split(':')[0], 10);
-      
-      console.log(formData);
+    formData.startHour = parseInt(formData.startHour.split(":")[0], 10);
+    formData.EndHour = parseInt(formData.EndHour.split(":")[0], 10);
+
+    console.log(formData);
 
     try {
       const res = await axios.post(
@@ -32,7 +31,7 @@ const AllowedDialog = ({ onClose }) => {
           EndHour: formData.EndHour,
           email: formData.Email,
           phoneNumber: formData.phoneNumber,
-          bookedSlots: formData.bookedSlots,
+          bookedSlots: 0,
           totalSlots: formData.totalSlots,
         }
       );
@@ -45,7 +44,7 @@ const AllowedDialog = ({ onClose }) => {
         console.error("Failed to add user:", res.data);
       }
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
   };
 
@@ -174,7 +173,7 @@ const AllowedDialog = ({ onClose }) => {
               />
               {errors.totalSlots && <p>This field is required</p>}
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <label
                 htmlFor="bookedSlots"
                 className="text-left self-start font-semibold"
@@ -188,7 +187,7 @@ const AllowedDialog = ({ onClose }) => {
                 className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
               />
               {errors.bookedSlots && <p>This field is required</p>}
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-row justify-end pt-6 w-full">
