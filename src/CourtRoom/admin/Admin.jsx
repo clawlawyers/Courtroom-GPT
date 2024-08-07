@@ -54,6 +54,7 @@ const CourtRoomUsers = () => {
   });
   
   const getAllData = async () => {
+    setIsLoading(true);
     try {
       const res = await axios.get(
         `${NODE_API_ENDPOINT}/admin/allCourtRoomData`
@@ -67,6 +68,8 @@ const CourtRoomUsers = () => {
       setUserData(filteredData);
     } catch (error) {
       console.error("Error fetching data:", error);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -107,6 +110,7 @@ const CourtRoomUsers = () => {
 
   const handleClose = () => {
     setUserDialog(false);
+    getAllData();
   };
 
   const handleOpen = () => {

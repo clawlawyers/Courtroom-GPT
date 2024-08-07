@@ -68,7 +68,7 @@ const UserDialog = ({ onClose, onUserAdd }) => {
       ...data,
       slots: addedSlots.map((slot) => ({
         date: dayjs(slot.date).format("D MMMM YYYY"),
-        hour: slot.hour,
+        hour: slot.time,
       })),
     };
 
@@ -231,11 +231,18 @@ const UserDialog = ({ onClose, onUserAdd }) => {
                 className="mb-4 w-fit rounded-md p-2 text-neutral-800 outline-none"
               >
                 <option value="">--Select hour--</option>
-                {[...Array(24).keys()].map((hour) => (
-                  <option key={hour} value={hour}>
-                    {hour.toString().padStart(2, "0")}
-                  </option>
-                ))}
+                {[...Array(24).keys()].map((hour) => {
+                  const currentHour = new Date().getHours();
+                  return (
+                    <option
+                      key={hour}
+                      value={hour}
+                      disabled={hour < currentHour}
+                    >
+                      {hour.toString().padStart(2, "0")}
+                    </option>
+                  );
+                })}
               </select>
               {errors.time && <p>This field is required</p>}
             </div>

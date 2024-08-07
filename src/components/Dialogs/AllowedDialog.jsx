@@ -26,7 +26,7 @@ const AllowedDialog = ({ onClose }) => {
       const res = await axios.post(
         `${NODE_API_ENDPOINT}/admin/api/trail-bookings`,
         {
-          date: formData.date,
+         
           StartHour: formData.startHour,
           EndHour: formData.EndHour,
           StartDate: formData.StartDate,
@@ -96,15 +96,7 @@ const AllowedDialog = ({ onClose }) => {
             type="email"
             className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
           />
-          <label htmlFor="date" className="text-left self-start font-semibold">
-            Date
-          </label>
-          <input
-            {...register("date", { required: true })}
-            id="date"
-            type="date"
-            className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
-          />
+        
 
           <label
             htmlFor="phoneNumber"

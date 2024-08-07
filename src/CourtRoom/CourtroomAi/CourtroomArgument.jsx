@@ -44,6 +44,7 @@ const CourtroomArgument = () => {
   const [userArgument, setUserArgument] = useState([]);
   const [judgeArgument, setJudgeArgument] = useState("");
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
+  const [flag,setFlag] = useState(false);
   const [selectedUserArgumentContent, setSelectedUserArgumentContent] =
     useState(null);
   const [aiJudgeLoading, setAiJudgeLoading] = useState(false);
@@ -188,6 +189,7 @@ const CourtroomArgument = () => {
   };
 
   const handleArgumentSelect = async (index, x) => {
+   
     setSelectedUserArgument(index);
     setSelectedUserArgumentContent(x);
     await RetieveDetails(index);
@@ -594,7 +596,8 @@ const CourtroomArgument = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center relative">
+                    {flag && (
+                      <div className="flex items-center relative">
                       <button
                         className="bg-red-500 text-white w-5 h-5  rounded-full"
                         onClick={(e) => {
@@ -619,6 +622,8 @@ const CourtroomArgument = () => {
                         </div>
                       )}
                     </div>
+                    )}
+                    
                   </div>
                 ))}
               </div>

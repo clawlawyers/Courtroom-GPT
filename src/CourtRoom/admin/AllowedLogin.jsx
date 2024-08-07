@@ -23,38 +23,37 @@ const AllowedLogin = () => {
   const [editableUserId, setEditableUserId] = useState(null);
   const [flag, setFlag] = useState(false);
 
-  const handleClose = () => {
-    setUserDialog(false);
+  
+  const FetchUserData = async () => {
+    setFlag(true);
+    try {
+      const response = await axios.get(
+        `${NODE_API_ENDPOINT}/admin/getAllallowedLogin`
+      );
+      const userDataObject = response.data.data;
+
+      const flattenedData = Object.values(userDataObject).flatMap((user) =>
+        user.courtroomBookings.map((booking) => ({
+          ...user,
+          name: booking.name,
+          email: booking.email,
+          phoneNumber: booking.phoneNumber,
+          recording: booking.recording ? "true" : "false",
+          userId: booking._id,
+        }))
+      );
+
+      setUserData(flattenedData);
+      console.log(flattenedData);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+      toast.error("Error fetching user data");
+    }
+    setFlag(false);
   };
 
   useEffect(() => {
-    const FetchUserData = async () => {
-      setFlag(true);
-      try {
-        const response = await axios.get(
-          `${NODE_API_ENDPOINT}/admin/getAllallowedLogin`
-        );
-        const userDataObject = response.data.data;
-
-        const flattenedData = Object.values(userDataObject).flatMap((user) =>
-          user.courtroomBookings.map((booking) => ({
-            ...user,
-            name: booking.name,
-            email: booking.email,
-            phoneNumber: booking.phoneNumber,
-            recording: booking.recording ? "true" : "false",
-            userId: booking._id,
-          }))
-        );
-
-        setUserData(flattenedData);
-        console.log(flattenedData);
-      } catch (error) {
-        console.error("Error fetching user data", error);
-        toast.error("Error fetching user data");
-      }
-      setFlag(false);
-    };
+   
 
     FetchUserData();
   }, []);
@@ -101,6 +100,10 @@ const AllowedLogin = () => {
     // Implement filtering logic here
   };
 
+  const handleClose = () => {
+    setUserDialog(false);
+    FetchUserData();
+  };
   const handleCheckboxChange = (userId, isChecked) => {
     setSelectedUserIds((prevSelectedUserIds) => {
       if (isChecked) {

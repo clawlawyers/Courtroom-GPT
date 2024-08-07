@@ -29,9 +29,7 @@ const AllowedBooking = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleClose = () => {
-    setUserDialog(false);
-  };
+ 
 
   const handleCheckboxChange = (userId, isChecked) => {
     setSelectedUserIds((prevSelectedUserIds) => {
@@ -42,31 +40,32 @@ const AllowedBooking = () => {
       }
     });
   };
+  const FetchUserData = async () => {
+    try {
+      const response = await axios.get(
+        `${NODE_API_ENDPOINT}/admin/allAllowedBooking`
+      );
+
+      const userDataObject = response.data.data;
+
+      // Assuming userDataObject is an object where each key represents a user or booking
+      // Convert it to an array
+      const userDataArray = Object.values(userDataObject);
+
+      setUserData(userDataArray);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+      toast.error("Error fetching user data");
+    }
+  };
 
   useEffect(() => {
-    const FetchUserData = async () => {
-      try {
-        const response = await axios.get(
-          `${NODE_API_ENDPOINT}/admin/allAllowedBooking`
-        );
-
-        const userDataObject = response.data.data;
-
-        // Assuming userDataObject is an object where each key represents a user or booking
-        // Convert it to an array
-        const userDataArray = Object.values(userDataObject);
-
-        setUserData(userDataArray);
-      } catch (error) {
-        console.error("Error fetching user data", error);
-        toast.error("Error fetching user data");
-      }
-    };
+    
 
     FetchUserData();
   });
 
-  console.log(userData);
+ 
 
   const handleDelete = async (userId) => {
     try {
@@ -151,6 +150,10 @@ const AllowedBooking = () => {
     });
   };
   
+  const handleClose = () => {
+    setUserDialog(false);
+    FetchUserData()
+  };
 
   return (
     <>
@@ -341,18 +344,9 @@ const AllowedBooking = () => {
                           )}
                         </td>
                         <td className="p-2 text-center">
-                          {editingUserId === user._id ? (
-                            <input
-                              type="text"
-                              value={editedUserData.bookedSlots}
-                              onChange={(e) =>
-                                handleInputChange(e, "bookedSlots")
-                              }
-                              className="w-full bg-transparent border-2 border-gray-300 rounded p-1 text-white"
-                            />
-                          ) : (
-                            user?.bookedSlots
-                          )}
+                          
+                            {user?.bookedSlots}
+                          
                         </td>
                         <td className="p-2 text-center">
                           {editingUserId === user._id ? (
