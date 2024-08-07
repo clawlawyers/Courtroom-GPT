@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 
 const AllowedLogin = () => {
   const [userData, setUserData] = useState([]);
+  const [originalUserData, setOriginalUserData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [userAddDialog, setUserDialog] = useState(false);
   const [filterDate, setFilterDate] = useState("");
@@ -47,6 +48,7 @@ const AllowedLogin = () => {
         );
 
         setUserData(flattenedData);
+        console.log(flattenedData);
       } catch (error) {
         console.error("Error fetching user data", error);
         toast.error("Error fetching user data");
@@ -119,8 +121,11 @@ const AllowedLogin = () => {
   const toggleEdit = (userId) => {
     if (editableUserId === userId) {
       setEditableUserId(null); // Stop editing if clicked again
+      setOriginalUserData(null); // Clear original data
     } else {
       setEditableUserId(userId); // Start editing this row
+      const userToEdit = userData.find((user) => user.userId === userId);
+      setOriginalUserData({ ...userToEdit }); // Store original data
     }
   };
 
@@ -133,27 +138,37 @@ const AllowedLogin = () => {
   };
 
   const handleSave = async (user) => {
+    // Check if data has changed
+    const dataChanged =
+      JSON.stringify(originalUserData) !== JSON.stringify(user);
+  
+    if (!dataChanged) {
+      setEditableUserId(null); // Exit edit mode without API call
+      return;
+    }
+  
     try {
       await axios.put(
         `${NODE_API_ENDPOINT}/admin/allowedLogin/users/${user.userId}`,
         user
       );
-      
-      const res2= await axios.put(
+  
+      const res2 = await axios.put(
         `${NODE_API_ENDPOINT}/admin/allowedLogin/${user._id}/users/${user.userId}/slot`,
         {
-          newDate:user.date,
-          newHour : user.hour,
+          newDate: user.date,
+          newHour: user.hour,
         }
-      )
+      );
       console.log(res2);
-
+  
       toast.success("User data updated successfully");
     } catch (error) {
       console.error("Error updating user data", error);
       toast.error("Error updating user data");
     } finally {
       setEditableUserId(null); // Exit edit mode
+      setOriginalUserData(null); // Clear original data
     }
   };
 
@@ -257,7 +272,7 @@ const AllowedLogin = () => {
                   })
                   .map((user) => (
                     <tr
-                      key={user.userId}
+                      key={user._id}
                       className=" border-b border-teal-600"
                     >
                       <td className="p-2 text-center">

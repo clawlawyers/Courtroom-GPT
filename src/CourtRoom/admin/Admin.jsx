@@ -1,4 +1,11 @@
-import { Add, Delete, Edit, Share, Check } from "@mui/icons-material";
+import {
+  Add,
+  Delete,
+  Edit,
+  Share,
+  Check,
+  ArrowDownward,
+} from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import Papa from "papaparse";
@@ -11,6 +18,8 @@ import dayjs from "dayjs";
 
 const CourtRoomUsers = () => {
   const [userData, setUserData] = useState([]);
+ 
+
   const [searchTerm, setSearchTerm] = useState("");
   const [userAddDialog, setUserDialog] = useState(false);
   const [filterDate, setFilterDate] = useState("");
@@ -35,13 +44,22 @@ const CourtRoomUsers = () => {
     phoneNumber: "",
     recording: false,
   });
+  const [originalFormData, setOriginalFormData] = useState({
+    date: "",
+    hour: "",
+    name: "",
+    email: "",
+    phoneNumber: "",
+    recording: false,
+  });
+  
   const getAllData = async () => {
     try {
       const res = await axios.get(
         `${NODE_API_ENDPOINT}/admin/allCourtRoomData`
       );
       const fetchedData = res.data.data;
-    
+
       // Filter the data to include only users with courtroomBookings[0]._id
       const filteredData = fetchedData.filter((user) =>
         user?.courtroomBookings.some((booking) => booking?._id)
@@ -53,20 +71,15 @@ const CourtRoomUsers = () => {
   };
 
   useEffect(() => {
-   
     getAllData();
     console.log(userData);
-
-  },[]);
+  }, []);
 
   const handleExport = () => {
     const csv = Papa.unparse(userData);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, "userData.csv");
   };
-
-
-  
 
   const handleFilter = () => {
     // Toggle sort order between ascending and descending
@@ -180,18 +193,21 @@ const CourtRoomUsers = () => {
   };
 
   const handleEdit = (booking, user) => {
-    console.log(booking._id)
-
     setEditingUserId(booking._id);
-    setEditFormData({
+    
+    const formData = {
       date: user.date,
       hour: user.hour,
       name: booking.name,
       email: booking.email,
       phoneNumber: booking.phoneNumber,
       recording: booking.recording,
-    });
+    };
+  
+    setEditFormData(formData);
+    setOriginalFormData(formData); // Store the original data
   };
+  
 
   const handleEditFormChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -200,47 +216,49 @@ const CourtRoomUsers = () => {
   };
 
   const handleEditConfirm = async (bookingId, userId) => {
+    // Check if any data has changed
+    if (JSON.stringify(editFormData) === JSON.stringify(originalFormData)) {
+      // No changes detected, skip API call
+      
+      setEditingUserId(null);
+      return;
+    }
+  
+    // Proceed with API call if data has changed
     try {
-      // Make a request to update the user data
-      const res = await axios.put(
+      await axios.put(
         `${NODE_API_ENDPOINT}/admin/update/users/${userId}`,
         editFormData
       );
-      console.log("User updated", res.data);
-      
-      const res2 = await axios.put(
+  
+      await axios.put(
         `${NODE_API_ENDPOINT}/admin/bookings/${bookingId}/users/${userId}/slot`,
         {
           newDate: editFormData.date,
           newHour: editFormData.hour,
         }
-      )
-      console.log(res2)
-     
-
-
-      // Update the state with the new data
-     
-
-          setUserData((prevUserData) =>
-            prevUserData.map((user) => ({
-              ...user,
-              date: user._id === bookingId ? dayjs( editFormData.date).format("YYYY-MM-DD") : user.date,
-              hour: user._id === bookingId ? editFormData.hour : user.hour,
-              courtroomBookings: user.courtroomBookings.map((booking) =>
-                booking._id === userId ? { ...booking, ...editFormData } : booking
-              ),
-            }))
-          );
-        
-        getAllData();
+      );
+  
+      setUserData((prevUserData) =>
+        prevUserData.map((user) => ({
+          ...user,
+          date:
+            user._id === bookingId
+              ? dayjs(editFormData.date).format("YYYY-MM-DD")
+              : user.date,
+          hour: user._id === bookingId ? editFormData.hour : user.hour,
+          courtroomBookings: user.courtroomBookings.map((booking) =>
+            booking._id === userId ? { ...booking, ...editFormData } : booking
+          ),
+        }))
+      );
+  
       setEditingUserId(null);
-      
-    } catch (e) {
-      
-      console.error("Error updating user data:", e);
+    } catch (error) {
+      console.error("Error updating user data:", error);
     }
   };
+  
 
   const handleAdd = (newUser) => {
     console.log(newUser);
@@ -310,9 +328,7 @@ const CourtRoomUsers = () => {
                   Delete ({selectedUserIds.length})
                 </div>
               </button>
-              <div>
-                Total Users ({userData.length})
-              </div>
+              <div>Total Users ({userData.length})</div>
             </div>
             <input
               type="text"
@@ -328,7 +344,16 @@ const CourtRoomUsers = () => {
               <thead>
                 <tr className="bg-teal-500">
                   <th className="p-2">Select</th>
-                  <th className="p-2">Date</th>
+                  <th className="p-2">
+                    <div className="flex flex-row items-center justify-start">
+                      Date
+                      <ArrowDownward
+                        className={`text-sm transition-transform duration-200 ${
+                          sortOrder === "desc" ? "rotate-180" : ""
+                        }`}
+                      />
+                    </div>
+                  </th>
                   <th className="p-2">Time</th>
                   <th className="p-2">Name</th>
                   <th className="p-2">Email</th>
@@ -364,22 +389,21 @@ const CourtRoomUsers = () => {
                   })
                   .flatMap((user) =>
                     user?.courtroomBookings?.map((booking) => (
-                      
                       <tr
-                      key={booking._id}
-                      className="hover:bg-black/50 transition-all duration-300 border-b border-white"
-                    >
-                      <td className="p-2">
-                        <input
-                          type="checkbox"
-                          onChange={(e) =>
-                            handleCheckboxChange(
-                              booking._id,
-                              e.target.checked
-                            )
-                          }
-                        />
-                      </td>
+                        key={booking._id}
+                        className="hover:bg-black/50 transition-all duration-300 border-b border-white"
+                      >
+                        <td className="p-2">
+                          <input
+                            type="checkbox"
+                            onChange={(e) =>
+                              handleCheckboxChange(
+                                booking._id,
+                                e.target.checked
+                              )
+                            }
+                          />
+                        </td>
 
                         <td className="p-2">
                           {editingUserId === booking._id ? (
@@ -393,111 +417,111 @@ const CourtRoomUsers = () => {
                           ) : (
                             user.date
                           )}
-                      </td>
-                      <td className="p-2">
+                        </td>
+                        <td className="p-2">
                           {editingUserId === booking._id ? (
-                           <select
-                           name="hour"
-                           value={editFormData.hour}
-                           onChange={handleEditFormChange}
-                           className="bg-neutral-800 rounded-md border-b-2 border-white text-white focus:outline-none"
-                         >
-                           <option value="">--Select hour--</option>
-                           {[...Array(24).keys()].map((hour) => (
-                             <option key={hour} value={hour}>
-                               {hour}
-                             </option>
-                           ))}
-                         </select>
+                            <select
+                              name="hour"
+                              value={editFormData.hour}
+                              onChange={handleEditFormChange}
+                              className="bg-neutral-800 rounded-md border-b-2 border-white text-white focus:outline-none"
+                            >
+                              <option value="">--Select hour--</option>
+                              {[...Array(24).keys()].map((hour) => (
+                                <option key={hour} value={hour}>
+                                  {hour}
+                                </option>
+                              ))}
+                            </select>
                           ) : (
                             user.hour
                           )}
-</td>
-                      <td className="p-2">
-                        {editingUserId === booking._id ? (
-                          <input
-                            type="text"
-                            name="name"
-                            value={editFormData.name}
-                            onChange={handleEditFormChange}
-                            className="bg-transparent border-b-2 border-white text-white focus:outline-none"
-                          />
-                        ) : (
-                          booking.name
-                        )}
-                      </td>
-                      <td className="p-2">
-                        {editingUserId === booking._id ? (
-                          <input
-                            type="email"
-                            name="email"
-                            value={editFormData.email}
-                            onChange={handleEditFormChange}
-                            className="bg-transparent border-b-2 border-white text-white focus:outline-none"
-                          />
-                        ) : (
-                          booking.email
-                        )}
-                      </td>
-                      <td className="p-2">
-                        {editingUserId === booking._id ? (
-                          <input
-                            type="text"
-                            name="phoneNumber"
-                            value={editFormData.phoneNumber}
-                            onChange={handleEditFormChange}
-                            className="bg-transparent border-b-2 border-white text-white focus:outline-none"
-                          />
-                        ) : (
-                          booking.phoneNumber
-                        )}
-                      </td>
-                      <td className="p-2">
-                        {editingUserId === booking._id ? (
-                          <input
-                            type="checkbox"
-                            name="recording"
-                            checked={editFormData.recording}
-                            onChange={handleEditFormChange}
-                            className="focus:outline-none"
-                          />
-                        ) : booking.recording ? (
-                          "true"
-                        ) : (
-                          "false"
-                        )}
-                      </td>
-                      <td className="p-2">{booking._id}</td>
-                      <td className="p-2 cursor-pointer">
-                        {editingUserId === booking._id ? (
-                          <Check
-                            onClick={() =>
-                              handleEditConfirm(
-                                user?._id,
-                                booking._id
-                              )
-                            }
-                          />
-                        ) : (
-                          <Edit onClick={() => handleEdit(booking, user)} />
-                        )}
-                      </td>
-                      <td
-                        className="p-2 cursor-pointer"
-                        onClick={() =>
-                          handleDeleteUser(booking?._id, user?._id)
-                        }
-                      >
-                        <Delete />
-                      </td>
-                    </tr>
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="text"
+                              name="name"
+                              value={editFormData.name}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            booking.name
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="email"
+                              name="email"
+                              value={editFormData.email}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            booking.email
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="text"
+                              name="phoneNumber"
+                              value={editFormData.phoneNumber}
+                              onChange={handleEditFormChange}
+                              className="bg-transparent border-b-2 border-white text-white focus:outline-none"
+                            />
+                          ) : (
+                            booking.phoneNumber
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {editingUserId === booking._id ? (
+                            <input
+                              type="checkbox"
+                              name="recording"
+                              checked={editFormData.recording}
+                              onChange={handleEditFormChange}
+                              className="focus:outline-none"
+                            />
+                          ) : booking.recording ? (
+                            "true"
+                          ) : (
+                            "false"
+                          )}
+                        </td>
+                        <td className="p-2">{booking._id}</td>
+                        <td className="p-2 cursor-pointer">
+                          {editingUserId === booking._id ? (
+                            <Check
+                              className="text-green-500 cursor-pointer"
+                              onClick={() =>
+                                handleEditConfirm(user?._id, booking._id)
+                              }
+                            />
+                          ) : (
+                            <Edit
+                              className="text-yellow-400 cursor-pointer"
+                              onClick={() => handleEdit(booking, user)}
+                            />
+                          )}
+                        </td>
+                        <td
+                          className="p-2 cursor-pointer text-red-500"
+                          onClick={() =>
+                            handleDeleteUser(booking?._id, user?._id)
+                          }
+                        >
+                          <Delete />
+                        </td>
+                      </tr>
                     ))
                   )}
               </tbody>
             </table>
           </div>
         </div>
-        
 
         {deleteDialog && userToDelete && (
           <div
