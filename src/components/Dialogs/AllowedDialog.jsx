@@ -29,6 +29,8 @@ const AllowedDialog = ({ onClose }) => {
           date: formData.date,
           StartHour: formData.startHour,
           EndHour: formData.EndHour,
+          StartDate:formData.StartDate,
+          EndDate:formData.EndDate,
           email: formData.Email,
           phoneNumber: formData.phoneNumber,
           bookedSlots: 0,
@@ -126,8 +128,37 @@ const AllowedDialog = ({ onClose }) => {
                 : "This field is required"}
             </p>
           )}
-
-          <div className="flex flex-wrap w-full items-center justify-between">
+          <div className="flex flex-wrap w-full justify-between  items-center">
+          <div className="flex flex-col">
+              <label
+                htmlFor="StartDate"
+                className="text-left self-start font-semibold"
+              >
+                Start Date
+              </label>
+              <input
+                {...register("StartDate", { required: true })}
+                id="StartDate"
+                type="date"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+              />
+              {errors.startDate && <p>This field is required</p>}
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="EndDate"
+                className="text-left self-start font-semibold"
+              >
+                End Date
+              </label>
+              <input
+                {...register("EndDate", { required: true })}
+                id="EndDate"
+                type="date"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+              />
+              {errors.EndDate && <p>This field is required</p>}
+            </div>
             <div className="flex flex-col">
               <label
                 htmlFor="StartHour"
@@ -138,8 +169,8 @@ const AllowedDialog = ({ onClose }) => {
               <input
                 {...register("startHour", { required: true })}
                 id="startHour"
-                type="time"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+                type="number"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 "
               />
               {errors.startHour && <p>This field is required</p>}
             </div>
@@ -153,11 +184,15 @@ const AllowedDialog = ({ onClose }) => {
               <input
                 {...register("EndHour", { required: true })}
                 id="EndHour"
-                type="time"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+                type="number"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800"
               />
               {errors.EndHour && <p>This field is required</p>}
             </div>
+          </div>
+
+          <div className="flex flex-wrap w-full items-center justify-between">
+            
             <div className="flex flex-col">
               <label
                 htmlFor="totalSlots"
@@ -173,21 +208,7 @@ const AllowedDialog = ({ onClose }) => {
               />
               {errors.totalSlots && <p>This field is required</p>}
             </div>
-            {/* <div className="flex flex-col">
-              <label
-                htmlFor="bookedSlots"
-                className="text-left self-start font-semibold"
-              >
-                Booked Slots
-              </label>
-              <input
-                {...register("bookedSlots", { required: true })}
-                id="bookedSlots"
-                type="text"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
-              />
-              {errors.bookedSlots && <p>This field is required</p>}
-            </div> */}
+           
           </div>
 
           <div className="flex flex-row justify-end pt-6 w-full">

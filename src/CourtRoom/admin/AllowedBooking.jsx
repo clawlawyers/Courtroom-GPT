@@ -367,7 +367,7 @@ const AllowedBooking = () => {
                               onClick={() => handleEdit(user)}
                               className=" text-white font-semibold px-2 py-1 rounded"
                             >
-                              <Edit />
+                              <Edit className="text-yellow-500 cursor-pointer" />
                             </button>
                           )}
                         </td>
@@ -376,7 +376,7 @@ const AllowedBooking = () => {
                             onClick={() => confirmDelete(user)}
                             className=" text-white font-semibold px-2 py-1 rounded"
                           >
-                            <Delete />
+                            <Delete className="text-red-500 cursor-pointer" />
                           </button>
                         </td>
                       </tr>

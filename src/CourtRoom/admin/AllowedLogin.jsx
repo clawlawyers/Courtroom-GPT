@@ -139,14 +139,14 @@ const AllowedLogin = () => {
         user
       );
       
-      // const res2= await axios.put(
-      //   `${NODE_API_ENDPOINT}/admin/allowedLogin/${user._id}/users/${user.userId}/slot`,
-      //   {
-      //     newDate:user.date,
-      //     newHour : user.hour,
-      //   }
-      // )
-      console.log(user.date,user.hour)
+      const res2= await axios.put(
+        `${NODE_API_ENDPOINT}/admin/allowedLogin/${user._id}/users/${user.userId}/slot`,
+        {
+          newDate:user.date,
+          newHour : user.hour,
+        }
+      )
+      console.log(res2);
 
       toast.success("User data updated successfully");
     } catch (error) {
@@ -258,7 +258,7 @@ const AllowedLogin = () => {
                   .map((user) => (
                     <tr
                       key={user.userId}
-                      className="bg-gray-900 border-b border-teal-600"
+                      className=" border-b border-teal-600"
                     >
                       <td className="p-2 text-center">
                         <input

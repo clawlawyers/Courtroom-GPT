@@ -234,8 +234,8 @@ const UserDialog = ({ onClose,onUserAdd }) => {
               <input
                 {...register("time", { required: true })}
                 id="time"
-                type="time"
-                className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
+                type="number"
+                className="mb-4 w-fit rounded-md p-2 text-neutral-800 outline-none"
               />
               {errors.time && <p>This field is required</p>}
             </div>
