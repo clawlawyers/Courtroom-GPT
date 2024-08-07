@@ -29,8 +29,8 @@ const AllowedDialog = ({ onClose }) => {
           date: formData.date,
           StartHour: formData.startHour,
           EndHour: formData.EndHour,
-          StartDate:formData.StartDate,
-          EndDate:formData.EndDate,
+          StartDate: formData.StartDate,
+          EndDate: formData.EndDate,
           email: formData.Email,
           phoneNumber: formData.phoneNumber,
           bookedSlots: 0,
@@ -129,7 +129,7 @@ const AllowedDialog = ({ onClose }) => {
             </p>
           )}
           <div className="flex flex-wrap w-full justify-between  items-center">
-          <div className="flex flex-col">
+            <div className="flex flex-col">
               <label
                 htmlFor="StartDate"
                 className="text-left self-start font-semibold"
@@ -166,33 +166,54 @@ const AllowedDialog = ({ onClose }) => {
               >
                 StartHour
               </label>
-              <input
+              <select
                 {...register("startHour", { required: true })}
                 id="startHour"
-                type="number"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 "
-              />
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800"
+              >
+                <option value="">--Select hour--</option>
+                {[...Array(24).keys()].map((hour) => {
+                  const currentHour = new Date().getHours();
+                  return (
+                    <option
+                      key={hour}
+                      value={hour}
+                      disabled={hour < currentHour}
+                    >
+                      {hour.toString().padStart(2, "0")}
+                    </option>
+                  );
+                })}
+              </select>
               {errors.startHour && <p>This field is required</p>}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="EndHour"
-                className="text-left self-start font-semibold"
-              >
-                EndHour
-              </label>
-              <input
-                {...register("EndHour", { required: true })}
-                id="EndHour"
-                type="number"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800"
-              />
-              {errors.EndHour && <p>This field is required</p>}
-            </div>
+  <label
+    htmlFor="EndHour"
+    className="text-left self-start font-semibold"
+  >
+    EndHour
+  </label>
+  <select
+    {...register("EndHour", { required: true })}
+    id="EndHour"
+    className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800"
+  >
+    <option value="">--Select hour--</option>
+    {[...Array(24).keys()].map((hour) => {
+      const currentHour = new Date().getHours();
+      return (
+        <option key={hour} value={hour} disabled={hour < currentHour}>
+          {hour.toString().padStart(2, '0')}
+        </option>
+      );
+    })}
+  </select>
+  {errors.EndHour && <p>This field is required</p>}
+</div>
           </div>
 
           <div className="flex flex-wrap w-full items-center justify-between">
-            
             <div className="flex flex-col">
               <label
                 htmlFor="totalSlots"
@@ -208,7 +229,6 @@ const AllowedDialog = ({ onClose }) => {
               />
               {errors.totalSlots && <p>This field is required</p>}
             </div>
-           
           </div>
 
           <div className="flex flex-row justify-end pt-6 w-full">
