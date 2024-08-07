@@ -16,14 +16,13 @@ import {
   removeSlot,
 } from "../../features/admin/courtroomAdminAddUserSlice";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
-import toast  from "react-hot-toast";
+import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
-const UserDialog = ({ onClose,onUserAdd }) => {
-  
+const UserDialog = ({ onClose, onUserAdd }) => {
   const dispatch = useDispatch();
   const [addedSlots, setAddedSlots] = useState([]);
   const slotsContainerRef = useRef(null);
-  const[btnLoading , setBtnLoading] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -69,7 +68,7 @@ const UserDialog = ({ onClose,onUserAdd }) => {
       ...data,
       slots: addedSlots.map((slot) => ({
         date: dayjs(slot.date).format("D MMMM YYYY"),
-        hour: parseInt(slot.time.split(":")),
+        hour: slot.hour,
       })),
     };
 
@@ -90,23 +89,19 @@ const UserDialog = ({ onClose,onUserAdd }) => {
 
       if (response.status === 201) {
         console.log("User added successfully:", response.data);
-       
-         
-      
+
         dispatch(setUserData(formData));
         onUserAdd(formData);
 
         // Optionally, show a success message or close the dialog
         toast.success("User Added successfully");
         onClose();
-        
       } else {
         console.error("Failed to add user:", response.data);
       }
     } catch (error) {
       console.error("Error adding user:", error);
-    }
-    finally{
+    } finally {
       setBtnLoading(false);
     }
   };
@@ -132,7 +127,6 @@ const UserDialog = ({ onClose,onUserAdd }) => {
           background: "linear-gradient(to right,#0e1118,#008080)",
         }}
       >
-        
         <div className="flex flex-row justify-between items-center border-b-2 border-white">
           <h4 className="text-center mx-10">New User Details</h4>
           <div className="flex justify-end">
@@ -231,12 +225,18 @@ const UserDialog = ({ onClose,onUserAdd }) => {
               >
                 Time
               </label>
-              <input
+              <select
                 {...register("time", { required: true })}
                 id="time"
-                type="number"
                 className="mb-4 w-fit rounded-md p-2 text-neutral-800 outline-none"
-              />
+              >
+                <option value="">--Select hour--</option>
+                {[...Array(24).keys()].map((hour) => (
+                  <option key={hour} value={hour}>
+                    {hour.toString().padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
               {errors.time && <p>This field is required</p>}
             </div>
             <button
@@ -284,9 +284,17 @@ const UserDialog = ({ onClose,onUserAdd }) => {
           <div className="flex flex-row justify-end pt-6 w-full">
             <button
               type="submit"
-              className={`${btnLoading ? "opacity-75 cursor-progress" : "opacity-100 cursor-pointer"} bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center`}
+              className={`${
+                btnLoading
+                  ? "opacity-75 cursor-progress"
+                  : "opacity-100 cursor-pointer"
+              } bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center`}
             >
-              {btnLoading ? <CircularProgress className="h-5 w-5" /> : <PersonAdd />}
+              {btnLoading ? (
+                <CircularProgress className="h-5 w-5" />
+              ) : (
+                <PersonAdd />
+              )}
               <div className="font-semibold">Add User</div>
             </button>
           </div>
