@@ -44,7 +44,7 @@ const CourtroomArgument = () => {
   const [userArgument, setUserArgument] = useState([]);
   const [judgeArgument, setJudgeArgument] = useState("");
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
-  const [flag,setFlag] = useState(false);
+  const [flag, setFlag] = useState(false);
   const [selectedUserArgumentContent, setSelectedUserArgumentContent] =
     useState(null);
   const [aiJudgeLoading, setAiJudgeLoading] = useState(false);
@@ -99,6 +99,15 @@ const CourtroomArgument = () => {
     setUserArgument(updatedArguments);
     setEditIndex(null);
     setEditValue("");
+
+    const inserUserArgument = await axios.post(
+      `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
+      {
+        user_id: currentUser.userId,
+        argument: addArgumentInputText,
+        argument_index: index,
+      }
+    );
 
     await GenerateDetails(index);
   };
@@ -189,7 +198,6 @@ const CourtroomArgument = () => {
   };
 
   const handleArgumentSelect = async (index, x) => {
-   
     setSelectedUserArgument(index);
     setSelectedUserArgumentContent(x);
     await RetieveDetails(index);
@@ -500,7 +508,6 @@ const CourtroomArgument = () => {
               >
                 {userArgument.map((x, index) => (
                   <div
-                    
                     onClick={() => {
                       handleArgumentSelect(index, x);
                     }}
@@ -597,37 +604,34 @@ const CourtroomArgument = () => {
                         </div>
                       )}
                     </div>
-                   
-                      { selectedUserArgument === index && (
-                        <div className="flex items-center relative">
-                      <button
-                        className="bg-red-500 text-white w-5 h-5  rounded-full"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsDialogOpen(true);
-                          setObjectionIndex(index);
-                        }}
-                      ></button>
 
-                      {isDialogOpen && index === objectionIndex && (
-                        <div
-                          ref={dialogRef}
-                          className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-50 p-4 rounded shadow-lg"
-                        >
-                          <button className="top-0 h-full overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
-                            {aiLawyerLoading ? (
-                              <p>Loading</p>
-                            ) : (
-                              <p className="">{potentialObjections}</p>
-                            )}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                      )}
-                      
-                    
-                    
+                    {selectedUserArgument === index && (
+                      <div className="flex items-center relative">
+                        <button
+                          className="bg-red-500 text-white w-5 h-5  rounded-full"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsDialogOpen(true);
+                            setObjectionIndex(index);
+                          }}
+                        ></button>
+
+                        {isDialogOpen && index === objectionIndex && (
+                          <div
+                            ref={dialogRef}
+                            className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-50 p-4 rounded shadow-lg"
+                          >
+                            <button className="top-0 h-full overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
+                              {aiLawyerLoading ? (
+                                <p>Loading</p>
+                              ) : (
+                                <p className="">{potentialObjections}</p>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
