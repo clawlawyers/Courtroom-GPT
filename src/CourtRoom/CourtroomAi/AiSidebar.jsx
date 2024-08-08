@@ -217,11 +217,14 @@ const AiSidebar = () => {
     navigate("/court-room");
   };
 
-  const ExitToCourtroom = () => {
+  const ExitToCourtroom = async () => {
     localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
-    saveHistory();
+    await saveHistory();
+
+    await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/end`);
+
     dispatch(logout());
 
     navigate("/");
@@ -309,9 +312,7 @@ const AiSidebar = () => {
         console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
-        }
-        else{
-
+        } else {
           dispatch(setOverview(overView.data.data.case_overview));
         }
       } catch (error) {
@@ -474,8 +475,11 @@ const AiSidebar = () => {
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="">
             <motion.div
-              className={`${overViewDetails === "NA" || overViewDetails === "" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
-
+              className={`${
+                overViewDetails === "NA" || overViewDetails === ""
+                  ? "opacity-75 pointer-events-none cursor-not-allowed"
+                  : ""
+              }`}
               onClick={() => downloadSessionCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
@@ -511,8 +515,11 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-              className={`${overViewDetails === "NA" || overViewDetails === "" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
-             
+              className={`${
+                overViewDetails === "NA" || overViewDetails === ""
+                  ? "opacity-75 pointer-events-none cursor-not-allowed"
+                  : ""
+              }`}
               onClick={() => downloadCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
@@ -616,11 +623,11 @@ const AiSidebar = () => {
                 <p className="m-0 text-sm text-white">View first Draft</p>
               </motion.div>
               <motion.div
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : ""
-              }`}
+                className={`${
+                  overViewDetails === "NA" || overViewDetails === ""
+                    ? "opacity-75 pointer-events-none cursor-not-allowed"
+                    : ""
+                }`}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
