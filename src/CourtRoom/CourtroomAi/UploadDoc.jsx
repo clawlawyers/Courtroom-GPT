@@ -63,75 +63,7 @@ const UploadDoc = () => {
         </div>
       )}
 
-      {/* <div className="w-full py-2 px-3 grid grid-cols-[65%_35%]">
-        <div className="py-2 pr-2">
-          <input
-            className="w-full"
-            style={{
-              border: "2px solid #00ffa3",
-              borderRadius: "20px",
-              padding: "10px",
-              // width: "600px",
-              cursor: `${
-                !uploadedFile || !inputText === "" ? "not-allowed" : "pointer"
-              }`,
-            }}
-            placeholder="Input Your Case Into The Courtroom"
-            onChange={handleInputChange}
-            value={inputText}
-          />
-        </div>
-        <div className="flex gap-2">
-          <motion.button
-            className="flex-1 my-2"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "5px",
-              border: "2px solid #00ffa3",
-              borderRadius: "20px",
-              background: "#008080",
-              padding: "10px",
-              cursor: "not-allowed",
-              color: "white",
-            }}
-          >
-            <img
-              style={{ width: "20px", height: "20px" }}
-              src={fight}
-              alt="fight"
-            />
-            <h2 style={{ fontSize: "15px", margin: "0", color: "gray" }}>
-              Fight Yourself
-            </h2>
-          </motion.button>
-          <motion.button
-            className="flex-1 my-2"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "5px",
-              border: "2px solid #00ffa3",
-              borderRadius: "20px",
-              background: "#008080",
-              padding: "10px",
-              cursor: "not-allowed",
-              color: "white",
-            }}
-          >
-            <img
-              style={{ width: "20px", height: "20px" }}
-              src={draft}
-              alt="draft"
-            />
-            <h2 style={{ fontSize: "15px", margin: "0", color: "gray" }}>
-              Get First Draft
-            </h2>
-          </motion.button>
-        </div>
-      </div> */}
+     
     </section>
   );
 };

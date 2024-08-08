@@ -16,8 +16,9 @@ import {
     removeSlot,
   } from "../../features/admin/courtroomAdminAddUserSlice";
   import { NODE_API_ENDPOINT } from "../../utils/utils";
-  
+  import {useNavigate} from "react-router-dom"
   const AllowedLoginDialog = ({ onClose }) => {
+    let navigate = useNavigate()
     const dispatch = useDispatch();
     const [addedSlots, setAddedSlots] = useState([]);
     const slotsContainerRef = useRef(null);
@@ -66,7 +67,7 @@ import {
         ...data,
         slots: addedSlots.map((slot) => ({
           date: dayjs(slot.date).format("D MMMM YYYY"),
-          hour: parseInt(slot.time.split(":")),
+          hour: slot.time,
         })),
       };
   
@@ -88,13 +89,18 @@ import {
           console.log("User added successfully:", response.data);
           dispatch(setUserData(formData));
           // Optionally, show a success message or close the dialog
+        
+           
+          
           onClose();
+          
         } else {
           console.error("Failed to add user:", response.data);
         }
       } catch (error) {
         console.error("Error adding user:", error);
       }
+      
   
       
     };
@@ -212,20 +218,29 @@ import {
                 {errors.date && <p>This field is required</p>}
               </div>
               <div className="flex flex-col">
-                <label
-                  htmlFor="Time"
-                  className="text-left self-start font-semibold"
-                >
-                  Time
-                </label>
-                <input
-                  {...register("time", { required: true })}
-                  id="time"
-                  type="time"
-                  className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
-                />
-                {errors.time && <p>This field is required</p>}
-              </div>
+  <label
+    htmlFor="Time"
+    className="text-left self-start font-semibold"
+  >
+    Time
+  </label>
+  <select
+    {...register("time", { required: true })}
+    id="time"
+    className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
+  >
+    <option value="">--Select hour--</option>
+    {[...Array(24).keys()].map((hour) => {
+      const currentHour = new Date().getHours();
+      return (
+        <option key={hour} value={hour} disabled={hour < currentHour}>
+          {hour.toString().padStart(2, '0')}
+        </option>
+      );
+    })}
+  </select>
+  {errors.time && <p>This field is required</p>}
+</div>
               <button
                 type="button"
                 onClick={handleAddSlots}

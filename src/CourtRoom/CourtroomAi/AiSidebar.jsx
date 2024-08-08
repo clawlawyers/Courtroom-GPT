@@ -307,8 +307,13 @@ const AiSidebar = () => {
         );
 
         console.log(overView.data.data.case_overview);
+        if (overView.data.data.case_overview === "NA") {
+          dispatch(setOverview(""));
+        }
+        else{
 
-        dispatch(setOverview(overView.data.data.case_overview));
+          dispatch(setOverview(overView.data.data.case_overview));
+        }
       } catch (error) {
         toast.error("Error in fetching case overview");
         console.error("Error fetching case overview", error);
@@ -469,6 +474,9 @@ const AiSidebar = () => {
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="">
             <motion.div
+              className={`${overViewDetails === "NA" || overViewDetails === "" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
+
+              onClick={() => downloadSessionCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -485,10 +493,7 @@ const AiSidebar = () => {
               }}
             >
               <div>
-                <p
-                  style={{ fontSize: "15px", margin: "0" }}
-                  onClick={() => downloadSessionCaseHistory()}
-                >
+                <p style={{ fontSize: "15px", margin: "0" }}>
                   Download Session History
                 </p>
               </div>
@@ -506,6 +511,9 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
+              className={`${overViewDetails === "NA" || overViewDetails === "" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
+             
+              onClick={() => downloadCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -521,10 +529,7 @@ const AiSidebar = () => {
               }}
             >
               <div>
-                <p
-                  style={{ fontSize: "15px", margin: "0" }}
-                  onClick={() => downloadCaseHistory()}
-                >
+                <p style={{ fontSize: "15px", margin: "0" }}>
                   Download Case History
                 </p>
               </div>
@@ -579,6 +584,11 @@ const AiSidebar = () => {
                 onClick={handleFirstDraft}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
+                className={`${
+                  overViewDetails === "NA" || overViewDetails === ""
+                    ? "opacity-75 pointer-events-none cursor-not-allowed"
+                    : ""
+                }`}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -606,6 +616,11 @@ const AiSidebar = () => {
                 <p className="m-0 text-sm text-white">View first Draft</p>
               </motion.div>
               <motion.div
+              className={`${
+                overViewDetails === "NA" || overViewDetails === ""
+                  ? "opacity-75 pointer-events-none cursor-not-allowed"
+                  : ""
+              }`}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{

@@ -22,7 +22,6 @@ const Button = styled.button`
   cursor: pointer;
   margin-bottom: 10px;
   text-align: left;
-  
 
   ${(props) =>
     props.isSelected &&
@@ -31,30 +30,31 @@ const Button = styled.button`
     `}
 
   ${(props) => {
-    if (props.bookingCount === 3) {
+    if (props.bookingCount >= 4) {
       return css`
         background-color: red;
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
       `;
     } else if (props.bookingCount === 2) {
       return css`
         background-color: yellow;
       `;
-    }
-    else if(props.bookingCount >=4)
-      {
-        return css`
-        opacity:0.5;
-        pointer-events: none;
-        cursor: not-allowed;
-      `;
-      } 
-    
-    else {
+    } else {
       return css`
         background-color: transparent;
       `;
     }
   }}
+
+  ${(props) =>
+    props.disabled &&
+    css`
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: not-allowed;
+    `}
 `;
 
 const Container = styled.div`
@@ -68,22 +68,17 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
   const [bookingData, setBookingData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const storedSelectedDate = localStorage.getItem('SelectedDate');
-  
+
   useEffect(() => {
     const getBookingDetails = async () => {
       try {
-        
         const response = await axios.get(`${NODE_API_ENDPOINT}/courtroom/book-courtroom`);
-        console.log(response)
         const bookedDatesData = response.data;
-        console.log(bookedDatesData);
 
-        // Convert server data to a more accessible format
         const dateHourMap = bookedDatesData.reduce((acc, slot) => {
           const date = dayjs(slot._id.date).format("YYYY-MM-DD");
           const hour = slot._id.hour;
-          const bookingCount = slot.bookingCount;  // Assuming slot has bookingCount
-          console.log(date, bookingCount);
+          const bookingCount = slot.bookingCount;
           if (!acc[date]) {
             acc[date] = {};
           }
@@ -91,13 +86,11 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
           return acc;
         }, {});
 
-        // Check if the stored date exists in the server data
         if (storedSelectedDate) {
           const formattedDate = dayjs(storedSelectedDate).format("YYYY-MM-DD");
           setBookingData(dateHourMap[formattedDate] || {});
         }
-        
-        // Mark loading as done
+
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching booking details:", error);
@@ -108,13 +101,12 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
     getBookingDetails();
   }, [storedSelectedDate]);
 
-  console.log("Booking data is", bookingData);
-
   const times = Array.from({ length: 24 }, (_, i) => {
     const hour = i < 10 ? `0${i}` : i;
     return `${hour}:00`;
   });
 
+  const currentHour = dayjs().hour();
   const dispatch = useDispatch();
 
   const handleTimeClick = (time) => {
@@ -132,18 +124,16 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
   return (
     <Container>
       {times.map((time, index) => {
-        // Extract hour from time
         const hour = parseInt(time.split(":")[0], 10);
-      
-        // Get booking count for this hour
         const bookingCount = bookingData[hour] || 0;
-       
+
         return (
           <Button
             key={index}
             onClick={() => handleTimeClick(time)}
             isSelected={selectedTimes.includes(time)}
             bookingCount={bookingCount}
+            disabled={hour < currentHour} // Disable buttons for times before the current hour
             className={`${
               selectedTimes.includes(time) ? "text-black" : "text-white"
             } font-semibold text-center`}

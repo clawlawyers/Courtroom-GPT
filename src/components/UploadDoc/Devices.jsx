@@ -29,7 +29,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [uploadComplete, setUploadComplete] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
   const [caseOverview, setCaseOverview] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula, est non blandit luctus, orci justo bibendum urna, at gravida ligula eros eget lectus."
+   ""
   );
   const [closed, setClosed] = useState(false);
   const [files, setFile] = useState(null);
@@ -54,7 +54,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
-      navigate("/courtroom-ai/arguments");
+      
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -113,11 +113,12 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
             console.log(response.data.data.case_overview.case_overview);
 
+            
             setPreviewContent(response.data.data.case_overview.case_overview);
             setInputText(response.data.data.case_overview.case_overview);
-            dispatch(
-              setOverview(response.data.data.case_overview.case_overview)
-            );
+            // dispatch(
+            //   setOverview(response.data.data.case_overview.case_overview)
+            // );
           }, 3000);
         } catch (error) {
           console.log(error);

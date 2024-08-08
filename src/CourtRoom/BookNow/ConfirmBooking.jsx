@@ -154,7 +154,7 @@ const ConfirmBooking = () => {
   };
 
   return (
-    <div className="flex flex-col p-5 w-full gap-2">
+    <div className="flex flex-col h-screen justify-between p-5 w-full gap-2">
       <div className="mx-32 flex  justify-between items-center bg-[#303030] rounded border-2 border-[#018585]">
         <div className="pl-8 py-2 flex flex-col gap-0">
           <p className="m-0">OTP sent to</p>
@@ -285,14 +285,14 @@ const ConfirmBooking = () => {
             </p>
             <div className="flex flex-row w-full justify-end">
               <button
-                disabled={!proceedToPayment}
+                // disabled={!proceedToPayment}
                 onClick={handlePayment}
                 className="border-2 font-semibold border-white rounded-md p-2"
-                style={{
-                  borderColor: !proceedToPayment ? "grey" : "white",
-                  color: !proceedToPayment ? "grey" : "white",
-                  cursor: !proceedToPayment ? "not-allowed" : "pointer",
-                }}
+                // style={{
+                //   borderColor: !proceedToPayment ? "grey" : "white",
+                //   color: !proceedToPayment ? "grey" : "white",
+                //   cursor: !proceedToPayment ? "not-allowed" : "pointer",
+                // }}
               >
                 Proceed to Payment
               </button>

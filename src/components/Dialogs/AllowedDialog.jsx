@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PersonAdd, Close } from "@mui/icons-material";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
+import { CircularProgress } from "@mui/material";
 const AllowedDialog = ({ onClose }) => {
+  const [loading,setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -12,23 +14,22 @@ const AllowedDialog = ({ onClose }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     const formData = {
       ...data,
     };
     console.log(formData);
 
-    formData.startHour = parseInt(formData.startHour.split(":")[0], 10);
-    formData.EndHour = parseInt(formData.EndHour.split(":")[0], 10);
-
+    
     console.log(formData);
-
     try {
       const res = await axios.post(
         `${NODE_API_ENDPOINT}/admin/api/trail-bookings`,
         {
-          date: formData.date,
-          StartHour: formData.startHour,
-          EndHour: formData.EndHour,
+         
+        
+          StartDate: formData.StartDate,
+          EndDate: formData.EndDate,
           email: formData.Email,
           phoneNumber: formData.phoneNumber,
           bookedSlots: 0,
@@ -45,6 +46,9 @@ const AllowedDialog = ({ onClose }) => {
       }
     } catch (e) {
       console.log(e);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -94,15 +98,7 @@ const AllowedDialog = ({ onClose }) => {
             type="email"
             className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
           />
-          <label htmlFor="date" className="text-left self-start font-semibold">
-            Date
-          </label>
-          <input
-            {...register("date", { required: true })}
-            id="date"
-            type="date"
-            className="mb-4 w-full rounded-md p-2 text-neutral-800 outline-none"
-          />
+        
 
           <label
             htmlFor="phoneNumber"
@@ -126,38 +122,42 @@ const AllowedDialog = ({ onClose }) => {
                 : "This field is required"}
             </p>
           )}
+          <div className="flex flex-wrap w-full justify-between  items-center">
+            <div className="flex flex-col">
+              <label
+                htmlFor="StartDate"
+                className="text-left self-start font-semibold"
+              >
+                Start Date
+              </label>
+              <input
+                {...register("StartDate", { required: true })}
+                id="StartDate"
+                type="date"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+              />
+              {errors.startDate && <p>This field is required</p>}
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="EndDate"
+                className="text-left self-start font-semibold"
+              >
+                End Date
+              </label>
+              <input
+                {...register("EndDate", { required: true })}
+                id="EndDate"
+                type="date"
+                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
+              />
+              {errors.EndDate && <p>This field is required</p>}
+            </div>
+            
+            
+          </div>
 
           <div className="flex flex-wrap w-full items-center justify-between">
-            <div className="flex flex-col">
-              <label
-                htmlFor="StartHour"
-                className="text-left self-start font-semibold"
-              >
-                StartHour
-              </label>
-              <input
-                {...register("startHour", { required: true })}
-                id="startHour"
-                type="time"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
-              />
-              {errors.startHour && <p>This field is required</p>}
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="EndHour"
-                className="text-left self-start font-semibold"
-              >
-                EndHour
-              </label>
-              <input
-                {...register("EndHour", { required: true })}
-                id="EndHour"
-                type="time"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
-              />
-              {errors.EndHour && <p>This field is required</p>}
-            </div>
             <div className="flex flex-col">
               <label
                 htmlFor="totalSlots"
@@ -173,29 +173,14 @@ const AllowedDialog = ({ onClose }) => {
               />
               {errors.totalSlots && <p>This field is required</p>}
             </div>
-            {/* <div className="flex flex-col">
-              <label
-                htmlFor="bookedSlots"
-                className="text-left self-start font-semibold"
-              >
-                Booked Slots
-              </label>
-              <input
-                {...register("bookedSlots", { required: true })}
-                id="bookedSlots"
-                type="text"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800 outline-none"
-              />
-              {errors.bookedSlots && <p>This field is required</p>}
-            </div> */}
           </div>
 
           <div className="flex flex-row justify-end pt-6 w-full">
             <button
               type="submit"
-              className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
+              className={`${loading ? "opacity-75 cursor-not-allowed pointer-events-none" : ""} bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center`}
             >
-              <PersonAdd />
+              {loading ?<CircularProgress /> : <PersonAdd />}
               <div className="font-semibold">Add User</div>
             </button>
           </div>
