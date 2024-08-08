@@ -285,14 +285,14 @@ const ConfirmBooking = () => {
             </p>
             <div className="flex flex-row w-full justify-end">
               <button
-                disabled={!proceedToPayment}
+                // disabled={!proceedToPayment}
                 onClick={handlePayment}
                 className="border-2 font-semibold border-white rounded-md p-2"
-                style={{
-                  borderColor: !proceedToPayment ? "grey" : "white",
-                  color: !proceedToPayment ? "grey" : "white",
-                  cursor: !proceedToPayment ? "not-allowed" : "pointer",
-                }}
+                // style={{
+                //   borderColor: !proceedToPayment ? "grey" : "white",
+                //   color: !proceedToPayment ? "grey" : "white",
+                //   cursor: !proceedToPayment ? "not-allowed" : "pointer",
+                // }}
               >
                 Proceed to Payment
               </button>

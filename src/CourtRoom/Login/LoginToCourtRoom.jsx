@@ -49,7 +49,7 @@ function LoginToCourtRoom() {
 
   if (currentUser && caseOverView === "NA") {
     navigate("/courtroom-ai");
-  } else if (currentUser && caseOverView !== "NA") {
+  } else if (currentUser && (caseOverView !== "NA" && caseOverView !== "")) {
     navigate("/courtroom-ai/arguments");
   }
 

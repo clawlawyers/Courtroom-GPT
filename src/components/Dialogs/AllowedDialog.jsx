@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PersonAdd, Close } from "@mui/icons-material";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
+import { CircularProgress } from "@mui/material";
 const AllowedDialog = ({ onClose }) => {
+  const [loading,setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -12,23 +14,20 @@ const AllowedDialog = ({ onClose }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     const formData = {
       ...data,
     };
     console.log(formData);
 
-    formData.startHour = parseInt(formData.startHour.split(":")[0], 10);
-    formData.EndHour = parseInt(formData.EndHour.split(":")[0], 10);
-
+    
     console.log(formData);
-
     try {
       const res = await axios.post(
         `${NODE_API_ENDPOINT}/admin/api/trail-bookings`,
         {
          
-          StartHour: formData.startHour,
-          EndHour: formData.EndHour,
+        
           StartDate: formData.StartDate,
           EndDate: formData.EndDate,
           email: formData.Email,
@@ -47,6 +46,9 @@ const AllowedDialog = ({ onClose }) => {
       }
     } catch (e) {
       console.log(e);
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -151,58 +153,8 @@ const AllowedDialog = ({ onClose }) => {
               />
               {errors.EndDate && <p>This field is required</p>}
             </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="StartHour"
-                className="text-left self-start font-semibold"
-              >
-                StartHour
-              </label>
-              <select
-                {...register("startHour", { required: true })}
-                id="startHour"
-                className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800"
-              >
-                <option value="">--Select hour--</option>
-                {[...Array(24).keys()].map((hour) => {
-                  const currentHour = new Date().getHours();
-                  return (
-                    <option
-                      key={hour}
-                      value={hour}
-                      disabled={hour < currentHour}
-                    >
-                      {hour.toString().padStart(2, "0")}
-                    </option>
-                  );
-                })}
-              </select>
-              {errors.startHour && <p>This field is required</p>}
-            </div>
-            <div className="flex flex-col">
-  <label
-    htmlFor="EndHour"
-    className="text-left self-start font-semibold"
-  >
-    EndHour
-  </label>
-  <select
-    {...register("EndHour", { required: true })}
-    id="EndHour"
-    className="mb-4 w-full rounded-md py-2 px-1 text-neutral-800"
-  >
-    <option value="">--Select hour--</option>
-    {[...Array(24).keys()].map((hour) => {
-      const currentHour = new Date().getHours();
-      return (
-        <option key={hour} value={hour} disabled={hour < currentHour}>
-          {hour.toString().padStart(2, '0')}
-        </option>
-      );
-    })}
-  </select>
-  {errors.EndHour && <p>This field is required</p>}
-</div>
+            
+            
           </div>
 
           <div className="flex flex-wrap w-full items-center justify-between">
@@ -226,9 +178,9 @@ const AllowedDialog = ({ onClose }) => {
           <div className="flex flex-row justify-end pt-6 w-full">
             <button
               type="submit"
-              className="bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center"
+              className={`${loading ? "opacity-75 cursor-not-allowed pointer-events-none" : ""} bg-card-gradient shadow-lg space-x-1 p-2 px-2 rounded-md shadow-black text-white flex items-center`}
             >
-              <PersonAdd />
+              {loading ?<CircularProgress /> : <PersonAdd />}
               <div className="font-semibold">Add User</div>
             </button>
           </div>
