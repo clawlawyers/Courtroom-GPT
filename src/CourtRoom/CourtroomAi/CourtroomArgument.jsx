@@ -596,8 +596,9 @@ const CourtroomArgument = () => {
                         </div>
                       )}
                     </div>
-                    {flag && (
-                      <div className="flex items-center relative">
+                   
+                      { selectedUserArgument === index && (
+                        <div className="flex items-center relative">
                       <button
                         className="bg-red-500 text-white w-5 h-5  rounded-full"
                         onClick={(e) => {
@@ -610,7 +611,7 @@ const CourtroomArgument = () => {
                       {isDialogOpen && index === objectionIndex && (
                         <div
                           ref={dialogRef}
-                          className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-10 p-4 rounded shadow-lg"
+                          className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-20 p-4 rounded shadow-lg"
                         >
                           <button className="top-0 h-full overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
                             {aiLawyerLoading ? (
@@ -622,7 +623,9 @@ const CourtroomArgument = () => {
                         </div>
                       )}
                     </div>
-                    )}
+                      )}
+                      
+                    
                     
                   </div>
                 ))}

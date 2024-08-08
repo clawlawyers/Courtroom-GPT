@@ -469,6 +469,7 @@ const AiSidebar = () => {
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="">
             <motion.div
+             onClick={() => downloadSessionCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -487,7 +488,7 @@ const AiSidebar = () => {
               <div>
                 <p
                   style={{ fontSize: "15px", margin: "0" }}
-                  onClick={() => downloadSessionCaseHistory()}
+                 
                 >
                   Download Session History
                 </p>
@@ -506,6 +507,7 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
+            onClick={() => downloadCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -523,7 +525,7 @@ const AiSidebar = () => {
               <div>
                 <p
                   style={{ fontSize: "15px", margin: "0" }}
-                  onClick={() => downloadCaseHistory()}
+                  
                 >
                   Download Case History
                 </p>
@@ -579,6 +581,7 @@ const AiSidebar = () => {
                 onClick={handleFirstDraft}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
+                className={`${overViewDetails === "NA" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
                 style={{
                   display: "flex",
                   alignItems: "center",

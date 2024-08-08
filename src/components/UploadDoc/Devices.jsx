@@ -54,7 +54,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
-      navigate("/courtroom-ai/arguments");
+      
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -113,6 +113,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
             console.log(response.data.data.case_overview.case_overview);
 
+            
             setPreviewContent(response.data.data.case_overview.case_overview);
             setInputText(response.data.data.case_overview.case_overview);
             dispatch(
