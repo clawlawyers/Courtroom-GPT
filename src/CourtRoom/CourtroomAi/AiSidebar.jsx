@@ -222,16 +222,19 @@ const AiSidebar = () => {
     localStorage.setItem("FileUploaded", false);
 
     // await saveHistory();
-
-    await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/end`,
-      {},
+    if(overViewDetails !== "")
       {
-        headers: {
-          Authorization: `Bearer ${currentUser.token}`,
-        },
+        await axios.post(
+          `${NODE_API_ENDPOINT}/courtroom/api/end`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          }
+        );
       }
-    );
+    
 
     dispatch(logout());
 
@@ -284,29 +287,36 @@ const AiSidebar = () => {
     setFirsDraftLoading(true);
     setFirstDraftDialog(true);
 
-    try {
-      const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-        {
-          // user_id: currentUser.userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-        }
-      );
-
-      console.log("response is ", response.data.data.draft.detailed_draft);
-      setFirstDraft(response.data.data.draft.detailed_draft);
-    } catch (error) {
-      toast.error("Error in getting first draft");
-    } finally {
-      setFirsDraftLoading(false);
-    }
+    
   };
   useEffect(()=> {
-    handleFirstDraft()
+    if(overViewDetails !== "")
+      {
+        const firstDraftApi = async() => {
+          try {
+            const response = await axios.post(
+              `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+              {
+                // user_id: currentUser.userId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${currentUser.token}`,
+                },
+              }
+            );
+      
+            console.log("response is ", response.data.data.draft.detailed_draft);
+            setFirstDraft(response.data.data.draft.detailed_draft);
+          } catch (error) {
+            toast.error("Error in getting first draft");
+          } finally {
+            setFirsDraftLoading(false);
+          }
+        }
+        firstDraftApi();
+      }
+    
   },[overViewDetails])
 
   const getAiQuestions = async () => {
