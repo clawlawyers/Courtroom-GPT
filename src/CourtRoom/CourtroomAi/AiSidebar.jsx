@@ -386,7 +386,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `case_history_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `case_history_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -419,10 +419,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `case_session_history_${currentUser.userId}.pdf`
-      );
+      link.setAttribute("download", `case_session_history_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -458,7 +455,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `draft_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `first_draft_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
