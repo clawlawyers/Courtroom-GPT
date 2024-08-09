@@ -98,16 +98,22 @@ const CourtroomArgument = () => {
     updatedArguments[index] = editValue;
     setUserArgument(updatedArguments);
     setEditIndex(null);
-    setEditValue("");
 
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
       {
-        user_id: currentUser.userId,
-        argument: addArgumentInputText,
+        // user_id: currentUser.userId,
+        argument: editValue,
         argument_index: index,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
       }
     );
+
+    setEditValue("");
 
     await GenerateDetails(index);
   };
@@ -117,7 +123,12 @@ const CourtroomArgument = () => {
       const swapedData = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -162,9 +173,14 @@ const CourtroomArgument = () => {
       const laywerArgument1 = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           action: "Retrieve",
           argument_index: index,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -181,9 +197,14 @@ const CourtroomArgument = () => {
       let judgeArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/judge`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           action: "Retrieve",
           argument_index: index,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -226,9 +247,14 @@ const CourtroomArgument = () => {
       const laywerArgument1 = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           action: "Generate",
           argument_index: index,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -245,9 +271,14 @@ const CourtroomArgument = () => {
       let judgeArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/judge`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           action: "Generate",
           argument_index: index,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -271,9 +302,14 @@ const CourtroomArgument = () => {
       const inserUserArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           argument: addArgumentInputText,
           argument_index: "NA",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -303,7 +339,12 @@ const CourtroomArgument = () => {
     const getHistory = async () => {
       try {
         const history = await axios.get(
-          `${NODE_API_ENDPOINT}/courtroom/${currentUser.userId}/getHistory`
+          `${NODE_API_ENDPOINT}/courtroom/getHistory`,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          }
         );
 
         setUserArgument(history.data.data.caseHistory.argument);

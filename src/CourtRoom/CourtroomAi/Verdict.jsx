@@ -17,7 +17,12 @@ const Verdict = () => {
         const response = await axios.post(
           `${NODE_API_ENDPOINT}/courtroom/api/rest`,
           {
-            user_id: currentUser.userId,
+            // user_id: currentUser.userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
           }
         );
         const verdictText = response.data.data.restDetail.verdict;
