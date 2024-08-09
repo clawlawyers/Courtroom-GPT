@@ -84,19 +84,20 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = ".pdf,.doc,.docx,.txt,.jpg"; // Specify the accepted file types
+    fileInput.multiple = true; // Allow multiple file selection
     fileInput.addEventListener("change", async (event) => {
-      const file = event.target.files[0];
-      setFile(file);
-      if (file) {
+      const files = Array.from(event.target.files);
+      if (files.length > 0) {
         setUploading(true);
 
-        console.log(file);
-
         const formData = new FormData();
-        formData.append("file", file);
-        // formData.append("userId", currentUser.userId);
-
-        console.log(currentUser);
+        files.forEach((file, index) => {
+          if (index === 0) {
+            formData.append(`file`, file); // Append all files under the same key
+          } else {
+            formData.append(`file${index}`, file); // Append all files under the same key
+          }
+        });
 
         try {
           const response = await axios.post(
@@ -110,27 +111,20 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             }
           );
 
-          console.log(response);
-
+          // Handle response and update state
+          setPreviewContent(response.data.data.case_overview.case_overview);
+          setInputText(response.data.data.case_overview.case_overview);
           setUploading(false);
           setAnalyzing(true);
 
           setTimeout(() => {
             setAnalyzing(false);
             setUploadComplete(true);
-
-            console.log(response.data.data.case_overview.case_overview);
-
-            setPreviewContent(response.data.data.case_overview.case_overview);
-            setInputText(response.data.data.case_overview.case_overview);
-            // dispatch(
-            //   setOverview(response.data.data.case_overview.case_overview)
-            // );
+            
           }, 3000);
         } catch (error) {
           console.log(error);
-          toast.error("Only accept Law Documentation");
-          setUploading(false);
+          toast.error("Error uploading file");
         }
       }
     });

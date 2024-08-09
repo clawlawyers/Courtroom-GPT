@@ -193,7 +193,7 @@ const AiSidebar = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [isApi,setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
@@ -223,15 +223,17 @@ const AiSidebar = () => {
 
     // await saveHistory();
 
-    await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/end`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${currentUser.token}`,
-        },
-      }
-    );
+    if (overViewDetails !== "") {
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+    }
 
     dispatch(logout());
 
@@ -281,30 +283,47 @@ const AiSidebar = () => {
     }
   };
   const handleFirstDraft = async () => {
-    setFirsDraftLoading(true);
+    if(isApi)
+      {
+        setFirsDraftLoading(true);
+      }
+   
     setFirstDraftDialog(true);
-
-    try {
-      const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-        {
-          // user_id: currentUser.userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-        }
-      );
-
-      console.log("response is ", response.data.data.draft.detailed_draft);
-      setFirstDraft(response.data.data.draft.detailed_draft);
-    } catch (error) {
-      toast.error("Error in getting first draft");
-    } finally {
-      setFirsDraftLoading(false);
-    }
   };
+
+  useEffect(()=> {
+    
+    if(overViewDetails !== "")
+      {
+        setisApi(true);
+        const firstDraftApi = async() => {
+          try {
+            const response = await axios.post(
+              `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+              {
+                // user_id: currentUser.userId,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${currentUser.token}`,
+                },
+              }
+            );
+      
+            console.log("response is ", response.data.data.draft.detailed_draft);
+            setFirstDraft(response.data.data.draft.detailed_draft);
+
+          } catch (error) {
+            toast.error("Error in getting first draft");
+          } finally {
+            setFirsDraftLoading(false);
+            setisApi(false);
+          }
+        }
+        firstDraftApi();
+      }
+    
+  },[overViewDetails])
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);
@@ -386,7 +405,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `case_history_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `case_history_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -419,10 +438,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `case_session_history_${currentUser.userId}.pdf`
-      );
+      link.setAttribute("download", `case_session_history_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -458,7 +474,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `draft_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `first_draft_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
