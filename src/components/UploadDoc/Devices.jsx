@@ -28,9 +28,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [analyzing, setAnalyzing] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
-  const [caseOverview, setCaseOverview] = useState(
-   ""
-  );
+  const [caseOverview, setCaseOverview] = useState("");
   const [closed, setClosed] = useState(false);
   const [files, setFile] = useState(null);
   const [inputText, setInputText] = useState("");
@@ -45,16 +43,23 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     // text save logic
 
     try {
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
-        user_id: currentUser.userId,
-        case_overview: inputText,
-      });
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        {
+          // user_id: currentUser.userId,
+          case_overview: inputText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
       dispatch(setOverview(inputText));
       setUploading(false);
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
-      
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -89,7 +94,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("userId", currentUser.userId);
+        // formData.append("userId", currentUser.userId);
 
         console.log(currentUser);
 
@@ -98,7 +103,10 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             `${NODE_API_ENDPOINT}/courtroom/newcase`,
             formData,
             {
-              headers: { "Content-Type": "multipart/form-data" },
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${currentUser.token}`,
+              },
             }
           );
 
@@ -113,7 +121,6 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
             console.log(response.data.data.case_overview.case_overview);
 
-            
             setPreviewContent(response.data.data.case_overview.case_overview);
             setInputText(response.data.data.case_overview.case_overview);
             // dispatch(

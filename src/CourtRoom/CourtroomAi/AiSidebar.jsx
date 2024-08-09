@@ -221,9 +221,17 @@ const AiSidebar = () => {
     localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
-    await saveHistory();
+    // await saveHistory();
 
-    await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/end`);
+    await axios.post(
+      `${NODE_API_ENDPOINT}/courtroom/api/end`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      }
+    );
 
     dispatch(logout());
 
@@ -233,9 +241,17 @@ const AiSidebar = () => {
   const saveHistory = async () => {
     try {
       if (overViewDetails !== "NA") {
-        await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/history`, {
-          user_id: currentUser.userId,
-        });
+        await axios.post(
+          `${NODE_API_ENDPOINT}/courtroom/api/history`,
+          {
+            // user_id: currentUser.userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          }
+        );
       }
     } catch (error) {
       toast.error("Error in saving history");
@@ -245,10 +261,18 @@ const AiSidebar = () => {
 
   const handleSave = async () => {
     try {
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
-        user_id: currentUser.userId,
-        case_overview: text,
-      });
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        {
+          // user_id: currentUser.userId,
+          case_overview: text,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
       dispatch(setOverview(text));
       setEditDialog(false);
     } catch (error) {
@@ -264,7 +288,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -283,7 +312,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
       console.log(
@@ -305,7 +339,12 @@ const AiSidebar = () => {
         const overView = await axios.post(
           `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
           {
-            user_id: currentUser.userId,
+            // user_id: currentUser.userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
           }
         );
 
@@ -334,9 +373,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
@@ -364,9 +406,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
@@ -398,11 +443,14 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           data: firstDraft,
           type: "First Draft",
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );

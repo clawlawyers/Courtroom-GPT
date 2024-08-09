@@ -60,11 +60,14 @@ const DocumentViewer = ({ text }) => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           data: text,
           type: "Verdict",
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
