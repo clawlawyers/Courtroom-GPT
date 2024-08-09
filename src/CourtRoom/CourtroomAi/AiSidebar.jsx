@@ -223,15 +223,17 @@ const AiSidebar = () => {
 
     // await saveHistory();
 
-    await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/api/end`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${currentUser.token}`,
-        },
-      }
-    );
+    if (overViewDetails !== "") {
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+    }
 
     dispatch(logout());
 
@@ -305,9 +307,11 @@ const AiSidebar = () => {
       setFirsDraftLoading(false);
     }
   };
-  useEffect(()=> {
-    handleFirstDraft()
-  },[overViewDetails])
+  useEffect(() => {
+    if (overViewDetails !== "") {
+      handleFirstDraft();
+    }
+  }, [overViewDetails]);
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);

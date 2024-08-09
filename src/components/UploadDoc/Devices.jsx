@@ -89,12 +89,16 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       const files = Array.from(event.target.files);
       if (files.length > 0) {
         setUploading(true);
-  
+
         const formData = new FormData();
-        files.forEach((file,index) => {
-          formData.append(`files${index}`, file); // Append all files under the same key
+        files.forEach((file, index) => {
+          if (index === 0) {
+            formData.append(`file`, file); // Append all files under the same key
+          } else {
+            formData.append(`file${index}`, file); // Append all files under the same key
+          }
         });
-  
+
         try {
           const response = await axios.post(
             `${NODE_API_ENDPOINT}/courtroom/newcase`,
@@ -106,13 +110,13 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
               },
             }
           );
-  
+
           // Handle response and update state
           setPreviewContent(response.data.data.case_overview.case_overview);
           setInputText(response.data.data.case_overview.case_overview);
-  
+
           setAnalyzing(true);
-  
+
           setTimeout(() => {
             setAnalyzing(false);
             setUploadComplete(true);
@@ -126,8 +130,6 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     });
     fileInput.click();
   };
-  
-  
 
   const handleUploadFromDrive = () => {
     setUploading(true);
