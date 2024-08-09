@@ -222,19 +222,18 @@ const AiSidebar = () => {
     localStorage.setItem("FileUploaded", false);
 
     // await saveHistory();
-    if(overViewDetails !== "")
-      {
-        await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/api/end`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${currentUser.token}`,
-            },
-          }
-        );
-      }
-    
+
+    if (overViewDetails !== "") {
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+    }
 
     dispatch(logout());
 
