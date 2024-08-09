@@ -193,7 +193,7 @@ const AiSidebar = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [isApi,setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
@@ -283,14 +283,19 @@ const AiSidebar = () => {
     }
   };
   const handleFirstDraft = async () => {
-    setFirsDraftLoading(true);
+    if(isApi)
+      {
+        setFirsDraftLoading(true);
+      }
+   
     setFirstDraftDialog(true);
-
-    
   };
+
   useEffect(()=> {
+    
     if(overViewDetails !== "")
       {
+        setisApi(true);
         const firstDraftApi = async() => {
           try {
             const response = await axios.post(
@@ -307,10 +312,12 @@ const AiSidebar = () => {
       
             console.log("response is ", response.data.data.draft.detailed_draft);
             setFirstDraft(response.data.data.draft.detailed_draft);
+
           } catch (error) {
             toast.error("Error in getting first draft");
           } finally {
             setFirsDraftLoading(false);
+            setisApi(false);
           }
         }
         firstDraftApi();
