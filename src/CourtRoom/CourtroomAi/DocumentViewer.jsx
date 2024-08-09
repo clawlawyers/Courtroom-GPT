@@ -17,11 +17,14 @@ const DocumentViewer = ({ text }) => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           data: text,
           type: "Verdict",
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
@@ -29,7 +32,7 @@ const DocumentViewer = ({ text }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `verdict_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `verdict_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();

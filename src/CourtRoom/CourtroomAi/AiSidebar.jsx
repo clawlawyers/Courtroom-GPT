@@ -217,11 +217,22 @@ const AiSidebar = () => {
     navigate("/court-room");
   };
 
-  const ExitToCourtroom = () => {
+  const ExitToCourtroom = async () => {
     localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
-    saveHistory();
+    // await saveHistory();
+
+    await axios.post(
+      `${NODE_API_ENDPOINT}/courtroom/api/end`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      }
+    );
+
     dispatch(logout());
 
     navigate("/");
@@ -230,9 +241,17 @@ const AiSidebar = () => {
   const saveHistory = async () => {
     try {
       if (overViewDetails !== "NA") {
-        await axios.post(`${NODE_API_ENDPOINT}/courtroom/api/history`, {
-          user_id: currentUser.userId,
-        });
+        await axios.post(
+          `${NODE_API_ENDPOINT}/courtroom/api/history`,
+          {
+            // user_id: currentUser.userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          }
+        );
       }
     } catch (error) {
       toast.error("Error in saving history");
@@ -242,10 +261,18 @@ const AiSidebar = () => {
 
   const handleSave = async () => {
     try {
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
-        user_id: currentUser.userId,
-        case_overview: text,
-      });
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        {
+          // user_id: currentUser.userId,
+          case_overview: text,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
       dispatch(setOverview(text));
       setEditDialog(false);
     } catch (error) {
@@ -261,7 +288,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -280,7 +312,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
       console.log(
@@ -302,16 +339,19 @@ const AiSidebar = () => {
         const overView = await axios.post(
           `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
           {
-            user_id: currentUser.userId,
+            // user_id: currentUser.userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
           }
         );
 
         console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
-        }
-        else{
-
+        } else {
           dispatch(setOverview(overView.data.data.case_overview));
         }
       } catch (error) {
@@ -333,9 +373,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
@@ -343,7 +386,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `case_history_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `case_history_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -363,9 +406,12 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
@@ -373,10 +419,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `case_session_history_${currentUser.userId}.pdf`
-      );
+      link.setAttribute("download", `case_session_history_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -397,11 +440,14 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
-          user_id: currentUser.userId,
+          // user_id: currentUser.userId,
           data: firstDraft,
           type: "First Draft",
         },
         {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
           responseType: "blob", // Important
         }
       );
@@ -409,7 +455,7 @@ const AiSidebar = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `draft_${currentUser.userId}.pdf`);
+      link.setAttribute("download", `first_draft_claw.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -474,8 +520,11 @@ const AiSidebar = () => {
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="">
             <motion.div
-              className={`${overViewDetails === "NA" || overViewDetails === "" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
-
+              className={`${
+                overViewDetails === "NA" || overViewDetails === ""
+                  ? "opacity-75 pointer-events-none cursor-not-allowed"
+                  : ""
+              }`}
               onClick={() => downloadSessionCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
@@ -511,8 +560,11 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-              className={`${overViewDetails === "NA" || overViewDetails === "" ? "opacity-75 pointer-events-none cursor-not-allowed" : ""}`}
-             
+              className={`${
+                overViewDetails === "NA" || overViewDetails === ""
+                  ? "opacity-75 pointer-events-none cursor-not-allowed"
+                  : ""
+              }`}
               onClick={() => downloadCaseHistory()}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
@@ -616,11 +668,11 @@ const AiSidebar = () => {
                 <p className="m-0 text-sm text-white">View first Draft</p>
               </motion.div>
               <motion.div
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : ""
-              }`}
+                className={`${
+                  overViewDetails === "NA" || overViewDetails === ""
+                    ? "opacity-75 pointer-events-none cursor-not-allowed"
+                    : ""
+                }`}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
