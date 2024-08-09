@@ -305,6 +305,9 @@ const AiSidebar = () => {
       setFirsDraftLoading(false);
     }
   };
+  useEffect(()=> {
+    handleFirstDraft()
+  },[overViewDetails])
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);
