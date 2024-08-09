@@ -521,13 +521,13 @@ const CourtroomArgument = () => {
       </div>
       {/* mid container */}
       <div
-        className="flex-1 overflow-auto border border-black"
+        className="flex-1  overflow-auto border border-black relative"
         style={{
           background: "#033E40",
           borderRadius: "10px",
         }}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
           <div className="p-3 flex gap-2">
             <img
               style={{ width: "25px", height: "25px" }}
@@ -536,8 +536,8 @@ const CourtroomArgument = () => {
             />
             <h1 style={{ fontSize: "20px", margin: "0" }}>User Argument</h1>
           </div>
-          <div className="flex-1 overflow-auto">
-            <div className="w-full flex flex-row-reverse pr-3 items-center  ">
+          <div className="flex-1 overflow-auto ">
+            <div className="w-full flex flex-row-reverse pr-3 items-center   ">
               <div
                 className=""
                 style={{
@@ -549,6 +549,7 @@ const CourtroomArgument = () => {
               >
                 {userArgument.map((x, index) => (
                   <div
+                  className=""
                     onClick={() => {
                       handleArgumentSelect(index, x);
                     }}
@@ -557,7 +558,7 @@ const CourtroomArgument = () => {
                     style={{
                       width: "99%",
                       display: "flex",
-                      position: "relative",
+                    
                       alignItems: "center",
                       gap: "4px",
                       justifyContent: "space-between",
@@ -647,7 +648,7 @@ const CourtroomArgument = () => {
                     </div>
 
                     {selectedUserArgument === index && (
-                      <div className="flex items-center relative">
+                      <div className="flex items-center ">
                         <button
                           className="bg-red-500 text-white w-5 h-5  rounded-full"
                           onClick={(e) => {
