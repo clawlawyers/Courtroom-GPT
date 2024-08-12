@@ -3,9 +3,21 @@ import { useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  auth,
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "../../utils/firebase";
+import { motion } from "framer-motion";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  // const [hasFilled, setHasFilled] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [countryCode, setCountryCode] = useState("+91");
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const bookingData = useSelector((state) => state?.booking?.bookingData);
   const slots = bookingData?.slots;
