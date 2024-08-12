@@ -28,7 +28,7 @@ const dialogText =
 const aiSuggestion =
   "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.";
 
-const TimerComponent = React.memo(({ ExitToCourtroom }) => {
+const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   const [countdownOver, setCountDownOver] = useState(false);
@@ -101,7 +101,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
             </div>
             <div className="flex justify-center">
               <motion.button
-                onClick={() => ExitToCourtroom()}
+                onClick={() => EndSessionToCourtroom()}
                 whileTap={{ scale: "0.95" }}
                 className="border border-white rounded-lg py-2 px-8"
               >
@@ -193,7 +193,7 @@ const AiSidebar = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isApi,setisApi] = useState(false);
+  const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
@@ -223,6 +223,16 @@ const AiSidebar = () => {
 
     // await saveHistory();
 
+    dispatch(logout());
+
+    navigate("/");
+  };
+
+  const EndSessionToCourtroom = async () => {
+    localStorage.removeItem("hasSeenSplash");
+    localStorage.setItem("FileUploaded", false);
+
+    // await saveHistory();
     if (overViewDetails !== "") {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/end`,
@@ -283,47 +293,42 @@ const AiSidebar = () => {
     }
   };
   const handleFirstDraft = async () => {
-    if(isApi)
-      {
-        setFirsDraftLoading(true);
-      }
-   
+    if (isApi) {
+      setFirsDraftLoading(true);
+    }
+
     setFirstDraftDialog(true);
   };
 
-  useEffect(()=> {
-    
-    if(overViewDetails !== "")
-      {
-        setisApi(true);
-        const firstDraftApi = async() => {
-          try {
-            const response = await axios.post(
-              `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-              {
-                // user_id: currentUser.userId,
+  useEffect(() => {
+    if (overViewDetails !== "") {
+      setisApi(true);
+      const firstDraftApi = async () => {
+        try {
+          const response = await axios.post(
+            `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+            {
+              // user_id: currentUser.userId,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser.token}`,
               },
-              {
-                headers: {
-                  Authorization: `Bearer ${currentUser.token}`,
-                },
-              }
-            );
-      
-            console.log("response is ", response.data.data.draft.detailed_draft);
-            setFirstDraft(response.data.data.draft.detailed_draft);
+            }
+          );
 
-          } catch (error) {
-            toast.error("Error in getting first draft");
-          } finally {
-            setFirsDraftLoading(false);
-            setisApi(false);
-          }
+          console.log("response is ", response.data.data.draft.detailed_draft);
+          setFirstDraft(response.data.data.draft.detailed_draft);
+        } catch (error) {
+          toast.error("Error in getting first draft");
+        } finally {
+          setFirsDraftLoading(false);
+          setisApi(false);
         }
-        firstDraftApi();
-      }
-    
-  },[overViewDetails])
+      };
+      firstDraftApi();
+    }
+  }, [overViewDetails]);
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);
@@ -533,7 +538,7 @@ const AiSidebar = () => {
               </div>
             </div>
           </div>
-          <TimerComponent ExitToCourtroom={ExitToCourtroom} />
+          <TimerComponent EndSessionToCourtroom={EndSessionToCourtroom} />
         </div>
         {/* bottom container */}
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
