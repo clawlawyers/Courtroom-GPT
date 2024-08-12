@@ -25,6 +25,10 @@ import FooterBanner from "./FooterBanner/FooterBanner.jsx";
 import ConfirmBooking from "./CourtRoom/BookNow/ConfirmBooking.jsx";
 import NewLayout from "./CourtRoom/CourtroomAi/NewLayout.jsx";
 import Admin from "./CourtRoom/admin/Admin.jsx";
+import AdminLayout from "./CourtRoom/admin/AdminLayout.jsx";
+import CourtRoomUsers from "./CourtRoom/admin/Admin.jsx";
+import AllowedBooking from "./CourtRoom/admin/AllowedBooking.jsx";
+import AllowedLogin from "./CourtRoom/admin/AllowedLogin.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -98,8 +102,22 @@ function App() {
           element: <CourtRoom />,
         },
         {
-          path:"/admin",
-          element:<Admin />,
+          path: "/admin",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "/admin/court-room",
+              element: <CourtRoomUsers />,
+            },
+            {
+              path: "/admin/allowed-booking",
+              element: <AllowedBooking />,
+            },
+            {
+              path: "/admin/allowed-login",
+              element: <AllowedLogin />,
+            },
+          ],
         },
         {
           path: "/login",
@@ -145,6 +163,7 @@ function App() {
         // },
       ],
     },
+
     {
       path: "*",
       element: <NotFound />,

@@ -28,9 +28,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [analyzing, setAnalyzing] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
   const [previewContent, setPreviewContent] = useState("");
-  const [caseOverview, setCaseOverview] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula, est non blandit luctus, orci justo bibendum urna, at gravida ligula eros eget lectus."
-  );
+  const [caseOverview, setCaseOverview] = useState("");
   const [closed, setClosed] = useState(false);
   const [files, setFile] = useState(null);
   const [inputText, setInputText] = useState("");
@@ -45,16 +43,23 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     // text save logic
 
     try {
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
-        user_id: currentUser.userId,
-        case_overview: inputText,
-      });
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        {
+          // user_id: currentUser.userId,
+          case_overview: inputText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
       dispatch(setOverview(inputText));
       setUploading(false);
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
-      navigate("/courtroom-ai/arguments");
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -79,50 +84,47 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = ".pdf,.doc,.docx,.txt,.jpg"; // Specify the accepted file types
+    fileInput.multiple = true; // Allow multiple file selection
     fileInput.addEventListener("change", async (event) => {
-      const file = event.target.files[0];
-      setFile(file);
-      if (file) {
+      const files = Array.from(event.target.files);
+      if (files.length > 0) {
         setUploading(true);
 
-        console.log(file);
-
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("userId", currentUser.userId);
-
-        console.log(currentUser);
+        files.forEach((file, index) => {
+          if (index === 0) {
+            formData.append(`file`, file); // Append all files under the same key
+          } else {
+            formData.append(`file${index}`, file); // Append all files under the same key
+          }
+        });
 
         try {
           const response = await axios.post(
             `${NODE_API_ENDPOINT}/courtroom/newcase`,
             formData,
             {
-              headers: { "Content-Type": "multipart/form-data" },
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${currentUser.token}`,
+              },
             }
           );
 
-          console.log(response);
-
+          // Handle response and update state
+          setPreviewContent(response.data.data.case_overview.case_overview);
+          setInputText(response.data.data.case_overview.case_overview);
           setUploading(false);
           setAnalyzing(true);
 
           setTimeout(() => {
             setAnalyzing(false);
             setUploadComplete(true);
-
-            console.log(response.data.data.case_overview.case_overview);
-
-            setPreviewContent(response.data.data.case_overview.case_overview);
-            setInputText(response.data.data.case_overview.case_overview);
-            dispatch(
-              setOverview(response.data.data.case_overview.case_overview)
-            );
+            
           }, 3000);
         } catch (error) {
           console.log(error);
-          toast.error("Only accept Law Documentation");
-          setUploading(false);
+          toast.error("Error uploading file");
         }
       }
     });

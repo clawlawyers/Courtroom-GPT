@@ -172,37 +172,36 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
       toast.error("Please Select at least one Date or Time");
       return;
     }
-
+  
     const newSlot = {
       date: selectedDates[selectedDates.length - 1],
       time: selectedTimes,
     };
+  
+    // Check if the slot already exists in the scheduled slots
+    const isDuplicate = scheduledSlots.some(
+      (slot) =>
+        slot.date === newSlot.date &&
+        slot.time.length === newSlot.time.length &&
+        slot.time.every((t, i) => t === newSlot.time[i])
+    );
+  
+    if (isDuplicate) {
+      toast.error("This slot has already been scheduled.");
+      return;
+    }
+  
     setScheduledSlots([...scheduledSlots, newSlot]);
     setSelectedTimes([]); // Clear selected times after adding
     dispatch(addSelectedTime(newSlot));
   };
+  
 
   const handleRemoveSlot = (index) => {
     const updatedSlots = scheduledSlots.filter((_, i) => i !== index);
     setScheduledSlots(updatedSlots);
   };
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -200, // Adjust the value as needed
-        behavior: "smooth",
-      });
-    }
-  };
 
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: 200, // Adjust the value as needed
-        behavior: "smooth",
-      });
-    }
-  };
 
   const settings = {
     dots: false,

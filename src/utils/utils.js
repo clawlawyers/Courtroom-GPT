@@ -27,3 +27,22 @@ export function MultipleItems() {
     slidesToScroll: 3,
   };
 }
+export const navbarMenus = [
+  { id: 1, name: 'Home', link: '/admin/dashboard' , },
+  { id: 2, name: 'Users', link: '/admin/users' },
+  { id: 3, name: 'Subscribed Users', link: '/admin/sub-users' },
+  { id: 4, name: 'Referral Codes', link: '/ref-codes' },
+  { id: 5, name: 'Visitors', link: '/visitors' },
+  { id: 6, name: 'Coupon Code', link: '/coupon-code' },
+  { id: 7, name: 'User - Visit', link: '/user-visit' },
+  { id: 8, name: 'Courtroom', link: '/admin/court-room' },
+  { id: 9, name: 'Allowed Booking', link: '/admin/allowed-booking' },
+  { id: 10, name: 'Allowed Log in', link: '/admin/allowed-login' },
+  { id: 11, name: 'Add Ambassador', link: '/add-ambasador' },
+  { id: 12, name: 'Salesman', link: '/salesman' },
+  { id: 13, name: 'All Admins', link: '/all-admins' },
+
+  
+];
+
+export default navbarMenus;
