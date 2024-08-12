@@ -236,7 +236,9 @@ const AiSidebar = () => {
     if (overViewDetails !== "") {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/end`,
-        {},
+        {
+          userId: currentUser.userId,
+        },
         {
           headers: {
             Authorization: `Bearer ${currentUser.token}`,
