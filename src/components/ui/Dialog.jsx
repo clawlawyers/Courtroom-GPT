@@ -130,7 +130,7 @@ const Dialog = ({
     <div className="fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div
         ref={dialogRef}
-        className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative"
+        className="bg-gradient-to-r from-[#0e1118] scale-90 to-[#008080] w-auto border border-white h-full rounded-md p-4 relative"
       >
         {/* Close Button */}
         <div className="absolute top-2 right-2">
@@ -173,7 +173,7 @@ const Dialog = ({
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[65vh] overflow-y-auto`}
                 >
                   <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
@@ -213,12 +213,12 @@ const Dialog = ({
                 </button>
               </div>
               <div className="h-[70vh] w-1 bg-neutral-200/40" />
-              <div className="flex flex-col w-full h-[70vh] justify-between">
+              <div className="flex flex-col w-full h-full justify-between">
                 <div className="w-full h-fit flex flex-row justify-center items-center">
-                  <img src={logo} className="h-96 w-96" alt="logo" />
+                  <img src={logo} className="h-80 w-80" alt="logo" />
                 </div>
-                <div className="flex flex-col w-full justify-center items-center gap-4">
-                  <div className="flex flex-row justify-between gap-2">
+                <div className="flex flex-col w-full justify-center items-center space-y-4">
+                  <div className="flex flex-row justify-between space-x-2">
                     <Button
                       className="lowercase border-2 text-sm border-white text-white"
                       variant="outlined"

@@ -618,7 +618,8 @@ const AiSidebar = () => {
               </div>
             </motion.div>
           </div>
-          <div className="flex justify-end cursor-pointer relative">
+          {(overViewDetails!== "NA" && overViewDetails!== "") && (
+            <div className="flex justify-end cursor-pointer relative">
             <motion.img
               className="h-11 w-11"
               whileTap={{ scale: "0.95" }}
@@ -639,6 +640,8 @@ const AiSidebar = () => {
               ""
             )}
           </div>
+          )}
+          
           <div className="flex flex-col w-full h-full justify-start items-center gap-2">
             <div
               style={{
