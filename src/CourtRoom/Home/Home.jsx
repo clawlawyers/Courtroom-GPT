@@ -45,6 +45,17 @@ function Home() {
     prevArrow: <SamplePrevArrow />,
   };
 
+  const testimonialSettings = {
+    className: "center",
+    centerMode: true,
+    infinite: true,
+    centerPadding: "60px",
+    slidesToShow: 3,
+    speed: 500,
+  };
+
+  const testimonialArr = [1, 2, 3, 4, 5, 6];
+
   return (
     <motion.div
       // whileHover="hover"
@@ -660,6 +671,64 @@ function Home() {
             </Link>
           </div>
         </motion.div>
+      </div>
+      <div>
+        <div className="flex flex-col justify-center items-center gap-3">
+          <h1 className="font-bold text-6xl">Testimonials</h1>
+          <p className="text-xl">
+            Get to know what the professionals got to say
+          </p>
+        </div>
+        <div className="px-28">
+          <div className="slider-container">
+            <Slider {...testimonialSettings}>
+              {testimonialArr.map((x, index) => (
+                <div
+                  key={index}
+                  className="flex  justify-center items-center w-full p-3 "
+                >
+                  <div
+                    className="p-2 w-full flex flex-col justify-center rounded border-2 border-white"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #018585, #0e5156 40%)",
+                    }}
+                  >
+                    <div className="p-2 w-full flex justify-between items-end">
+                      <div className="flex flex-col gap-1">
+                        <h1 className="text-3xl font-bold m-0">Aditya Goel</h1>
+                        <p className="text-sm m-0">Lawyer Delhi High Court</p>
+                      </div>
+                      {[1, 2, 3, 4, 5].map((x, index) => (
+                        <div key={index}>
+                          <svg
+                            className="w-7 h-7"
+                            fill="yellow"
+                            clip-rule="evenodd"
+                            fill-rule="evenodd"
+                            stroke-linejoin="round"
+                            stroke-miterlimit="2"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="m11.322 2.923c.126-.259.39-.423.678-.423.289 0 .552.164.678.423.974 1.998 2.65 5.44 2.65 5.44s3.811.524 6.022.829c.403.055.65.396.65.747 0 .19-.072.383-.231.536-1.61 1.538-4.382 4.191-4.382 4.191s.677 3.767 1.069 5.952c.083.462-.275.882-.742.882-.122 0-.244-.029-.355-.089-1.968-1.048-5.359-2.851-5.359-2.851s-3.391 1.803-5.359 2.851c-.111.06-.234.089-.356.089-.465 0-.825-.421-.741-.882.393-2.185 1.07-5.952 1.07-5.952s-2.773-2.653-4.382-4.191c-.16-.153-.232-.346-.232-.535 0-.352.249-.694.651-.748 2.211-.305 6.021-.829 6.021-.829s1.677-3.442 2.65-5.44z"
+                              fill-rule="nonzero"
+                            />
+                          </svg>
+                        </div>
+                      ))}
+                    </div>
+                    <hr />
+                    <div className="w-full h-60 flex justify-center items-center">
+                      <div>Video Container</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
