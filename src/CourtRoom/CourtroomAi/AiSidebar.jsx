@@ -625,30 +625,30 @@ const AiSidebar = () => {
               </div>
             </motion.div>
           </div>
-          {(overViewDetails!== "NA" && overViewDetails!== "") && (
+          {overViewDetails !== "NA" && overViewDetails !== "" && (
             <div className="flex justify-end cursor-pointer relative">
-            <motion.img
-              className="h-11 w-11"
-              whileTap={{ scale: "0.95" }}
-              alt="assistant"
-              src={showAssistant ? assistantIcon2 : aiAssistant}
-              onHoverStart={() => setAiIconHover(true)}
-              onHoverEnd={() => setAiIconHover(false)}
-              onClick={() => {
-                setShowAssistant(true);
-                getAiQuestions();
-              }}
-            />
-            {aiIconHover ? (
-              <h1 className="absolute text-xs right-16 top-1 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
-                CLAW AI Assistant
-              </h1>
-            ) : (
-              ""
-            )}
-          </div>
+              <motion.img
+                className="h-11 w-11"
+                whileTap={{ scale: "0.95" }}
+                alt="assistant"
+                src={showAssistant ? assistantIcon2 : aiAssistant}
+                onHoverStart={() => setAiIconHover(true)}
+                onHoverEnd={() => setAiIconHover(false)}
+                onClick={() => {
+                  setShowAssistant(true);
+                  getAiQuestions();
+                }}
+              />
+              {aiIconHover ? (
+                <h1 className="absolute text-xs right-16 top-1 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+                  CLAW AI Assistant
+                </h1>
+              ) : (
+                ""
+              )}
+            </div>
           )}
-          
+
           <div className="flex flex-col w-full h-full justify-start items-center gap-2">
             <div
               style={{
@@ -835,7 +835,7 @@ const AiSidebar = () => {
             </div>
           ) : (
             <div
-              className="h-fit w-2/3 rounded-md border-2 border-white"
+              className="w-2/3 max-h-screen rounded-md border-2 border-white"
               style={{
                 background: "linear-gradient(to right,#0e1118,#008080)",
               }}
@@ -861,49 +861,49 @@ const AiSidebar = () => {
                   />
                 </svg>
               </div>
-              <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-                <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
-                  <div className="flex h-full  flex-row justify-center w-full items-center">
-                    <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
-                      <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
-                        <p className="uppercase font-bold my-2 w-full ">
-                          First Draft Preview
-                        </p>
-                        <div className="flex flex-row w-full items-center">
-                          <div className="h-1 bg-neutral-900 w-2/3" />
-                          <div className="bg-neutral-900 rounded-md">
-                            <img
-                              className="w-[5vw] h-[29px]"
-                              src={logo}
-                              alt="logo"
-                            />
-                          </div>
+              {/* <div className="m-0 flex flex-column justify-center items-center"> */}
+              <div className="grid grid-cols-2 justify-between items-center w-full gap-5">
+                <div className="flex justify-center w-full items-center p-3">
+                  <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
+                    <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
+                      <p className="uppercase font-bold my-2 w-full ">
+                        First Draft Preview
+                      </p>
+                      <div className="flex flex-row w-full items-center">
+                        <div className="h-1 bg-neutral-900 w-2/3" />
+                        <div className="bg-neutral-900 rounded-md">
+                          <img
+                            className="w-[5vw] h-[29px]"
+                            src={logo}
+                            alt="logo"
+                          />
                         </div>
                       </div>
-                      <textarea
-                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
-                        value={firstDraft}
-                        onChange={(e) => setFirstDraft(e.target.value)}
-                      />
                     </div>
-                  </div>
-                  <div className="h-[80vh] w-1 bg-neutral-200/40" />
-                  <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
-                    <div className="flex flex-col w-full gap-2">
-                      <img className="" src={logo} alt="logo" />
-                      <h1 className="uppercase text-center font-bold">
-                        First draft preview
-                      </h1>
-                    </div>
-                    <button
-                      onClick={() => dowloadFirstDraft()}
-                      className="border border-white rounded-md p-3 justify-end"
-                    >
-                      <Download /> Download
-                    </button>
+                    <textarea
+                      className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
+                      value={firstDraft}
+                      onChange={(e) => setFirstDraft(e.target.value)}
+                    />
                   </div>
                 </div>
+                {/* <div className="h-[80vh] w-1 bg-neutral-200/40" /> */}
+                <div className="flex flex-col w-full gap-4 px-5">
+                  <div className="flex flex-col w-full gap-2">
+                    <img className="" src={logo} alt="logo" />
+                    <h1 className="uppercase text-center font-bold m-0">
+                      First draft preview
+                    </h1>
+                  </div>
+                  <button
+                    onClick={() => dowloadFirstDraft()}
+                    className="border border-white rounded-md p-3 justify-end"
+                  >
+                    <Download /> Download
+                  </button>
+                </div>
               </div>
+              {/* </div> */}
             </div>
           )}
         </div>
