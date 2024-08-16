@@ -927,16 +927,19 @@ const AiSidebar = () => {
                   <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
                     <div className="flex flex-col w-full gap-2">
                       <img className="" src={logo} alt="logo" />
-                      <h1 className="uppercase text-center font-bold">
-                        First draft preview
-                      </h1>
+                      <h3 className=" text-center">Draft Preview</h3>
                     </div>
-                    <button
-                      onClick={() => dowloadFirstDraft()}
-                      className="border border-white rounded-md p-3 justify-end"
-                    >
-                      <Download /> Download
-                    </button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button className="border border-white rounded-md py-1">
+                        Relevant Case Laws
+                      </button>
+                      <button
+                        onClick={() => dowloadFirstDraft()}
+                        className="border border-white rounded-md py-1"
+                      >
+                        <Download /> Download
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
