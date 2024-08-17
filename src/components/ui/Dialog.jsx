@@ -130,7 +130,7 @@ const Dialog = ({
     <div className="fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div
         ref={dialogRef}
-        className="bg-gradient-to-r from-[#0e1118] scale-90 to-[#008080] w-auto border border-white h-full rounded-md p-4 relative"
+        className="bg-gradient-to-r from-[#0e1118] scale-90 to-[#008080] w-auto border border-white rounded-md p-4 relative"
       >
         {/* Close Button */}
         <div className="absolute top-2 right-2">
@@ -156,10 +156,10 @@ const Dialog = ({
 
         {/* Dialog Content */}
         <div className="text-center w-full">
-          <h1 className="text-2xl text-white font-bold mb-4">{title}</h1>
+          <h1 className="text-2xl text-white font-bold">{title}</h1>
           {text && (
-            <div className="flex flex-row justify-between items-center w-full gap-5">
-              <div className="flex flex-row justify-center py-5 w-full items-center">
+            <div className="grid grid-cols-2 justify-between items-center w-full gap-5">
+              <div className="flex flex-row justify-center w-full items-center">
                 <button
                   onClick={handlePrevious}
                   className="p-2 mx-2 bg-white text-black rounded-full"
@@ -212,10 +212,10 @@ const Dialog = ({
                   <ArrowRight />
                 </button>
               </div>
-              <div className="h-[70vh] w-1 bg-neutral-200/40" />
-              <div className="flex flex-col w-full h-full justify-between">
+              {/* <div className="h-[70vh] w-1 bg-neutral-200/40" /> */}
+              <div className="flex flex-col w-full">
                 <div className="w-full h-fit flex flex-row justify-center items-center">
-                  <img src={logo} className="h-80 w-80" alt="logo" />
+                  <img src={logo} className="h-72 w-72" alt="logo" />
                 </div>
                 <div className="flex flex-col w-full justify-center items-center space-y-4">
                   <div className="flex flex-row justify-between space-x-2">
