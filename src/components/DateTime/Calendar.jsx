@@ -134,7 +134,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
 
     // Tooltip text
     const tooltipText =
-      count >= 2 ? "Filling fast" : count === 4 ? "Only one seat left" : "";
+      ""
 
     return (
       <Tooltip title={tooltipText} arrow>

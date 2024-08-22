@@ -107,6 +107,9 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
   });
 
   const currentHour = dayjs().hour();
+  const currentDate = dayjs().format("YYYY-MM-DD");
+  const isToday = storedSelectedDate === currentDate;
+
   const dispatch = useDispatch();
 
   const handleTimeClick = (time) => {
@@ -133,7 +136,7 @@ export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
             onClick={() => handleTimeClick(time)}
             isSelected={selectedTimes.includes(time)}
             bookingCount={bookingCount}
-            disabled={hour < currentHour} // Disable buttons for times before the current hour
+            disabled={isToday && hour < currentHour} // Disable buttons for times before the current hour only for today
             className={`${
               selectedTimes.includes(time) ? "text-black" : "text-white"
             } font-semibold text-center`}

@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import TestimonialCard from "./Testimonial";
 
 function SampleNextArrow(props) {
   const { className, style } = props;
@@ -44,6 +45,17 @@ function Home() {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
+
+  const testimonialSettings = {
+    // className: "center",
+    // centerMode: true,
+    infinite: true,
+    // centerPadding: "0px",
+    slidesToShow: 3,
+    // speed: 500,
+  };
+
+  const testimonialArr = [1, 2, 3, 4, 5, 6];
 
   return (
     <motion.div
@@ -660,6 +672,16 @@ function Home() {
             </Link>
           </div>
         </motion.div>
+      </div>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col justify-center items-center gap-1">
+          <h1 className="font-bold text-6xl">Testimonials</h1>
+          <p className="text-xl">
+            Get to know what the professionals got to say
+          </p>
+        </div>
+        <TestimonialCard />
+        <br />
       </div>
     </motion.div>
   );
