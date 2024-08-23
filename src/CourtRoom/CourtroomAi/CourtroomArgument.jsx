@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -52,6 +54,19 @@ const CourtroomArgument = () => {
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
   const [potentialObjections, setPotentialObjections] = useState("");
   const [objectionIndex, setObjectionIndex] = useState("");
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   const currentUser = useSelector((state) => state.user.user);
   const lastItemRef = useRef(null);
@@ -521,13 +536,13 @@ const CourtroomArgument = () => {
       </div>
       {/* mid container */}
       <div
-        className="flex-1 overflow-auto border border-black"
+        className="flex-1  overflow-auto border border-black relative"
         style={{
           background: "#033E40",
           borderRadius: "10px",
         }}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
           <div className="p-3 flex gap-2">
             <img
               style={{ width: "25px", height: "25px" }}
@@ -536,8 +551,8 @@ const CourtroomArgument = () => {
             />
             <h1 style={{ fontSize: "20px", margin: "0" }}>User Argument</h1>
           </div>
-          <div className="flex-1 overflow-auto">
-            <div className="w-full flex flex-row-reverse pr-3 items-center  ">
+          <div className="flex-1 overflow-auto ">
+            <div className="w-full flex flex-row-reverse pr-3 items-center   ">
               <div
                 className=""
                 style={{
@@ -549,6 +564,7 @@ const CourtroomArgument = () => {
               >
                 {userArgument.map((x, index) => (
                   <div
+                    className=""
                     onClick={() => {
                       handleArgumentSelect(index, x);
                     }}
@@ -557,7 +573,7 @@ const CourtroomArgument = () => {
                     style={{
                       width: "99%",
                       display: "flex",
-                      position: "relative",
+
                       alignItems: "center",
                       gap: "4px",
                       justifyContent: "space-between",
@@ -647,29 +663,57 @@ const CourtroomArgument = () => {
                     </div>
 
                     {selectedUserArgument === index && (
-                      <div className="flex items-center relative">
+                      <div className="flex items-center ">
                         <button
                           className="bg-red-500 text-white w-5 h-5  rounded-full"
                           onClick={(e) => {
                             e.stopPropagation();
                             setIsDialogOpen(true);
                             setObjectionIndex(index);
+                            setAnchorEl(e.currentTarget);
                           }}
+                          // onClick={handleClick}
                         ></button>
 
                         {isDialogOpen && index === objectionIndex && (
-                          <div
-                            ref={dialogRef}
-                            className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-50 p-4 rounded shadow-lg"
+                          // <div
+                          //   ref={dialogRef}
+                          //   className="absolute flex items-center justify-end top-0 w-72  right-16 h-52 bg-white z-50 p-4 rounded shadow-lg"
+                          // >
+                          //   <button className="top-0 h-full overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
+                          //     {aiLawyerLoading ? (
+                          //       <p>Loading</p>
+                          //     ) : (
+                          //       <p className="">{potentialObjections}</p>
+                          //     )}
+                          //   </button>
+                          // </div>
+                          <Popover
+                            sx={
+                              {
+                                // width: "450px",
+                                // height: "250px",
+                              }
+                            }
+                            id={id}
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "right",
+                            }}
                           >
-                            <button className="top-0 h-full overscroll-none overflow-y-auto scroll-smooth p-2 right-0 mt-2 mr-2 text-neutral-800 font-semibold text-sm text-left">
-                              {aiLawyerLoading ? (
-                                <p>Loading</p>
-                              ) : (
-                                <p className="">{potentialObjections}</p>
-                              )}
-                            </button>
-                          </div>
+                            {aiLawyerLoading ? (
+                              <Typography sx={{ p: 3 }}>Loading</Typography>
+                            ) : (
+                              <Typography
+                                sx={{ p: 3, width: "300px", height: "300px" }}
+                              >
+                                {potentialObjections}
+                              </Typography>
+                            )}
+                          </Popover>
                         )}
                       </div>
                     )}

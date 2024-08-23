@@ -22,13 +22,14 @@ import countDown from "../../assets/images/countdown.gif";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
 import loader from "../../assets/images/aiAssistantLoading.gif";
+
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
 
 const aiSuggestion =
   "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.";
 
-const TimerComponent = React.memo(({ ExitToCourtroom }) => {
+const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   const [countdownOver, setCountDownOver] = useState(false);
@@ -101,7 +102,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
             </div>
             <div className="flex justify-center">
               <motion.button
-                onClick={() => ExitToCourtroom()}
+                onClick={() => EndSessionToCourtroom()}
                 whileTap={{ scale: "0.95" }}
                 className="border border-white rounded-lg py-2 px-8"
               >
@@ -135,6 +136,11 @@ const AiSidebar = () => {
   const [inputText, setInputText] = useState(
     "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content."
   );
+
+  const [showAskLegalGPT, setShowAskLegalGPT] = useState(false);
+  const [promptArr, setPromptArr] = useState([]);
+  const [askLegalGptPrompt, setAskLegalGptPrompt] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(false);
 
   const charsPerPage = 1000; // Define this value outside the function
 
@@ -193,7 +199,7 @@ const AiSidebar = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isApi,setisApi] = useState(false);
+  const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
@@ -223,10 +229,22 @@ const AiSidebar = () => {
 
     // await saveHistory();
 
+    dispatch(logout());
+
+    navigate("/");
+  };
+
+  const EndSessionToCourtroom = async () => {
+    localStorage.removeItem("hasSeenSplash");
+    localStorage.setItem("FileUploaded", false);
+
+    // await saveHistory();
     if (overViewDetails !== "") {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/end`,
-        {},
+        {
+          userId: currentUser.userId,
+        },
         {
           headers: {
             Authorization: `Bearer ${currentUser.token}`,
@@ -283,47 +301,42 @@ const AiSidebar = () => {
     }
   };
   const handleFirstDraft = async () => {
-    if(isApi)
-      {
-        setFirsDraftLoading(true);
-      }
-   
+    if (isApi) {
+      setFirsDraftLoading(true);
+    }
+
     setFirstDraftDialog(true);
   };
 
-  useEffect(()=> {
-    
-    if(overViewDetails !== "")
-      {
-        setisApi(true);
-        const firstDraftApi = async() => {
-          try {
-            const response = await axios.post(
-              `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-              {
-                // user_id: currentUser.userId,
+  useEffect(() => {
+    if (overViewDetails !== "") {
+      setisApi(true);
+      const firstDraftApi = async () => {
+        try {
+          const response = await axios.post(
+            `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+            {
+              // user_id: currentUser.userId,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${currentUser.token}`,
               },
-              {
-                headers: {
-                  Authorization: `Bearer ${currentUser.token}`,
-                },
-              }
-            );
-      
-            console.log("response is ", response.data.data.draft.detailed_draft);
-            setFirstDraft(response.data.data.draft.detailed_draft);
+            }
+          );
 
-          } catch (error) {
-            toast.error("Error in getting first draft");
-          } finally {
-            setFirsDraftLoading(false);
-            setisApi(false);
-          }
+          console.log("response is ", response.data.data.draft.detailed_draft);
+          setFirstDraft(response.data.data.draft.detailed_draft);
+        } catch (error) {
+          toast.error("Error in getting first draft");
+        } finally {
+          setFirsDraftLoading(false);
+          setisApi(false);
         }
-        firstDraftApi();
-      }
-    
-  },[overViewDetails])
+      };
+      firstDraftApi();
+    }
+  }, [overViewDetails]);
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);
@@ -533,7 +546,7 @@ const AiSidebar = () => {
               </div>
             </div>
           </div>
-          <TimerComponent ExitToCourtroom={ExitToCourtroom} />
+          <TimerComponent EndSessionToCourtroom={EndSessionToCourtroom} />
         </div>
         {/* bottom container */}
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
@@ -556,7 +569,7 @@ const AiSidebar = () => {
                 color: "#008080",
                 border: "2px solid white",
                 borderRadius: "5px",
-                marginBottom: "10px",
+                marginBottom: "5px",
                 cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
               }}
             >
@@ -597,12 +610,45 @@ const AiSidebar = () => {
                 border: "2px solid white",
                 borderRadius: "5px",
                 cursor: `${downloadCaseLoading ? "wait" : "pointer"}`,
+                marginBottom: "5px",
               }}
             >
               <div>
                 <p style={{ fontSize: "15px", margin: "0" }}>
                   Download Case History
                 </p>
+              </div>
+              <div style={{ width: "15px", margin: "0" }}>
+                <svg
+                  width="24"
+                  height="24"
+                  style={{ fill: "#008080", cursor: "pointer" }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                >
+                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                </svg>
+              </div>
+            </motion.div>
+            <motion.div
+              onClick={() => setShowAskLegalGPT(true)}
+              whileTap={{ scale: "0.95" }}
+              whileHover={{ scale: "1.01" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "5px 20px",
+                background: "#C5C5C5",
+                color: "#008080",
+                border: "2px solid white",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              <div>
+                <p style={{ fontSize: "15px", margin: "0" }}>Ask LegalGPT</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -881,16 +927,19 @@ const AiSidebar = () => {
                   <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
                     <div className="flex flex-col w-full gap-2">
                       <img className="" src={logo} alt="logo" />
-                      <h1 className="uppercase text-center font-bold">
-                        First draft preview
-                      </h1>
+                      <h3 className=" text-center">Draft Preview</h3>
                     </div>
-                    <button
-                      onClick={() => dowloadFirstDraft()}
-                      className="border border-white rounded-md p-3 justify-end"
-                    >
-                      <Download /> Download
-                    </button>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button className="border border-white rounded-md py-1">
+                        Relevant Case Laws
+                      </button>
+                      <button
+                        onClick={() => dowloadFirstDraft()}
+                        className="border border-white rounded-md py-1"
+                      >
+                        <Download /> Download
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -940,69 +989,69 @@ const AiSidebar = () => {
                 />
               </svg>
             </div>
-            <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-              <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
-                <div className="flex h-full  flex-row justify-center w-full items-center">
-                  <div
-                    className={`${
-                      isEditing ? "border-4  border-teal-400" : "border-none"
-                    } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
-                  >
-                    <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
-                      <p className="uppercase font-bold my-2 w-full ">
-                        Edit Your Document
-                      </p>
-                      <div className="flex flex-row w-full items-center">
-                        <div className="h-1 bg-neutral-900 w-2/3" />
-                        <div className="bg-neutral-900 rounded-md">
-                          <img
-                            className="w-[5vw] h-[29px]"
-                            src={logo}
-                            alt="logo"
-                          />
-                        </div>
+            {/* <div className="m-0 flex flex-column justify-center items-center"> */}
+            <div className="grid grid-cols-2  px-5 pb-3 justify-between items-center w-full gap-5">
+              <div className="flex flex-row justify-center w-full items-center">
+                <div
+                  className={`${
+                    isEditing ? "border-4  border-teal-400" : "border-none"
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                >
+                  <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
+                    <p className="uppercase font-bold my-2 w-full ">
+                      Edit Your Document
+                    </p>
+                    <div className="flex flex-row w-full items-center">
+                      <div className="h-1 bg-neutral-900 w-2/3" />
+                      <div className="bg-neutral-900 rounded-md">
+                        <img
+                          className="w-[5vw] h-[29px]"
+                          src={logo}
+                          alt="logo"
+                        />
                       </div>
                     </div>
-                    <textarea
-                      className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      readOnly={!isEditing}
-                    />
                   </div>
+                  <textarea
+                    className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    readOnly={!isEditing}
+                  />
                 </div>
-                <div className="h-[80vh] w-1 bg-neutral-200/40" />
-                <div className="flex flex-col justify-between h-[80vh] py-20  w-full gap-4 ">
-                  <div className="flex flex-col w-full gap-4">
-                    <img className="" src={logo} alt="logo" />
-                    <h1 className="uppercase text-center font-bold text-4xl">
-                      {" "}
-                      Edit Your Document
-                    </h1>
-                  </div>
-                  <div className="flex flex-col w-full  justify-between">
-                    <div className="flex flex-col w-full justify-center items-center gap-4">
-                      <div className="flex flex-row justify-between gap-2 w-full">
-                        <Button
-                          className="lowercase w-1/2 border-2 text-sm border-white text-white"
-                          variant="outlined"
-                          onClick={handleSave} // Modify if needed
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          className="text-white w-1/2 text-sm border-2 border-white"
-                          variant="outlined"
-                          onClick={handleEditToggle}
-                        >
-                          {isEditing ? "Save Changes" : "Edit current document"}
-                        </Button>
-                      </div>
+              </div>
+              {/* <div className="h-5/6 w-1 bg-neutral-200/40" /> */}
+              <div className="flex flex-col justify-between py-20  w-full gap-4 ">
+                <div className="flex flex-col w-full gap-4">
+                  <img className="" src={logo} alt="logo" />
+                  <h1 className="uppercase text-center font-bold text-4xl">
+                    {" "}
+                    Edit Your Document
+                  </h1>
+                </div>
+                <div className="flex flex-col w-full  justify-between">
+                  <div className="flex flex-col w-full justify-center items-center gap-4">
+                    <div className="flex flex-row justify-center gap-2 w-full">
+                      <Button
+                        className="lowercase border-2 text-sm border-white text-white"
+                        variant="outlined"
+                        onClick={handleSave} // Modify if needed
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        className="text-white text-sm border-2 border-white"
+                        variant="outlined"
+                        onClick={handleEditToggle}
+                      >
+                        {isEditing ? "Save Changes" : "Edit current document"}
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            {/* </div> */}
           </div>
         </div>
       ) : null}
@@ -1063,6 +1112,195 @@ const AiSidebar = () => {
       ) : (
         ""
       )}
+      {showAskLegalGPT ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "3",
+            overflow: "auto",
+          }}
+        >
+          {promptArr.length === 0 ? (
+            <div className="h-screen flex flex-col justify-between border-2 border-white rounded w-2/4 bg-[#222222]">
+              <div
+                className="flex justify-end p-3 cursor-pointer"
+                onClick={() => {
+                  setShowAskLegalGPT(false);
+                  setPromptArr([]);
+                }}
+              >
+                <svg
+                  className="w-7 h-7"
+                  fill="white"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+              </div>
+              <div className="flex flex-col justify-center items-center gap-3">
+                <h4>Have A Query?</h4>
+                <h1 className="font-bold">
+                  Ask {"  "}
+                  <span
+                    style={{
+                      padding: 3,
+                      borderLeft: `4px solid #00FFA3`,
+                      background: `linear-gradient(to right, rgba(0,128,128,0.75), rgba(0,128,128,0) 100%)`,
+                    }}
+                  >
+                    LegalGPT
+                  </span>
+                </h1>
+                <p className="px-[70px] text-center">
+                  Drop your queries here and let LegalGPT assist you with all
+                  your questions and queries
+                </p>
+              </div>
+              <div className="flex gap-2 p-3">
+                <input
+                  className="flex-1 p-2 rounded text-black"
+                  placeholder="Enter Your Query Here"
+                  value={askLegalGptPrompt}
+                  onChange={(e) => setAskLegalGptPrompt(e.target.value)}
+                />
+                <motion.button
+                  whileTap={{ scale: "0.95" }}
+                  onClick={() => {
+                    setSearchQuery(true);
+                    setPromptArr([
+                      ...promptArr,
+                      {
+                        prompt: askLegalGptPrompt,
+                        promptResponse: null,
+                        // promptResponse:
+                        //   "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
+                      },
+                    ]);
+                    setAskLegalGptPrompt(null);
+                  }}
+                  className="px-3 rounded"
+                  style={{
+                    background: "linear-gradient(180deg, #008080,#001A1A)",
+                  }}
+                >
+                  Send
+                </motion.button>
+              </div>
+            </div>
+          ) : (
+            <div className="h-screen flex flex-col border-2 border-white rounded w-2/4 bg-[#222222]">
+              <div className="flex justify-between">
+                <div className="flex gap-2 py-3 px-4">
+                  <h3 className="text-xl text-[#00FFA3]">LegalGPT</h3>
+                  <p className="text-xs">by Claw</p>
+                </div>
+
+                <div
+                  className="flex justify-end p-3 cursor-pointer"
+                  onClick={() => {
+                    setShowAskLegalGPT(false);
+                    setPromptArr([]);
+                  }}
+                >
+                  <svg
+                    className="w-7 h-7"
+                    fill="white"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                      fill-rule="nonzero"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="px-4 h-full flex flex-col justify-between">
+                <div>
+                  {promptArr.length > 0 &&
+                    promptArr.map((x, index) => (
+                      <div key={index}>
+                        <div className="flex flex-col">
+                          <div className="flex gap-3">
+                            <svg
+                              fill="white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7.753 18.305c-.261-.586-.789-.991-1.871-1.241-2.293-.529-4.428-.993-3.393-2.945 3.145-5.942.833-9.119-2.489-9.119-3.388 0-5.644 3.299-2.489 9.119 1.066 1.964-1.148 2.427-3.393 2.945-1.084.25-1.608.658-1.867 1.246-1.405-1.723-2.251-3.919-2.251-6.31 0-5.514 4.486-10 10-10s10 4.486 10 10c0 2.389-.845 4.583-2.247 6.305z" />
+                            </svg>
+                            <p>{x.prompt}</p>
+                          </div>
+                          {x.promptResponse ? (
+                            <p className="border-2 border-white rounded bg-[#008080] p-2 text-sm">
+                              {x.promptResponse}
+                            </p>
+                          ) : (
+                            <div className="h-full w-full flex flex-col gap-2">
+                              <div className="w-full h-3 bg-slate-600 animate-pulse  rounded-full"></div>
+                              <div className="w-full h-3 bg-slate-600 animate-pulse  rounded-full"></div>
+                              <div className="w-[60%] h-3 bg-slate-600 animate-pulse  rounded-full"></div>
+                              <div className="w-[40%] h-3 bg-slate-600 animate-pulse  rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <div className="flex gap-2 py-3">
+                  <input
+                    className="flex-1 p-2 rounded text-black"
+                    placeholder="Enter Your Query Here"
+                    value={askLegalGptPrompt}
+                    onChange={(e) => setAskLegalGptPrompt(e.target.value)}
+                  />
+                  <motion.button
+                    whileTap={{ scale: "0.95" }}
+                    onClick={() => {
+                      setSearchQuery(true);
+                      setPromptArr([
+                        ...promptArr,
+                        {
+                          prompt: askLegalGptPrompt,
+                          promptResponse: null,
+                        },
+                      ]);
+                      setAskLegalGptPrompt(null);
+                    }}
+                    className="px-3 rounded"
+                    style={{
+                      background: "linear-gradient(180deg, #008080,#001A1A)",
+                    }}
+                  >
+                    Send
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : null}
     </>
   );
 };

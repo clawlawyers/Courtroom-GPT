@@ -47,11 +47,11 @@ function LoginToCourtRoom() {
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
 
-  if (currentUser && caseOverView === "NA") {
-    navigate("/courtroom-ai");
-  } else if (currentUser && (caseOverView !== "NA" && caseOverView !== "")) {
-    navigate("/courtroom-ai/arguments");
-  }
+  // if (currentUser && caseOverView === "NA") {
+  //   navigate("/courtroom-ai");
+  // } else if (currentUser && (caseOverView !== "NA" && caseOverView !== "")) {
+  //   navigate("/courtroom-ai/arguments");
+  // }
 
   const [isHovered, setIsHovered] = useState(false);
   const [showPass, setShowPass] = useState(false);
