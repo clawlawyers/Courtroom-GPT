@@ -24,11 +24,14 @@ const ConfirmBooking = () => {
   const [verificationId, setVerificationId] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
   const [proceedToPayment, setProceedToPayment] = useState(false);
+  const [paymentGatewayLoading, setPaymentGatewayLoading] = useState(false);
 
   // console.log(bookingData.phoneNumber);
 
   const handlePayment = async () => {
+    setPaymentGatewayLoading(true);
     await loadRazorpay(bookingData);
+    setPaymentGatewayLoading(false);
   };
 
   const loadRazorpay = async (bookingData) => {
@@ -154,13 +157,13 @@ const ConfirmBooking = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen justify-between p-5 w-full gap-2">
-      <div className="mx-32 flex  justify-between items-center bg-[#303030] rounded border-2 border-[#018585]">
-        <div className="pl-8 py-2 flex flex-col gap-0">
-          <p className="m-0">OTP sent to</p>
+    <div className="flex flex-col p-5 w-full gap-2">
+      <div className="md:mx-32 p-1 flex flex-col md:flex-row  justify-between items-center bg-[#303030] rounded border-2 border-[#018585]">
+        <div className="py-2 flex items-center gap-2">
+          <p className="m-0">OTP sent to :</p>
           <h2 className="font-bold m-0">{bookingData?.phoneNumber}</h2>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col md:flex-row items-center gap-2">
           <input
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
@@ -211,9 +214,9 @@ const ConfirmBooking = () => {
         </div>
       </div>
       {/* Card Section */}
-      <section className="w-full h-max flex flex-row justify-start  items-start gap-20 px-40">
+      <section className="w-full h-max grid md:grid-cols-2 justify-center items-center  md:items-start gap-10 md:px-28">
         {/* Card 1 */}
-        <div className="p-4 border border-white w-2/3 h-max rounded-md bg-card-gradient flex flex-col gap-3">
+        <div className="p-4 border border-white h-max rounded-md bg-card-gradient flex flex-col gap-3">
           <div className="flex flex-col gap-2">
             <h3 className="font-bold">Confirm your booking</h3>
             <div className="h-0.5 bg-white w-full" />
@@ -263,7 +266,7 @@ const ConfirmBooking = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="p-4 border border-white w-1/2 rounded-md bg-card-gradient flex flex-col gap-3">
+        <div className="p-4 border border-white rounded-md bg-card-gradient flex flex-col gap-3">
           <div className="flex flex-col gap-2">
             <h3 className="font-semibold">Payment Details</h3>
             <div className="h-0.5 bg-white w-full" />
@@ -284,7 +287,8 @@ const ConfirmBooking = () => {
               Amount to Pay: {100 * slots?.length}
             </p>
             <div className="flex flex-row w-full justify-end">
-              <button
+              <motion.button
+                whileTap={{ scale: "0.95" }}
                 // disabled={!proceedToPayment}
                 onClick={handlePayment}
                 className="border-2 font-semibold border-white rounded-md p-2"
@@ -294,8 +298,22 @@ const ConfirmBooking = () => {
                 //   cursor: !proceedToPayment ? "not-allowed" : "pointer",
                 // }}
               >
-                Proceed to Payment
-              </button>
+                {paymentGatewayLoading ? (
+                  <svg
+                    className="animate-spin"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    stroke="white"
+                    fill="white"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M23 12c0 1.042-.154 2.045-.425 3h-2.101c.335-.94.526-1.947.526-3 0-4.962-4.037-9-9-9-1.706 0-3.296.484-4.655 1.314l1.858 2.686h-6.994l2.152-7 1.849 2.673c1.684-1.049 3.659-1.673 5.79-1.673 6.074 0 11 4.925 11 11zm-6.354 7.692c-1.357.826-2.944 1.308-4.646 1.308-4.962 0-9-4.038-9-9 0-1.053.191-2.06.525-3h-2.1c-.271.955-.425 1.958-.425 3 0 6.075 4.925 11 11 11 2.127 0 4.099-.621 5.78-1.667l1.853 2.667 2.152-6.989h-6.994l1.855 2.681z" />
+                  </svg>
+                ) : (
+                  "Proceed to Payment"
+                )}
+              </motion.button>
             </div>
             <br />
             <div className="h-0.5 bg-white w-full" />

@@ -87,8 +87,8 @@ const Contact = () => {
         </p>
         <p className="text-white text-lg">We are waiting to hear from you</p>
       </div>
-      <div className="grid grid-cols-[40%_60%] items-center text-black">
-        <div>
+      <div className="md:grid md:grid-cols-[40%_60%] items-center text-black">
+        <div className="">
           <img
             style={{ width: "100%", height: "100%" }}
             src={courtroomContact}
@@ -97,7 +97,7 @@ const Contact = () => {
         </div>
         <div>
           <form onSubmit={handleSave}>
-            <div style={{ position: "relative" }} className="mx-32">
+            <div style={{ position: "relative" }} className="mx-5">
               {!success ? (
                 <div
                   className="p-3"

@@ -133,8 +133,7 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     let badgeContent;
 
     // Tooltip text
-    const tooltipText =
-      ""
+    const tooltipText = "";
 
     return (
       <Tooltip title={tooltipText} arrow>
@@ -172,12 +171,12 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
       toast.error("Please Select at least one Date or Time");
       return;
     }
-  
+
     const newSlot = {
       date: selectedDates[selectedDates.length - 1],
       time: selectedTimes,
     };
-  
+
     // Check if the slot already exists in the scheduled slots
     const isDuplicate = scheduledSlots.some(
       (slot) =>
@@ -185,23 +184,21 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
         slot.time.length === newSlot.time.length &&
         slot.time.every((t, i) => t === newSlot.time[i])
     );
-  
+
     if (isDuplicate) {
       toast.error("This slot has already been scheduled.");
       return;
     }
-  
+
     setScheduledSlots([...scheduledSlots, newSlot]);
     setSelectedTimes([]); // Clear selected times after adding
     dispatch(addSelectedTime(newSlot));
   };
-  
 
   const handleRemoveSlot = (index) => {
     const updatedSlots = scheduledSlots.filter((_, i) => i !== index);
     setScheduledSlots(updatedSlots);
   };
-
 
   const settings = {
     dots: false,
@@ -212,10 +209,10 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     className: "px-2 py-10",
   };
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full">
       <main className="w-full h-full flex  flex-col justify-center items-center gap-20">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <div className="flex w-full h-full justify-center items-center gap-24">
+          <div className="flex flex-col md:flex-row w-full h-full justify-center items-center gap-24">
             <CalendarWrapper ref={calendarRef} className="custom-calendar">
               <DateCalendar
                 slots={{
