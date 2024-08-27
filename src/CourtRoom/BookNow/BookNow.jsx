@@ -162,7 +162,7 @@ const BookNow = () => {
           Book your Court Room
         </h1>
       </div>
-      <div className=" w-full h-full">
+      <div className=" w-full h-full mt-14 md:mt-0">
         <CalendarComponent
           scheduledSlots={scheduledSlots}
           setScheduledSlots={setScheduledSlots}
@@ -171,7 +171,7 @@ const BookNow = () => {
 
       <div
         // className={styles.formContainer}
-        className="w-full grid grid-cols-[30%_70%]"
+        className="w-full grid md:grid-cols-[30%_70%]"
       >
         <div className="">
           <img src={image} alt="" />
@@ -180,7 +180,7 @@ const BookNow = () => {
           <h2 className="text-5xl font-bold ">Enter your Details</h2>
           <form
             // className={`${styles.forms} gap-4 lg:gap-5`}
-            className="w-full px-44 flex flex-col justify-center gap-4"
+            className="w-full px-5 flex flex-col justify-center gap-4"
             onSubmit={handleSubmit}
           >
             <input

@@ -122,16 +122,19 @@ function LoginToCourtRoom() {
       }}
     >
       {/* top cont */}
-      <div className="grid grid-cols-2 items-center">
-        <div>
+      <div className="grid md:grid-cols-2 items-center">
+        <div className="w-full flex items-center justify-center">
           <img
             style={{ width: "100%", height: "100%" }}
             src={balances}
             alt="balance"
           />
         </div>
-        <form style={{ position: "relative" }} onSubmit={handleSave}>
-          <div style={{ marginRight: "140px" }}>
+        <form
+          className="relative w-full flex items-center justify-center"
+          onSubmit={handleSave}
+        >
+          <div className="w-[80%]">
             <div
               style={{
                 background: errorState
@@ -234,13 +237,7 @@ function LoginToCourtRoom() {
                     </div>
                   )}
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                <div className="flex flex-col md:flex-row items-center justify-between">
                   <div style={{ display: "flex", fontSize: "5px" }}>
                     <h1 style={{ fontSize: "20px" }}>Current Time:</h1>
                     {/* <h1 style={{ fontSize: "20px" }}>
@@ -280,12 +277,12 @@ function LoginToCourtRoom() {
           </div>
           {errorState ? (
             <div
+              className="left-[-22px] md:left-[-38px]"
               style={{
                 position: "absolute",
                 // backgroundColor: "rgba(0, 0, 0, 0.1)",
                 backdropFilter: "blur(3px)",
                 top: "0px",
-                left: "-115px",
                 width: "110%",
                 height: "95%",
                 borderRadius: "10px",
@@ -402,15 +399,7 @@ function LoginToCourtRoom() {
               zIndex: 0,
             }}
           />
-          <div
-            style={{
-              position: "relative",
-              zIndex: 2,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center">
             <div style={{ width: "50%" }}>
               <h1
                 style={{

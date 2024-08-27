@@ -74,7 +74,9 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      <div
+
+      {/* <div
+
         className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
         style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
@@ -86,7 +88,9 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
-      </div>
+
+      </div> */}
+
       {countdownOver ? (
         <div
           style={{
@@ -532,6 +536,47 @@ const AiSidebar = () => {
     }
   };
 
+  const getLegalGptResponse = async () => {
+    try {
+      setSearchQuery(true);
+      const getResponse = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/ask_query`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({
+            action: "Generate",
+            query: askLegalGptPrompt,
+          }),
+        }
+      );
+
+      if (!getResponse.ok) {
+        throw new Error(`Error: ${getResponse.statusText}`);
+      }
+
+      const responseData = await getResponse.json();
+
+      const data = JSON.parse(responseData.data.fetchedAskQuery.answer);
+
+      console.log(data.response);
+
+      setPromptArr([
+        ...promptArr,
+        {
+          prompt: askLegalGptPrompt,
+          promptResponse: data.response,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error in getting response:", error);
+      toast.error("Error in getting response");
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-3 h-screen py-3 pl-3">
@@ -588,7 +633,16 @@ const AiSidebar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <MenuItem onClick={() => setEditDialog(true)}>Edit</MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      handleMenuClose();
+                      setEditDialog(true);
+                    }}
+                  >
+                    Edit
+                  </MenuItem>
+
                   <MenuItem onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
@@ -614,7 +668,9 @@ const AiSidebar = () => {
                     },
                   }}
                 >
-                  <EvidenceDialog onClose={handleEvidenceClose} />
+
+                  <EvidenceDialog handleEvidenceClose={handleEvidenceClose} />
+
                 </Popover>
               </div>
               <div className="h-[50px] overflow-auto">
@@ -1260,15 +1316,7 @@ const AiSidebar = () => {
                   whileTap={{ scale: "0.95" }}
                   onClick={() => {
                     setSearchQuery(true);
-                    setPromptArr([
-                      ...promptArr,
-                      {
-                        prompt: askLegalGptPrompt,
-                        promptResponse: null,
-                        // promptResponse:
-                        //   "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.",
-                      },
-                    ]);
+                    getLegalGptResponse();
                     setAskLegalGptPrompt(null);
                   }}
                   className="px-3 rounded"
@@ -1356,7 +1404,6 @@ const AiSidebar = () => {
                   <motion.button
                     whileTap={{ scale: "0.95" }}
                     onClick={() => {
-                      setSearchQuery(true);
                       setPromptArr([
                         ...promptArr,
                         {

@@ -65,11 +65,9 @@ function Home() {
       className={Styles.mainContainer}
     >
       {/* top container */}
-      <div className="md:grid md:grid-cols-2 items-center px-2 md:px-28 pt-5">
-        <div className="w-full flex flex-col  pl-32  gap-14">
-          <h1 className="m-0 text-start text-5xl font-bold">
-            What is Courtroom ?
-          </h1>
+      <div className="flex flex-col md:grid md:grid-cols-2 items-center px-2 md:px-28 pt-5 gap-5">
+        <div className="w-full flex flex-col text-center md:text-start  md:pl-32  gap-14">
+          <h1 className="m-0 text-5xl font-bold">What is Courtroom ?</h1>
           <div className="">
             <div className="slider-container">
               <Slider {...settings}>
@@ -93,7 +91,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="flex gap-5">
+          <div className="flex justify-center gap-5">
             <Link to="/book-now">
               <motion.button
                 style={{
@@ -202,7 +200,7 @@ function Home() {
         </div>
       </div>
       {/* 2nd container */}
-      <div className="grid grid-cols-3 m-5 px-10 py-28">
+      <div className="grid md:grid-cols-3 m-5 md:px-10 py-28">
         <motion.div
           initial={{ x: ["100%"] }}
           whileInView={{ x: "0%" }}
@@ -273,26 +271,16 @@ function Home() {
         </motion.div>
       </div>
 
-      <div
-        style={{
-          marginTop: "200px",
-          margin: "45px 150px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "700px",
-          }}
-        >
+      {/* 3rd container       */}
+      <div className="flex flex-col gap-3">
+        <div className="flex justify-center gap-[345px] md:gap-[700px]">
           <img alt="plus" src={plus} style={{ width: 20, height: 20 }} />
           <img alt="plus" src={plus} style={{ width: 20, height: 20 }} />
         </div>
-        <div style={{ display: "grid", placeItems: "center" }}>
+        <div className="flex justify-center items-center">
           <div
-            className="relative"
-            style={{ height: "400px", width: "max-content" }}
+            className="relative md:h-[400px] w-max"
+            // style={{ height: "400px", width: "max-content" }}
           >
             <img
               alt="courtRoom Preiview"
@@ -300,7 +288,7 @@ function Home() {
               style={{ borderRadius: 0, width: "100%", height: "100%" }}
             />
             <video
-              className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+              className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
               src={mainIntro}
               autoPlay
               loop
@@ -309,23 +297,17 @@ function Home() {
             />
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "700px",
-          }}
-        >
+        <div className="flex justify-center gap-[345px] md:gap-[700px]">
           <img alt="plus" src={plus} style={{ width: 20, height: 20 }} />
           <img alt="plus" src={plus} style={{ width: 20, height: 20 }} />
         </div>
       </div>
 
-      <div style={{ width: "40%", marginLeft: "600px" }}>
+      <div className="w-full flex justify-center items-center">
         <img
           alt="arrow"
           src={arrw}
-          style={{ borderRadius: 0, width: "100%", height: "100%" }}
+          style={{ borderRadius: 0, width: "40%", height: "100%" }}
         />
       </div>
 
@@ -333,7 +315,7 @@ function Home() {
         // whileHover="hover"
         // onHoverStart={() => setSubmitHover(true)}
         // onHoverEnd={() => setSubmitHover(false)}
-        className="flex items-center justify-center mt-[150px] mx-10 p-5"
+        className="flex flex-col-reverse gap-3 md:flex-row mt-[150px] mx-10 items-center"
       >
         <div
           style={{
@@ -354,8 +336,8 @@ function Home() {
           >
             SUBMIT YOUR CASE
           </motion.h1>
-          <motion.h3
-            style={{ fontSize: "22px", color: "#B7B2B2" }}
+          <motion.h5
+            className="text-[#B7B2B2]"
             initial={{ opacity: 0 }}
             // variants={{
             //   hover: { opacity: 1 },
@@ -368,7 +350,7 @@ function Home() {
             Add case details in the format of courtroom judgement , statement of
             claim, statement of defence, filed application or details from
             client's perspective.
-          </motion.h3>
+          </motion.h5>
         </div>
         <motion.div
           initial={{ x: "50%" }}
@@ -379,19 +361,17 @@ function Home() {
           transition={{ type: "spring", stiffness: 120, damping: 10 }}
         >
           <div
-            style={{ display: "grid", placeItems: "center", cursor: "pointer" }}
+            className="flex justify-center items-center"
+            // style={{ display: "grid", placeItems: "center", cursor: "pointer" }}
           >
-            <div
-              className="relative"
-              style={{ height: "400px", width: "max-content" }}
-            >
+            <div className="relative md:h-[400px] md:w-max">
               <img
                 alt="courtRoom Preiview"
                 src={laptop}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
               <video
-                className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
                 src={submitCase}
                 autoPlay
                 loop
@@ -403,24 +383,21 @@ function Home() {
         </motion.div>
       </motion.div>
 
-      <motion.div className="flex items-center justify-center  mt-[150px] mx-10 p-5">
+      <motion.div className="flex flex-col gap-3 md:flex-row mt-[150px] mx-10 items-center">
         <motion.div
           initial={{ x: "-50%" }}
           whileInView={{ x: "0%" }}
           transition={{ type: "spring", stiffness: 120, damping: 10 }}
         >
-          <div style={{ display: "grid", placeItems: "center" }}>
-            <div
-              className="relative"
-              style={{ height: "400px", width: "max-content" }}
-            >
+          <div className="flex justify-center items-center">
+            <div className="relative md:h-[400px] md:w-max">
               <img
                 alt="courtRoom Preiview"
                 src={laptop}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
               <video
-                className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
                 src={argumentDraft}
                 autoPlay
                 loop
@@ -446,8 +423,8 @@ function Home() {
           >
             GET THE ARGUMENT'S DRAFT
           </motion.h1>
-          <motion.h3
-            style={{ fontSize: "22px", color: "#B7B2B2" }}
+          <motion.h5
+            style={{ color: "#B7B2B2" }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{
@@ -457,11 +434,11 @@ function Home() {
             Get a first draft of arguments, potential counter arguments,
             judgement scores and explanations and verdict from 4 different Point
             of Views
-          </motion.h3>
+          </motion.h5>
         </div>
       </motion.div>
 
-      <motion.div className="flex items-center justify-center  mt-[150px] mx-10 p-5">
+      <motion.div className="flex flex-col-reverse gap-3 md:flex-row mt-[150px] mx-10 items-center">
         <div
           style={{
             display: "flex",
@@ -478,8 +455,8 @@ function Home() {
           >
             FRAME YOUR CASE AND WIN
           </motion.h1>
-          <motion.h3
-            style={{ fontSize: "22px", color: "#B7B2B2" }}
+          <motion.h5
+            style={{ color: "#B7B2B2" }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{
@@ -488,25 +465,22 @@ function Home() {
           >
             Frame and finetune your arguments to turn the weights in your favor
             until you are able to crack the verdict of your choice
-          </motion.h3>
+          </motion.h5>
         </div>
         <motion.div
           initial={{ x: "50%" }}
           whileInView={{ x: "0%" }}
           transition={{ type: "spring", stiffness: 120, damping: 10 }}
         >
-          <div style={{ display: "grid", placeItems: "center" }}>
-            <div
-              className="relative"
-              style={{ height: "400px", width: "max-content" }}
-            >
+          <div className="flex justify-center items-center">
+            <div className="relative md:h-[400px] md:w-max">
               <img
                 alt="courtRoom Preiview"
                 src={laptop}
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
               <video
-                className="absolute -top-5 w-full h-full flex justify-center items-center p-9 rounded-xl"
+                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
                 src={frameCase}
                 autoPlay
                 loop
@@ -522,7 +496,7 @@ function Home() {
         <div>
           <h1 style={{ fontWeight: "700" }}>Why Claw Courtroom ?</h1>
         </div>
-        <div style={{ display: "flex", gap: "100px" }}>
+        <div className="flex flex-col md:flex-row gap-[100px]">
           <div>
             <h1
               style={{
@@ -635,15 +609,7 @@ function Home() {
               zIndex: 0,
             }}
           />
-          <div
-            style={{
-              position: "relative",
-              zIndex: 2,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center">
             <div style={{ width: "50%" }}>
               <h1
                 style={{
@@ -673,10 +639,11 @@ function Home() {
           </div>
         </motion.div>
       </div>
+
       <div className="flex flex-col gap-3">
         <div className="flex flex-col justify-center items-center gap-1">
-          <h1 className="font-bold text-6xl">Testimonials</h1>
-          <p className="text-xl">
+          <h1 className="font-bold text-5xl md:text-6xl">Testimonials</h1>
+          <p className="text-lg md:text-xl">
             Get to know what the professionals got to say
           </p>
         </div>
