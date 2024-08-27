@@ -74,9 +74,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-
       {/* <div
-
         className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
         style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
@@ -88,9 +86,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
-
       </div> */}
-
       {countdownOver ? (
         <div
           style={{
@@ -633,7 +629,6 @@ const AiSidebar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-
                   <MenuItem
                     onClick={() => {
                       handleMenuClose();
@@ -642,7 +637,6 @@ const AiSidebar = () => {
                   >
                     Edit
                   </MenuItem>
-
                   <MenuItem onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
@@ -668,9 +662,7 @@ const AiSidebar = () => {
                     },
                   }}
                 >
-
                   <EvidenceDialog handleEvidenceClose={handleEvidenceClose} />
-
                 </Popover>
               </div>
               <div className="h-[50px] overflow-auto">

@@ -228,14 +228,14 @@ const ConfirmBooking = () => {
             </p>
 
             <p>
-              UserId: <span className="font-bold">{bookingData?.name}</span>
+              UserId: <span className="font-bold">{bookingData.name}</span>
             </p>
             <p>
-              Email: <span className="font-bold">{bookingData?.email}</span>
+              Email: <span className="font-bold">{bookingData.email}</span>
             </p>
             <p>
               Phone Number:{" "}
-              <span className="font-bold">{bookingData?.phoneNumber}</span>
+              <span className="font-bold">{bookingData.phoneNumber}</span>
             </p>
           </div>
           <div className="h-0.5 bg-white w-full" />

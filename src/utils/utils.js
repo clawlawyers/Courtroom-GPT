@@ -5,15 +5,15 @@ export const FLASK_API_ENDPOINT =
 
 export const NODE_API_ENDPOINT =
   process.env.NODE_ENV === "production"
-    ? "https://claw-app.onrender.com/api/v1"
+    ? "https://claw-app-dev.onrender.com/api/v1"
     : "http://localhost:8000/api/v1";
 
 export const splitContentIntoPages = (text, maxWordsPerPage) => {
-  const words = text.split(" ");
+  const words = text.split(' ');
   const pages = [];
-
+  
   for (let i = 0; i < words.length; i += maxWordsPerPage) {
-    pages.push(words.slice(i, i + maxWordsPerPage).join(" "));
+    pages.push(words.slice(i, i + maxWordsPerPage).join(' '));
   }
 
   return pages;
@@ -24,7 +24,7 @@ export function MultipleItems() {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToScroll: 3
   };
 }
 export const navbarMenus = [

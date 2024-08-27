@@ -77,8 +77,8 @@ const BookNow = () => {
       // loadRazorpay(bookingData);
     } else {
       setErrorState(true);
-      setErrorData(respos.data.data.data);
-      toast.error(respos.data.data.data);
+      setErrorData("same number or email not allowed at same time slot");
+      toast.error("same number or email not allowed at same time slot");
     }
     // TODO : backend post request
   };
@@ -317,7 +317,7 @@ const BookNow = () => {
               </div>
 
               <p className="text-black text-lg font-semibold p-5">
-                {errorData}
+                Same number or email not allowed at same time slot
               </p>
             </div>
           </div>

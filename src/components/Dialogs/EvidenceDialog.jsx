@@ -1,7 +1,6 @@
 import { Close, Send } from "@mui/icons-material";
 import React, { useState } from "react";
 import fileUpload from "../../assets/icons/fileUpload.svg";
-
 import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
@@ -11,7 +10,6 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const currentUser = useSelector((state) => state.user.user);
 
-
   const handleChangeEvidence = (e) => {
     setEvidence(e.target.value);
   };
@@ -20,7 +18,6 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
     const files = Array.from(e.target.files);
     setUploadedFiles((prevFiles) => [...prevFiles, ...files]);
   };
-
 
   const handleSubmit = async () => {
     // Handle the submission of evidence and uploaded files
@@ -62,7 +59,6 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
       console.error("Error in submitting evidence", error);
       toast.error("Error in submitting evidence", error);
     }
-
   };
 
   return (
@@ -77,9 +73,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
             Add your evidence in textual form or upload your document
           </h3>
         </div>
-
         <div className="cursor-pointer" onClick={handleEvidenceClose}>
-
           <Close />
         </div>
       </section>
@@ -87,9 +81,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
 
       <section className="w-full">
         <textarea
-
           required
-
           value={evidence}
           onChange={handleChangeEvidence}
           placeholder="Add your Evidence"
@@ -116,4 +108,3 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
 };
 
 export default EvidenceDialog;
-
