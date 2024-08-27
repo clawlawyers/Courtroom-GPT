@@ -584,15 +584,20 @@ const AiSidebar = () => {
                 <Menu
                   id="long-menu"
                   anchorEl={anchorEl}
-                  keepMounted
+                  keepMounted 
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <MenuItem onClick={() => setEditDialog(true)}>Edit</MenuItem>
+                  <MenuItem onClick={() => {
+                   handleMenuClose();
+                    setEditDialog(true);
+                  }}>Edit</MenuItem>
                   <MenuItem onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
                   <MenuItem>Save</MenuItem>
+                  <MenuItem>Cancel</MenuItem>
+
                 </Menu>
 
                 <Popover
