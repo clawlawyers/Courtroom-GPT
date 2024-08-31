@@ -425,9 +425,13 @@ const AiSidebar = () => {
 
     try {
       const fetchedData = await fetch(
-        `${NODE_API_ENDPOINT}/specificLawyerCourtroom/api/relevant_case_law`,
+        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
         }
       );
 
@@ -614,7 +618,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
         {
           // user_id: currentUser.userId,
           data: firstDraft,
@@ -645,7 +649,7 @@ const AiSidebar = () => {
     try {
       setSearchQuery(true);
       const getResponse = await fetch(
-        `${NODE_API_ENDPOINT}/specificLawyerCourtroom/api/ask_query`,
+        `${NODE_API_ENDPOINT}/courtroom/api/ask_query`,
         {
           method: "POST",
           headers: {

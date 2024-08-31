@@ -30,7 +30,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
     // console.log("Uploaded Files:", uploadedFiles);
     try {
       const fetchData = await fetch(
-        `${NODE_API_ENDPOINT}/specificLawyerCourtroom/api/evidence`,
+        `${NODE_API_ENDPOINT}/courtroom/api/evidence`,
         {
           method: "POST",
           headers: {
