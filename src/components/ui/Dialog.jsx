@@ -158,7 +158,7 @@ const Dialog = ({
         <div className="text-center w-full">
           <h1 className="text-2xl text-white font-bold">{title}</h1>
           {text && (
-            <div className="grid grid-cols-2 justify-between items-center w-full gap-5">
+            <div className="flex justify-between items-center w-full gap-5">
               <div className="flex flex-row justify-center w-full items-center">
                 <button
                   onClick={handlePrevious}
@@ -173,7 +173,7 @@ const Dialog = ({
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[65vh] overflow-y-auto`}
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[75vh] overflow-y-auto`}
                 >
                   <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
@@ -191,7 +191,7 @@ const Dialog = ({
                     </div>
                   </div>
                   <textarea
-                    className="w-full h-full p-2.5 mb-4 text-black resize-none border-none"
+                    className="w-full h-full p-2.5 text-black resize-none border-none"
                     value={currentText}
                     onChange={handleTextChange}
                     readOnly={!isEditing}
@@ -212,7 +212,7 @@ const Dialog = ({
                   <ArrowRight />
                 </button>
               </div>
-              {/* <div className="h-[70vh] w-1 bg-neutral-200/40" /> */}
+              <div className="h-[80vh] w-1 bg-neutral-200/40" />
               <div className="flex flex-col w-full">
                 <div className="w-full h-fit flex flex-row justify-center items-center">
                   <img src={logo} className="h-72 w-72" alt="logo" />
