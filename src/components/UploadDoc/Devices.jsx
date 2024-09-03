@@ -20,9 +20,9 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import uploadImage from "../../assets/images/uploading.gif";
 import analyzingImage from "../../assets/images/analyzing.gif";
-import useDrivePicker from "react-google-drive-picker";
+// import useDrivePicker from "react-google-drive-picker";
 import UploadDrive from "./UploadDrive";
-import { gapi } from "gapi-script";
+// import { gapi } from "gapi-script";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { data } from "autoprefixer";
@@ -200,7 +200,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
   const handleUploadFromDrive = () => {
     setuploaddrivedialog(true);
-    handleOpenPicker();
+    // handleOpenPicker();
 
     // setUploading(true);
     // setTimeout(() => {
