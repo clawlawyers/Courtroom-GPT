@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assets/images/claw-login.png";
 import Styles from "./AiSidebar.module.css";
 import { motion } from "framer-motion";
@@ -26,6 +26,7 @@ import toast from "react-hot-toast";
 import loader from "../../assets/images/aiAssistantLoading.gif";
 import { MoreVert } from "@mui/icons-material";
 import EvidenceDialog from "../../components/Dialogs/EvidenceDialog";
+import PDFDownloadButton from "./PdfDownloader/PdfDoc";
 
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
@@ -156,7 +157,7 @@ const AiSidebar = () => {
 
   const [showAskLegalGPT, setShowAskLegalGPT] = useState(false);
   const [promptArr, setPromptArr] = useState([]);
-  const [askLegalGptPrompt, setAskLegalGptPrompt] = useState(null);
+  const [askLegalGptPrompt, setAskLegalGptPrompt] = useState("");
   const [searchQuery, setSearchQuery] = useState(false);
   const [evidenceAnchorEl, setEvidenceAnchorEl] = useState(null);
 
@@ -234,6 +235,22 @@ const AiSidebar = () => {
   const [downloadSessionLoading, setDownloadSessionLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isEvidenceDialogOpen, setEvidenceDialogOpen] = useState(false);
+  const [sessionHistoryText, setSessionHistoryText] = useState(null);
+  const [downloadHistoryPrompt, setDownloadHistoryPrompt] = useState(false);
+
+  const [showRelevantLaws, setShowRelevantLaws] = useState(false);
+  const [relevantCaseLoading, setRelevantCaseLoading] = useState(false);
+  const [relevantLawsArr, setRelevantLawsArr] = useState(null);
+
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to bottom on component mount and whenever the content changes
+    const element = scrollRef.current;
+    if (element) {
+      element.scrollTop = element.scrollHeight;
+    }
+  }, [promptArr]);
 
   useEffect(() => {
     setText(overViewDetails);
@@ -279,6 +296,8 @@ const AiSidebar = () => {
   };
 
   const saveHistory = async () => {
+    setRelevantLawsArr(null);
+    setShowRelevantLaws(false);
     try {
       if (overViewDetails !== "NA") {
         await axios.post(
@@ -336,6 +355,7 @@ const AiSidebar = () => {
   const handleEvidenceClose = () => {
     setEvidenceAnchorEl(null);
   };
+
   useEffect(() => {
     if (overViewDetails !== "") {
       setisApi(true);
@@ -353,7 +373,7 @@ const AiSidebar = () => {
             }
           );
 
-          console.log("response is ", response.data.data.draft.detailed_draft);
+          // console.log("response is ", response.data.data.draft.detailed_draft);
           setFirstDraft(response.data.data.draft.detailed_draft);
         } catch (error) {
           toast.error("Error in getting first draft");
@@ -380,9 +400,9 @@ const AiSidebar = () => {
           },
         }
       );
-      console.log(
-        response.data.data.hallucinationQuestions.assistant_questions
-      );
+      // console.log(
+      //   response.data.data.hallucinationQuestions.assistant_questions
+      // );
       setAiQuestions(
         response.data.data.hallucinationQuestions.assistant_questions
       );
@@ -390,6 +410,46 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error fetching AI questions:", error);
       setAiAssistantLoading(false);
+    }
+  };
+
+  const formatText = (text) => {
+    return text
+      .replace(/\\n\\n/g, "<br/><br/>")
+      .replace(/\\n/g, "  <br/>")
+      .replace(/\\/g, " ");
+  };
+
+  const getReventCaseLaw = async () => {
+    setRelevantCaseLoading(true);
+
+    try {
+      const fetchedData = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+
+      if (!fetchedData.ok) {
+        toast.error("Failed to fetch relevant case laws");
+        return;
+      }
+
+      const data = await fetchedData.json();
+      const formattedData = formatText(
+        data.data.relevantCases.relevant_case_law
+      );
+      console.log(data.data.relevantCases.relevant_case_law);
+      setRelevantCaseLoading(false);
+      setRelevantLawsArr(formattedData);
+    } catch (error) {
+      toast.error("Failed to fetch relevant case laws");
+      console.error(error);
     }
   };
 
@@ -408,7 +468,7 @@ const AiSidebar = () => {
           }
         );
 
-        console.log(overView.data.data.case_overview);
+        // console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
         } else {
@@ -422,7 +482,7 @@ const AiSidebar = () => {
     if (currentUser.userId) {
       getOverview();
 
-      console.log(currentUser.userId);
+      // console.log(currentUser.userId);
     }
   }, [currentUser.userId]);
 
@@ -458,34 +518,87 @@ const AiSidebar = () => {
     }
   };
 
+  // const downloadSessionCaseHistory = async () => {
+  //   setDownloadSessionLoading(true);
+  //   try {
+  //     await saveHistory();
+
+  //     const response = await axios.post(
+  //       `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
+  //       {
+  //         // user_id: currentUser.userId,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${currentUser.token}`,
+  //         },
+  //         responseType: "blob", // Important
+  //       }
+  //     );
+
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", `case_session_history_claw.pdf`);
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.remove();
+  //   } catch (error) {
+  //     console.error("Error downloading case history:", error);
+  //     toast.error("Error downloading case history");
+  //   } finally {
+  //     setDownloadSessionLoading(false);
+  //   }
+  // };
+
   const downloadSessionCaseHistory = async () => {
     setDownloadSessionLoading(true);
     try {
-      await saveHistory();
-
-      const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
-        {
-          // user_id: currentUser.userId,
-        },
+      const history = await axios.get(
+        `${NODE_API_ENDPOINT}/courtroom/getHistory`,
         {
           headers: {
             Authorization: `Bearer ${currentUser.token}`,
           },
-          responseType: "blob", // Important
         }
       );
+      // console.log(history);
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `case_session_history_claw.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      const bold = "\x1b";
+      const reset = "\x1b";
+
+      let textArr = [`${bold}Case Session History${reset} \n\n`];
+
+      const arrays = {
+        Arguments: history.data.data.caseHistory.argument,
+        "Counter Arguments": history.data.data.caseHistory.counter_argument,
+        Judgement: history.data.data.caseHistory.judgement,
+        "Potential Objection":
+          history.data.data.caseHistory.potential_objection,
+      };
+
+      const arrayNames = Object.keys(arrays);
+
+      const maxLength = Math.max(
+        ...arrayNames.map((name) => arrays[name].length)
+      );
+
+      for (let i = 0; i < maxLength; i++) {
+        let elements = arrayNames.map((name) => {
+          const arr = arrays[name];
+          return arr[i] !== undefined
+            ? `\n ${bold}${name}${reset}: \n\n ${arr[i]}`
+            : `${bold}${name}${reset}: \n\n undefined`;
+        });
+
+        textArr.push(`${bold}Case ${i + 1}${reset}: \n ${elements.join("\n")}`);
+      }
+      // console.log(textArr.join(""));
+      setSessionHistoryText(textArr.join(""));
+      setDownloadHistoryPrompt(true);
     } catch (error) {
-      console.error("Error downloading case history:", error);
-      toast.error("Error downloading case history");
+      console.error(error);
+      toast.error("Error in fetching case history");
     } finally {
       setDownloadSessionLoading(false);
     }
@@ -505,7 +618,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
         {
           // user_id: currentUser.userId,
           data: firstDraft,
@@ -556,21 +669,22 @@ const AiSidebar = () => {
 
       const responseData = await getResponse.json();
 
-      const data = JSON.parse(responseData.data.fetchedAskQuery.answer);
+      const data = responseData.data.fetchedAskQuery.answer;
 
-      console.log(data.response);
+      console.log(data);
 
       setPromptArr([
         ...promptArr,
         {
           prompt: askLegalGptPrompt,
-          promptResponse: data.response,
+          promptResponse: data,
         },
       ]);
     } catch (error) {
       console.error("Error in getting response:", error);
       toast.error("Error in getting response");
     }
+    // setAskLegalGptPrompt(null);
   };
 
   return (
@@ -640,7 +754,7 @@ const AiSidebar = () => {
                   <MenuItem onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
-                  <MenuItem>Save</MenuItem>
+                  {/* <MenuItem>Save</MenuItem> */}
                 </Menu>
 
                 <Popover
@@ -677,6 +791,11 @@ const AiSidebar = () => {
         {/* bottom container */}
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="">
+            {/* {sessionHistoryText ? ( */}
+            {/* <PDFDownloadButton sessionHistoryText={sessionHistoryText} /> */}
+            {/* ) : (
+              ""
+            )} */}
             <motion.div
               className={`${
                 overViewDetails === "NA" || overViewDetails === ""
@@ -988,7 +1107,7 @@ const AiSidebar = () => {
         >
           {firstDraftLoading ? (
             <div
-              className="border-2 border-white rounded-lg w-2/6 h-fit p-2 flex flex-row justify-center items-center"
+              className="border-2 border-white rounded-lg w-1/6 h-fit p-2 flex flex-row justify-center items-center"
               style={{
                 background: "linear-gradient(to right,#0e1118,#008080)",
               }}
@@ -1004,7 +1123,9 @@ const AiSidebar = () => {
             >
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <svg
-                  onClick={() => setFirstDraftDialog(false)}
+                  onClick={() => {
+                    setFirstDraftDialog(false);
+                  }}
                   style={{ margin: "20px", cursor: "pointer" }}
                   width="30"
                   height="30"
@@ -1050,15 +1171,53 @@ const AiSidebar = () => {
                     </div>
                   </div>
                   <div className="h-[80vh] w-1 bg-neutral-200/40" />
-                  <div className="flex flex-col justify-between h-[80vh] py-32 w-full gap-4 ">
-                    <div className="flex flex-col w-full gap-2">
-                      <img className="" src={logo} alt="logo" />
-                      <h3 className=" text-center">Draft Preview</h3>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button className="border border-white rounded-md py-1">
-                        Relevant Case Laws
-                      </button>
+                  <div className="flex flex-col justify-between h-full w-full gap-4 ">
+                    {showRelevantLaws ? (
+                      <div className="overflow-auto border-2 border-white rounded bg-white text-black p-2">
+                        {relevantCaseLoading ? (
+                          <div className="flex justify-center items-center">
+                            <img
+                              className="h-40 w-40 my-10"
+                              src={loader}
+                              alt="loader"
+                            />
+                          </div>
+                        ) : (
+                          <p
+                            className="h-[60vh]"
+                            dangerouslySetInnerHTML={{
+                              __html: relevantLawsArr,
+                            }}
+                          />
+                          // {relevantLawsArr}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col w-full gap-2">
+                        <img className="" src={logo} alt="logo" />
+                        <h3 className=" text-center">Draft Preview</h3>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 gap-2 relative">
+                      {showRelevantLaws ? (
+                        <motion.button
+                          disabled={!relevantLawsArr}
+                          className="border border-white rounded-md py-1"
+                          onClick={() => setShowRelevantLaws(false)}
+                        >
+                          Go Back
+                        </motion.button>
+                      ) : (
+                        <motion.button
+                          onClick={() => {
+                            setShowRelevantLaws(true);
+                            getReventCaseLaw();
+                          }}
+                          className="border border-white rounded-md py-1"
+                        >
+                          Relevant Case Laws
+                        </motion.button>
+                      )}
                       <button
                         onClick={() => dowloadFirstDraft()}
                         className="border border-white rounded-md py-1"
@@ -1297,7 +1456,22 @@ const AiSidebar = () => {
                   your questions and queries
                 </p>
               </div>
-              <div className="flex gap-2 p-3">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setSearchQuery(true);
+                  getLegalGptResponse();
+                  setPromptArr([
+                    ...promptArr,
+                    {
+                      prompt: askLegalGptPrompt,
+                      promptResponse: null,
+                    },
+                  ]);
+                  setAskLegalGptPrompt("");
+                }}
+                className="flex gap-2 p-3"
+              >
                 <input
                   className="flex-1 p-2 rounded text-black"
                   placeholder="Enter Your Query Here"
@@ -1305,12 +1479,9 @@ const AiSidebar = () => {
                   onChange={(e) => setAskLegalGptPrompt(e.target.value)}
                 />
                 <motion.button
+                  type="submit"
+                  disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
-                  onClick={() => {
-                    setSearchQuery(true);
-                    getLegalGptResponse();
-                    setAskLegalGptPrompt(null);
-                  }}
                   className="px-3 rounded"
                   style={{
                     background: "linear-gradient(180deg, #008080,#001A1A)",
@@ -1318,10 +1489,10 @@ const AiSidebar = () => {
                 >
                   Send
                 </motion.button>
-              </div>
+              </form>
             </div>
           ) : (
-            <div className="h-screen flex flex-col border-2 border-white rounded w-2/4 bg-[#222222]">
+            <div className="h-screen flex flex-col border-2 border-white rounded w-2/4 bg-[#222222] justify-between">
               <div className="flex justify-between">
                 <div className="flex gap-2 py-3 px-4">
                   <h3 className="text-xl text-[#00FFA3]">LegalGPT</h3>
@@ -1352,11 +1523,14 @@ const AiSidebar = () => {
                   </svg>
                 </div>
               </div>
-              <div className="px-4 h-full flex flex-col justify-between">
-                <div>
+              <div
+                ref={scrollRef}
+                className="flex-1 px-4 h-full flex flex-col overflow-auto"
+              >
+                <div className="">
                   {promptArr.length > 0 &&
                     promptArr.map((x, index) => (
-                      <div key={index}>
+                      <div className="" key={index}>
                         <div className="flex flex-col">
                           <div className="flex gap-3">
                             <svg
@@ -1386,38 +1560,111 @@ const AiSidebar = () => {
                       </div>
                     ))}
                 </div>
-                <div className="flex gap-2 py-3">
-                  <input
-                    className="flex-1 p-2 rounded text-black"
-                    placeholder="Enter Your Query Here"
-                    value={askLegalGptPrompt}
-                    onChange={(e) => setAskLegalGptPrompt(e.target.value)}
-                  />
-                  <motion.button
-                    whileTap={{ scale: "0.95" }}
-                    onClick={() => {
-                      setPromptArr([
-                        ...promptArr,
-                        {
-                          prompt: askLegalGptPrompt,
-                          promptResponse: null,
-                        },
-                      ]);
-                      setAskLegalGptPrompt(null);
-                    }}
-                    className="px-3 rounded"
-                    style={{
-                      background: "linear-gradient(180deg, #008080,#001A1A)",
-                    }}
-                  >
-                    Send
-                  </motion.button>
-                </div>
               </div>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setSearchQuery(true);
+                  getLegalGptResponse();
+                  setPromptArr([
+                    ...promptArr,
+                    {
+                      prompt: askLegalGptPrompt,
+                      promptResponse: null,
+                    },
+                  ]);
+                  setAskLegalGptPrompt("");
+                }}
+                className="px-4 flex gap-2 py-3"
+              >
+                <input
+                  className="flex-1 p-2 rounded text-black"
+                  placeholder="Enter Your Query Here"
+                  value={askLegalGptPrompt}
+                  onChange={(e) => setAskLegalGptPrompt(e.target.value)}
+                />
+                <motion.button
+                  type="submit"
+                  disabled={askLegalGptPrompt === ""}
+                  whileTap={{ scale: "0.95" }}
+                  className="px-3 rounded"
+                  style={{
+                    background: "linear-gradient(180deg, #008080,#001A1A)",
+                  }}
+                >
+                  Send
+                </motion.button>
+              </form>
             </div>
           )}
         </div>
       ) : null}
+      {downloadHistoryPrompt ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <div
+            className="flex flex-col justify-center gap-20 p-5"
+            style={{
+              background: "linear-gradient(to right,#0e1118,#008080)",
+              height: "450px",
+              width: "900px",
+              border: "2px solid white",
+              borderRadius: "10px",
+            }}
+          >
+            <div className="flex justify-end">
+              <svg
+                onClick={() => setDownloadHistoryPrompt(false)}
+                className="w-7 h-7 cursor-pointer"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                fill="white"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                  fill-rule="nonzero"
+                />
+              </svg>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-10">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="60"
+                height="60"
+                fill="white"
+                viewBox="0 0 24 24"
+              >
+                <path d="M14 10h5l-7 8-7-8h5v-10h4v10zm4.213-8.246l-1.213 1.599c2.984 1.732 5 4.955 5 8.647 0 5.514-4.486 10-10 10s-10-4.486-10-10c0-3.692 2.016-6.915 5-8.647l-1.213-1.599c-3.465 2.103-5.787 5.897-5.787 10.246 0 6.627 5.373 12 12 12s12-5.373 12-12c0-4.349-2.322-8.143-5.787-10.246z" />
+              </svg>
+              <h1 className="text-3xl">
+                Your Session History is Ready to Download
+              </h1>
+            </div>
+            <div className="flex justify-center">
+              <PDFDownloadButton sessionHistoryText={sessionHistoryText} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 };

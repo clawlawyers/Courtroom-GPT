@@ -44,6 +44,7 @@ const CourtroomArgument = () => {
   const [editValue, setEditValue] = useState("");
   const [lawyerArgument, setLawyerArgument] = useState("");
   const [userArgument, setUserArgument] = useState([]);
+  // console.log(userArgument);
   const [judgeArgument, setJudgeArgument] = useState("");
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
   const [flag, setFlag] = useState(false);
@@ -361,6 +362,40 @@ const CourtroomArgument = () => {
             },
           }
         );
+        // console.log(history);
+
+        const bold = "\x1b[1m";
+        const reset = "\x1b[0m";
+
+        let textArr = [`${bold}Case Session History${reset} \n\n`];
+
+        const arrays = {
+          Arguments: history.data.data.caseHistory.argument,
+          "Counter Arguments": history.data.data.caseHistory.counter_argument,
+          Judgement: history.data.data.caseHistory.judgement,
+          "Potential Objection":
+            history.data.data.caseHistory.potential_objection,
+        };
+
+        const arrayNames = Object.keys(arrays);
+
+        const maxLength = Math.max(
+          ...arrayNames.map((name) => arrays[name].length)
+        );
+
+        for (let i = 0; i < maxLength; i++) {
+          let elements = arrayNames.map((name) => {
+            const arr = arrays[name];
+            return arr[i] !== undefined
+              ? `\n ${bold}${name}${reset}: \n ${arr[i]}`
+              : `${bold}${name}${reset}: \n undefined`;
+          });
+
+          textArr.push(
+            `${bold}Case ${i + 1}${reset} \n ${elements.join("\n")}`
+          );
+        }
+        console.log(textArr.join(""));
 
         setUserArgument(history.data.data.caseHistory.argument);
         const lawyerArrLen =
