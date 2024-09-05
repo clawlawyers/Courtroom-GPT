@@ -24,9 +24,9 @@ const CourtRoomAiLayout = () => {
   // console.log(currentUser);
 
   // useEffect(() => {
-  if (currentUser === "") {
-    navigate("/");
-  }
+  //   if (currentUser === "") {
+  //     navigate("/");
+  //   }
   // }, [currentUser]);
 
   useEffect(() => {

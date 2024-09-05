@@ -62,8 +62,6 @@ const UploadDoc = () => {
           <img src={uploadImage} alt="" />
         </div>
       )}
-
-     
     </section>
   );
 };
