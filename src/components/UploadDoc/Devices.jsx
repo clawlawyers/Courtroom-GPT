@@ -20,9 +20,9 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import uploadImage from "../../assets/images/uploading.gif";
 import analyzingImage from "../../assets/images/analyzing.gif";
-import useDrivePicker from "react-google-drive-picker";
+// import useDrivePicker from "react-google-drive-picker";
 import UploadDrive from "./UploadDrive";
-import { gapi } from "gapi-script";
+// import { gapi } from "gapi-script";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { data } from "autoprefixer";
@@ -42,7 +42,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [closed, setClosed] = useState(false);
   const [files, setFile] = useState(null);
   const [inputText, setInputText] = useState("");
-  const [openPicker, authResponse] = useDrivePicker();
+  // const [openPicker, authResponse] = useDrivePicker();
   const [open, setOpen] = useState(false);
   const [content, setconetnt] = useState("");
 
@@ -60,44 +60,44 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     width: "50%",
   };
 
-  const handleOpenPicker = () => {
-    openPicker({
-      clientId:
-        "238978741277-ekmelih48qrpk1pk1viqes3lil02pgbt.apps.googleusercontent.com",
-      developerKey: "AIzaSyAOKT3s8Mk_WK-ckgxDgvHODHmZC-wctHk",
-      viewId: "DOCS",
-      // token:
-      //   "ya29.a0AcM612zhfqoZlQzCRgmqgrFmkjXC4lNOrkMe_D50c7Kmu2nPaT_XMXFMlUCXpaCbmtFapk_z27SQhXUrUbf1ZOBuAbjFDzbVKFwKsPZsV5NivY8Yl-Aaq8aBofArWp-_aTDi-9nFN_RjU0Lk26PJTAN0qbkFh-5sSnizMsD9aCgYKAS4SARESFQHGX2MiOBtm_SHQFiY6jyTHqHjVBQ0175",
-      //   "ya29.a0AcM612zjuDRqG7wQkCyDG8mSj2GNwBZLwU2UinKEcdr-mHD7qK5z__z0PeYJw9kFQ8m2q2uct2rsiT2_Oe-wSLEp-l1ttFucylhgJTISGSunawREflu4ZqILnfIhjYr6nUBFtj9ZAYkRQHwYB8_cgkRNlXYEWZOBHKJJ_wvhaCgYKAWcSAQ8SFQHGX2MiXmL5f9N3qNIEHRQA4VRkzw0175", // pass oauth token in case you already have one
-      showUploadView: true,
-      showUploadFolders: true,
-      supportDrives: true,
-      multiselect: true,
+  // const handleOpenPicker = () => {
+  //   openPicker({
+  //     clientId:
+  //       "238978741277-ekmelih48qrpk1pk1viqes3lil02pgbt.apps.googleusercontent.com",
+  //     developerKey: "AIzaSyAOKT3s8Mk_WK-ckgxDgvHODHmZC-wctHk",
+  //     viewId: "DOCS",
+  //     // token:
+  //     //   "ya29.a0AcM612zhfqoZlQzCRgmqgrFmkjXC4lNOrkMe_D50c7Kmu2nPaT_XMXFMlUCXpaCbmtFapk_z27SQhXUrUbf1ZOBuAbjFDzbVKFwKsPZsV5NivY8Yl-Aaq8aBofArWp-_aTDi-9nFN_RjU0Lk26PJTAN0qbkFh-5sSnizMsD9aCgYKAS4SARESFQHGX2MiOBtm_SHQFiY6jyTHqHjVBQ0175",
+  //     //   "ya29.a0AcM612zjuDRqG7wQkCyDG8mSj2GNwBZLwU2UinKEcdr-mHD7qK5z__z0PeYJw9kFQ8m2q2uct2rsiT2_Oe-wSLEp-l1ttFucylhgJTISGSunawREflu4ZqILnfIhjYr6nUBFtj9ZAYkRQHwYB8_cgkRNlXYEWZOBHKJJ_wvhaCgYKAWcSAQ8SFQHGX2MiXmL5f9N3qNIEHRQA4VRkzw0175", // pass oauth token in case you already have one
+  //     showUploadView: true,
+  //     showUploadFolders: true,
+  //     supportDrives: true,
+  //     multiselect: true,
 
-      // customViews: customViewsArray, // custom view
-      callbackFunction: async (data) => {
-        if (data.action === "cancel") {
-          console.log("User clicked cancel/close button");
-        }
+  //     // customViews: customViewsArray, // custom view
+  //     callbackFunction: async (data) => {
+  //       if (data.action === "cancel") {
+  //         console.log("User clicked cancel/close button");
+  //       }
 
-        if (data.docs !== undefined) {
-          console.log("hi");
+  //       if (data.docs !== undefined) {
+  //         console.log("hi");
 
-          console.log(data);
-          // gapi.load("client:auth2", initClient);
-          // gapi.client.init({
-          //   apiKey: "AIzaSyAOKT3s8Mk_WK-ckgxDgvHODHmZC-wctHk",
-          //   // Your API key will be automatically added to the Discovery Document URLs.
-          //   discoveryDocs: ["https://people.googleapis.com/$discovery/rest"],
-          //   // clientId and scope are optional if auth is not required.
-          //   clientId:
-          //     "238978741277-ekmelih48qrpk1pk1viqes3lil02pgbt.apps.googleusercontent.com",
-          //   scope: "drive",
-          // });
-        }
-      },
-    });
-  };
+  //         console.log(data);
+  //         // gapi.load("client:auth2", initClient);
+  //         // gapi.client.init({
+  //         //   apiKey: "AIzaSyAOKT3s8Mk_WK-ckgxDgvHODHmZC-wctHk",
+  //         //   // Your API key will be automatically added to the Discovery Document URLs.
+  //         //   discoveryDocs: ["https://people.googleapis.com/$discovery/rest"],
+  //         //   // clientId and scope are optional if auth is not required.
+  //         //   clientId:
+  //         //     "238978741277-ekmelih48qrpk1pk1viqes3lil02pgbt.apps.googleusercontent.com",
+  //         //   scope: "drive",
+  //         // });
+  //       }
+  //     },
+  //   });
+  // };
 
   const handleChange = (e) => {
     console.log("Textarea changed:", e.target.value);
@@ -200,7 +200,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
   const handleUploadFromDrive = () => {
     setuploaddrivedialog(true);
-    handleOpenPicker();
+    // handleOpenPicker();
 
     // setUploading(true);
     // setTimeout(() => {

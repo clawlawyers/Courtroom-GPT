@@ -20,10 +20,7 @@ const BookNow = () => {
   const [errorData, setErrorData] = useState("");
   const [errorState, setErrorState] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    contact: "",
+    code: "",
     record: false, // Assuming 'record' checkbox state
   });
   const navigate = useNavigate();
@@ -177,7 +174,7 @@ const BookNow = () => {
           <img src={image} alt="" />
         </div>
         <div className="flex flex-col gap-5 justify-center  items-center">
-          <h2 className="text-5xl font-bold ">Enter your Details</h2>
+          <h2 className="text-5xl font-bold ">Book Courtroom via Code</h2>
           <form
             // className={`${styles.forms} gap-4 lg:gap-5`}
             className="w-full px-5 flex flex-col justify-center gap-4"
@@ -185,72 +182,10 @@ const BookNow = () => {
           >
             <input
               type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded text-black"
-            />
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded text-black"
-            />
-            <div className="relative bg-white rounded">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-                className="text-black bg-transparent w-full p-3 rounded"
-              />
-              <button
-                type="button"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                  border: "1px",
-                  background: "none",
-                  cursor: "pointer",
-                  width: "fit-content",
-                }}
-                onClick={() =>
-                  showPassword ? setShowPassword(false) : setShowPassword(true)
-                }
-              >
-                {showPassword ? (
-                  <Visibility
-                    sx={{
-                      color: "black",
-                    }}
-                  />
-                ) : (
-                  <VisibilityOff
-                    sx={{
-                      color: "black",
-                    }}
-                  />
-                )}
-              </button>
-            </div>
-            <input
-              type="text"
-              id="contact"
-              name="contact"
-              placeholder="Enter your contact number"
-              value={formData.contact}
+              id="code"
+              name="code"
+              placeholder="Enter Your Code"
+              value={formData.code}
               onChange={handleInputChange}
               required
               className="p-3 rounded text-black"
@@ -279,7 +214,7 @@ const BookNow = () => {
                 cursor: "pointer",
               }}
             >
-              Proceed for Payment
+              Proceed For Payment
             </motion.button>
           </form>
         </div>
