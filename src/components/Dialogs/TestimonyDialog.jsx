@@ -1,69 +1,45 @@
 import { Close, Send } from "@mui/icons-material";
 import React, { useState } from "react";
-import fileUpload from "../../assets/icons/fileUpload.svg";
 import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import evidenceLoad from "../../assets/images/evidenceLoad.gif";
-import { Popover } from "@mui/material";
 
-const EvidenceDialog = ({ handleEvidenceClose }) => {
-  const [evidence, setEvidence] = useState("");
-  const [evidenceGenerated, setEvidenceGenerated] = useState(false);
-  const [evidenceRelevance, setEvidenceRelevance] = useState("");
+const TestimonyDialog = ({ handleTestimonyClose }) => {
+  const [testimony, setTestimony] = useState("");
+  const [testimonyGenerated, setTestimonyGenerated] = useState(false);
+  const [testimonyRelevance, setTestimonyRelevance] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [uploadedFiles, setUploadedFiles] = useState([]);
   const currentUser = useSelector((state) => state.user.user);
 
-  const handleChangeEvidence = (e) => {
-    setEvidence(e.target.value);
+  const handleChangeTestimony = (e) => {
+    setTestimony(e.target.value);
   };
-
-  // const handleFileUpload = (e) => {
-  //   const files = Array.from(e.target.files);
-  //   setUploadedFiles((prevFiles) => [...prevFiles, ...files]);
-  // };
 
   const handleSubmit = async () => {
     setLoading(true);
-    // Handle the submission of evidence and uploaded files
-    console.log("Evidence:", evidence);
-    // console.log("Uploaded Files:", uploadedFiles);
+    console.log("Testimony:", testimony);
     try {
-      const fetchData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/evidence`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-          body: JSON.stringify({ action: "Generate", evidence_text: evidence }),
-        }
-      );
-
-      if (!fetchData.ok) {
-        throw new Error("API request failed");
-      }
-
-      const data = await fetchData.json();
-      console.log("API response:", data);
-      toast.success("Evidence submitted successfully");
-      setEvidenceGenerated(true);
-      setEvidenceRelevance(data.data.fetchedEvidence.Evidence_Relevance);
-      setLoading(false);
-      // handleEvidenceClose();
-
-      // Clear the evidence and uploaded files
-      // setEvidence("");
-      // setUploadedFiles([]);
-
-      // Reset the form
-      // document.getElementById("evidence-form")?.reset();
-
-      // Update the evidence list with the new evidence
-
-      // Example: updateEvidenceList(data.evidence)
+      //     const fetchData = await fetch(
+      //       `${NODE_API_ENDPOINT}/courtroom/api/evidence`,
+      //       {
+      //         method: "POST",
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Authorization: `Bearer ${currentUser.token}`,
+      //         },
+      //         body: JSON.stringify({ action: "Generate", evidence_text: evidence }),
+      //       }
+      //     );
+      //   if (!fetchData.ok) {
+      //     throw new Error("API request failed");
+      //   }
+      //   const data = await fetchData.json();
+      //   console.log("API response:", data);
+      //   toast.success("Testimony submitted successfully");
+      //   setTestimonyGenerated(true);
+      //     setTestimonyRelevance(data.data.fetchedEvidence.Evidence_Relevance);
+      //   setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error("Error in submitting evidence", error);
@@ -73,19 +49,19 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
 
   return (
     <main className="w-full p-2 flex flex-col justify-center items-center">
-      {!evidenceGenerated && !loading ? (
+      {!testimonyGenerated && !loading ? (
         <>
           {/* //header */}
           <section className="flex flex-row justify-between items-start w-full">
             <div className="flex flex-col justify-center items-start">
               <h1 className="text-lg font-semibold text-teal-700 text-left">
-                Add your Evidences
+                Add Case Testimony
               </h1>
               <h3 className="text-xs font-light text-neutral-600">
-                Add your evidence in textual form
+                Add your testimony in textual form
               </h3>
             </div>
-            <div className="cursor-pointer" onClick={handleEvidenceClose}>
+            <div className="cursor-pointer" onClick={handleTestimonyClose}>
               <Close />
             </div>
           </section>
@@ -93,9 +69,9 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
           <section className="w-full">
             <textarea
               required
-              value={evidence}
-              onChange={handleChangeEvidence}
-              placeholder="Add your Evidence"
+              value={testimony}
+              onChange={handleChangeTestimony}
+              placeholder="Add your Testimony..."
               rows={12}
               className="w-full resize-none bg-[#00808030] text-black rounded-md p-2"
             />
@@ -125,10 +101,10 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
               <section className="flex flex-row justify-between items-start w-full">
                 <div className="flex flex-col justify-center items-start">
                   <h1 className="text-lg font-semibold text-teal-700 text-left">
-                    Add your Evidences
+                    Add Case Testimony
                   </h1>
                 </div>
-                <div className="cursor-pointer" onClick={handleEvidenceClose}>
+                <div className="cursor-pointer" onClick={handleTestimonyClose}>
                   <Close />
                 </div>
               </section>
@@ -136,7 +112,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
                 <textarea
                   required
                   readOnly
-                  value={evidenceRelevance}
+                  value={testimonyRelevance}
                   rows={12}
                   className="w-full resize-none bg-[#00808030] text-black rounded-md p-2"
                 />
@@ -147,10 +123,10 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
               <section className="flex flex-row justify-between items-start w-full">
                 <div className="flex flex-col justify-center items-start">
                   <h1 className="text-lg font-semibold text-teal-700 text-left">
-                    Evidence Analysis
+                    Testimony Uploaded
                   </h1>
                 </div>
-                <div className="cursor-pointer" onClick={handleEvidenceClose}>
+                <div className="cursor-pointer" onClick={handleTestimonyClose}>
                   <Close />
                 </div>
               </section>
@@ -165,4 +141,4 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
   );
 };
 
-export default EvidenceDialog;
+export default TestimonyDialog;

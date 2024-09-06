@@ -13,7 +13,9 @@ import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducre
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
+  console.log(currentUser);
   const caseOverView = useSelector((state) => state.user.caseOverview);
+  console.log(caseOverView);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -23,11 +25,11 @@ const CourtRoomAiLayout = () => {
 
   // console.log(currentUser);
 
-  useEffect(() => {
-    if (currentUser === "") {
-      navigate("/");
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser === "") {
+  //     navigate("/");
+  //   }
+  // }, [currentUser]);
 
   useEffect(() => {
     // console.log(caseOverView);
@@ -65,6 +67,10 @@ const CourtRoomAiLayout = () => {
     setShowSplash(true);
     setVideoStarted(false);
   };
+
+  if (currentUser === "") {
+    navigate("/");
+  }
 
   return (
     <div className="">

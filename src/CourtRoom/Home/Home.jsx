@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import courtroom from "../../assets/images/Courtroom.png";
 import feature1 from "../../assets/images/image 2.png";
 import feature2 from "../../assets/images/image 3.png";
@@ -11,13 +11,14 @@ import mainIntro from "../../assets/images/mainIntro.mp4";
 import plus from "../../assets/images/Group 53.png";
 import Styles from "./CourtRoomHome.module.css";
 import arrw from "../../assets/images/Vector 1.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { motion } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import TestimonialCard from "./Testimonial";
+import { useSelector } from "react-redux";
 
 function SampleNextArrow(props) {
   const { className, style } = props;
@@ -30,6 +31,9 @@ function SamplePrevArrow(props) {
 }
 
 function Home() {
+  const currentUser = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+
   const [submitHover, setSubmitHover] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -55,7 +59,11 @@ function Home() {
     // speed: 500,
   };
 
-  const testimonialArr = [1, 2, 3, 4, 5, 6];
+  // useEffect(() => {
+  //   if (currentUser !== "") {
+  //     navigate("/courtroom-ai");
+  //   }
+  // }, [currentUser]);
 
   return (
     <motion.div

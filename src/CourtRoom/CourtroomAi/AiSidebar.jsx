@@ -27,6 +27,7 @@ import loader from "../../assets/images/aiAssistantLoading.gif";
 import { MoreVert } from "@mui/icons-material";
 import EvidenceDialog from "../../components/Dialogs/EvidenceDialog";
 import PDFDownloadButton from "./PdfDownloader/PdfDoc";
+import TestimonyDialog from "../../components/Dialogs/TestimonyDialog";
 
 const dialogText =
   "n publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is availablen publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available";
@@ -160,6 +161,7 @@ const AiSidebar = () => {
   const [askLegalGptPrompt, setAskLegalGptPrompt] = useState("");
   const [searchQuery, setSearchQuery] = useState(false);
   const [evidenceAnchorEl, setEvidenceAnchorEl] = useState(null);
+  const [testimonyAnchorEl, setTestimonyAnchorEl] = useState(null);
 
   const charsPerPage = 1000; // Define this value outside the function
 
@@ -354,6 +356,15 @@ const AiSidebar = () => {
 
   const handleEvidenceClose = () => {
     setEvidenceAnchorEl(null);
+  };
+
+  const handleTestimonyClick = (event) => {
+    setTestimonyAnchorEl(event.currentTarget);
+    handleMenuClose();
+  };
+
+  const handleTestimonyClose = () => {
+    setTestimonyAnchorEl(null);
   };
 
   useEffect(() => {
@@ -754,7 +765,9 @@ const AiSidebar = () => {
                   <MenuItem onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
-                  {/* <MenuItem>Save</MenuItem> */}
+                  <MenuItem onClick={handleTestimonyClick}>
+                    Add Testimony
+                  </MenuItem>
                 </Menu>
 
                 <Popover
@@ -777,6 +790,29 @@ const AiSidebar = () => {
                   }}
                 >
                   <EvidenceDialog handleEvidenceClose={handleEvidenceClose} />
+                </Popover>
+                <Popover
+                  open={Boolean(testimonyAnchorEl)}
+                  anchorEl={testimonyAnchorEl}
+                  onClose={handleTestimonyClose}
+                  anchorOrigin={{
+                    vertical: "center",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "center",
+                    horizontal: "left",
+                  }}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      width: "600px", // Adjust the width as needed
+                      padding: "16px", // Adjust the padding as needed
+                    },
+                  }}
+                >
+                  <TestimonyDialog
+                    handleTestimonyClose={handleTestimonyClose}
+                  />
                 </Popover>
               </div>
               <div className="h-[50px] overflow-auto">
