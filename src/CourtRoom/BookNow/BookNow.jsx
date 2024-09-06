@@ -54,10 +54,11 @@ const BookNow = () => {
     });
 
     const bookingData = {
-      phoneNumber: formData.contact,
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
+      // phoneNumber: formData.contact,
+      // name: formData.name,
+      // email: formData.email,
+      // password: formData.password,
+      CouponCode: formData.code,
       recording: formData.record,
       slots: formattedBookings, // Add scheduledSlots to bookingData
     };

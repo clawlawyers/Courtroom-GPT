@@ -11,6 +11,7 @@ import {
   signInWithPhoneNumber,
 } from "../../utils/firebase";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
@@ -26,11 +27,33 @@ const ConfirmBooking = () => {
   const [proceedToPayment, setProceedToPayment] = useState(false);
   const [paymentGatewayLoading, setPaymentGatewayLoading] = useState(false);
 
-  // console.log(bookingData.phoneNumber);
+  console.log(bookingData);
 
   const handlePayment = async () => {
     setPaymentGatewayLoading(true);
-    await loadRazorpay(bookingData);
+    // await loadRazorpay(bookingData);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/book-courtroom`,
+        {
+          method: "POST",
+          body: JSON.stringify(bookingData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to book courtroom.");
+      }
+      const data = await response.text();
+      console.log(data);
+      toast.success("Booking Successful");
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to process payment. Please try again later.");
+    }
     setPaymentGatewayLoading(false);
   };
 

@@ -72,7 +72,7 @@ function LoginToCourtRoom() {
 
     axios
       .post(`${NODE_API_ENDPOINT}/courtroom/login`, {
-        phoneNumber: phone,
+        CouponCode: phone,
         password: password,
       })
       .then((response) => {
