@@ -127,6 +127,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           }
         });
 
+        formData.append("isMultilang", true); // this is for multilang
+
         try {
           const response = await axios.post(
             `${NODE_API_ENDPOINT}/courtroom/newcase`,
