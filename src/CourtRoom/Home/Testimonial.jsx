@@ -49,10 +49,9 @@ const TestimonialCard = () => {
         border: "none",
         display: "flex",
         alignItems: "center",
-        width: "90%",
       }}
     >
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", width: "90%" }}>
         <ResponsiveContainer
           carouselRef={ref}
           render={(parentWidth, carouselRef) => {
@@ -64,7 +63,7 @@ const TestimonialCard = () => {
                 ref={carouselRef}
                 slideComponent={Slide}
                 slideWidth={350}
-                height={400}
+                height={450}
                 carouselWidth={parentWidth}
                 data={data}
                 maxVisibleSlide={5}
