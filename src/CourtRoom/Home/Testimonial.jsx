@@ -9,39 +9,9 @@ import { Slide } from "./Slider";
 const data = [
   {
     description:
-      "LegalGPT has completely changed the way I do my legal research. What used to take me hours now only takes minutes. The way it understands context and pulls up exactly what I need is incredible. Honestly, I don't know how I managed without it before.",
-    person: "Senior Advocate",
-    rating: 5,
-  },
-  {
-    description:
-      "I’ve been using LegalGPT for a few months now, and I’m genuinely impressed. It makes legal research feel effortless, and the time I save lets me focus more on strategy and client interactions. It’s become an indispensable part of my practice.",
-    person: "Independent Lawyer",
-    rating: 4.5,
-  },
-  {
-    description:
-      "LegalGPT has become my go-to tool for research. It’s almost like having a personal assistant who knows exactly where to find the information I need, fast. It’s streamlined my workflow and made legal research so much less daunting.",
-    person: "Junior Associate",
-    rating: 5,
-  },
-  {
-    description:
-      "As a corporate lawyer, speed and accuracy are everything. LegalGPT nails both. Drafting documents has become so much quicker, and I love how it organizes everything I need in one place. At this point, its become an essential part of my daily work.",
-    person: "Corporate Lawyer",
-    rating: 4,
-  },
-  {
-    description:
-      "I was amazed the first time I used LegalGPT. It quickly found all the relevant case laws and documents I needed, and the interface is super easy to use. If you're a legal professional, you need this in your toolkit.",
-    person: "Legal Consultant",
-    rating: 4.5,
-  },
-  {
-    description:
       "What sets AI Courtroom apart is its ability to simulate different courtroom situations. The AI Judge’s verdicts offer diverse perspectives, which is invaluable in preparing for court. It’s an indispensable tool for any lawyer who wants to be thoroughly prepared.",
     person: "Public Prosecutor",
-    rating: 4.5,
+    rating: 5,
   },
   {
     description:
@@ -72,8 +42,16 @@ const data = [
 const TestimonialCard = () => {
   const ref = React.useRef();
   return (
-    <div className="card" style={{ background: "transparent", border: "none" }}>
-      <div style={{ position: "relative" }}>
+    <div
+      className="card"
+      style={{
+        background: "transparent",
+        border: "none",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ position: "relative", width: "90%" }}>
         <ResponsiveContainer
           carouselRef={ref}
           render={(parentWidth, carouselRef) => {
@@ -84,12 +62,12 @@ const TestimonialCard = () => {
               <StackedCarousel
                 ref={carouselRef}
                 slideComponent={Slide}
-                slideWidth={450}
-                height={400}
+                slideWidth={350}
+                height={450}
                 carouselWidth={parentWidth}
                 data={data}
                 maxVisibleSlide={5}
-                disableSwipe
+                // disableSwipe
                 currentVisibleSlide={currentVisibleSlide}
                 // customScales={[1, 0.85, 0.7, 0.55]}
                 // transitionTime={450}
