@@ -275,20 +275,21 @@ const AiSidebar = () => {
     localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
-    // await saveHistory();  //open krna hai
-    // if (overViewDetails !== "") {
-    //   await axios.post(
-    //     `${NODE_API_ENDPOINT}/courtroom/api/end`,
-    //     {
-    //       userId: currentUser.userId,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${currentUser.token}`,
-    //       },
-    //     }
-    //   );
-    // }
+    await saveHistory(); //open krna hai
+    if (overViewDetails !== "") {
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        {
+          userId: currentUser.userId,
+          CouponCode: currentUser.CouponCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+    }
 
     dispatch(logout());
 
