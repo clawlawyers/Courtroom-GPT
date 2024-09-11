@@ -13,6 +13,8 @@ import Markdown from "react-markdown";
 import toast from "react-hot-toast";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+import VoiceSearch from "./VoiceSearch/VoiceSearch";
+import voiceIcon from "../../assets/images/voice.png";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -55,6 +57,7 @@ const CourtroomArgument = () => {
   const [addArgumentInputText, setAddArgumentInputText] = useState(null);
   const [potentialObjections, setPotentialObjections] = useState("");
   const [objectionIndex, setObjectionIndex] = useState("");
+  const [voiceSearchInitiate, setVoiceSearchInitiate] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -761,7 +764,7 @@ const CourtroomArgument = () => {
       </div>
       {/* bottom container */}
       <div className="w-full grid grid-cols-[65%_35%] items-center">
-        <div className="pr-2">
+        <div className="pr-2 relative">
           <input
             value={addArgumentInputText !== null ? addArgumentInputText : ""}
             disabled={aiJudgeLoading || aiLawyerLoading}
@@ -775,6 +778,16 @@ const CourtroomArgument = () => {
               cursor: "pointer",
             }}
             placeholder="Input Your Case Into The Courtroom"
+          />
+          <motion.img
+            whileTap={{ scale: "0.95" }}
+            onClick={() => {
+              setVoiceSearchInitiate(true);
+              setAddArgumentInputText(null);
+            }}
+            className="absolute right-4 top-2 cursor-pointer"
+            src={voiceIcon}
+            alt="voice.png"
           />
         </div>
         <div className="flex gap-2">
@@ -821,6 +834,30 @@ const CourtroomArgument = () => {
           </motion.button>
         </div>
       </div>
+      {voiceSearchInitiate ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <VoiceSearch
+            setVoiceSearchInitiate={setVoiceSearchInitiate}
+            setAddArgumentInputText={setAddArgumentInputText}
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
