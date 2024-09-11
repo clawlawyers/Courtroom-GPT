@@ -50,7 +50,8 @@ const Dialog = ({
   useEffect(() => {
     const newPages = getPages(inputText);
     setPages(newPages);
-    setCurrentText(newPages[currentPage] || "");
+    // setCurrentText(newPages[currentPage] || "");
+    setCurrentText(inputText);
   }, [inputText]);
 
   // Update inputText when pages change
@@ -160,7 +161,7 @@ const Dialog = ({
           {text && (
             <div className="flex justify-between items-center w-full gap-5">
               <div className="flex flex-row justify-center w-full items-center">
-                <button
+                {/* <button
                   onClick={handlePrevious}
                   className="p-2 mx-2 bg-white text-black rounded-full"
                   style={{
@@ -169,7 +170,7 @@ const Dialog = ({
                   disabled={currentPage === 0}
                 >
                   <ArrowLeft />
-                </button>
+                </button> */}
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
@@ -196,11 +197,11 @@ const Dialog = ({
                     onChange={handleTextChange}
                     readOnly={!isEditing}
                   />
-                  <div className="text-right p-1 mx-2 font-semibold">
+                  {/* <div className="text-right p-1 mx-2 font-semibold">
                     Page {currentPage + 1}
-                  </div>
+                  </div> */}
                 </div>
-                <button
+                {/* <button
                   onClick={handleNext}
                   className={`p-2 mx-2 bg-white text-black rounded-full`}
                   style={{
@@ -210,7 +211,7 @@ const Dialog = ({
                   disabled={currentPage === pages.length - 1}
                 >
                   <ArrowRight />
-                </button>
+                </button> */}
               </div>
               <div className="h-[80vh] w-1 bg-neutral-200/40" />
               <div className="flex flex-col w-full">

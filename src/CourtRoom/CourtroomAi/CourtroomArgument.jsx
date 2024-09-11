@@ -66,6 +66,7 @@ const CourtroomArgument = () => {
   const [potentialObjections, setPotentialObjections] = useState("");
   const [objectionIndex, setObjectionIndex] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElmenu, setAnchorElmenu] = useState(null);
   const [loadingRelevantCases, setLoadingRelevantCases] = useState(false);
 
   const handleClick = (event) => {
@@ -329,10 +330,11 @@ const CourtroomArgument = () => {
     }
   };
   const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    console.log(event.currentTarget);
+    setAnchorElmenu(event.currentTarget);
   };
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setAnchorElmenu(null);
   };
   const handleAddArgument = async () => {
     try {
@@ -464,9 +466,9 @@ const CourtroomArgument = () => {
     setRelevantCases("");
 
     var data;
-    if (anchorEl.id == "judge") {
+    if (anchorElmenu.id == "judge") {
       data = judgeArgument;
-    } else if (anchorEl.id == "lawyer") {
+    } else if (anchorElmenu.id == "lawyer") {
       data = lawyerArgument;
     }
     console.log(data);
@@ -546,14 +548,14 @@ const CourtroomArgument = () => {
                 sx={{
                   "& .MuiPaper-root": {
                     width: "600px",
-                    height: "200px", // Adjust the width as needed
+                    // height: "200px", // Adjust the width as needed
                     padding: "16px", // Adjust the padding as needed
                   },
                 }}
               >
                 <>
-                  <section className="flex flex-row justify-between items-start w-full">
-                    <div className="flex flex-col justify-center items-start">
+                  <div className="flex  flex-row justify-between items-start w-full">
+                    <div className="flex  flex-col justify-center items-start">
                       <h1 className="text-lg font-semibold text-teal-700 text-left">
                         Relevant Cases Laws
                       </h1>
@@ -564,8 +566,8 @@ const CourtroomArgument = () => {
                     >
                       <Close />
                     </div>
-                  </section>
-                  <section className="w-full flex items-center justify-center px-10 py-3">
+                  </div>
+                  <div className="w-full flex overflow-scroll items-center justify-center px-10 py-3">
                     {!loadingRelevantCases ? (
                       <p
                         dangerouslySetInnerHTML={{ __html: relevantCases }}
@@ -576,7 +578,7 @@ const CourtroomArgument = () => {
                         <img alt="laoding" src={loader} className="w-28 h-28" />
                       </div>
                     )}
-                  </section>
+                  </div>
                 </>
               </Popover>
               <div>
@@ -591,9 +593,9 @@ const CourtroomArgument = () => {
                 </IconButton>
                 <Menu
                   id="long-menu"
-                  anchorEl={anchorEl}
+                  anchorEl={anchorElmenu}
                   keepMounted
-                  open={Boolean(anchorEl)}
+                  open={Boolean(anchorElmenu)}
                   onClose={handleMenuClose}
                   anchorOrigin={{
                     vertical: "center",
