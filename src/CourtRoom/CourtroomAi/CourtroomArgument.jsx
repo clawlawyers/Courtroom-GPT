@@ -15,6 +15,8 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import VoiceSearch from "./VoiceSearch/VoiceSearch";
 import voiceIcon from "../../assets/images/voice.png";
+import { IconButton, Menu } from "@mui/material";
+import { Close, MoreVert } from "@mui/icons-material";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -58,14 +60,23 @@ const CourtroomArgument = () => {
   const [potentialObjections, setPotentialObjections] = useState("");
   const [objectionIndex, setObjectionIndex] = useState("");
   const [voiceSearchInitiate, setVoiceSearchInitiate] = useState(false);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [showRelevantCaseJudge, setRelevantCaseJudge] = useState(false);
+  const [relevantCases, setRelevantCases] = useState("");
+  const [loadingRelevantCases, setLoadingRelevantCases] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -436,6 +447,41 @@ const CourtroomArgument = () => {
     }
   }, [userArgument]);
 
+  const handleshowcaseaijudge = async () => {
+    setRelevantCaseJudge(true);
+    setRelevantCases("");
+
+    var data;
+    if (anchorEl.id == "judge") {
+      data = judgeArgument;
+    } else if (anchorEl.id == "lawyer") {
+      data = lawyerArgument;
+    }
+    console.log(data);
+    setLoadingRelevantCases(true);
+
+    try {
+      const res = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/relevant_cases_judge_lawyer`,
+        {
+          text_input: data,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+      console.log(res);
+      var data = res.data.data.relevantCases.relevant_case_law;
+      data = data.replace(/\\n/g, "<br/>");
+      data = data.replace(/\\n\\n/g, "<br/><br/>");
+      data = data.replace(/\\/g, " ");
+      setRelevantCases(data);
+      setLoadingRelevantCases(false);
+    } catch (error) {}
+  };
+
   return (
     <div className="flex flex-col p-3 h-screen gap-2">
       {/* top container */}
@@ -463,14 +509,65 @@ const CourtroomArgument = () => {
               borderRadius: "10px",
             }}
           >
-            <div className="px-3 pt-2 flex gap-2">
-              <img
-                style={{ width: "25px", height: "25px" }}
-                src={aiJudge}
-                alt="judge-icon"
-              />
-              <h1 style={{ fontSize: "20px", margin: "0" }}>AI Judge</h1>
+            <div className="px-3 pt-2 flex gap-2 justify-between">
+              <div>
+                <img
+                  style={{ width: "25px", height: "25px" }}
+                  src={aiJudge}
+                  alt="judge-icon"
+                />
+                <h1 style={{ fontSize: "20px", margin: "0" }}>AI Judge</h1>
+              </div>
+              <div>
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  id="judge"
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVert />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{
+                    vertical: "center",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "center",
+                    horizontal: "right",
+                  }}
+                  PaperProps={{
+                    style: {
+                      marginRight: "16px", // Adjust this value for the desired gap
+                    },
+                  }}
+                >
+                  <div
+                    className="text-xs px-2 hover:cursor-pointer "
+                    onClick={() => {
+                      handleshowcaseaijudge();
+                      handleMenuClose();
+                    }}
+                  >
+                    View Relevant Case Laws
+                  </div>
+                  {/* <MenuItem>Save</MenuItem> */}
+                </Menu>
+                {/* <button
+                  onClick={handleshowcaseaijudge}
+                  className="text-[0.575rem] shadow-md bg-[#D9D9D9] px-2 py-1 text-black font-medium "
+                >
+                  View Relevant Case Laws
+                </button> */}
+              </div>
             </div>
+
             <div
               className="flex-1"
               style={{
@@ -507,16 +604,30 @@ const CourtroomArgument = () => {
           </div>
         ) : (
           <div className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black">
-            <div
-              className="h-[5vh]"
-              style={{ padding: "10px", display: "flex", gap: "10px" }}
-            >
-              <img
-                style={{ width: "25px", height: "25px" }}
-                src={aiLawyer}
-                alt="judge-icon"
-              />
-              <h1 style={{ fontSize: "20px", margin: "0" }}>AI Lawyer</h1>
+            <div className="flex justify-between">
+              <div
+                className="h-[5vh]"
+                style={{ padding: "10px", display: "flex", gap: "10px" }}
+              >
+                <img
+                  style={{ width: "25px", height: "25px" }}
+                  src={aiLawyer}
+                  alt="judge-icon"
+                />
+                <h1 style={{ fontSize: "20px", margin: "0" }}>AI Lawyer</h1>
+              </div>
+              <div>
+                {" "}
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  id="lawyer"
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVert />
+                </IconButton>
+              </div>
             </div>
             <div
               className="flex-1 overflow-auto"
@@ -854,6 +965,55 @@ const CourtroomArgument = () => {
             setVoiceSearchInitiate={setVoiceSearchInitiate}
             setAddArgumentInputText={setAddArgumentInputText}
           />
+        </div>
+      ) : (
+        ""
+      )}
+      {showRelevantCaseJudge ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "0",
+            // backgroundColor: "rgba(0, 0, 0, 0.1)",
+            // backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <div className="w-2/5 h-[90%] bg-white rounded p-3">
+            <div className="flex  flex-row justify-between items-start w-full">
+              <div className="flex  flex-col justify-center items-start">
+                <h1 className="px-10 text-xl font-semibold text-teal-700 text-left">
+                  Relevant Cases Laws
+                </h1>
+              </div>
+              <div
+                className="cursor-pointer text-black"
+                onClick={() => setRelevantCaseJudge(false)}
+              >
+                <Close />
+              </div>
+            </div>
+            <div className="h-[90%] flex overflow-auto items-center justify-center px-10 py-3 ">
+              {!loadingRelevantCases ? (
+                <p
+                  className="text-black text-sm h-[90%]"
+                  dangerouslySetInnerHTML={{ __html: relevantCases }}
+                ></p>
+              ) : (
+                <div className="h-full flex justify-center items-center">
+                  {" "}
+                  <img alt="loading" src={loader} className="w-28 h-28" />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       ) : (
         ""
