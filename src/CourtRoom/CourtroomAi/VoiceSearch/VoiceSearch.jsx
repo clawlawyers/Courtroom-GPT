@@ -45,7 +45,7 @@ const VoiceSearch = ({ setVoiceSearchInitiate, setAddArgumentInputText }) => {
             >
               <path d="M12 20l-5 4h10l-5-4zm4-9c0 2.209-1.791 4-4 4s-4-1.791-4-4v-7c0-2.209 1.791-4 4-4s4 1.791 4 4v7zm4-2v2c0 4.418-3.582 8-8 8s-8-3.582-8-8v-2h2v2c0 3.309 2.691 6 6 6s6-2.691 6-6v-2h2z" />
             </svg>
-            <p>On</p>
+            <p className="font-bold">On</p>
           </div>
         ) : (
           <div>
@@ -57,7 +57,7 @@ const VoiceSearch = ({ setVoiceSearchInitiate, setAddArgumentInputText }) => {
             >
               <path d="M12 20l-5 4h10l-5-4zm0-18c1.103 0 2 .897 2 2v7c0 1.103-.897 2-2 2s-2-.897-2-2v-7c0-1.103.897-2 2-2m0-2c-2.209 0-4 1.791-4 4v7c0 2.209 1.791 4 4 4s4-1.791 4-4v-7c0-2.209-1.791-4-4-4zm8 9v2c0 4.418-3.582 8-8 8s-8-3.582-8-8v-2h2v2c0 3.309 2.691 6 6 6s6-2.691 6-6v-2h2z" />
             </svg>
-            <p>Off</p>
+            <p className="font-bold">Off</p>
           </div>
         )}
       </div>

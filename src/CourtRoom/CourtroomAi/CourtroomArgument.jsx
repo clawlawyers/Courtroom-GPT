@@ -535,55 +535,7 @@ const CourtroomArgument = () => {
                 />
                 <h1 style={{ fontSize: "20px", margin: "0" }}>AI Judge</h1>
               </div>
-              <Popover
-                open={showRelevantCaseJudge}
-                // onClose={handleEvidenceClose}
-                anchorReference="anchorPosition"
-                anchorPosition={{ top: 50, left: 450 }}
-                anchorOrigin={{
-                  vertical: "center",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "center",
-                  horizontal: "left",
-                }}
-                sx={{
-                  "& .MuiPaper-root": {
-                    width: "600px",
-                    // height: "200px", // Adjust the width as needed
-                    padding: "16px", // Adjust the padding as needed
-                  },
-                }}
-              >
-                <>
-                  <div className="flex  flex-row justify-between items-start w-full">
-                    <div className="flex  flex-col justify-center items-start">
-                      <h1 className="text-lg font-semibold text-teal-700 text-left">
-                        Relevant Cases Laws
-                      </h1>
-                    </div>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => setRelevantCaseJudge(false)}
-                    >
-                      <Close />
-                    </div>
-                  </div>
-                  <div className="w-full flex overflow-scroll items-center justify-center px-10 py-3">
-                    {!loadingRelevantCases ? (
-                      <p
-                        dangerouslySetInnerHTML={{ __html: relevantCases }}
-                      ></p>
-                    ) : (
-                      <div>
-                        {" "}
-                        <img alt="laoding" src={loader} className="w-28 h-28" />
-                      </div>
-                    )}
-                  </div>
-                </>
-              </Popover>
+
               <div>
                 <IconButton
                   aria-label="more"
@@ -616,7 +568,10 @@ const CourtroomArgument = () => {
                 >
                   <div
                     className="text-xs px-2 hover:cursor-pointer "
-                    onClick={handleshowcaseaijudge}
+                    onClick={() => {
+                      handleshowcaseaijudge();
+                      handleMenuClose();
+                    }}
                   >
                     View Relevant Case Laws
                   </div>
@@ -942,7 +897,7 @@ const CourtroomArgument = () => {
             value={addArgumentInputText !== null ? addArgumentInputText : ""}
             disabled={aiJudgeLoading || aiLawyerLoading}
             onChange={(e) => setAddArgumentInputText(e.target.value)}
-            className="w-full text-black"
+            className="w-full text-black "
             style={{
               border: "2px solid #00ffa3",
               borderRadius: "20px",
@@ -1015,6 +970,7 @@ const CourtroomArgument = () => {
             position: "absolute",
             left: "0",
             right: "0",
+            top: "0",
             backgroundColor: "rgba(0, 0, 0, 0.1)",
             backdropFilter: "blur(3px)",
             display: "flex",
@@ -1027,6 +983,102 @@ const CourtroomArgument = () => {
             setVoiceSearchInitiate={setVoiceSearchInitiate}
             setAddArgumentInputText={setAddArgumentInputText}
           />
+        </div>
+      ) : (
+        ""
+      )}
+      {showRelevantCaseJudge ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "0",
+            // backgroundColor: "rgba(0, 0, 0, 0.1)",
+            // backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <div className="w-2/5 h-[90%] bg-white rounded p-3">
+            <div className="flex  flex-row justify-between items-start w-full">
+              <div className="flex  flex-col justify-center items-start">
+                <h1 className="px-10 text-xl font-semibold text-teal-700 text-left">
+                  Relevant Cases Laws
+                </h1>
+              </div>
+              <div
+                className="cursor-pointer text-black"
+                onClick={() => setRelevantCaseJudge(false)}
+              >
+                <Close />
+              </div>
+            </div>
+            <div className="h-[90%] flex overflow-auto items-center justify-center px-10 py-3 ">
+              {!loadingRelevantCases ? (
+                <p
+                  className="text-black text-sm h-[90%]"
+                  dangerouslySetInnerHTML={{ __html: relevantCases }}
+                ></p>
+              ) : (
+                <div className="h-full flex justify-center items-center">
+                  {" "}
+                  <img alt="loading" src={loader} className="w-28 h-28" />
+                </div>
+              )}
+            </div>
+          </div>
+          {/* <Popover
+            open={showRelevantCaseJudge}
+            // onClose={handleEvidenceClose}
+            // anchorReference="anchorPosition"
+            // anchorPosition={{ top: 50, left: 50 }}
+            // anchorOrigin={{
+            //   vertical: "center",
+            //   horizontal: "center",
+            // }}
+            // transformOrigin={{
+            //   vertical: "center",
+            //   horizontal: "left",
+            // }}
+            sx={{
+              "& .MuiPaper-root": {
+                width: "600px",
+                // height: "200px", // Adjust the width as needed
+                padding: "16px", // Adjust the padding as needed
+              },
+            }}
+          >
+            <>
+              <div className="flex  flex-row justify-between items-start w-full">
+                <div className="flex  flex-col justify-center items-start">
+                  <h1 className="text-lg font-semibold text-teal-700 text-left">
+                    Relevant Cases Laws
+                  </h1>
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setRelevantCaseJudge(false)}
+                >
+                  <Close />
+                </div>
+              </div>
+              <div className="w-full flex overflow-scroll items-center justify-center px-10 py-3">
+                {!loadingRelevantCases ? (
+                  <p dangerouslySetInnerHTML={{ __html: relevantCases }}></p>
+                ) : (
+                  <div>
+                    {" "}
+                    <img alt="laoding" src={loader} className="w-28 h-28" />
+                  </div>
+                )}
+              </div>
+            </>
+          </Popover> */}
         </div>
       ) : (
         ""
