@@ -12,8 +12,8 @@ import { MenuItem, IconButton } from "@mui/material";
 import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import Markdown from "react-markdown";
 import toast from "react-hot-toast";
 import Popover from "@mui/material/Popover";
@@ -22,6 +22,9 @@ import EvidenceDialog from "../../components/Dialogs/EvidenceDialog";
 import { MoreVert } from "@mui/icons-material";
 import voiceIcon from "../../assets/images/voice.png";
 import VoiceSearch from "./VoiceSearch/VoiceSearch";
+import expand from "../../assets/images/expand.png";
+import collapse from "../../assets/images/collapse.png";
+import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
 
 // const userArgument = [
 //   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
@@ -44,6 +47,7 @@ import VoiceSearch from "./VoiceSearch/VoiceSearch";
 
 const CourtroomArgument = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [dialogContent, setDialogContent] = useState(
     "I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product"
@@ -71,6 +75,8 @@ const CourtroomArgument = () => {
   const [anchorElmenu, setAnchorElmenu] = useState(null);
   const [loadingRelevantCases, setLoadingRelevantCases] = useState(false);
   const [voiceSearchInitiate, setVoiceSearchInitiate] = useState(false);
+  const [judgeViewExpand, setJudgeViewExpand] = useState(false);
+  const [lawyerViewExpand, setLawyerViewExpand] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -333,7 +339,6 @@ const CourtroomArgument = () => {
     }
   };
   const handleMenuOpen = (event) => {
-    console.log(event.currentTarget);
     setAnchorElmenu(event.currentTarget);
   };
   const handleMenuClose = () => {
@@ -464,6 +469,7 @@ const CourtroomArgument = () => {
       editItemRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, [userArgument]);
+
   const handleshowcaseaijudge = async () => {
     setRelevantCaseJudge(true);
     setRelevantCases("");
@@ -499,6 +505,11 @@ const CourtroomArgument = () => {
     } catch (error) {}
   };
 
+  const tapAnimations = {
+    true: { scale: 0.98 },
+    false: {},
+  };
+
   return (
     <div className="flex flex-col p-3 h-screen gap-2">
       {/* top container */}
@@ -518,24 +529,16 @@ const CourtroomArgument = () => {
             <img alt="laoding" src={loader} className="w-28 h-28" />
           </div>
         ) : (
-          <div
-            className="bg-[#033E40] overflow-auto border border-black"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              borderRadius: "10px",
-            }}
-          >
-            <div className="px-3 pt-2 flex gap-2 justify-between">
-              <div className="flex items-center gap-3 ">
+          <div className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg">
+            <div className="flex justify-between">
+              <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
                   style={{ width: "25px", height: "25px" }}
                   src={aiJudge}
                   alt="judge-icon"
                 />
-                <h1 style={{ fontSize: "20px", margin: "0" }}>AI Judge</h1>
+                <h1 className="text-sm m-0">AI Judge</h1>
               </div>
-
               <div>
                 <IconButton
                   aria-label="more"
@@ -577,24 +580,19 @@ const CourtroomArgument = () => {
                   </div>
                   {/* <MenuItem>Save</MenuItem> */}
                 </Menu>
-                {/* <button
-                  onClick={handleshowcaseaijudge}
-                  className="text-[0.575rem] shadow-md bg-[#D9D9D9] px-2 py-1 text-black font-medium "
-                >
-                  View Relevant Case Laws
-                </button> */}
               </div>
             </div>
             <div
-              className="flex-1"
+              className="flex-1 overflow-auto"
               style={{
-                margin: "10px",
-                overflow: "auto",
+                margin: "15px",
+                overflow: "hidden",
+                overflowY: "scroll",
               }}
             >
               <p
                 style={{
-                  fontSize: "15px",
+                  fontSize: "13px",
                   lineHeight: "20px",
                   wordSpacing: "4px",
                   padding: "0px 10px",
@@ -602,6 +600,13 @@ const CourtroomArgument = () => {
               >
                 <Markdown>{judgeArgument}</Markdown>
               </p>
+            </div>
+            <div
+              onClick={() => setJudgeViewExpand(true)}
+              className="h-[5vh] flex  items-center cursor-pointer px-2"
+            >
+              <img className="h-4 w-4" alt="expand" src={expand} />
+              <h1 className="text-xs m-[5px]">Expand</h1>
             </div>
           </div>
         )}
@@ -620,18 +625,15 @@ const CourtroomArgument = () => {
             <img alt="laoding" src={loader} className="w-28 h-28" />
           </div>
         ) : (
-          <div className="flex flex-col  bg-[#033E40] rounded-lg overflow-auto border border-black">
+          <div className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black">
             <div className="flex justify-between">
-              <div
-                className="h-[5vh] flex gap-3"
-                style={{ padding: "10px", display: "flex", gap: "10px" }}
-              >
+              <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
                   style={{ width: "25px", height: "25px" }}
                   src={aiLawyer}
                   alt="judge-icon"
                 />
-                <h1 style={{ fontSize: "20px", margin: "0" }}>AI Lawyer</h1>
+                <h1 className="text-sm m-0">AI Lawyer</h1>
               </div>
               <div>
                 {" "}
@@ -656,7 +658,7 @@ const CourtroomArgument = () => {
             >
               <p
                 style={{
-                  fontSize: "15px",
+                  fontSize: "13px",
                   lineHeight: "20px",
                   wordSpacing: "4px",
                   padding: "0px 10px",
@@ -665,38 +667,41 @@ const CourtroomArgument = () => {
                 <Markdown>{lawyerArgument}</Markdown>
               </p>
             </div>
-            <motion.div
-              className="h-[5vh]"
-              onClick={handleSwap}
-              whileTap={{ scale: "0.98" }}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <svg
-                width="20"
-                height="20"
-                stroke="white"
-                fill="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+            <div className="h-[5vh] flex justify-between items-center cursor-pointer px-2">
+              <div
+                onClick={() => setLawyerViewExpand(true)}
+                className="flex gap-1 items-center"
               >
-                <path
-                  d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
-                  fill-rule="nonzero"
-                />
-              </svg>
-              <h1 style={{ margin: "5px", fontSize: "15px" }}>
-                Swap with AI Lawyer
-              </h1>
-            </motion.div>
+                <img className="h-4 w-4" alt="expand" src={expand} />
+                <h1 className="text-xs m-[5px]">Expand</h1>
+              </div>
+              <motion.div
+                onClick={userArgument.length > 0 ? handleSwap : null}
+                whileTap={
+                  tapAnimations[userArgument.length > 0 ? "true" : "false"]
+                }
+                className="flex gap-1 items-center"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  stroke="white"
+                  fill="white"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+                <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
+              </motion.div>
+            </div>
           </div>
         )}
       </div>
@@ -715,7 +720,7 @@ const CourtroomArgument = () => {
               src={userIcon}
               alt="user-icon"
             />
-            <h1 style={{ fontSize: "20px", margin: "0" }}>User Argument</h1>
+            <h1 className="text-sm m-0">User Argument</h1>
           </div>
           <div className="flex-1 overflow-auto ">
             <div className="w-full flex flex-row-reverse pr-3 items-center   ">
@@ -761,7 +766,7 @@ const CourtroomArgument = () => {
                           className="text-black"
                           style={{
                             margin: "0",
-                            fontSize: "15px",
+                            fontSize: "13px",
                             padding: "15px",
                             borderRadius: "10px",
                             width: "100%",
@@ -776,7 +781,7 @@ const CourtroomArgument = () => {
                         <p
                           style={{
                             margin: "0",
-                            fontSize: "15px",
+                            fontSize: "13px",
                             padding: "15px",
                             lineHeight: "20px",
                             width: "100%",
@@ -1001,10 +1006,10 @@ const CourtroomArgument = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: "20",
+            zIndex: "50",
           }}
         >
-          <div className="w-2/5 h-[90%] bg-white rounded p-3">
+          <div className="w-2/5 h-[90%] bg-white rounded p-3 border border-black">
             <div className="flex  flex-row justify-between items-start w-full">
               <div className="flex  flex-col justify-center items-start">
                 <h1 className="px-10 text-xl font-semibold text-teal-700 text-left">
@@ -1031,54 +1036,227 @@ const CourtroomArgument = () => {
                 </div>
               )}
             </div>
+            {!loadingRelevantCases && (
+              <div className="flex justify-end">
+                <Link to={"/courtroom-ai/caseLaws"}>
+                  <button
+                    onClick={() => {
+                      dispatch(removeCaseLaws());
+                      dispatch(
+                        retrieveCaseLaws({
+                          query: relevantCases,
+                          token: currentUser.token,
+                        })
+                      );
+                    }}
+                    className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
+                  >
+                    View Case Laws
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
-          {/* <Popover
-            open={showRelevantCaseJudge}
-            // onClose={handleEvidenceClose}
-            // anchorReference="anchorPosition"
-            // anchorPosition={{ top: 50, left: 50 }}
-            // anchorOrigin={{
-            //   vertical: "center",
-            //   horizontal: "center",
-            // }}
-            // transformOrigin={{
-            //   vertical: "center",
-            //   horizontal: "left",
-            // }}
-            sx={{
-              "& .MuiPaper-root": {
-                width: "600px",
-                // height: "200px", // Adjust the width as needed
-                padding: "16px", // Adjust the padding as needed
-              },
-            }}
-          >
-            <>
-              <div className="flex  flex-row justify-between items-start w-full">
-                <div className="flex  flex-col justify-center items-start">
-                  <h1 className="text-lg font-semibold text-teal-700 text-left">
-                    Relevant Cases Laws
-                  </h1>
-                </div>
-                <div
-                  className="cursor-pointer"
-                  onClick={() => setRelevantCaseJudge(false)}
+        </div>
+      ) : (
+        ""
+      )}
+      {judgeViewExpand ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "0",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
+            <div className="flex justify-between">
+              <div className="h-[5vh] p-[10px] flex gap-[10px]">
+                <img
+                  style={{ width: "25px", height: "25px" }}
+                  src={aiJudge}
+                  alt="judge-icon"
+                />
+                <h1 className="text-sm m-0">AI Judge</h1>
+              </div>
+              <div>
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  id="judge"
+                  onClick={handleMenuOpen}
                 >
-                  <Close />
-                </div>
-              </div>
-              <div className="w-full flex overflow-scroll items-center justify-center px-10 py-3">
-                {!loadingRelevantCases ? (
-                  <p dangerouslySetInnerHTML={{ __html: relevantCases }}></p>
-                ) : (
-                  <div>
-                    {" "}
-                    <img alt="laoding" src={loader} className="w-28 h-28" />
+                  <MoreVert />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorElmenu}
+                  keepMounted
+                  open={Boolean(anchorElmenu)}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{
+                    vertical: "center",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "center",
+                    horizontal: "right",
+                  }}
+                  PaperProps={{
+                    style: {
+                      marginRight: "16px", // Adjust this value for the desired gap
+                    },
+                  }}
+                >
+                  <div
+                    className="text-xs px-2 hover:cursor-pointer "
+                    onClick={() => {
+                      handleshowcaseaijudge();
+                      handleMenuClose();
+                    }}
+                  >
+                    View Relevant Case Laws
                   </div>
-                )}
+                  {/* <MenuItem>Save</MenuItem> */}
+                </Menu>
               </div>
-            </>
-          </Popover> */}
+            </div>
+            <div
+              className="flex-1 overflow-auto"
+              style={{
+                margin: "15px",
+                overflow: "hidden",
+                overflowY: "scroll",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "13px",
+                  lineHeight: "20px",
+                  wordSpacing: "4px",
+                  padding: "0px 10px",
+                }}
+              >
+                <Markdown>{judgeArgument}</Markdown>
+              </p>
+            </div>
+            <div
+              onClick={() => setJudgeViewExpand(false)}
+              className="h-[5vh] flex  items-center cursor-pointer px-2"
+            >
+              <img className="h-4 w-4" alt="expand" src={collapse} />
+              <h1 className="text-xs m-[5px]">Collapse</h1>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      {lawyerViewExpand ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "0",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
+            <div className="flex justify-between">
+              <div className="h-[5vh] p-[10px] flex gap-[10px]">
+                <img
+                  style={{ width: "25px", height: "25px" }}
+                  src={aiLawyer}
+                  alt="judge-icon"
+                />
+                <h1 className="text-sm m-0">AI Lawyer</h1>
+              </div>
+              <div>
+                {" "}
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  id="lawyer"
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVert />
+                </IconButton>
+              </div>
+            </div>
+            <div
+              className="flex-1 overflow-auto"
+              style={{
+                margin: "15px",
+                overflow: "hidden",
+                overflowY: "scroll",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "13px",
+                  lineHeight: "20px",
+                  wordSpacing: "4px",
+                  padding: "0px 10px",
+                }}
+              >
+                <Markdown>{lawyerArgument}</Markdown>
+              </p>
+            </div>
+            <div className="h-[5vh] flex justify-between items-center cursor-pointer px-2">
+              <div
+                onClick={() => setLawyerViewExpand(false)}
+                className="flex gap-1 items-center"
+              >
+                <img className="h-4 w-4" alt="expand" src={expand} />
+                <h1 className="text-xs m-[5px]">Collapse</h1>
+              </div>
+              <motion.div
+                onClick={userArgument.length > 0 ? handleSwap : null}
+                whileTap={
+                  tapAnimations[userArgument.length > 0 ? "true" : "false"]
+                }
+                className="flex gap-1 items-center"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  stroke="white"
+                  fill="white"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+                <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
+              </motion.div>
+            </div>
+          </div>
         </div>
       ) : (
         ""

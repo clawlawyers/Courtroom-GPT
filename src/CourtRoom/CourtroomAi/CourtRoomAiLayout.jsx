@@ -15,7 +15,7 @@ const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
   console.log(currentUser);
   const caseOverView = useSelector((state) => state.user.caseOverview);
-  console.log(caseOverView);
+  // console.log(caseOverView);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
