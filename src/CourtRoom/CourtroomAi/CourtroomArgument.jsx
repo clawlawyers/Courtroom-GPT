@@ -54,6 +54,7 @@ const CourtroomArgument = () => {
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
+  const [relevantCasesData, setRelevantCasesData] = useState("");
   const [showRelevantCaseJudge, setRelevantCaseJudge] = useState(false);
   const [showRelevantCaseLawyer, setRelevantCaseLawyer] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
@@ -496,6 +497,7 @@ const CourtroomArgument = () => {
         }
       );
       console.log(res);
+      setRelevantCasesData(res.data.data.relevantCases.relevant_case_law);
       var data = res.data.data.relevantCases.relevant_case_law;
       data = data.replace(/\\n/g, "<br/>");
       data = data.replace(/\\n\\n/g, "<br/><br/>");
@@ -1044,7 +1046,7 @@ const CourtroomArgument = () => {
                       dispatch(removeCaseLaws());
                       dispatch(
                         retrieveCaseLaws({
-                          query: relevantCases,
+                          query: relevantCasesData,
                           token: currentUser.token,
                         })
                       );
