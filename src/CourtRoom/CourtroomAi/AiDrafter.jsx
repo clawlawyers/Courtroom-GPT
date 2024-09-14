@@ -1,20 +1,56 @@
 import { Close } from "@mui/icons-material";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import loader from "../../assets/images/evidenceLoad.gif";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+import { editDrafter, removeDrafter } from "../../features/laws/drafterSlice";
 
 const AiDrafter = () => {
   const drafterDoc = useSelector((state) => state.drafter.drafterDoc);
+  const currentUser = useSelector((state) => state.user.user);
 
   const [promptText, setPromptText] = useState("");
   const [promptTextbox, setPromptTextbox] = useState(false);
+  const [drafterText, setDrafterText] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNavigation = () => {
     navigate(-1);
   };
+
+  const handleEditDoc = async () => {
+    dispatch(removeDrafter());
+    try {
+      const props = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/edit_application`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({ query: promptText }),
+        }
+      );
+      const parsedProps = await props.json();
+      dispatch(
+        editDrafter({
+          drafterDoc: parsedProps.data.editApplication.application,
+        })
+      );
+      setPromptTextbox(false);
+      setPromptText("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setDrafterText(drafterDoc);
+  }, [drafterDoc]);
 
   return (
     <div className="p-3 h-screen">
@@ -29,9 +65,9 @@ const AiDrafter = () => {
           </div>
           <div className="flex-1 grid grid-cols-[65%_35%] gap-2 px-3 h-[80%]">
             <div className="bg-[#00808034] rounded-md h-full overflow-scroll">
-              {drafterDoc ? (
+              {drafterText ? (
                 <p className="m-0 p-2 text-sm text-black h-full overflow-auto">
-                  {drafterDoc}
+                  {drafterText}
                 </p>
               ) : (
                 <div className="h-full flex justify-center items-center">
@@ -52,7 +88,10 @@ const AiDrafter = () => {
                   <p className="h-[40vh] overflow-auto text-sm m-0">
                     {promptText}
                   </p>
-                  <button className="bg-[#002828] rounded text-white py-2">
+                  <button
+                    onClick={handleEditDoc}
+                    className="bg-[#002828] rounded text-white py-2"
+                  >
                     Confirm Update Document
                   </button>
                   <button

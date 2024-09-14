@@ -34,6 +34,9 @@ const drafterSlice = createSlice({
     drafterDoc: null,
   },
   reducers: {
+    editDrafter(state, action) {
+      state.drafterDoc = action.payload.drafterDoc;
+    },
     removeDrafter(state) {
       state.drafterDoc = "";
     },
@@ -48,7 +51,7 @@ const drafterSlice = createSlice({
 });
 
 // Export the action creators
-export const { removeDrafter } = drafterSlice.actions;
+export const { editDrafter, removeDrafter } = drafterSlice.actions;
 
 // Export the reducer to be used in the store
 export default drafterSlice.reducer;
