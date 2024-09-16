@@ -38,6 +38,7 @@ import {
   removeDrafter,
   retrieveDrafterQuestions,
 } from "../../features/laws/drafterSlice";
+import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -109,6 +110,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             position: "absolute",
             left: "0",
             right: "0",
+            top: "0",
             backgroundColor: "rgba(0, 0, 0, 0.1)",
             backdropFilter: "blur(3px)",
             display: "flex",
@@ -173,57 +175,12 @@ const AiSidebar = () => {
   const [askLegalGptPrompt, setAskLegalGptPrompt] = useState("");
   const [searchQuery, setSearchQuery] = useState(false);
   const [evidenceAnchorEl, setEvidenceAnchorEl] = useState(null);
+  const [testimonyAnchorEl, setTestimonyAnchorEl] = useState(null);
+  const [showDrafterQuestions, setShowDrafterQuestions] = useState(false);
 
-  const charsPerPage = 1000; // Define this value outside the function
-
-  // Function to split text into pages
-  const getPages = (text) => {
-    const pages = [];
-    for (let i = 0; i < text.length; i += charsPerPage) {
-      pages.push(text.slice(i, i + charsPerPage));
-    }
-    return pages;
-  };
-
-  // Update pages when inputText changes
-  // useEffect(() => {
-  //   const newPages = getPages(inputText);
-  //   setPages(newPages);
-  //   setCurrentText(newPages[currentPage] || "");
-  // }, [inputText]);
-
-  // Update inputText when pages change
   useEffect(() => {
     setInputText(pages.join(""));
   }, [pages]);
-
-  const handlePrevious = () => {
-    if (currentPage > 0) {
-      setPages((pages) => {
-        const updatedPages = [...pages];
-        updatedPages[currentPage] = currentText;
-        return updatedPages;
-      });
-      setCurrentPage(currentPage - 1);
-      setCurrentText(pages[currentPage - 1] || "");
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < pages.length - 1) {
-      setPages((pages) => {
-        const updatedPages = [...pages];
-        updatedPages[currentPage] = currentText;
-        return updatedPages;
-      });
-      setCurrentPage(currentPage + 1);
-      setCurrentText(pages[currentPage + 1] || "");
-    }
-  };
-
-  const handleTextChange = (e) => {
-    setCurrentText(e.target.value);
-  };
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -254,8 +211,7 @@ const AiSidebar = () => {
   const [showRelevantLaws, setShowRelevantLaws] = useState(false);
   const [relevantCaseLoading, setRelevantCaseLoading] = useState(false);
   const [relevantLawsArr, setRelevantLawsArr] = useState(null);
-  const [testimonyAnchorEl, setTestimonyAnchorEl] = useState(null);
-  const [showDrafterQuestions, setShowDrafterQuestions] = useState(false);
+  const [relevantLawData, setRelevantLawData] = useState("");
 
   const scrollRef = useRef(null);
 
@@ -290,13 +246,12 @@ const AiSidebar = () => {
     localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
-    await saveHistory(); //open krna hai
+    // await saveHistory();
     if (overViewDetails !== "") {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/end`,
         {
           userId: currentUser.userId,
-          CouponCode: currentUser.CouponCode,
         },
         {
           headers: {
@@ -469,7 +424,8 @@ const AiSidebar = () => {
       const formattedData = formatText(
         data.data.relevantCases.relevant_case_law
       );
-      console.log(data.data.relevantCases.relevant_case_law);
+      setRelevantLawData(data.data.relevantCases.relevant_case_law);
+      // console.log(data.data.relevantCases.relevant_case_law);
       setRelevantCaseLoading(false);
       setRelevantLawsArr(formattedData);
     } catch (error) {
@@ -617,7 +573,6 @@ const AiSidebar = () => {
 
   //       textArr.push(`${bold}Case ${i + 1}${reset}: \n ${elements.join("\n")}`);
   //     }
-  //     // console.log(textArr.join(""));
   //     setSessionHistoryText(textArr.join(""));
   //     setDownloadHistoryPrompt(true);
   //   } catch (error) {
@@ -725,7 +680,7 @@ const AiSidebar = () => {
         {/* top container */}
         <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
           <motion.div
-            className="max-w-fit rounded-lg flex gap-2 items-center pt-2 cursor-pointer"
+            className="max-w-fit rounded-lg flex gap-1 items-center pt-2 cursor-pointer"
             whileTap={{ scale: "0.95" }}
             onClick={handleGoBack}
           >
@@ -835,7 +790,7 @@ const AiSidebar = () => {
                 </Popover>
               </div>
               <div className="h-[50px] overflow-auto">
-                <h1 className="text-sm m-0 py-2">
+                <h1 className="text-xs m-0 py-2">
                   <Markdown>{overViewDetails}</Markdown>
                 </h1>
               </div>
@@ -1205,6 +1160,27 @@ const AiSidebar = () => {
                       <div className="flex flex-col w-full gap-2">
                         <img className="" src={logo} alt="logo" />
                         <h3 className=" text-center">Draft Preview</h3>
+                      </div>
+                    )}
+                    {showRelevantLaws && !relevantCaseLoading && (
+                      <div className="w-full flex justify-end">
+                        <Link to={"/courtroom-ai/caseLaws"}>
+                          <button
+                            onClick={() => {
+                              dispatch(removeCaseLaws());
+                              dispatch(
+                                retrieveCaseLaws({
+                                  query: relevantLawData,
+                                  token: currentUser.token,
+                                })
+                              );
+                              setFirstDraftDialog(false);
+                            }}
+                            className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
+                          >
+                            View Case Laws
+                          </button>
+                        </Link>
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2 relative">
