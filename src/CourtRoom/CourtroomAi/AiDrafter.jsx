@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import loader from "../../assets/images/evidenceLoad.gif";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { editDrafter, removeDrafter } from "../../features/laws/drafterSlice";
+import Markdown from "react-markdown";
 
 const AiDrafter = () => {
   const drafterDoc = useSelector((state) => state.drafter.drafterDoc);
@@ -67,7 +68,7 @@ const AiDrafter = () => {
             <div className="bg-[#00808034] rounded-md h-full overflow-scroll">
               {drafterText ? (
                 <p className="m-0 p-2 text-sm text-black h-full overflow-auto">
-                  {drafterText}
+                  <Markdown>{drafterText}</Markdown>
                 </p>
               ) : (
                 <div className="h-full flex justify-center items-center">
