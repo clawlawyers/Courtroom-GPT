@@ -15,7 +15,10 @@ import analyze from "../../assets/icons/Animation - 1721467138603.json";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useDispatch } from "react-redux";
-import { setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
+import {
+  setFightingSideModal,
+  setOverview,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import uploadImage from "../../assets/images/uploading.gif";
@@ -82,6 +85,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         }
       );
       dispatch(setOverview(inputText));
+      dispatch(setFightingSideModal(true));
       setUploading(false);
       setAnalyzing(false);
       setUploadComplete(false);
@@ -114,18 +118,28 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     fileInput.addEventListener("change", async (event) => {
       const files = Array.from(event.target.files);
       if (files.length > 0) {
+        const maxFileSize = 15 * 1024 * 1024; // 15 MB in bytes
+        const validFiles = [];
+
+        for (const file of files) {
+          if (file.size <= maxFileSize) {
+            validFiles.push(file);
+          } else {
+            toast.error(
+              `File uploaded exceeds the 15 MB limit.Please try another file`
+            );
+          }
+        }
+
+        if (validFiles.length === 0) {
+          return; // No valid files, exit the function
+        }
+
         setUploading(true);
 
         const formData = new FormData();
-        files.forEach((file, index) => {
-          if (index === 0) {
-            console.log("filetype");
-            console.log(typeof file);
-            console.log(file);
-            formData.append(`file`, file); // Append all files under the same key
-          } else {
-            formData.append(`file${index}`, file); // Append all files under the same key
-          }
+        validFiles.forEach((file, index) => {
+          formData.append(`file${index === 0 ? "" : index}`, file); // Append files under the same key
         });
 
         formData.append("isMultilang", true); // this is for multilang
@@ -153,8 +167,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             setUploadComplete(true);
           }, 3000);
         } catch (error) {
-          console.log(error);
-          toast.error("Error uploading file");
+          console.log(error?.response?.data?.error.split(":")[1]);
+          toast.error(error?.response?.data?.error.split(":")[1]);
+          handleDialogClose();
         }
       }
     });
@@ -435,10 +450,14 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           image={uploading ? uploadImage : analyzing ? analyzingImage : ""}
         >
           {uploading && (
-            <img className="h-20 w-20" src={uploadImage} alt="uploading" />
+            <img className="h-10 w-10" src={uploadImage} alt="uploading" />
           )}
           {analyzing && (
-            <img className="fit-content" src={analyzingImage} alt="uploading" />
+            <img
+              className="w-full h-full fit-content flex items-center justify-center"
+              src={analyzingImage}
+              alt="uploading"
+            />
           )}
           {/* {uploaddrivedialog && <UploadDrive></UploadDrive>} */}
           {uploadComplete && (

@@ -6,6 +6,7 @@ import Devices from "../../components/UploadDoc/Devices";
 import { motion } from "framer-motion";
 import uploadImage from "../../assets/icons/upload.svg";
 import { useNavigate } from "react-router-dom";
+
 const UploadDoc = () => {
   const [inputText, setInputText] = useState("");
   const navigate = useNavigate();
