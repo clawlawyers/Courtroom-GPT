@@ -6,6 +6,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useSelector } from "react-redux";
 import evidenceLoad from "../../assets/images/evidenceLoad.gif";
 import { Popover } from "@mui/material";
+import Markdown from "react-markdown";
 
 const EvidenceDialog = ({ handleEvidenceClose }) => {
   const [evidence, setEvidence] = useState("");
@@ -50,7 +51,20 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
       console.log("API response:", data);
       toast.success("Evidence submitted successfully");
       setEvidenceGenerated(true);
-      setEvidenceRelevance(data.data.fetchedEvidence.Evidence_Relevance);
+      const evidenceData =
+        data.data.fetchedEvidence.Evidence_Relevance.replaceAll(
+          "\\\\n\\\\n",
+          "\n"
+        )
+          .replaceAll("\\\\n", "\n")
+          .replaceAll("\\n\\n", "\n")
+          .replaceAll("\\n", "\n")
+          .replaceAll("\n", "\n")
+          .replaceAll("\\", "")
+          .replaceAll('"', "")
+          .replaceAll(":", " :")
+          .replaceAll("#", "");
+      setEvidenceRelevance(evidenceData);
       setLoading(false);
       // handleEvidenceClose();
 
