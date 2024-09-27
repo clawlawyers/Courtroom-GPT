@@ -58,7 +58,9 @@ const CourtroomArgument = () => {
   const [judgeViewExpand, setJudgeViewExpand] = useState(false);
   const [lawyerViewExpand, setLawyerViewExpand] = useState(false);
   const [fightType, setFightType] = useState("");
+  console.log(fightType);
   const [otherFightType, setOtherFightType] = useState("");
+  console.log(otherFightType);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -479,6 +481,36 @@ const CourtroomArgument = () => {
   const tapAnimations = {
     true: { scale: 0.98 },
     false: {},
+  };
+
+  const handleFightingSide = async () => {
+    // console.log(fightType);
+    // console.log(otherFightType);
+    let type;
+    if (fightType === "others") {
+      type = otherFightType;
+    } else {
+      type = fightType;
+    }
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/setFavor`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({ favour: type }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      dispatch(setFightingSideModal(false));
+    } catch (error) {
+      console.log(error);
+      dispatch(setFightingSideModal(false));
+    }
   };
 
   return (
@@ -1318,7 +1350,9 @@ const CourtroomArgument = () => {
                   />
                 ) : null}
                 <button
-                  onClick={() => dispatch(setFightingSideModal(false))}
+                  // onClick={() => dispatch(setFightingSideModal(false))}
+                  disabled={fightType === ""}
+                  onClick={() => handleFightingSide()}
                   className="bg-[#003131] p-2 rounded"
                 >
                   Confirm

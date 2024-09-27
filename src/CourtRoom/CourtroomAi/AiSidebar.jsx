@@ -34,11 +34,16 @@ import oldCaseLogo from "../../assets/sideMenubar/oldCase.png";
 import newCaseLogo from "../../assets/sideMenubar/newCase.png";
 import homeLogo from "../../assets/sideMenubar/homeLogo.png";
 import exitLogo from "../../assets/sideMenubar/exitLogo.png";
+import evidenceLoad from "../../assets/images/evidenceLoad.gif";
 import {
   removeDrafter,
   retrieveDrafterQuestions,
 } from "../../features/laws/drafterSlice";
-import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
+import {
+  removeCaseLaws,
+  retrieveCaseLaws,
+  setCaseLaws,
+} from "../../features/laws/lawSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -213,6 +218,8 @@ const AiSidebar = () => {
   const [relevantLawsArr, setRelevantLawsArr] = useState(null);
   const [relevantLawData, setRelevantLawData] = useState("");
   const [caseSearchDialog, setCaseSearchDialog] = useState(false);
+  const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
+  const [caseSearchLoading, setCaseSearchLoading] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -672,6 +679,34 @@ const AiSidebar = () => {
     dispatch(
       retrieveDrafterQuestions({ query: action, token: currentUser.token })
     );
+  };
+
+  const handleCaseSearchPrompt = async () => {
+    setCaseSearchLoading(true);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/sidebar-casesearch`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({ context: caseSearchPrompt }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      dispatch(removeCaseLaws());
+      dispatch(setCaseLaws(data.data.FetchedSidebarCasesearch.relatedCases));
+      setCaseSearchLoading(false);
+      setCaseSearchDialog(false);
+      setCaseSearchPrompt("");
+      navigate("/courtroom-ai/caseLaws");
+    } catch (error) {
+      console.log(error);
+      setCaseSearchLoading(false);
+    }
   };
 
   return (
@@ -1763,26 +1798,42 @@ const AiSidebar = () => {
                   </h3>
                 </div>
                 <div className="cursor-pointer text-teal-800">
-                  <Close onClick={() => setCaseSearchDialog(false)} />
+                  <Close
+                    onClick={() => {
+                      setCaseSearchDialog(false);
+                      setCaseSearchPrompt("");
+                    }}
+                  />
                 </div>
               </section>
               {/* header ends */}
-              <section className="w-full">
-                <textarea
-                  required
-                  // value={evidence}
-                  // onChange={handleChangeEvidence}
-                  placeholder="Enter your search details here..."
-                  rows={12}
-                  className="w-full resize-none bg-[#00808030] text-black rounded-md p-2"
-                />
-              </section>
+              {!caseSearchLoading ? (
+                <>
+                  <section className="w-full">
+                    <textarea
+                      required
+                      value={caseSearchPrompt}
+                      onChange={(e) => setCaseSearchPrompt(e.target.value)}
+                      placeholder="Enter your search details here..."
+                      rows={12}
+                      className="w-full resize-none bg-[#00808030] text-black rounded-md p-2"
+                    />
+                  </section>
 
-              <section className="flex space-x-5 flex-row w-full items-center justify-end">
-                <button className="bg-teal-800 cursor-pointer py-1 px-3 rounded">
-                  Search
-                </button>
-              </section>
+                  <section className="flex space-x-5 flex-row w-full items-center justify-end">
+                    <button
+                      onClick={() => handleCaseSearchPrompt()}
+                      className="bg-teal-800 cursor-pointer py-1 px-3 rounded"
+                    >
+                      Search
+                    </button>
+                  </section>
+                </>
+              ) : (
+                <section className="w-full flex items-center justify-center p-20">
+                  <img className="w-48 h-48" src={evidenceLoad} alt="loading" />
+                </section>
+              )}
             </>
           </main>
         </div>
