@@ -245,6 +245,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     formData.append("file", fileData, file.name); // Append file content
     formData.append("fileName", file.name); // Append additional metadata
 
+    formData.append("isMultilang", true); // this is for multilang
+
     const response = await fetch(`${NODE_API_ENDPOINT}/courtroom/newcase`, {
       method: "POST",
       body: formData,
@@ -281,23 +283,6 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     setuploaddrivedialog(true);
     await handleOpenPicker();
 
-    // handleAuthClick();
-
-    // setUploading(true);
-    // setTimeout(() => {
-    //   setUploading(false);
-    //   setAnalyzing(true);
-    //   setTimeout(() => {
-    //     setAnalyzing(false);
-    //     setUploadComplete(true);
-    //     setPreviewContent(
-    //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula, est non blandit luctus, orci justo bibendum urna, at gravida ligula eros eget lectus."
-    //     ); // Set preview content
-
-    //     //dispatch function
-    //     // dispatch(setOverview())
-    //   }, 3000); // Simulate analyzing
-    // }, 3000); // Simulate upload
     setuploaddrivedialog(false);
   };
 
