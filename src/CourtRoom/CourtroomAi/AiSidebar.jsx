@@ -6,12 +6,13 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Menu } from "@mui/material";
-import { ArrowRight, Close, Download } from "@mui/icons-material";
+import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
 import { Popover } from "@mui/material";
 import {
   logout,
+  setFirstDraftAction,
   setOverview,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import aiAssistant from "../../assets/images/aiAssistant.png";
@@ -34,11 +35,16 @@ import oldCaseLogo from "../../assets/sideMenubar/oldCase.png";
 import newCaseLogo from "../../assets/sideMenubar/newCase.png";
 import homeLogo from "../../assets/sideMenubar/homeLogo.png";
 import exitLogo from "../../assets/sideMenubar/exitLogo.png";
+import evidenceLoad from "../../assets/images/evidenceLoad.gif";
 import {
   removeDrafter,
   retrieveDrafterQuestions,
 } from "../../features/laws/drafterSlice";
-import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
+import {
+  removeCaseLaws,
+  retrieveCaseLaws,
+  setCaseLaws,
+} from "../../features/laws/lawSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -190,6 +196,8 @@ const AiSidebar = () => {
   const dispatch = useDispatch();
   const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
+
+  const firstDraftDetails = useSelector((state) => state.user.firstDraft);
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
 
@@ -212,6 +220,9 @@ const AiSidebar = () => {
   const [relevantCaseLoading, setRelevantCaseLoading] = useState(false);
   const [relevantLawsArr, setRelevantLawsArr] = useState(null);
   const [relevantLawData, setRelevantLawData] = useState("");
+  const [caseSearchDialog, setCaseSearchDialog] = useState(false);
+  const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
+  const [caseSearchLoading, setCaseSearchLoading] = useState(false);
 
   const scrollRef = useRef(null);
 
@@ -310,6 +321,7 @@ const AiSidebar = () => {
       console.error("Error in saving case", error);
     }
   };
+
   const handleFirstDraft = async () => {
     if (isApi) {
       setFirsDraftLoading(true);
@@ -336,32 +348,51 @@ const AiSidebar = () => {
     setTestimonyAnchorEl(null);
   };
 
+  const firstDraftApi = async () => {
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${currentUser.token}`,
+        //   },
+        // }
+      );
+
+      if (response.ok) {
+        dispatch(
+          setFirstDraftAction({
+            draft: response?.data?.data?.draft?.detailed_draft,
+          })
+        );
+      }
+
+      // console.log("response is ", response.data.data.draft.detailed_draft);
+      // setFirstDraft(response.data.data.draft.detailed_draft);
+      // console.log(response.data.data.draft);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in getting first draft");
+    } finally {
+      setFirsDraftLoading(false);
+      setisApi(false);
+    }
+  };
+
+  useEffect(() => {
+    setFirstDraft(firstDraftDetails);
+  }, [firstDraftDetails]);
+
   useEffect(() => {
     if (overViewDetails !== "") {
       setisApi(true);
-      const firstDraftApi = async () => {
-        try {
-          const response = await axios.post(
-            `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-            {
-              // user_id: currentUser.userId,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${currentUser.token}`,
-              },
-            }
-          );
 
-          // console.log("response is ", response.data.data.draft.detailed_draft);
-          setFirstDraft(response.data.data.draft.detailed_draft);
-        } catch (error) {
-          toast.error("Error in getting first draft");
-        } finally {
-          setFirsDraftLoading(false);
-          setisApi(false);
-        }
-      };
       firstDraftApi();
     }
   }, [overViewDetails]);
@@ -649,7 +680,6 @@ const AiSidebar = () => {
       const responseData = await getResponse.json();
 
       const data = responseData.data.fetchedAskQuery.answer;
-
       console.log(data);
 
       setPromptArr([
@@ -672,6 +702,34 @@ const AiSidebar = () => {
     dispatch(
       retrieveDrafterQuestions({ query: action, token: currentUser.token })
     );
+  };
+
+  const handleCaseSearchPrompt = async () => {
+    setCaseSearchLoading(true);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/sidebar-casesearch`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({ context: caseSearchPrompt }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      dispatch(removeCaseLaws());
+      dispatch(setCaseLaws(data.data.FetchedSidebarCasesearch.relatedCases));
+      setCaseSearchLoading(false);
+      setCaseSearchDialog(false);
+      setCaseSearchPrompt("");
+      navigate("/courtroom-ai/caseLaws");
+    } catch (error) {
+      console.log(error);
+      setCaseSearchLoading(false);
+    }
   };
 
   return (
@@ -714,6 +772,7 @@ const AiSidebar = () => {
                   Edit
                 </motion.button> */}
                 <IconButton
+                  sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
@@ -800,12 +859,7 @@ const AiSidebar = () => {
         </div>
         {/* bottom container */}
         <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
-          <div className="">
-            {/* {sessionHistoryText ? ( */}
-            {/* <PDFDownloadButton sessionHistoryText={sessionHistoryText} /> */}
-            {/* ) : (
-              ""
-            )} */}
+          <div className="flex flex-col gap-1">
             <motion.div
               className={`${
                 overViewDetails === "NA" || overViewDetails === ""
@@ -824,7 +878,7 @@ const AiSidebar = () => {
                 color: "#008080",
                 border: "2px solid white",
                 borderRadius: "5px",
-                marginBottom: "5px",
+                // marginBottom: "5px",
                 cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
               }}
             >
@@ -863,7 +917,7 @@ const AiSidebar = () => {
                 border: "2px solid white",
                 borderRadius: "5px",
                 cursor: `${downloadCaseLoading ? "wait" : "pointer"}`,
-                marginBottom: "5px",
+                // marginBottom: "5px",
               }}
             >
               <div>
@@ -900,6 +954,38 @@ const AiSidebar = () => {
             >
               <div>
                 <p className="text-xs m-0">Ask LegalGPT</p>
+              </div>
+              <div style={{ width: "15px", margin: "0" }}>
+                <svg
+                  width="24"
+                  height="24"
+                  style={{ fill: "#008080", cursor: "pointer" }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                >
+                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                </svg>
+              </div>
+            </motion.div>
+            <motion.div
+              onClick={() => setCaseSearchDialog(true)}
+              whileTap={{ scale: "0.95" }}
+              whileHover={{ scale: "1.01" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "0px 10px",
+                background: "#C5C5C5",
+                color: "#008080",
+                border: "2px solid white",
+                borderRadius: "5px",
+                marginBottom: "5px",
+              }}
+            >
+              <div>
+                <p className="text-xs m-0">Case Search</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -1527,11 +1613,13 @@ const AiSidebar = () => {
                             >
                               <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7.753 18.305c-.261-.586-.789-.991-1.871-1.241-2.293-.529-4.428-.993-3.393-2.945 3.145-5.942.833-9.119-2.489-9.119-3.388 0-5.644 3.299-2.489 9.119 1.066 1.964-1.148 2.427-3.393 2.945-1.084.25-1.608.658-1.867 1.246-1.405-1.723-2.251-3.919-2.251-6.31 0-5.514 4.486-10 10-10s10 4.486 10 10c0 2.389-.845 4.583-2.247 6.305z" />
                             </svg>
-                            <p>{x.prompt}</p>
+                            <p>
+                              <Markdown>{x.prompt}</Markdown>
+                            </p>
                           </div>
                           {x.promptResponse ? (
                             <p className="border-2 border-white rounded bg-[#008080] p-2 text-sm">
-                              {x.promptResponse}
+                              <Markdown>{x.promptResponse}</Markdown>
                             </p>
                           ) : (
                             <div className="h-full w-full flex flex-col gap-2">
@@ -1659,8 +1747,6 @@ const AiSidebar = () => {
             left: "0",
             right: "0",
             top: "0",
-            // backgroundColor: "rgba(0, 0, 0, 0.1)",
-            // backdropFilter: "blur(3px)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -1707,6 +1793,74 @@ const AiSidebar = () => {
         </div>
       ) : (
         ""
+      )}
+      {caseSearchDialog && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "10",
+          }}
+        >
+          <main className="w-2/4 p-3 flex flex-col justify-center items-center bg-white rounded">
+            <>
+              {/* //header */}
+              <section className="flex flex-row justify-between items-start w-full">
+                <div className="flex flex-col justify-center items-start">
+                  <h1 className="text-lg font-semibold text-teal-700 text-left">
+                    Case Search
+                  </h1>
+                  <h3 className="text-xs font-light text-neutral-600">
+                    Enter prompt to search for cases
+                  </h3>
+                </div>
+                <div className="cursor-pointer text-teal-800">
+                  <Close
+                    onClick={() => {
+                      setCaseSearchDialog(false);
+                      setCaseSearchPrompt("");
+                    }}
+                  />
+                </div>
+              </section>
+              {/* header ends */}
+              {!caseSearchLoading ? (
+                <>
+                  <section className="w-full">
+                    <textarea
+                      required
+                      value={caseSearchPrompt}
+                      onChange={(e) => setCaseSearchPrompt(e.target.value)}
+                      placeholder="Enter your search details here..."
+                      rows={12}
+                      className="w-full resize-none bg-[#00808030] text-black rounded-md p-2"
+                    />
+                  </section>
+
+                  <section className="flex space-x-5 flex-row w-full items-center justify-end">
+                    <button
+                      onClick={() => handleCaseSearchPrompt()}
+                      className="bg-teal-800 cursor-pointer py-1 px-3 rounded"
+                    >
+                      Search
+                    </button>
+                  </section>
+                </>
+              ) : (
+                <section className="w-full flex items-center justify-center p-20">
+                  <img className="w-48 h-48" src={evidenceLoad} alt="loading" />
+                </section>
+              )}
+            </>
+          </main>
+        </div>
       )}
     </>
   );

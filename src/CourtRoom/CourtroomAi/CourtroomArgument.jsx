@@ -7,7 +7,7 @@ import markdownit from "markdown-it";
 
 import { motion } from "framer-motion";
 import { Close, Co2Sharp, ResetTvSharp, Send } from "@mui/icons-material";
-import { Button, Menu } from "@mui/material";
+import { Button, Menu, Modal } from "@mui/material";
 import { MenuItem, IconButton } from "@mui/material";
 import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
@@ -25,38 +25,21 @@ import VoiceSearch from "./VoiceSearch/VoiceSearch";
 import expand from "../../assets/images/expand.png";
 import collapse from "../../assets/images/collapse.png";
 import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
-
-// const userArgument = [
-//   "I feel your pain. This is such a simple function and yet they make it so amazingly complicated. I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
-//   "I get the feeling the Figma designers don’t ever use their product",
-//   "I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-// ];
-
-// const aiLawyerArr = [
-//   "This is such a simple function and yet they make it so amazingly complicated.",
-// ];
+import {
+  setFightingSideModal,
+  setFirstDraftAction,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const CourtroomArgument = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [dialogContent, setDialogContent] = useState(
-    "I find the same nonsense with adding a simple border to an object. They have 400 ways to shade the color of a box, but not even 1 simple option for drawing a line around the box. I get the feeling the Figma designers don’t ever use their product"
-  );
+  const fightingModal = useSelector((state) => state.user.fightingSideModal);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
   const [relevantCasesData, setRelevantCasesData] = useState("");
   const [showRelevantCaseJudge, setRelevantCaseJudge] = useState(false);
-  const [showRelevantCaseLawyer, setRelevantCaseLawyer] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [lawyerArgument, setLawyerArgument] = useState("");
@@ -64,7 +47,6 @@ const CourtroomArgument = () => {
   // console.log(userArgument);
   const [judgeArgument, setJudgeArgument] = useState("");
   const [selectedUserArgument, setSelectedUserArgument] = useState(null);
-  const [flag, setFlag] = useState(false);
   const [selectedUserArgumentContent, setSelectedUserArgumentContent] =
     useState(null);
   const [aiJudgeLoading, setAiJudgeLoading] = useState(false);
@@ -78,6 +60,8 @@ const CourtroomArgument = () => {
   const [voiceSearchInitiate, setVoiceSearchInitiate] = useState(false);
   const [judgeViewExpand, setJudgeViewExpand] = useState(false);
   const [lawyerViewExpand, setLawyerViewExpand] = useState(false);
+  const [fightType, setFightType] = useState("");
+  const [otherFightType, setOtherFightType] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -86,18 +70,6 @@ const CourtroomArgument = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const md = markdownit({
-    html: true,
-    xhtmlOut: true,
-    breaks: true,
-    langPrefix: "language-",
-    linkify: true,
-    typographer: false,
-    quotes: "“”‘’",
-    highlight: function (/*str, lang*/) {
-      return "";
-    },
-  });
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -512,6 +484,64 @@ const CourtroomArgument = () => {
     false: {},
   };
 
+  const handleFightingSide = async () => {
+    // console.log(fightType);
+    // console.log(otherFightType);
+    let type;
+    if (fightType === "others") {
+      type = otherFightType;
+    } else {
+      type = fightType;
+    }
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/setFavor`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({ favor: type }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      firstDraftApi();
+      dispatch(setFightingSideModal(false));
+    } catch (error) {
+      console.log(error);
+      dispatch(setFightingSideModal(false));
+    }
+  };
+
+  const firstDraftApi = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        {
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+
+      // console.log("response is ", response.data.data.draft.detailed_draft);
+      // setFirstDraft(response.data.data.draft.detailed_draft);
+      dispatch(
+        setFirstDraftAction({ draft: response.data.data.draft.detailed_draft })
+      );
+    } catch (error) {
+      toast.error("Error in getting first draft");
+    } finally {
+      // setFirsDraftLoading(false);
+      // setisApi(false);
+    }
+  };
+
   return (
     <div className="flex flex-col p-3 h-screen gap-2">
       {/* top container */}
@@ -543,6 +573,8 @@ const CourtroomArgument = () => {
               </div>
               <div>
                 <IconButton
+                  sx={{ color: "white" }}
+                  disabled={userArgument.length === 0}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
@@ -640,6 +672,8 @@ const CourtroomArgument = () => {
               <div>
                 {" "}
                 <IconButton
+                  sx={{ color: "white" }}
+                  disabled={userArgument.length === 0}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
@@ -1092,6 +1126,7 @@ const CourtroomArgument = () => {
               </div>
               <div>
                 <IconButton
+                  sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
@@ -1194,6 +1229,7 @@ const CourtroomArgument = () => {
               <div>
                 {" "}
                 <IconButton
+                  sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
@@ -1262,6 +1298,109 @@ const CourtroomArgument = () => {
         </div>
       ) : (
         ""
+      )}
+      {fightingModal && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: "0",
+            right: "0",
+            top: "0",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "20",
+          }}
+        >
+          <div
+            className="w-2/4 border-2 border-white rounded p-4"
+            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}
+          >
+            <div className="w-full flex justify-end">
+              <Close
+                className="cursor-pointer"
+                onClick={() => {
+                  dispatch(setFightingSideModal(false));
+                }}
+              />
+            </div>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <p className="m-0 flex justify-center text-3xl font-bold text-[#00FFD1]">
+                  Select Fighting Side
+                </p>
+                <p className="m-0 flex justify-center">
+                  Please Specify from which side you're placing arguments
+                </p>
+              </div>
+              <div className="flex justify-center gap-5">
+                <div className="flex gap-2">
+                  <input
+                    type="radio"
+                    value="respondent"
+                    checked={fightType === "respondent"}
+                    onChange={(e) => setFightType(e.target.value)}
+                    className="cursor-pointer"
+                  />
+                  <p className="m-0 text-white font-semibold text-xl">
+                    Respondent
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="radio"
+                    value="petitioner"
+                    checked={fightType === "petitioner"}
+                    onChange={(e) => setFightType(e.target.value)}
+                    className="cursor-pointer"
+                  />
+                  <p className="m-0 text-white font-semibold text-xl">
+                    Petitioner
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="radio"
+                    value="others"
+                    checked={fightType === "others"}
+                    onChange={(e) => setFightType(e.target.value)}
+                    className="cursor-pointer"
+                  />
+                  <p className="m-0 text-white font-semibold text-xl">Others</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                {fightType === "others" ? (
+                  <input
+                    value={otherFightType}
+                    onChange={(e) => setOtherFightType(e.target.value)}
+                    className="p-2 rounded text-black"
+                    placeholder="Enter Your Choice of Side..."
+                  />
+                ) : null}
+                <button
+                  // onClick={() => dispatch(setFightingSideModal(false))}
+                  disabled={fightType === ""}
+                  onClick={() => handleFightingSide()}
+                  className="bg-[#003131] p-2 rounded"
+                >
+                  Confirm
+                </button>
+                <div>
+                  <hr />
+                  <p className="m-0 text-xs flex justify-center">
+                    You Can Swap Side While Using Courtroom Using The SWAP WITH
+                    AI LAWYER Feature{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

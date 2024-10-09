@@ -15,23 +15,26 @@ import analyze from "../../assets/icons/Animation - 1721467138603.json";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useDispatch } from "react-redux";
-import { setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
+import {
+  setFightingSideModal,
+  setOverview,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import uploadImage from "../../assets/images/uploading.gif";
 import analyzingImage from "../../assets/images/analyzing.gif";
-// import useDrivePicker from "react-google-drive-picker";
-import UploadDrive from "./UploadDrive";
-// import { gapi } from "gapi-script";
+
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { data } from "autoprefixer";
+
+import useDrivePicker from "react-google-drive-picker";
 
 const Devices = ({ uploadedFile, setUploadedFile }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.user);
-  console.log(currentUser);
+  // console.log(currentUser);
+  const [openPicker, data, authResponse] = useDrivePicker();
 
   const [uploading, setUploading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
@@ -60,45 +63,6 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     width: "50%",
   };
 
-  // const handleOpenPicker = () => {
-  //   openPicker({
-  //     clientId:
-  //       "238978741277-ekmelih48qrpk1pk1viqes3lil02pgbt.apps.googleusercontent.com",
-  //     developerKey: "AIzaSyAOKT3s8Mk_WK-ckgxDgvHODHmZC-wctHk",
-  //     viewId: "DOCS",
-  //     // token:
-  //     //   "ya29.a0AcM612zhfqoZlQzCRgmqgrFmkjXC4lNOrkMe_D50c7Kmu2nPaT_XMXFMlUCXpaCbmtFapk_z27SQhXUrUbf1ZOBuAbjFDzbVKFwKsPZsV5NivY8Yl-Aaq8aBofArWp-_aTDi-9nFN_RjU0Lk26PJTAN0qbkFh-5sSnizMsD9aCgYKAS4SARESFQHGX2MiOBtm_SHQFiY6jyTHqHjVBQ0175",
-  //     //   "ya29.a0AcM612zjuDRqG7wQkCyDG8mSj2GNwBZLwU2UinKEcdr-mHD7qK5z__z0PeYJw9kFQ8m2q2uct2rsiT2_Oe-wSLEp-l1ttFucylhgJTISGSunawREflu4ZqILnfIhjYr6nUBFtj9ZAYkRQHwYB8_cgkRNlXYEWZOBHKJJ_wvhaCgYKAWcSAQ8SFQHGX2MiXmL5f9N3qNIEHRQA4VRkzw0175", // pass oauth token in case you already have one
-  //     showUploadView: true,
-  //     showUploadFolders: true,
-  //     supportDrives: true,
-  //     multiselect: true,
-
-  //     // customViews: customViewsArray, // custom view
-  //     callbackFunction: async (data) => {
-  //       if (data.action === "cancel") {
-  //         console.log("User clicked cancel/close button");
-  //       }
-
-  //       if (data.docs !== undefined) {
-  //         console.log("hi");
-
-  //         console.log(data);
-  //         // gapi.load("client:auth2", initClient);
-  //         // gapi.client.init({
-  //         //   apiKey: "AIzaSyAOKT3s8Mk_WK-ckgxDgvHODHmZC-wctHk",
-  //         //   // Your API key will be automatically added to the Discovery Document URLs.
-  //         //   discoveryDocs: ["https://people.googleapis.com/$discovery/rest"],
-  //         //   // clientId and scope are optional if auth is not required.
-  //         //   clientId:
-  //         //     "238978741277-ekmelih48qrpk1pk1viqes3lil02pgbt.apps.googleusercontent.com",
-  //         //   scope: "drive",
-  //         // });
-  //       }
-  //     },
-  //   });
-  // };
-
   const handleChange = (e) => {
     console.log("Textarea changed:", e.target.value);
     setCaseOverview(e.target.value);
@@ -121,6 +85,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         }
       );
       dispatch(setOverview(inputText));
+      dispatch(setFightingSideModal(true));
       setUploading(false);
       setAnalyzing(false);
       setUploadComplete(false);
@@ -153,19 +118,31 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     fileInput.addEventListener("change", async (event) => {
       const files = Array.from(event.target.files);
       if (files.length > 0) {
+        const maxFileSize = 15 * 1024 * 1024; // 15 MB in bytes
+        const validFiles = [];
+
+        for (const file of files) {
+          if (file.size <= maxFileSize) {
+            validFiles.push(file);
+          } else {
+            toast.error(
+              `File uploaded exceeds the 15 MB limit.Please try another file`
+            );
+          }
+        }
+
+        if (validFiles.length === 0) {
+          return; // No valid files, exit the function
+        }
+
         setUploading(true);
 
         const formData = new FormData();
-        files.forEach((file, index) => {
-          if (index === 0) {
-            console.log("filetype");
-            console.log(typeof file);
-            console.log(file);
-            formData.append(`file`, file); // Append all files under the same key
-          } else {
-            formData.append(`file${index}`, file); // Append all files under the same key
-          }
+        validFiles.forEach((file, index) => {
+          formData.append(`file${index === 0 ? "" : index}`, file); // Append files under the same key
         });
+
+        formData.append("isMultilang", true); // this is for multilang
 
         try {
           const response = await axios.post(
@@ -190,33 +167,138 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             setUploadComplete(true);
           }, 3000);
         } catch (error) {
-          console.log(error);
-          toast.error("Error uploading file");
+          console.log(error?.response?.data?.error.split(":")[1]);
+          toast.error(error?.response?.data?.error.split(":")[1]);
+          handleDialogClose();
         }
       }
     });
     fileInput.click();
   };
 
-  const handleUploadFromDrive = () => {
+  const handleOpenPicker = () => {
+    openPicker({
+      clientId:
+        "1013135670873-p4t4ef4m5qvpr5j993ar1tr5k58g136d.apps.googleusercontent.com",
+      developerKey: "AIzaSyDSW4OuWpzk19KMGdylGkDuZzhFD2tagXQ",
+      viewId: "DOCS",
+      showUploadView: true,
+      showUploadFolders: true,
+      supportDrives: true,
+      multiselect: true,
+      callbackFunction: async (data) => {
+        console.log(data);
+        if (data?.docs) {
+          const file = data.docs[0]; // Get the first selected file
+          console.log("Selected file:", file);
+
+          try {
+            // Check if it's a Google Docs Editors file or a binary file
+            const fileData = await fetchFileFromGoogleDrive(
+              file.id,
+              file.mimeType
+            );
+            console.log("File content:", fileData);
+
+            // Send the file data to your backend
+            await sendFileToBackend(file, fileData);
+          } catch (error) {
+            console.error("Error fetching file data:", error);
+          }
+        } else {
+          console.log("No file selected or auth token missing");
+        }
+      },
+    });
+  };
+
+  // Fetch file data based on its MIME type (Google Docs Editors files or binary)
+  const fetchFileFromGoogleDrive = async (fileId, mimeType) => {
+    const baseUrl = `https://www.googleapis.com/drive/v3/files/${fileId}`;
+    let url;
+
+    // Check if the file is a Google Docs Editors file
+    if (
+      mimeType === "application/vnd.google-apps.document" ||
+      mimeType === "application/vnd.google-apps.spreadsheet" ||
+      mimeType === "application/vnd.google-apps.presentation"
+    ) {
+      // Use export for Docs Editors files
+      const exportMimeType =
+        mimeType === "application/vnd.google-apps.document"
+          ? "application/pdf"
+          : mimeType === "application/vnd.google-apps.spreadsheet"
+          ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          : "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+
+      url = `${baseUrl}/export?mimeType=${exportMimeType}`;
+    } else {
+      // Use direct download for binary files
+      url = `${baseUrl}?alt=media`;
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${data.access_token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const resp = await response.text();
+      console.log(resp);
+      throw new Error("Failed to fetch file from Google Drive");
+    }
+
+    const fileBlob = await response.blob(); // Get the file content as a blob
+    return fileBlob;
+  };
+
+  const sendFileToBackend = async (file, fileData) => {
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", fileData, file.name); // Append file content
+    formData.append("fileName", file.name); // Append additional metadata
+
+    formData.append("isMultilang", true); // this is for multilang
+
+    const response = await fetch(`${NODE_API_ENDPOINT}/courtroom/newcase`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        // "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${currentUser.token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload file to backend");
+    }
+
+    console.log("File successfully sent to backend");
+
+    const data = await response.json();
+
+    console.log(data.data);
+    console.log(data.data.case_overview.case_overview);
+
+    // Handle response and update state
+    setPreviewContent(data.data.case_overview.case_overview);
+    setInputText(data.data.case_overview.case_overview);
+    setUploading(false);
+    setAnalyzing(true);
+
+    setTimeout(() => {
+      setAnalyzing(false);
+      setUploadComplete(true);
+    }, 3000);
+  };
+
+  const handleUploadFromDrive = async () => {
     setuploaddrivedialog(true);
-    // handleOpenPicker();
+    await handleOpenPicker();
 
-    // setUploading(true);
-    // setTimeout(() => {
-    //   setUploading(false);
-    //   setAnalyzing(true);
-    //   setTimeout(() => {
-    //     setAnalyzing(false);
-    //     setUploadComplete(true);
-    //     setPreviewContent(
-    //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula, est non blandit luctus, orci justo bibendum urna, at gravida ligula eros eget lectus."
-    //     ); // Set preview content
-
-    //     //dispatch function
-    //     // dispatch(setOverview())
-    //   }, 3000); // Simulate analyzing
-    // }, 3000); // Simulate upload
+    setuploaddrivedialog(false);
   };
 
   const handleUploadFromDropBox = async () => {
@@ -353,12 +435,16 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           image={uploading ? uploadImage : analyzing ? analyzingImage : ""}
         >
           {uploading && (
-            <img className="h-20 w-20" src={uploadImage} alt="uploading" />
+            <img className="h-10 w-10" src={uploadImage} alt="uploading" />
           )}
           {analyzing && (
-            <img className="fit-content" src={analyzingImage} alt="uploading" />
+            <img
+              className="w-full h-full fit-content flex items-center justify-center"
+              src={analyzingImage}
+              alt="uploading"
+            />
           )}
-          {uploaddrivedialog && <UploadDrive></UploadDrive>}
+          {/* {uploaddrivedialog && <UploadDrive></UploadDrive>} */}
           {uploadComplete && (
             <textarea
               className="w-full h-64  p-2.5 mb-4 text-black rounded-md "
