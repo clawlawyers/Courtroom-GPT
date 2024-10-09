@@ -12,6 +12,7 @@ import { MenuItem, IconButton } from "@mui/material";
 import { Popover } from "@mui/material";
 import {
   logout,
+  setFirstDraftAction,
   setOverview,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import aiAssistant from "../../assets/images/aiAssistant.png";
@@ -195,6 +196,8 @@ const AiSidebar = () => {
   const dispatch = useDispatch();
   const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
+
+  const firstDraftDetails = useSelector((state) => state.user.firstDraft);
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
 
@@ -318,6 +321,7 @@ const AiSidebar = () => {
       console.error("Error in saving case", error);
     }
   };
+
   const handleFirstDraft = async () => {
     if (isApi) {
       setFirsDraftLoading(true);
@@ -344,32 +348,51 @@ const AiSidebar = () => {
     setTestimonyAnchorEl(null);
   };
 
+  const firstDraftApi = async () => {
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${currentUser.token}`,
+        //   },
+        // }
+      );
+
+      if (response.ok) {
+        dispatch(
+          setFirstDraftAction({
+            draft: response?.data?.data?.draft?.detailed_draft,
+          })
+        );
+      }
+
+      // console.log("response is ", response.data.data.draft.detailed_draft);
+      // setFirstDraft(response.data.data.draft.detailed_draft);
+      // console.log(response.data.data.draft);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in getting first draft");
+    } finally {
+      setFirsDraftLoading(false);
+      setisApi(false);
+    }
+  };
+
+  useEffect(() => {
+    setFirstDraft(firstDraftDetails);
+  }, [firstDraftDetails]);
+
   useEffect(() => {
     if (overViewDetails !== "") {
       setisApi(true);
-      const firstDraftApi = async () => {
-        try {
-          const response = await axios.post(
-            `${NODE_API_ENDPOINT}/courtroom/api/draft`,
-            {
-              // user_id: currentUser.userId,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${currentUser.token}`,
-              },
-            }
-          );
 
-          // console.log("response is ", response.data.data.draft.detailed_draft);
-          setFirstDraft(response.data.data.draft.detailed_draft);
-        } catch (error) {
-          toast.error("Error in getting first draft");
-        } finally {
-          setFirsDraftLoading(false);
-          setisApi(false);
-        }
-      };
       firstDraftApi();
     }
   }, [overViewDetails]);
@@ -749,6 +772,7 @@ const AiSidebar = () => {
                   Edit
                 </motion.button> */}
                 <IconButton
+                  sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"

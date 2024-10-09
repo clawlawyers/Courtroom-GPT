@@ -29,6 +29,7 @@ const Contact = () => {
       preferredContactMode: contactMode,
       businessName: business,
       query,
+      from: "courtroom",
     };
 
     try {

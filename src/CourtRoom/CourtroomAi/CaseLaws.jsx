@@ -34,7 +34,7 @@ const courtIdMapping = [
 const newcourtIdMapping = [
   {
     name: "Supreme Court of India",
-    id: "1bgi-1xe5a_r6_5bm9QO3_znBo9Y5ly7xpNOdl",
+    id: "1xe5a_r6_5bm9QO3_znBo9Y5ly7xpNOdl",
   },
   { name: "Chattisgarh High Court", id: "1e7GbahAfohsiF7w1_nCKWc7gr69ctOKO" },
   { name: "Sikkim High Court", id: "1BPtm3lqfX-PCErzoNByDwH0xlHpBKHtG" },
@@ -47,8 +47,8 @@ const newcourtIdMapping = [
     id: "1xroQ7bjQPDiTpPWfAi5YDbMeM1MPlNOH",
   },
   { name: "Jharkhand High Court", id: "1iQOmzXhtTPa2G7C-pGwcVorkrUFBATTh" },
-  { name: "Delhi High Court", id: "1NCDpBZGjKIGEYaq-7JPX2rTNDwi48YBv" },
-  { name: "Delhi District Court", id: "1PSrAbXpBsoUvqjV_ssoca3Xzzk71qP4a" },
+  { name: "Delhi High Court", id: "1uLtctLYbGYy26A3KbUs8Wh2SwMq6WbpF" },
+  { name: "Delhi District Court", id: "1NCDpBZGjKIGEYaq-7JPX2rTNDwi48YBv" },
   {
     name: "Madhya Pradesh High Court",
     id: "1qFppmDox-fKOcPFW4FGedfCsIsOWUF8i",

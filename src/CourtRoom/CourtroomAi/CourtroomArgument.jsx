@@ -25,7 +25,10 @@ import VoiceSearch from "./VoiceSearch/VoiceSearch";
 import expand from "../../assets/images/expand.png";
 import collapse from "../../assets/images/collapse.png";
 import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
-import { setFightingSideModal } from "../../features/bookCourtRoom/LoginReducreSlice";
+import {
+  setFightingSideModal,
+  setFirstDraftAction,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const CourtroomArgument = () => {
   const navigate = useNavigate();
@@ -501,15 +504,41 @@ const CourtroomArgument = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${currentUser.token}`,
           },
-          body: JSON.stringify({ favour: type }),
+          body: JSON.stringify({ favor: type }),
         }
       );
       const data = await response.json();
       console.log(data);
+      firstDraftApi();
       dispatch(setFightingSideModal(false));
     } catch (error) {
       console.log(error);
       dispatch(setFightingSideModal(false));
+    }
+  };
+
+  const firstDraftApi = async () => {
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        {
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+
+      // console.log("response is ", response.data.data.draft.detailed_draft);
+      // setFirstDraft(response.data.data.draft.detailed_draft);
+      dispatch(setFirstDraftAction(response.data.data.draft.detailed_draft));
+    } catch (error) {
+      toast.error("Error in getting first draft");
+    } finally {
+      // setFirsDraftLoading(false);
+      // setisApi(false);
     }
   };
 
@@ -544,6 +573,7 @@ const CourtroomArgument = () => {
               </div>
               <div>
                 <IconButton
+                  sx={{ color: "white" }}
                   disabled={userArgument.length === 0}
                   aria-label="more"
                   aria-controls="long-menu"
@@ -642,6 +672,7 @@ const CourtroomArgument = () => {
               <div>
                 {" "}
                 <IconButton
+                  sx={{ color: "white" }}
                   disabled={userArgument.length === 0}
                   aria-label="more"
                   aria-controls="long-menu"
@@ -1095,6 +1126,7 @@ const CourtroomArgument = () => {
               </div>
               <div>
                 <IconButton
+                  sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
@@ -1197,6 +1229,7 @@ const CourtroomArgument = () => {
               <div>
                 {" "}
                 <IconButton
+                  sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
