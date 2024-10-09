@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Styles from "./CaseLaws.module.css";
-import { Close, X } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress, Modal } from "@mui/material";

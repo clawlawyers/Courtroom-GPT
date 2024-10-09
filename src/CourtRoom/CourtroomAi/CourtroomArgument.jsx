@@ -61,9 +61,7 @@ const CourtroomArgument = () => {
   const [judgeViewExpand, setJudgeViewExpand] = useState(false);
   const [lawyerViewExpand, setLawyerViewExpand] = useState(false);
   const [fightType, setFightType] = useState("");
-  console.log(fightType);
   const [otherFightType, setOtherFightType] = useState("");
-  console.log(otherFightType);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -533,7 +531,9 @@ const CourtroomArgument = () => {
 
       // console.log("response is ", response.data.data.draft.detailed_draft);
       // setFirstDraft(response.data.data.draft.detailed_draft);
-      dispatch(setFirstDraftAction(response.data.data.draft.detailed_draft));
+      dispatch(
+        setFirstDraftAction({ draft: response.data.data.draft.detailed_draft })
+      );
     } catch (error) {
       toast.error("Error in getting first draft");
     } finally {
