@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
 import { motion } from "framer-motion";
+import { CircularProgress } from "@mui/material";
 
 const BookNow = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const BookNow = () => {
   console.log(scheduledSlots);
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     const formattedBookings = scheduledSlots.map((booking) => {
@@ -73,10 +75,12 @@ const BookNow = () => {
     );
     if (respos.data.data.data === "Slot can be book") {
       dispatch(setBookingData(bookingData));
+      setLoading(false);
       navigate("/confirm-booking");
       // loadRazorpay(bookingData);
     } else {
       setErrorState(true);
+      setLoading(false);
       setErrorData("same number or email not allowed at same time slot");
       toast.error("same number or email not allowed at same time slot");
     }
@@ -279,7 +283,11 @@ const BookNow = () => {
                 cursor: "pointer",
               }}
             >
-              Proceed for Payment
+              {loading ? (
+                <CircularProgress color="inherit" size={20} />
+              ) : (
+                "Proceed for Payment"
+              )}
             </motion.button>
           </form>
         </div>

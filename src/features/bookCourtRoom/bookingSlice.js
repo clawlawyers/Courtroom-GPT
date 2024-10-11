@@ -1,22 +1,25 @@
 // Step 1: Import createSlice from Redux Toolkit
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 // Step 2: Define the initial state
 const initialState = {
-  bookingData: {}
+  bookingData: "",
 };
 
 // Step 3: Create the slice
 const bookingSlice = createSlice({
-  name: 'booking',
+  name: "booking",
   initialState,
   reducers: {
     setBookingData: (state, action) => {
       state.bookingData = action.payload;
     },
+    setClearBooking: (state, action) => {
+      state = initialState;
+    },
   },
 });
 
 // Step 4: Export the actions and reducer
-export const { setBookingData } = bookingSlice.actions;
+export const { setBookingData, setClearBooking } = bookingSlice.actions;
 export default bookingSlice.reducer;
