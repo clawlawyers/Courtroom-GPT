@@ -62,7 +62,7 @@ const BookNow = () => {
       phoneNumber: formData.contact,
       name: formData.name,
       email: formData.email,
-      password: formData.password,
+      // password: formData.password,
       recording: formData.record,
       slots: formattedBookings, // Add scheduledSlots to bookingData
     };
@@ -207,7 +207,7 @@ const BookNow = () => {
               required
               className="p-3 rounded text-black"
             />
-            <div className="relative bg-white rounded">
+            {/* <div className="relative bg-white rounded">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
@@ -248,7 +248,7 @@ const BookNow = () => {
                   />
                 )}
               </button>
-            </div>
+            </div> */}
             <input
               type="text"
               id="contact"
@@ -286,7 +286,7 @@ const BookNow = () => {
               {loading ? (
                 <CircularProgress color="inherit" size={20} />
               ) : (
-                "Proceed for Payment"
+                "Confirm Booking"
               )}
             </motion.button>
           </form>
