@@ -12,6 +12,13 @@ import { useDispatch } from "react-redux";
 import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 import { CircularProgress } from "@mui/material";
+import {
+  auth,
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "../../utils/firebase";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const TimerComponent = React.memo(() => {
@@ -47,6 +54,7 @@ function LoginToCourtRoom() {
   const currentUser = useSelector((state) => state.user.user);
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
+  const [verificationId, setVerificationId] = useState("");
 
   // if (currentUser && caseOverView === "NA") {
   //   navigate("/courtroom-ai");
@@ -63,19 +71,64 @@ function LoginToCourtRoom() {
   const [otpLoading, setOtpLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
   const [otpSuccess, setOtpSuccess] = useState(false);
+  const [loginDetails, setLoginDetails] = useState({});
 
   const dispatch = useDispatch();
 
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     setOtpLoading(true);
 
-    //api call
-    if (true) {
-      setOtpSuccess(true);
-      setOtpLoading(false);
-      setIsDisabled(true);
+    const loginInfo = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: phone }),
+    });
+
+    if (!loginInfo.ok) {
+      toast.error("Your phone number is not valid for current slot");
+      throw new Error("Failed to send OTP");
     }
+
+    const jsonData = await loginInfo.json();
+    setLoginDetails(jsonData);
+
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
+
+    signInWithPhoneNumber(auth, "+91" + phone, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
+
+    //api call
+    // if (true) {
+    //   setOtpSuccess(true);
+    //   setOtpLoading(false);
+    //   setIsDisabled(true);
+    // }
   };
 
   useEffect(() => {
@@ -95,9 +148,54 @@ function LoginToCourtRoom() {
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [isDisabled, countdown]);
 
-  const handleRetryClick = (e) => {
+  const handleRetryClick = async (e) => {
     e.preventDefault();
     setIsDisabled(true);
+
+    // const loginInfo = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ phoneNumber: phone }),
+    // });
+
+    // if (!loginInfo.ok) {
+    //   toast.error("Your phone number is not valid for current slot");
+    //   throw new Error("Failed to send OTP");
+    // }
+
+    // const jsonData = await loginInfo.json();
+    // setLoginDetails(jsonData);
+
+    console.log("sendOTP");
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
+
+    signInWithPhoneNumber(auth, "+91" + phone, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
 
     //  API call here
   };
@@ -105,6 +203,46 @@ function LoginToCourtRoom() {
   const handleVerifyOtp = (e) => {
     e.preventDefault();
     setOtpLoading(true);
+
+    if (otp.length === 6) {
+      const credential = PhoneAuthProvider.credential(verificationId, otp);
+      localStorage.setItem("loginOtp", otp);
+
+      signInWithCredential(auth, credential)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          toast.success("Phone number verified successfully!");
+          setOtpLoading(false);
+          setOtp("");
+
+          const loginInfo = await fetch(
+            `${NODE_API_ENDPOINT}/courtroom/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ phoneNumber: phone }),
+            }
+          );
+
+          if (!loginInfo.ok) {
+            toast.error("Your phone number is not valid for current slot");
+            throw new Error("Failed to send OTP");
+          }
+
+          dispatch(login({ user: loginDetails }));
+          navigate("/courtroom-ai");
+        })
+        .catch((error) => {
+          console.error("Error during OTP verification:", error);
+          toast.error("Error during OTP verification");
+          setOtp("");
+          setOtpLoading(false);
+        });
+    } else {
+      toast.error("Please enter a valid OTP");
+    }
   };
 
   return (
@@ -435,6 +573,7 @@ function LoginToCourtRoom() {
           </div>
         </motion.div>
       </div>
+      <div id="recaptcha-container"></div>
     </div>
   );
 }

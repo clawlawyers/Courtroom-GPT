@@ -83,7 +83,7 @@ const ConfirmBooking = () => {
         const { amount, id, currency } = result.data.razorpayOrder;
         const { _id } = result.data.createdOrder;
         const options = {
-          key: "rzp_test_UWcqHHktRV6hxM",
+          key: "rzp_live_vlDmt5SV4QPDhN",
           amount: String(amount),
           currency: currency,
           name: "CLAW LEGALTECH PRIVATE LIMITED",
@@ -144,22 +144,24 @@ const ConfirmBooking = () => {
     // handleDisableButton();
     setOtpLoading(true);
     console.log("sendOTP");
-    const recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
         },
-      },
-      auth
-    );
+        auth
+      );
+    }
 
     signInWithPhoneNumber(
       auth,
       "+91" + bookingData?.phoneNumber,
-      recaptchaVerifier
+      window.recaptchaVerifier
     )
       .then((confirmationResult) => {
         setVerificationId(confirmationResult.verificationId);
@@ -220,6 +222,39 @@ const ConfirmBooking = () => {
     setIsDisabled(true);
 
     //  API call here
+
+    console.log("sendOTP");
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
+
+    signInWithPhoneNumber(
+      auth,
+      "+91" + bookingData?.phoneNumber,
+      window.recaptchaVerifier
+    )
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
   };
 
   const handleCouponCode = (e) => {
