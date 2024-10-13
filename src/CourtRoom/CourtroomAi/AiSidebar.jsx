@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Menu } from "@mui/material";
+import { Button, CircularProgress, Menu } from "@mui/material";
 import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
@@ -45,6 +45,7 @@ import {
   retrieveCaseLaws,
   setCaseLaws,
 } from "../../features/laws/lawSlice";
+import Rating from "@mui/material/Rating";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -56,8 +57,14 @@ const drafterQuestions = [
 
 const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
+  const currentUser = useSelector((state) => state.user.user);
+
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  const [countdownOver, setCountDownOver] = useState(false);
+  const [countdownOver, setCountDownOver] = useState(true);
+  const [feedbackForm, setFeedbackForm] = useState(false);
+  const [rateValue, setRateValue] = React.useState(0);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -80,6 +87,36 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     }
   });
 
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/feedback`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({
+            rating: rateValue.toString(),
+            feedback: feedbackMessage,
+          }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      toast.success("Thankyou for the feedback!");
+      EndSessionToCourtroom();
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to submit feedback!");
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -95,19 +132,6 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      {/* <div
-        className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
-      >
-        <h1 className="text-sm m-0">Time Used :</h1>
-        <h1
-          className="text-sm m-0 font-semibold"
-          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
-        >
-          {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
-          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
-        </h1>
-      </div> */}
       {countdownOver ? (
         <div
           style={{
@@ -125,39 +149,93 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             zIndex: "20",
           }}
         >
-          <div
-            className="flex flex-col justify-center gap-20 p-5"
-            style={{
-              background: "linear-gradient(to right,#0e1118,#008080)",
-              height: "450px",
-              width: "900px",
-              border: "4px solid red",
-              borderRadius: "10px",
-            }}
-          >
-            <div className="flex flex-col justify-center items-center gap-10">
-              <img className="w-28 h-28" alt="clock" src={countDown} />
-              <h1 className="text-3xl">Your Courtroom Time is Over</h1>
-            </div>
-            <div className="flex justify-center">
-              <motion.button
-                onClick={() => EndSessionToCourtroom()}
-                whileTap={{ scale: "0.95" }}
-                className="border border-white rounded-lg py-2 px-8"
-              >
-                Go Back To Homepage
-              </motion.button>
-              {/* <Link to={"/courtroom-ai/verdict"}>
+          {!feedbackForm ? (
+            <div
+              className="flex flex-col justify-center gap-20 p-5"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+                height: "450px",
+                width: "900px",
+                border: "4px solid red",
+                borderRadius: "10px",
+              }}
+            >
+              <div className="flex flex-col justify-center items-center gap-10">
+                <img className="w-28 h-28" alt="clock" src={countDown} />
+                <h1 className="text-3xl">Your Courtroom Time is Over</h1>
+              </div>
+              <div className="flex justify-center gap-5">
                 <motion.button
-                  onClick={() => setCountDownOver(false)}
+                  whileHover={{ scale: "1.01" }}
+                  onClick={() => EndSessionToCourtroom()}
+                  whileTap={{ scale: "0.95" }}
+                  className="border border-white rounded-lg py-2 px-8"
+                >
+                  Skip & Exit To Homepage
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: "1.01" }}
+                  onClick={() => setFeedbackForm(true)}
                   whileTap={{ scale: "0.95" }}
                   className="border border-white rounded-lg py-2 px-8 text-white"
                 >
-                  View Verdict
+                  Provide Feedback
                 </motion.button>
-              </Link> */}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div
+              className="flex flex-col justify-center gap-20 p-5"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+                border: "4px solid white",
+                borderRadius: "10px",
+              }}
+            >
+              <div className="flex flex-col gap-5">
+                <h1 className="text-3xl">Provide your valuable feedback</h1>
+                <form
+                  onSubmit={handleFeedbackSubmit}
+                  className="flex flex-col gap-2"
+                >
+                  <div className="flex">
+                    <p>Rate your Experience :</p>
+                    <Rating
+                      required
+                      sx={{ color: "white" }}
+                      name="simple-controlled"
+                      value={rateValue}
+                      onChange={(event, newValue) => {
+                        setRateValue(newValue);
+                      }}
+                    />
+                  </div>
+                  <textarea
+                    required
+                    className="p-2 rounded text-black min-h-20 max-h-40"
+                    placeholder="Provide a detailed description...."
+                    value={feedbackMessage}
+                    onChange={(e) => setFeedbackMessage(e.target.value)}
+                  />
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => EndSessionToCourtroom()}
+                      className="border rounded px-4 py-2"
+                    >
+                      Skip & Exit
+                    </button>
+                    <button type="submit" className="border rounded px-4 py-2">
+                      {loading ? (
+                        <CircularProgress color="inherit" size={15} />
+                      ) : (
+                        "Submit Feedback"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         ""
