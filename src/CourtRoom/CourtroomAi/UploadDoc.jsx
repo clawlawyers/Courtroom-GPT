@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Styles from "./UploadDoc.module.css";
 import fight from "../../assets/images/fightYourself.png";
 import draft from "../../assets/images/draft.png";
@@ -6,8 +6,30 @@ import Devices from "../../components/UploadDoc/Devices";
 import { motion } from "framer-motion";
 import uploadImage from "../../assets/icons/upload.svg";
 import { useNavigate } from "react-router-dom";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { setTutorial } from "../../features/sidebar/sidebarSlice";
+import { useSelector } from "react-redux";
+
 
 const UploadDoc = () => {
+  const tutorial = useSelector((state)=>state.sidebar.tutorial)
+ 
+    const driverObj = driver({
+      showProgress: true,
+      steps:  [
+        {
+          element: "#docupload",
+          popover: {
+            title: "New Case",
+            description:
+              "click this button to provide details of the case  ",
+            side: "left",
+            align: "start",
+          },
+        },]
+    })
+    
   const [inputText, setInputText] = useState("");
   const navigate = useNavigate();
   const handleInputChange = (event) => {
@@ -20,7 +42,19 @@ const UploadDoc = () => {
   const [error, setError] = useState(false);
   const handleClick = () => {
     setChooseDevice(true);
+    driverObj.destroy()
+    
+    
   };
+
+  useEffect(()=>{
+    if(!tutorial){
+
+      driverObj.drive()
+    }
+
+    setTutorial(true)
+  },[])
 
   const handleSubmit = () => {
     if (!ChooseDevice && !inputText) {
@@ -54,7 +88,7 @@ const UploadDoc = () => {
           />
         </motion.div>
       ) : (
-        <div
+        <div id="docupload"
           onClick={handleClick}
           className={` ${Styles.uploadButton} ${
             error ? Styles.errorBoundary : ""

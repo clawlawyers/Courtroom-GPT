@@ -60,11 +60,17 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   const currentUser = useSelector((state) => state.user.user);
 
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  const [countdownOver, setCountDownOver] = useState(true);
+  const [countdownOver, setCountDownOver] = useState(false);
   const [feedbackForm, setFeedbackForm] = useState(false);
   const [rateValue, setRateValue] = React.useState(0);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
+
+  const dispatch= useDispatch()
+useEffect(()=>{
+  console.log("hi")
+},[dispatch])
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -123,7 +129,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
         className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
         style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
-        <h1 className="text-xs m-0">Time Remaining:</h1>
+        <h1 id="time-left" className="text-xs m-0">Time Remaining:</h1>
         <h1
           className="text-xs m-0 font-semibold"
           style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
@@ -849,7 +855,7 @@ const AiSidebar = () => {
                 >
                   Edit
                 </motion.button> */}
-                <IconButton
+                <IconButton id="evidence-menu"
                   sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
@@ -865,7 +871,7 @@ const AiSidebar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <MenuItem
+                  <MenuItem id="edit_doc"
                     onClick={() => {
                       handleMenuClose();
                       setEditDialog(true);
@@ -873,10 +879,10 @@ const AiSidebar = () => {
                   >
                     Edit
                   </MenuItem>
-                  <MenuItem onClick={handleEvidenceClick}>
+                  <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
-                  <MenuItem onClick={handleTestimonyClick}>
+                  <MenuItem id="evidence-testimony" onClick={handleTestimonyClick}>
                     Add Testimony
                   </MenuItem>
                 </Menu>
@@ -936,7 +942,7 @@ const AiSidebar = () => {
           <TimerComponent EndSessionToCourtroom={EndSessionToCourtroom} />
         </div>
         {/* bottom container */}
-        <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
+        <div id="normal-div" className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
           <div className="flex flex-col gap-1">
             <motion.div
               className={`${
@@ -960,7 +966,7 @@ const AiSidebar = () => {
                 cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
               }}
             >
-              <div>
+              <div id="download-session">
                 <p className="text-xs m-0">Download Session History</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
@@ -998,7 +1004,7 @@ const AiSidebar = () => {
                 // marginBottom: "5px",
               }}
             >
-              <div>
+              <div id="download-case">
                 <p className="text-xs m-0">Download Case History</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
@@ -1030,7 +1036,7 @@ const AiSidebar = () => {
                 cursor: "pointer",
               }}
             >
-              <div>
+              <div id="legalGpt">
                 <p className="text-xs m-0">Ask LegalGPT</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
@@ -1062,7 +1068,7 @@ const AiSidebar = () => {
                 marginBottom: "5px",
               }}
             >
-              <div>
+              <div id="case-search">
                 <p className="text-xs m-0">Case Search</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
@@ -1079,7 +1085,7 @@ const AiSidebar = () => {
               </div>
             </motion.div>
           </div>
-          <div className="flex justify-end cursor-pointer relative">
+          <div  id="claw-ai-ass" className="flex justify-end cursor-pointer relative">
             <motion.img
               className="h-9 w-9"
               whileTap={{ scale: "0.95" }}
@@ -1120,7 +1126,7 @@ const AiSidebar = () => {
               >
                 <img className="w-4" src={aiDrafter} alt="aiDrafter" />
 
-                <p className="m-0 text-xs text-white">Ai Drafter</p>
+                <p className="m-0 text-xs text-white" id="AIdrafter">Ai Drafter</p>
               </motion.div>
               <motion.div
                 onClick={handleFirstDraft}
@@ -1176,7 +1182,7 @@ const AiSidebar = () => {
                   }}
                 >
                   <img src={newCaseLogo} />
-                  <p
+                  <p id="NewCaseInput"
                     className="m-0 text-xs text-white"
                     onClick={() => saveHistory()}
                   >
@@ -1493,6 +1499,7 @@ const AiSidebar = () => {
         <div
           // md:left-[28rem] md:top-32
           // bg-[#eeeeee]
+
           className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               "
         >

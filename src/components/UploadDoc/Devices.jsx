@@ -27,9 +27,46 @@ import analyzingImage from "../../assets/images/analyzing.gif";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
-import useDrivePicker from "react-google-drive-picker";
 
+import useDrivePicker from "react-google-drive-picker";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 const Devices = ({ uploadedFile, setUploadedFile }) => {
+  const driverObj = driver({
+    showProgress: true,
+    steps:  [
+      {
+        element: "#uploaddrive",
+        popover: {
+          title: "DrIve upload",
+          description:
+            "click this button to upload a case file (.docx , .pdf) directly from the drive  ",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#uploadtext",
+        popover: {
+          title: "Write text",
+          description:
+            "click this button to write the case file   ",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#uploadpc",
+        popover: {
+          title: "PC upload",
+          description:
+            "click this button to upload a case file (.docx , .pdf) directly from the pc  ",
+          side: "left",
+          align: "start",
+        },
+      },
+    ]
+  })
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.user);
@@ -67,6 +104,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     console.log("Textarea changed:", e.target.value);
     setCaseOverview(e.target.value);
   };
+  useEffect(()=>{
+    driverObj.drive()
+  },[])
 
   const handleSave = async () => {
     // text save logic
@@ -95,6 +135,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     }
   };
   const handleClick = (source) => {
+    driverObj.destroy()
     switch (source) {
       case "local":
         handleUploadFromComputer();
@@ -374,6 +415,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         }}
       >
         <section
+        
           style={{
             display: "flex",
             flexDirection: "row",
@@ -384,7 +426,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             padding: "30px",
           }}
         >
-          <div
+          <div 
+          id="uploaddrive"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("drive")}
           >
@@ -395,6 +438,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </div>
           <div className={styles.verticalLine}></div>
           <div
+             id="uploadtext"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("dropbox")}
           >
@@ -405,6 +449,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </div>
           <div className={styles.verticalLine}></div>
           <div
+             id="uploadpc"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("local")}
           >
