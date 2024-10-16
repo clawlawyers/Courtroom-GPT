@@ -11,147 +11,212 @@ import { useDispatch } from "react-redux";
 import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
+import {
+  auth,
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "../../utils/firebase";
 
 const BookNow = () => {
   const dispatch = useDispatch();
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const [loading, setLoading] = useState(false);
   const [scheduledSlots, setScheduledSlots] = useState([]);
-  const [showPassword, setShowPassword] = useState(false);
   const [errorData, setErrorData] = useState("");
   const [errorState, setErrorState] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    contact: "",
-    record: false, // Assuming 'record' checkbox state
-  });
-  const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+  const [contact, setContact] = useState("");
+  const [record, setRecord] = useState(false);
+  const [email, setEmail] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [isFirst, setIsfirst] = useState(true);
+  const [otpSuccess, setOtpSuccess] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [verificationId, setVerificationId] = useState("");
+  const [countdown, setCountdown] = useState(30);
+  const [otpVerifySuccess, setOtpVerifySuccess] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-    setFormData({ ...formData, [name]: newValue });
-  };
+  const navigate = useNavigate();
 
   console.log(scheduledSlots);
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    if (otpVerifySuccess) {
+      setLoading(true);
 
-    const formattedBookings = scheduledSlots.map((booking) => {
-      // Create a new Date object to avoid mutating the original date
-      let date = new Date(booking.date);
+      const formattedBookings = scheduledSlots.map((booking) => {
+        // Create a new Date object to avoid mutating the original date
+        let date = new Date(booking.date);
 
-      // Add one day
-      date.setDate(date.getDate() + 1);
+        // Add one day
+        date.setDate(date.getDate() + 1);
 
-      // Format the date
-      const formattedDate = date.toISOString().split("T")[0];
+        // Format the date
+        const formattedDate = date.toISOString().split("T")[0];
 
-      // Extract the hour from the time string
-      const hour = parseInt(booking.time[0].split(":")[0], 10);
+        // Extract the hour from the time string
+        const hour = parseInt(booking.time[0].split(":")[0], 10);
 
-      // Return the formatted booking
-      return { date: formattedDate, hour };
-    });
+        // Return the formatted booking
+        return { date: formattedDate, hour };
+      });
 
-    const bookingData = {
-      phoneNumber: formData.contact,
-      name: formData.name,
-      email: formData.email,
-      // password: formData.password,
-      recording: formData.record,
-      slots: formattedBookings, // Add scheduledSlots to bookingData
-    };
-    console.log("Booking Data:", bookingData);
-    const respos = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/book-courtroom-validation`,
-      {
-        ...bookingData,
+      const bookingData = {
+        phoneNumber: contact,
+        name: userName,
+        email: email,
+        recording: record,
+        slots: formattedBookings, // Add scheduledSlots to bookingData
+      };
+      const respos = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/book-courtroom-validation`,
+        {
+          ...bookingData,
+        }
+      );
+      if (respos.data.data.data === "Slot can be book") {
+        dispatch(setBookingData(bookingData));
+        setLoading(false);
+        navigate("/confirm-booking");
+        // loadRazorpay(bookingData);
+      } else {
+        setErrorState(true);
+        setLoading(false);
+        setErrorData("same number or email not allowed at same time slot");
+        toast.error("same number or email not allowed at same time slot");
       }
-    );
-    if (respos.data.data.data === "Slot can be book") {
-      dispatch(setBookingData(bookingData));
-      setLoading(false);
-      navigate("/confirm-booking");
-      // loadRazorpay(bookingData);
+      // TODO : backend post request
     } else {
-      setErrorState(true);
-      setLoading(false);
-      setErrorData("same number or email not allowed at same time slot");
-      toast.error("same number or email not allowed at same time slot");
+      toast.error("Please verify phone number to proceed!");
     }
-    // TODO : backend post request
   };
 
-  const loadRazorpay = async (bookingData) => {
-    setLoading(true);
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.onerror = () => {
-      alert("Razorpay SDK failed to load. Are you online?");
-    };
-    script.onload = async () => {
-      try {
-        // const planeName = `${type}_${request}_${session}`;
-        const result = await axios.post(
-          `${NODE_API_ENDPOINT}/booking-payment/create-order`,
-          {
-            amount: scheduledSlots.length * 100,
-            phoneNumber: formData.contact,
-            currency: "INR",
-            receipt: receipt,
-            numberOfSlot: scheduledSlots.length,
-          }
-        );
-
-        console.log(result);
-
-        const { amount, id, currency } = result.data.razorpayOrder;
-        const { _id } = result.data.createdOrder;
-        const options = {
-          key: "rzp_test_UWcqHHktRV6hxM",
-          amount: String(amount),
-          currency: currency,
-          name: "CLAW LEGALTECH PRIVATE LIMITED",
-          description: "Transaction",
-          order_id: id,
-          handler: async function (response) {
-            const data = {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              _id,
-              bookingData,
-              amount,
-            };
-
-            const result = await axios.post(
-              `${NODE_API_ENDPOINT}/booking-payment/verifyPayment`,
-              data
-            );
-            alert(result.data.status);
-            //TODO: add a confirm booking page before calling razorpay API
-            navigate("/login");
+  const handleSendOTP = (e) => {
+    e.preventDefault();
+    // handleDisableButton();
+    setOtpLoading(true);
+    console.log("sendOTP");
+    if (isFirst) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
           },
-
-          theme: {
-            color: "#3399cc",
+        },
+        auth
+      );
+      setIsfirst(false);
+    } else if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
           },
-        };
+        },
+        auth
+      );
+    }
 
-        const paymentObject = new window.Razorpay(options);
-        paymentObject.open();
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    document.body.appendChild(script);
+    signInWithPhoneNumber(auth, "+91" + contact, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    let intervalId;
+    if (isDisabled && countdown > 0) {
+      intervalId = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (countdown === 0) {
+      clearInterval(intervalId);
+      setIsDisabled(false);
+      setCountdown(30); // Reset countdown
+    }
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [isDisabled, countdown]);
+
+  const handleRetryClick = (e) => {
+    e.preventDefault();
+    setIsDisabled(true);
+
+    //  API call here
+
+    console.log("sendOTP");
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
+
+    signInWithPhoneNumber(auth, "+91" + contact, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
+  };
+
+  const handleVerifyOTP = (e) => {
+    e.preventDefault();
+    setOtpLoading(true);
+    const credential = PhoneAuthProvider.credential(verificationId, otp);
+    localStorage.setItem("loginOtp", otp);
+
+    signInWithCredential(auth, credential)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        toast.success("Phone number verified successfully!");
+        setOtpLoading(false);
+        setOtpVerifySuccess(true);
+        setOtp("");
+        setOtpSuccess(false);
+      })
+      .catch((error) => {
+        console.error("Error during OTP verification:", error);
+        toast.error("Error during OTP verification");
+        setOtp("");
+        setOtpLoading(false);
+      });
   };
 
   return (
@@ -192,8 +257,8 @@ const BookNow = () => {
               id="name"
               name="name"
               placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleInputChange}
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
               required
               className="p-3 rounded text-black"
             />
@@ -202,75 +267,95 @@ const BookNow = () => {
               id="email"
               name="email"
               placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleInputChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="p-3 rounded text-black"
             />
-            {/* <div className="relative bg-white rounded">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-                className="text-black bg-transparent w-full p-3 rounded"
-              />
-              <button
-                type="button"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                  border: "1px",
-                  background: "none",
-                  cursor: "pointer",
-                  width: "fit-content",
-                }}
-                onClick={() =>
-                  showPassword ? setShowPassword(false) : setShowPassword(true)
-                }
-              >
-                {showPassword ? (
-                  <Visibility
-                    sx={{
-                      color: "black",
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  id="contact"
+                  name="contact"
+                  placeholder="Enter your contact number"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  required
+                  className="flex-1 p-3 rounded text-black"
+                />
+                {!otpVerifySuccess ? (
+                  <button
+                    style={{
+                      background:
+                        "linear-gradient(100deg, #008080 0%, #15B3B3 100%)",
                     }}
-                  />
+                    className="rounded px-3 w-28"
+                    disabled={otpLoading}
+                    onClick={handleSendOTP}
+                  >
+                    {otpLoading ? (
+                      <CircularProgress size={15} color="inherit" />
+                    ) : (
+                      "Verify"
+                    )}
+                  </button>
                 ) : (
-                  <VisibilityOff
-                    sx={{
-                      color: "black",
+                  <button
+                    style={{
+                      background:
+                        "linear-gradient(100deg, #008080 0%, #00ffa3 100%)",
                     }}
-                  />
+                    className="rounded px-3 w-28"
+                  >
+                    Verified
+                  </button>
                 )}
-              </button>
-            </div> */}
-            <input
-              type="text"
-              id="contact"
-              name="contact"
-              placeholder="Enter your contact number"
-              value={formData.contact}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded text-black"
-            />
+              </div>
+              {otpSuccess && (
+                <div className="flex gap-3">
+                  <input
+                    required
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                    className="p-2 rounded text-black"
+                  />
+                  <button
+                    onClick={handleRetryClick}
+                    disabled={isDisabled}
+                    className="bg-transparent border rounded px-5"
+                  >
+                    {isDisabled ? `Wait ${countdown} seconds...` : "Retry"}
+                  </button>
+                  <motion.button
+                    onClick={handleVerifyOTP}
+                    disabled={otpLoading || otp === ""}
+                    whileTap={{ scale: "0.95" }}
+                    className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2 w-28"
+                  >
+                    {otpLoading ? (
+                      <CircularProgress size={15} color="inherit" />
+                    ) : (
+                      "Verify OTP"
+                    )}
+                  </motion.button>
+                </div>
+              )}
+            </div>
 
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="record"
                 name="record"
-                checked={formData.record}
-                onChange={handleInputChange}
+                checked={record}
+                onChange={() => setRecord(true)}
               />
               <label htmlFor="record">Record the CourtRoom</label>
             </div>
             <motion.button
+              // disabled={!otpVerifySuccess}
               whileTap={{ scale: "0.95" }}
               className=""
               type="submit"
@@ -333,6 +418,7 @@ const BookNow = () => {
           ""
         )}
       </div>
+      <div id="recaptcha-container"></div>
     </div>
   );
 };

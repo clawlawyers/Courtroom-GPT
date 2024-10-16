@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Drive from "../../assets/icons/drive.svg";
 import DropBox from "../../assets/icons/dropbox.svg";
+import Document from "../../assets/icons/document5.svg";
 import pc from "../../assets/icons/local.svg";
 import styles from "../../CourtRoom/CourtroomAi/UploadDoc.module.css";
 import Dialog from "../ui/Dialog";
@@ -27,14 +28,13 @@ import analyzingImage from "../../assets/images/analyzing.gif";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
-
 import useDrivePicker from "react-google-drive-picker";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 const Devices = ({ uploadedFile, setUploadedFile }) => {
   const driverObj = driver({
     showProgress: true,
-    steps:  [
+    steps: [
       {
         element: "#uploaddrive",
         popover: {
@@ -49,8 +49,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         element: "#uploadtext",
         popover: {
           title: "Write text",
-          description:
-            "click this button to write the case file   ",
+          description: "click this button to write the case file   ",
           side: "left",
           align: "start",
         },
@@ -65,8 +64,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           align: "start",
         },
       },
-    ]
-  })
+    ],
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.user);
@@ -104,9 +103,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     console.log("Textarea changed:", e.target.value);
     setCaseOverview(e.target.value);
   };
-  useEffect(()=>{
-    driverObj.drive()
-  },[])
+  useEffect(() => {
+    driverObj.drive();
+  }, []);
 
   const handleSave = async () => {
     // text save logic
@@ -135,7 +134,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     }
   };
   const handleClick = (source) => {
-    driverObj.destroy()
+    driverObj.destroy();
     switch (source) {
       case "local":
         handleUploadFromComputer();
@@ -415,7 +414,6 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         }}
       >
         <section
-        
           style={{
             display: "flex",
             flexDirection: "row",
@@ -426,8 +424,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             padding: "30px",
           }}
         >
-          <div 
-          id="uploaddrive"
+          <div
+            id="uploaddrive"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("drive")}
           >
@@ -438,18 +436,18 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </div>
           <div className={styles.verticalLine}></div>
           <div
-             id="uploadtext"
+            id="uploadtext"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("dropbox")}
           >
-            <img className="p-5" src={DropBox} alt="" />
+            <img className="p-5 h-1 w-1 text-white" src={Document} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Write Your Own Text
             </h4>
           </div>
           <div className={styles.verticalLine}></div>
           <div
-             id="uploadpc"
+            id="uploadpc"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("local")}
           >
