@@ -55,6 +55,7 @@ function LoginToCourtRoom() {
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
   const [verificationId, setVerificationId] = useState("");
+  const [isFirst, setIsfirst] = useState(true);
 
   // if (currentUser && caseOverView === "NA") {
   //   navigate("/courtroom-ai");
@@ -89,13 +90,36 @@ function LoginToCourtRoom() {
 
     if (!loginInfo.ok) {
       toast.error("Your phone number is not valid for current slot");
-      throw new Error("Failed to send OTP");
+      // throw new Error("Failed to send OTP");
+      return;
     }
 
     const jsonData = await loginInfo.json();
+    if (jsonData === "No bookings found for the current time slot.") {
+      toast.error("No bookings found for the current time slot.");
+      setOtpLoading(false);
+      setErrorState(true);
+      setErrorData(["No bookings found for the current time slot."]);
+      return;
+      // throw new Error("No bookings found for the current time slot.");
+    }
     setLoginDetails(jsonData);
 
-    if (!window.recaptchaVerifier) {
+    if (isFirst) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+      setIsfirst(false);
+    } else if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
         "recaptcha-container",
@@ -228,9 +252,20 @@ function LoginToCourtRoom() {
 
           if (!loginInfo.ok) {
             toast.error("Your phone number is not valid for current slot");
-            throw new Error("Failed to send OTP");
+            // throw new Error("Failed to send OTP");
+            return;
           }
 
+          const jsonData = await loginInfo.json();
+          if (jsonData === "No bookings found for the current time slot.") {
+            toast.error("No bookings found for the current time slot.");
+            setOtpLoading(false);
+            setErrorState(true);
+            setErrorData(["No bookings found for the current time slot."]);
+            return;
+            // throw new Error("No bookings found for the current time slot.");
+          }
+          setLoginDetails(jsonData);
           dispatch(login({ user: loginDetails }));
           navigate("/courtroom-ai");
         })

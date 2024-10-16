@@ -40,6 +40,7 @@ const ConfirmBooking = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [discountPercentage, setDiscountPercentage] = useState(null);
+  const [isFirst, setIsfirst] = useState(true);
 
   // console.log(bookingData.phoneNumber);
 
@@ -144,7 +145,21 @@ const ConfirmBooking = () => {
     // handleDisableButton();
     setOtpLoading(true);
     console.log("sendOTP");
-    if (!window.recaptchaVerifier) {
+    if (isFirst) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+      setIsfirst(false);
+    } else if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
         auth,
         "recaptcha-container",
