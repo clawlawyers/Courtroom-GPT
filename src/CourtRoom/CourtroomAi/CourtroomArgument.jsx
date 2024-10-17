@@ -33,7 +33,7 @@ import {
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-
+import { setTutorialFalse } from "../../features/popup/popupSlice";
 const CourtroomArgument = () => {
   // var driverObj = driver({
   //   showProgress: true,
@@ -57,8 +57,250 @@ const CourtroomArgument = () => {
   }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  
   const fightingModal = useSelector((state) => state.user.fightingSideModal);
+  const tutorial = useSelector((state) => state.popup.tutorial);
+  useEffect(() => {
+    console.log("hiasasdd");
+    if(tutorial){
+      console.log("adsd")
+      var driverObj = driver({
+        showProgress: true,
+        steps:  [
+          // {
+          //   element: "#side-selection",
+          //   popover: {
+          //     title: "Ai judgde",
+          //     description:
+          //       "This will show ai judge response to an argument  ",
+          //     side: "left",
+          //     align: "start",
+          //   },
+          // },
+          {
+            element: "#aijudge",
+            popover: {
+              title: "Ai judgde",
+              description: "This will show ai judge response to an argument  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#ailawyer",
+            popover: {
+              title: "Ai Lawyer",
+              description:
+                "This will show the response of the ai lawyer of the oppsing counsel",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#expand",
+            popover: {
+              title: "Exapnd",
+              description:
+                "click this button to exapnd response for better view   ",
+              side: "left",
+
+              align: "start",
+              onNextClick: () => {
+                console.log(myDivRef.current);
+                setAnchorElmenu(myDivRef.current);
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#swaplawyer",
+            popover: {
+              title: "Change side",
+              description:
+                "click this button to change the side you are representing   ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#relevant-case-menu",
+            popover: {
+              title: "menu",
+              description: "click this button to open mnenu  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#relevantcase-button",
+            popover: {
+              title: "menu",
+              description: "click this button to show relevant cases  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                setAnchorElmenu(null);
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#evidence-menu",
+            popover: {
+              title: "menu",
+              description: "click this button to show relevant cases  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                document.getElementById("evidence-menu").click();
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#edit_doc",
+            popover: {
+              title: "Edit Doc",
+              description: "click this button to edit the case law document  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#evidence-button",
+            popover: {
+              title: "Add Evidence",
+              description:
+                "click this button to add evidences a popup will open and you can add releavnt evidences t will also return its relevance  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#evidence-testimony",
+            popover: {
+              title: "Add Testimony",
+              description:
+                "click this button to add testimony a popup will open and you can add releavnt testimony t will also return its relevance  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                document.getElementById("long-menu").click();
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#time-left",
+            popover: {
+              title: "Time Remaning ",
+              description: "It shows amount of time remaining ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#first-draft",
+            popover: {
+              title: "First Draft",
+              description:
+                "Click this button to open the first draft of the given case fle ",
+              side: "left",
+              align: "start",
+            },
+          },
+          
+          {
+            element: "#Ai-Drafter",
+            popover: {
+              title: "Document Drafter",
+              description:
+                "Click this button to open a popup to create documents reletaed to the case using ai  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#legalGpt",
+            popover: {
+              title: "Legal Gpt",
+              description:
+                "Click this button to open legal gpt popup to ask law releated queries ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#case-search",
+            popover: {
+              title: "Case Search",
+              description:
+                "Click this button to open a popup to search older cases related to your use case  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#claw-ai-ass",
+            popover: {
+              title: "Case AI Assistant",
+              description:
+                "Click this button to open a   popup to for ai assiatance for the case  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#download-session",
+            popover: {
+              title: "Download Session",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+          {
+            element: "#download-case",
+            popover: {
+              title: "Download Case",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+      
+       
+          {
+            element: "#NewCaseInput",
+            popover: {
+              title: "New Case",
+              description: "Click this button to open a new case file ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#userinput",
+            popover: {
+              title: "Enter Argument",
+              description:
+                "Enter your argumentnts here you can use either text and voice input  ",
+              side: "left",
+              align: "start",
+            },
+          },
+        ],
+      })
+      driverObj.drive()
+      dispatch(setTutorialFalse())
+
+    }
+
+  }, [tutorial]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
@@ -721,21 +963,22 @@ const CourtroomArgument = () => {
             },
           },
           {
-            element: "#download-session",
+            element: "#first-draft",
             popover: {
-              title: "Download Session",
+              title: "First Draft",
               description:
-                "Click this button to download the entire session histroy in pdf form ",
+                "Click this button to open the first draft of the given case fle ",
               side: "left",
               align: "start",
             },
           },
+          
           {
-            element: "#download-case",
+            element: "#Ai-Drafter",
             popover: {
-              title: "Download Case",
+              title: "Document Drafter",
               description:
-                "Click this button to download the entire session histroy in pdf form ",
+                "Click this button to open a popup to create documents reletaed to the case using ai  ",
               side: "left",
               align: "start",
             },
@@ -771,15 +1014,29 @@ const CourtroomArgument = () => {
             },
           },
           {
-            element: "#AIdrafter",
+            element: "#download-session",
             popover: {
-              title: "Document Drafter",
+              title: "Download Session",
               description:
-                "Click this button to open a popup to create documents reletaed to the case using ai  ",
+                "Click this button to download the entire session histroy in pdf form ",
               side: "left",
               align: "start",
             },
           },
+        
+          {
+            element: "#download-case",
+            popover: {
+              title: "Download Case",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+      
+       
           {
             element: "#NewCaseInput",
             popover: {
