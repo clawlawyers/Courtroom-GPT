@@ -10,6 +10,7 @@ import { Button, CircularProgress, Menu } from "@mui/material";
 import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
+import { IoReload } from "react-icons/io5";
 import { Popover } from "@mui/material";
 import {
   logout,
@@ -47,6 +48,7 @@ import {
   retrieveCaseLaws,
   setCaseLaws,
 } from "../../features/laws/lawSlice";
+import { setTutorial } from "../../features/popup/popupSlice";
 import Rating from "@mui/material/Rating";
 import sendIcon from "../../assets/icons/Send.png";
 
@@ -974,7 +976,7 @@ const AiSidebar = () => {
                 borderRadius: "5px",
               }}
             >
-              <div>
+              <div id="first-draft">
                 <p className="text-xs m-0">View First Draft</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
@@ -1006,7 +1008,7 @@ const AiSidebar = () => {
                 cursor: "pointer",
               }}
             >
-              <div>
+              <div id="Ai-Drafter">
                 <p className="text-xs m-0">Ai Drafter</p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
@@ -1129,6 +1131,7 @@ const AiSidebar = () => {
             </div>
             <div className="h-full flex flex-col justify-evenly">
               <motion.div
+              id="download-session"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
@@ -1155,6 +1158,7 @@ const AiSidebar = () => {
                 </p>
               </motion.div>
               <motion.div
+              id="download-case"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
@@ -1235,6 +1239,22 @@ const AiSidebar = () => {
 
                 <p className="m-0 text-xs" onClick={() => ExitToCourtroom()}>
                   Exit Courtroom
+                </p>
+              </motion.div>
+              <motion.div
+             
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                 className={`${
+                  overViewDetails === "NA" || overViewDetails === ""
+                    ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
+                    : " flex items-center gap-[12px] cursor-pointer relative"
+                }`}
+              >
+                {/* <img className="h-4 w-4" src={exitLogo} /> */}
+                <IoReload/>
+                <p className="m-0 text-xs"  onClick={() => dispatch(setTutorial())}>
+                  Restart Tutorial
                 </p>
               </motion.div>
             </div>
