@@ -326,6 +326,15 @@ const CourtroomArgument = () => {
           },
         }
       );
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/summary`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
 
       judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
       setJudgeArgument(judgeArgument);
@@ -809,7 +818,7 @@ const CourtroomArgument = () => {
   };
 
   const firstDraftApi = async () => {
-    dispatch(setFirstDraftLoading());
+    // dispatch(setFirstDraftLoading());
     try {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -826,12 +835,14 @@ const CourtroomArgument = () => {
       // console.log("response is ", response.data.data.draft.detailed_draft);
       // setFirstDraft(response.data.data.draft.detailed_draft);
       dispatch(
-        setFirstDraftAction({ draft: response.data.data.draft.detailed_draft })
+        setFirstDraftAction({
+          draft: response?.data?.data?.draft?.detailed_draft,
+        })
       );
-      dispatch(setFirstDraftLoading());
+      // dispatch(setFirstDraftLoading());
     } catch (error) {
       toast.error("Error in getting first draft");
-      dispatch(setFirstDraftLoading());
+      // dispatch(setFirstDraftLoading());
     } finally {
       // setFirsDraftLoading(false);
       // setisApi(false);

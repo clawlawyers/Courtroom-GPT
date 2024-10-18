@@ -129,6 +129,17 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        {
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
     } catch (error) {
       toast.error("Failed to save case overview");
     }
@@ -207,8 +218,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             setUploadComplete(true);
           }, 3000);
         } catch (error) {
-          console.log(error?.response?.data?.error.split(":")[1]);
-          toast.error(error?.response?.data?.error.split(":")[1]);
+          console.log(error);
+          // console.log(error?.response?.data?.error.split(":")[1]);
+          // toast.error(error?.response?.data?.error.split(":")[1]);
           handleDialogClose();
         }
       }

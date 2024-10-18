@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assets/images/claw-login.png";
+import clawLogo from "../../assets/icons/clawlogo1.png";
 import Styles from "./AiSidebar.module.css";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -47,6 +48,7 @@ import {
   setCaseLaws,
 } from "../../features/laws/lawSlice";
 import Rating from "@mui/material/Rating";
+import sendIcon from "../../assets/icons/Send.png";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -283,8 +285,10 @@ const AiSidebar = () => {
   const dispatch = useDispatch();
   const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
+  console.log(overViewDetails);
 
   const firstDraftDetails = useSelector((state) => state.user.firstDraft);
+  console.log(firstDraftDetails);
   const firstDraftLoading = useSelector(
     (state) => state.user.firstDraftLoading
   );
@@ -373,6 +377,8 @@ const AiSidebar = () => {
   const saveHistory = async () => {
     setRelevantLawsArr(null);
     setShowRelevantLaws(false);
+    dispatch(setOverview(""));
+    dispatch(setFirstDraftAction({ draft: "" }));
     try {
       if (overViewDetails !== "NA") {
         await axios.post(
@@ -409,6 +415,17 @@ const AiSidebar = () => {
       );
       dispatch(setOverview(text));
       setEditDialog(false);
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        {
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
     } catch (error) {
       toast.error("Error in saving case");
       console.error("Error in saving case", error);
@@ -421,6 +438,7 @@ const AiSidebar = () => {
     // }
 
     setFirstDraftDialog(true);
+    firstDraftApi();
   };
 
   const handleEvidenceClick = (event) => {
@@ -442,7 +460,7 @@ const AiSidebar = () => {
   };
 
   const firstDraftApi = async () => {
-    dispatch(setFirstDraftLoading());
+    // dispatch(setFirstDraftLoading());
     try {
       const response = await fetch(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -458,28 +476,37 @@ const AiSidebar = () => {
         //   },
         // }
       );
-
+      console.log(response);
       dispatch(
-        setFirstDraftAction({ draft: response?.data.data.draft.detailed_draft })
+        setFirstDraftAction({
+          draft: response?.data?.data?.draft?.detailed_draft,
+        })
       );
 
-      dispatch(setFirstDraftLoading());
+      // dispatch(setFirstDraftLoading());
       // console.log("response is ", response.data.data.draft.detailed_draft);
       // setFirstDraft(response.data.data.draft.detailed_draft);
       // console.log(response.data.data.draft);
     } catch (error) {
       console.log(error);
       // toast.error("Error in getting first draft");
-      dispatch(setFirstDraftLoading());
+      // dispatch(setFirstDraftLoading());
     }
   };
 
   useEffect(() => {
-    firstDraftApi();
+    console.log(overViewDetails);
+    if (overViewDetails !== "" || overViewDetails !== "NA") {
+      firstDraftApi();
+    }
   }, [overViewDetails]);
 
   useEffect(() => {
-    setFirstDraft(firstDraftDetails);
+    if (firstDraftDetails === undefined) {
+      setFirstDraft("");
+    } else {
+      setFirstDraft(firstDraftDetails);
+    }
   }, [firstDraftDetails]);
 
   const getAiQuestions = async () => {
@@ -565,7 +592,7 @@ const AiSidebar = () => {
           }
         );
 
-        // console.log(overView.data.data.case_overview);
+        console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
         } else {
@@ -662,7 +689,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
           // user_id: currentUser.userId,
           data: firstDraft,
@@ -1230,7 +1257,7 @@ const AiSidebar = () => {
             overflow: "auto",
           }}
         >
-          {firstDraftLoading ? (
+          {/* {firstDraftLoading ? (
             <div
               className="border-2 border-white rounded-lg w-1/6 h-fit p-2 flex flex-row justify-center items-center"
               style={{
@@ -1239,39 +1266,40 @@ const AiSidebar = () => {
             >
               <img className="h-40 w-40 my-10" src={loader} alt="loader" />
             </div>
-          ) : (
-            <div
-              className="h-fit w-2/3 rounded-md border-2 border-white"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <svg
-                  onClick={() => {
-                    setFirstDraftDialog(false);
-                  }}
-                  style={{ margin: "20px", cursor: "pointer" }}
-                  width="30"
-                  height="30"
-                  fill="white"
-                  stroke="white"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-              </div>
-              <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-                <div className="flex h-full px-5 pb-3 flex-row justify-between items-center w-full gap-5">
-                  <div className="flex h-full  flex-col gap-2 justify-center w-full items-center">
+          ) : ( */}
+          <div
+            className="h-fit w-2/3 rounded-md border-2 border-white"
+            style={{
+              background: "linear-gradient(to right,#0e1118,#008080)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <svg
+                onClick={() => {
+                  setFirstDraftDialog(false);
+                }}
+                style={{ margin: "20px", cursor: "pointer" }}
+                width="30"
+                height="30"
+                fill="white"
+                stroke="white"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                  fill-rule="nonzero"
+                />
+              </svg>
+            </div>
+            <div className="m-0 h-2/3 flex flex-column justify-center items-center">
+              <div className="flex h-full px-5 pb-3 flex-row justify-between items-center w-full gap-5">
+                <div className="flex h-full  flex-col gap-2 justify-center w-full items-center">
+                  {firstDraft !== "" ? (
                     <div className="flex flex-col w-full rounded-md bg-white text-black h-[75vh] overflow-y-auto">
                       <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                         <p className="uppercase font-bold my-2 w-full ">
@@ -1294,100 +1322,109 @@ const AiSidebar = () => {
                         onChange={(e) => setFirstDraft(e.target.value)}
                       />
                     </div>
-                    <div className="w-full flex justify-end">
-                      <button
-                        onClick={handleNextAppeal}
-                        className="px-4 py-1 rounded border"
-                      >
-                        {nextAppealLoading ? (
-                          <CircularProgress size={15} color="inherit" />
-                        ) : (
-                          "Next Appeal"
-                        )}
-                      </button>
+                  ) : (
+                    <div className="flex flex-col w-full justify-center items-center rounded-md bg-white text-black h-[75vh] overflow-y-auto">
+                      <img
+                        className="h-40 w-40 my-10"
+                        src={loader}
+                        alt="loader"
+                      />
                     </div>
-                  </div>
-                  <div className="h-[75vh] w-1 bg-neutral-200/40" />
-                  <div className="flex flex-col justify-between h-full w-full gap-4 ">
-                    {showRelevantLaws ? (
-                      <div className="overflow-auto border-2 border-white rounded bg-white text-black p-2">
-                        {relevantCaseLoading ? (
-                          <div className="flex justify-center items-center">
-                            <img
-                              className="h-40 w-40 my-10"
-                              src={loader}
-                              alt="loader"
-                            />
-                          </div>
-                        ) : (
-                          <p
-                            className="h-[60vh]"
-                            dangerouslySetInnerHTML={{
-                              __html: relevantLawsArr,
-                            }}
-                          />
-                          // {relevantLawsArr}</p>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col w-full gap-2">
-                        <img className="" src={logo} alt="logo" />
-                        <h3 className=" text-center">Draft Preview</h3>
-                      </div>
-                    )}
-                    {showRelevantLaws && !relevantCaseLoading && (
-                      <div className="w-full flex justify-end">
-                        <Link to={"/courtroom-ai/caseLaws"}>
-                          <button
-                            onClick={() => {
-                              dispatch(removeCaseLaws());
-                              dispatch(
-                                retrieveCaseLaws({
-                                  query: relevantLawData,
-                                  token: currentUser.token,
-                                })
-                              );
-                              setFirstDraftDialog(false);
-                            }}
-                            className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
-                          >
-                            View Case Laws
-                          </button>
-                        </Link>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-2 gap-2 relative">
-                      {showRelevantLaws ? (
-                        <motion.button
-                          disabled={!relevantLawsArr}
-                          className="border border-white rounded-md py-1"
-                          onClick={() => setShowRelevantLaws(false)}
-                        >
-                          Go Back
-                        </motion.button>
+                  )}
+                  <div className="w-full flex justify-end">
+                    <button
+                      onClick={handleNextAppeal}
+                      className="px-4 py-1 rounded border"
+                    >
+                      {nextAppealLoading ? (
+                        <CircularProgress size={15} color="inherit" />
                       ) : (
-                        <motion.button
-                          onClick={() => {
-                            setShowRelevantLaws(true);
-                            getReventCaseLaw();
-                          }}
-                          className="border border-white rounded-md py-1"
-                        >
-                          Relevant Case Laws
-                        </motion.button>
+                        "Next Appeal"
                       )}
-                      <button
-                        onClick={() => dowloadFirstDraft()}
+                    </button>
+                  </div>
+                </div>
+                <div className="h-[75vh] w-1 bg-neutral-200/40" />
+                <div className="flex flex-col justify-between h-full w-full gap-4 ">
+                  {showRelevantLaws ? (
+                    <div className="overflow-auto border-2 border-white rounded bg-white text-black p-2">
+                      {relevantCaseLoading ? (
+                        <div className="flex justify-center items-center">
+                          <img
+                            className="h-40 w-40 my-10"
+                            src={loader}
+                            alt="loader"
+                          />
+                        </div>
+                      ) : (
+                        <p
+                          className="h-[60vh]"
+                          dangerouslySetInnerHTML={{
+                            __html: relevantLawsArr,
+                          }}
+                        />
+                        // {relevantLawsArr}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col w-full gap-2">
+                      <img className="" src={clawLogo} alt="logo" />
+                      <h3 className=" text-center">Draft Preview</h3>
+                    </div>
+                  )}
+                  {showRelevantLaws && !relevantCaseLoading && (
+                    <div className="w-full flex justify-end">
+                      <Link to={"/courtroom-ai/caseLaws"}>
+                        <button
+                          onClick={() => {
+                            dispatch(removeCaseLaws());
+                            dispatch(
+                              retrieveCaseLaws({
+                                query: relevantLawData,
+                                token: currentUser.token,
+                              })
+                            );
+                            setFirstDraftDialog(false);
+                          }}
+                          className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
+                        >
+                          View Case Laws
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-2 relative">
+                    {showRelevantLaws ? (
+                      <motion.button
+                        disabled={!relevantLawsArr}
+                        className="border border-white rounded-md py-1"
+                        onClick={() => setShowRelevantLaws(false)}
+                      >
+                        Go Back
+                      </motion.button>
+                    ) : (
+                      <motion.button
+                        onClick={() => {
+                          setShowRelevantLaws(true);
+                          getReventCaseLaw();
+                        }}
                         className="border border-white rounded-md py-1"
                       >
-                        <Download /> Download
-                      </button>
-                    </div>
+                        Relevant Case Laws
+                      </motion.button>
+                    )}
+                    <button
+                      onClick={() => dowloadFirstDraft()}
+                      className="border border-white rounded-md py-1"
+                    >
+                      <Download /> Download
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
+          {/* )} */}
         </div>
       ) : null}
       {editDialog ? (
@@ -1633,7 +1670,7 @@ const AiSidebar = () => {
               >
                 <input
                   className="flex-1 p-2 rounded text-black"
-                  placeholder="Enter Your Query Here"
+                  placeholder="Enter Your Query Here..."
                   value={askLegalGptPrompt}
                   onChange={(e) => setAskLegalGptPrompt(e.target.value)}
                 />
@@ -1641,12 +1678,8 @@ const AiSidebar = () => {
                   type="submit"
                   disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
-                  className="px-3 rounded"
-                  style={{
-                    background: "linear-gradient(180deg, #008080,#001A1A)",
-                  }}
                 >
-                  Send
+                  <img className="w-9 h-9" src={sendIcon} />
                 </motion.button>
               </form>
             </div>
@@ -1689,10 +1722,15 @@ const AiSidebar = () => {
                 <div className="">
                   {promptArr.length > 0 &&
                     promptArr.map((x, index) => (
-                      <div className="" key={index}>
-                        <div className="flex flex-col">
-                          <div className="flex gap-3">
-                            <svg
+                      <div
+                        className="flex flex-col"
+                        style={{
+                          alignSelf: x.prompt ? "flex-start" : "flex-end",
+                        }}
+                        key={index}
+                      >
+                        <div className="flex gap-3">
+                          {/* <svg
                               fill="white"
                               xmlns="http://www.w3.org/2000/svg"
                               width="24"
@@ -1700,23 +1738,30 @@ const AiSidebar = () => {
                               viewBox="0 0 24 24"
                             >
                               <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7.753 18.305c-.261-.586-.789-.991-1.871-1.241-2.293-.529-4.428-.993-3.393-2.945 3.145-5.942.833-9.119-2.489-9.119-3.388 0-5.644 3.299-2.489 9.119 1.066 1.964-1.148 2.427-3.393 2.945-1.084.25-1.608.658-1.867 1.246-1.405-1.723-2.251-3.919-2.251-6.31 0-5.514 4.486-10 10-10s10 4.486 10 10c0 2.389-.845 4.583-2.247 6.305z" />
-                            </svg>
-                            <p>
-                              <Markdown>{x.prompt}</Markdown>
-                            </p>
-                          </div>
-                          {x.promptResponse ? (
-                            <p className="border-2 border-white rounded bg-[#008080] p-2 text-sm">
-                              <Markdown>{x.promptResponse}</Markdown>
-                            </p>
-                          ) : (
-                            <div className="h-full w-full flex flex-col gap-2">
-                              <div className="w-full h-3 bg-slate-600 animate-pulse  rounded-full"></div>
-                              <div className="w-full h-3 bg-slate-600 animate-pulse  rounded-full"></div>
-                              <div className="w-[60%] h-3 bg-slate-600 animate-pulse  rounded-full"></div>
-                              <div className="w-[40%] h-3 bg-slate-600 animate-pulse  rounded-full"></div>
+                            </svg> */}
+                          {/* <p className="bg-[#D9D9D9]  text-black p-2 text-sm rounded-t-xl rounded-r-xl max-w-[75%]"> */}
+                          <div className="w-full flex justify-end">
+                            <div className="w-5/6 flex justify-end">
+                              <p className=" bg-[#D9D9D9] p-2 text-sm text-black rounded-t-xl rounded-l-xl">
+                                {x.prompt}
+                              </p>
                             </div>
-                          )}
+                          </div>
+                        </div>
+                        <div className="w-full flex justify-start">
+                          <div className="w-5/6 flex justify-start">
+                            {x.promptResponse ? (
+                              <p className=" bg-[#00C37B] p-2 text-sm text-black rounded-t-xl rounded-r-xl">
+                                <Markdown>{x.promptResponse}</Markdown>
+                              </p>
+                            ) : (
+                              <div className="bg-[#00C37B] p-2 text-sm text-black rounded-t-xl rounded-r-xl flex flex-col justify-end gap-1 w-14 mb-2">
+                                <div className="w-full h-1 bg-slate-600 animate-pulse  rounded-full"></div>
+                                <div className="w-[60%] h-1 bg-slate-600 animate-pulse  rounded-full"></div>
+                                <div className="w-[40%] h-1 bg-slate-600 animate-pulse  rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -1736,11 +1781,12 @@ const AiSidebar = () => {
                   ]);
                   setAskLegalGptPrompt("");
                 }}
-                className="px-4 flex gap-2 py-3"
+                className="px-4 flex gap-2 py-3 items-center"
               >
                 <input
+                  required
                   className="flex-1 p-2 rounded text-black"
-                  placeholder="Enter Your Query Here"
+                  placeholder="Enter Your Query Here..."
                   value={askLegalGptPrompt}
                   onChange={(e) => setAskLegalGptPrompt(e.target.value)}
                 />
@@ -1748,12 +1794,8 @@ const AiSidebar = () => {
                   type="submit"
                   disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
-                  className="px-3 rounded"
-                  style={{
-                    background: "linear-gradient(180deg, #008080,#001A1A)",
-                  }}
                 >
-                  Send
+                  <img className="w-9 h-9" src={sendIcon} />
                 </motion.button>
               </form>
             </div>

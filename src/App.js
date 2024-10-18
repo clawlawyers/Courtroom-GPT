@@ -30,6 +30,7 @@ import AllowedBooking from "./CourtRoom/admin/AllowedBooking.jsx";
 import AllowedLogin from "./CourtRoom/admin/AllowedLogin.jsx";
 import AiDrafter from "./CourtRoom/CourtroomAi/AiDrafter.jsx";
 import CaseLaws from "./CourtRoom/CourtroomAi/CaseLaws.jsx";
+import AdminLogin from "./CourtRoom/Login/AdminLogin.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -123,6 +124,10 @@ function App() {
         {
           path: "/login",
           element: <LoginToCourtRoom />,
+        },
+        {
+          path: "/admin-login",
+          element: <AdminLogin />,
         },
         {
           path: "/book-now",
