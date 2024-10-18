@@ -113,6 +113,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           body: JSON.stringify({
             rating: rateValue.toString(),
             feedback: feedbackMessage,
+            userId: "65589uh3nwsnm,os",
           }),
         }
       );
@@ -287,10 +288,10 @@ const AiSidebar = () => {
   const dispatch = useDispatch();
   const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
-  console.log(overViewDetails);
+  // console.log(overViewDetails);
 
   const firstDraftDetails = useSelector((state) => state.user.firstDraft);
-  console.log(firstDraftDetails);
+  // console.log(firstDraftDetails);
   const firstDraftLoading = useSelector(
     (state) => state.user.firstDraftLoading
   );
@@ -440,7 +441,6 @@ const AiSidebar = () => {
     // }
 
     setFirstDraftDialog(true);
-    firstDraftApi();
   };
 
   const handleEvidenceClick = (event) => {
@@ -478,12 +478,14 @@ const AiSidebar = () => {
         //   },
         // }
       );
-      console.log(response);
-      dispatch(
-        setFirstDraftAction({
-          draft: response?.data?.data?.draft?.detailed_draft,
-        })
-      );
+      // console.log(await response.data);
+      if (response.data !== undefined) {
+        dispatch(
+          setFirstDraftAction({
+            draft: response?.data?.data?.draft?.detailed_draft,
+          })
+        );
+      }
 
       // dispatch(setFirstDraftLoading());
       // console.log("response is ", response.data.data.draft.detailed_draft);
@@ -497,18 +499,14 @@ const AiSidebar = () => {
   };
 
   useEffect(() => {
-    console.log(overViewDetails);
     if (overViewDetails !== "" || overViewDetails !== "NA") {
+      console.log(overViewDetails);
       firstDraftApi();
     }
   }, [overViewDetails]);
 
   useEffect(() => {
-    if (firstDraftDetails === undefined) {
-      setFirstDraft("");
-    } else {
-      setFirstDraft(firstDraftDetails);
-    }
+    setFirstDraft(firstDraftDetails);
   }, [firstDraftDetails]);
 
   const getAiQuestions = async () => {
@@ -1131,7 +1129,7 @@ const AiSidebar = () => {
             </div>
             <div className="h-full flex flex-col justify-evenly">
               <motion.div
-              id="download-session"
+                id="download-session"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
@@ -1158,7 +1156,7 @@ const AiSidebar = () => {
                 </p>
               </motion.div>
               <motion.div
-              id="download-case"
+                id="download-case"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
@@ -1242,18 +1240,20 @@ const AiSidebar = () => {
                 </p>
               </motion.div>
               <motion.div
-             
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
-                 className={`${
+                className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
                     : " flex items-center gap-[12px] cursor-pointer relative"
                 }`}
               >
                 {/* <img className="h-4 w-4" src={exitLogo} /> */}
-                <IoReload/>
-                <p className="m-0 text-xs"  onClick={() => dispatch(setTutorial())}>
+                <IoReload />
+                <p
+                  className="m-0 text-xs"
+                  onClick={() => dispatch(setTutorial())}
+                >
                   Restart Tutorial
                 </p>
               </motion.div>
