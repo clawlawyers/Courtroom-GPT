@@ -57,23 +57,123 @@ function AdminLogin() {
   const [tokenCheckLoading, setTokenCheckLoading] = useState(false);
   const [tokenVerified, setTokenVerified] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
-  const handleCheckToken = (e) => {
+  const handleCheckToken = async (e) => {
     e.preventDefault();
     setTokenCheckLoading(true);
-    //api calls
-    if (true) {
+    const slotBooked = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: token }),
+    });
+
+    if (!slotBooked.ok) {
+      toast.error("Invalid token. Please try again.");
+      return;
+    }
+
+    const parsedSlotBooked = await slotBooked.json();
+
+    if (parsedSlotBooked === "No bookings found for the current time slot.") {
+      let currentDate, currentHour;
+
+      if (process.env.NODE_ENV === "production") {
+        // Get current date and time in UTC
+        const now = new Date();
+
+        // Convert to milliseconds
+        const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+
+        // IST offset is +5:30
+        const istOffset = 5.5 * 60 * 60000;
+
+        // Create new date object for IST
+        const istTime = new Date(utcTime + istOffset);
+
+        // Format the date to YYYY-MM-DD
+        currentDate = `${istTime.getFullYear()}-${String(
+          istTime.getMonth() + 1
+        ).padStart(2, "0")}-${String(istTime.getDate()).padStart(2, "0")}`;
+
+        currentHour = istTime.getHours();
+      } else {
+        // Get the current date and hour in local time (for development)
+        const now = new Date();
+        currentDate = `${now.getFullYear()}-${String(
+          now.getMonth() + 1
+        ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+        currentHour = now.getHours();
+      }
+
+      console.log(currentDate);
+      console.log(currentHour);
+
+      // book current slot
+      const bookSlot = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/adminLogin/book-courtroom`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: token,
+            phoneNumber: token,
+            email: "admin@gmail.com",
+            slots: [{ date: currentDate, hour: currentHour }],
+            recording: false,
+            password: token,
+          }),
+        }
+      );
+      if (!bookSlot.ok) {
+        toast.error("Failed to book slot. Please try again.");
+        return;
+      }
+      toast.success("Slot booked successfully!");
+      setTokenVerified(true);
+      setTokenCheckLoading(false);
+    } else {
       setTokenVerified(true);
       setTokenCheckLoading(false);
     }
+
+    // //api calls
+    // if (true) {
+    //   setTokenVerified(true);
+    //   setTokenCheckLoading(false);
+    // }
   };
 
-  const handleCheckPassword = (e) => {
+  const handleCheckPassword = async (e) => {
     e.preventDefault();
     setTokenCheckLoading(true);
-    if (true) {
+    const slotBooked = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: token }),
+    });
+
+    if (!slotBooked.ok) {
+      toast.error("Invalid token. Please try again.");
       setTokenCheckLoading(false);
+      return;
     }
+
+    const loginDetails = await slotBooked.json();
+
+    if (loginDetails === "No bookings found for the current time slot.") {
+      toast.error("No bookings found for the current time slot.");
+    }
+
+    dispatch(login({ user: loginDetails }));
+    navigate("/courtroom-ai");
+    setTokenCheckLoading(false);
   };
 
   return (
