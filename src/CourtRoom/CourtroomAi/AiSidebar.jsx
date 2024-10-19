@@ -135,7 +135,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
         className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
         style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
-        <h1 id="time-left" className="text-xs m-0">
+        <h1 id="time-left" className="text-xs m-0 font-bold text-teal-800">
           Time Remaining:
         </h1>
         <h1
@@ -961,7 +961,7 @@ const AiSidebar = () => {
               className={`${
                 overViewDetails === "NA" || overViewDetails === ""
                   ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : ""
+                  : "cursor-pointer"
               }`}
               style={{
                 display: "flex",
@@ -975,7 +975,9 @@ const AiSidebar = () => {
               }}
             >
               <div id="first-draft">
-                <p className="text-xs m-0">View First Draft</p>
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  View First Draft
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -1007,7 +1009,9 @@ const AiSidebar = () => {
               }}
             >
               <div id="Ai-Drafter">
-                <p className="text-xs m-0">Ai Drafter</p>
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  Ai Drafter
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -1039,7 +1043,9 @@ const AiSidebar = () => {
               }}
             >
               <div id="legalGpt">
-                <p className="text-xs m-0">Ask LegalGPT</p>
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  Ask LegalGPT
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -1068,10 +1074,13 @@ const AiSidebar = () => {
                 border: "2px solid white",
                 borderRadius: "5px",
                 marginBottom: "5px",
+                cursor: "pointer",
               }}
             >
               <div id="case-search">
-                <p className="text-xs m-0">Case Search</p>
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  Case Search
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -1133,7 +1142,7 @@ const AiSidebar = () => {
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
-                    : ""
+                    : "cursor-pointer"
                 }`}
                 onClick={() => downloadSessionCaseHistory()}
                 whileTap={{ scale: "0.95" }}
@@ -1167,11 +1176,9 @@ const AiSidebar = () => {
                 whileHover={{ scale: "1.01" }}
               >
                 <img className="w-4" src={aiDrafter} alt="aiDrafter" />
-                <p className="m-0 text-xs text-white pl-1">
-                  Download Case History
-                </p>
+                <p className="m-0 text-xs text-white">Download Case History</p>
               </motion.div>
-              <motion.div
+              {/* <motion.div
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
@@ -1188,7 +1195,7 @@ const AiSidebar = () => {
               >
                 <img src={oldCaseLogo} />
                 <p className="m-0 text-xs text-white">Old Case Search</p>
-              </motion.div>
+              </motion.div> */}
               <Link to={"/courtroom-ai"}>
                 <motion.div
                   whileTap={{ scale: "0.95" }}
