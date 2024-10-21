@@ -380,8 +380,6 @@ const AiSidebar = () => {
   const saveHistory = async () => {
     setRelevantLawsArr(null);
     setShowRelevantLaws(false);
-    dispatch(setOverview(""));
-    dispatch(setFirstDraftAction({ draft: "" }));
     try {
       if (overViewDetails !== "NA") {
         await axios.post(
@@ -1211,7 +1209,12 @@ const AiSidebar = () => {
                   <p
                     id="NewCaseInput"
                     className="m-0 text-xs text-white"
-                    onClick={() => saveHistory()}
+                    onClick={() => {
+                      saveHistory();
+
+                      dispatch(setOverview(""));
+                      dispatch(setFirstDraftAction({ draft: "" }));
+                    }}
                   >
                     New Case Input
                   </p>
