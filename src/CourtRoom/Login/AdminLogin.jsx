@@ -153,18 +153,12 @@ function AdminLogin() {
       setTokenVerified(true);
       setTokenCheckLoading(false);
     } else if (
-      parsedSlotBooked === "Maximum of 6 courtrooms can be booked at same time"
+      parsedSlotBooked.data === "Maximum of 6 courtrooms can be booked"
     ) {
       toast.error("Maximum of 6 courtrooms can be booked");
       return;
-    } else if (
-      parsedSlotBooked ===
-      "User with phone number admin@gmail.com or email admin@gmail.com has already booked a courtroom at same time"
-    ) {
-      setTokenVerified(true);
-      setTokenCheckLoading(false);
     } else {
-      toast.error("Invalid token. Please try again.");
+      setTokenVerified(true);
       setTokenCheckLoading(false);
     }
 
