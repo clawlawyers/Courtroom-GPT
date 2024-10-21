@@ -47,6 +47,10 @@ const BookNow = () => {
   console.log(scheduledSlots);
 
   const handleSubmit = async (e) => {
+    if (scheduledSlots.length === 0) {
+      toast.error("Please select a slot");
+      return;
+    }
     e.preventDefault();
     if (!otpVerifySuccess) {
       toast.error("Please verify phone number to proceed!");

@@ -62,6 +62,11 @@ function AdminLogin() {
   const handleCheckToken = async (e) => {
     e.preventDefault();
     setTokenCheckLoading(true);
+
+    if (token !== "9950866260ADMIN") {
+      toast.error("Invalid token. Please try again.");
+      return;
+    }
     const slotBooked = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
       method: "POST",
       headers: {
