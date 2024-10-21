@@ -152,7 +152,9 @@ function AdminLogin() {
       toast.success("Slot booked successfully!");
       setTokenVerified(true);
       setTokenCheckLoading(false);
-    } else if (parsedSlotBooked === "Maximum of 6 courtrooms can be booked") {
+    } else if (
+      parsedSlotBooked.data === "Maximum of 6 courtrooms can be booked"
+    ) {
       toast.error("Maximum of 6 courtrooms can be booked");
       return;
     } else {
