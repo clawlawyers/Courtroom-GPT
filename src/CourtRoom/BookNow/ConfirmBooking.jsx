@@ -295,12 +295,12 @@ const ConfirmBooking = () => {
   };
 
   return (
-    <div className="flex flex-col p-5 m-auto gap-2">
+    <div className="flex flex-col w-[80%] p-5 m-auto gap-2">
       <>
         {couponApplied ? (
           <form
             onSubmit={handleResetCode}
-            className="flex justify-center items-center gap-3 p-3"
+            className="flex flex-col md:flex-row justify-start items-center gap-3 py-3"
           >
             <p className="m-0">Have a Coupon Code ? Apply Here : </p>
             <input
@@ -321,7 +321,7 @@ const ConfirmBooking = () => {
         ) : (
           <form
             onSubmit={handleCouponCode}
-            className="flex justify-center items-center gap-3 p-3"
+            className="flex flex-col md:flex-row justify-start items-center gap-3 py-3"
           >
             <p className="m-0">Have a Coupon Code ? Apply Here : </p>
             <input
@@ -341,34 +341,34 @@ const ConfirmBooking = () => {
         )}
       </>
       {/* Card Section */}
-      <section className="w-full h-max flex flex-col md:flex-row justify-center items-start gap-2">
+      <section className="w-full h-max grid md:grid-cols-[60%_40%] justify-center items-start gap-2">
         {/* Card 1 */}
-        <div className="p-4 border border-white max-w-[50%] h-max rounded-md bg-card-gradient flex flex-col gap-3">
+        <div className="p-4 border border-white w-full rounded-md bg-card-gradient flex flex-col gap-3">
           <div className="flex flex-col gap-2">
             <h3 className="font-bold">Booking Details</h3>
             <div className="h-0.5 bg-white w-full" />
           </div>
-          <div className="mx-2">
+          <div className="mx-2 flex flex-col ">
             {/* <h3 className="font-semibold">CLAW courtroom</h3>
             <p className="text-neutral-200 text-sm">
               Access to AI Powered CLAW courtroom
             </p> */}
 
-            <p>
-              User Id: <span className="font-bold">{bookingData.name}</span>
+            <p className="m-0">
+              User Id : <span className="font-bold">{bookingData.name}</span>
             </p>
-            <p>
-              Email: <span className="font-bold">{bookingData.email}</span>
+            <p className="m-0">
+              Email : <span className="font-bold">{bookingData.email}</span>
             </p>
-            <p>
-              Phone Number:{" "}
+            <p className="m-0">
+              Phone Number :{" "}
               <span className="font-bold">{bookingData.phoneNumber}</span>
             </p>
           </div>
           <div className="h-0.5 bg-white w-full" />
           {/* Time Slot */}
           <div className="flex flex-col gap-1 w-full px-2">
-            <p>Timer Slot: </p>
+            <p>Timer Slot : </p>
             <div className="flex flex-row flex-wrap items-center gap-2 w-full h-full">
               {slots?.map((idx) => (
                 <div
@@ -399,11 +399,12 @@ const ConfirmBooking = () => {
             <div className="h-0.5 bg-white w-full" />
           </div>
           <div className="mx-2 gap-2">
-            <h3 className="font-bold text-lg">
-              Price per slot: <span className="text-lg">Rs. 100</span> /-
+            <h3 className="text-lg m-0">
+              Price per slot : <span className="font-bold">₹ 100</span> /-
             </h3>
-            <h3 className="font-bold text-lg">
-              No. of slots booked: {slots?.length}
+            <h3 className="text-lg">
+              No. of slots booked :{" "}
+              <span className="font-bold">{slots?.length}</span>
             </h3>
           </div>
           <div className="h-0.5 bg-white w-full" />
@@ -412,12 +413,12 @@ const ConfirmBooking = () => {
           <div className="flex flex-col w-full px-2">
             {discountPercentage ? (
               <p className="text-xl font-bold">
-                Amount to Pay:{" "}
+                Amount to Pay :{" "}
                 {100 * slots?.length * (discountPercentage / 100)}
               </p>
             ) : (
               <p className="text-xl font-bold">
-                Amount to Pay: {100 * slots?.length}
+                Amount to Pay : ₹ {100 * slots?.length}
               </p>
             )}
             <div className="flex flex-row w-full justify-end">
