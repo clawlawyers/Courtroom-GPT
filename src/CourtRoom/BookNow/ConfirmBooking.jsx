@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -11,34 +11,57 @@ import {
   signInWithPhoneNumber,
 } from "../../utils/firebase";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { CircularProgress } from "@mui/material";
+import { setClearBooking } from "../../features/bookCourtRoom/bookingSlice";
+
+const couponArr = [{ name: "exam50", discount: 50 }];
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const bookingData = useSelector((state) => state?.booking?.bookingData);
+  // console.log(bookingData);
+  const slots = bookingData?.slots;
+
   const [otp, setOtp] = useState("");
   // const [hasFilled, setHasFilled] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
-  const bookingData = useSelector((state) => state?.booking?.bookingData);
-  const slots = bookingData?.slots;
   const [verificationId, setVerificationId] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
   const [proceedToPayment, setProceedToPayment] = useState(false);
   const [paymentGatewayLoading, setPaymentGatewayLoading] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpSuccess, setOtpSuccess] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(30);
+  const [otpVerifySuccess, setOtpVerifySuccess] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [discountPercentage, setDiscountPercentage] = useState(null);
+  const [isFirst, setIsfirst] = useState(true);
 
   // console.log(bookingData.phoneNumber);
+
+  useEffect(() => {
+    if (bookingData === "") {
+      navigate("/book-now");
+    }
+  }, [bookingData]);
 
   const handlePayment = async () => {
     setPaymentGatewayLoading(true);
     await loadRazorpay(bookingData);
-    setPaymentGatewayLoading(false);
+    // setPaymentGatewayLoading(false);
   };
 
   const loadRazorpay = async (bookingData) => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onerror = () => {
-      alert("Razorpay SDK failed to load. Are you online?");
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      setPaymentGatewayLoading(false);
     };
     script.onload = async () => {
       try {
@@ -46,7 +69,9 @@ const ConfirmBooking = () => {
         const result = await axios.post(
           `${NODE_API_ENDPOINT}/booking-payment/create-order`,
           {
-            amount: slots.length * 100,
+            amount: discountPercentage
+              ? slots.length * 100 * (discountPercentage / 100)
+              : slots.length * 100,
             phoneNumber: bookingData.phoneNumber,
             currency: "INR",
             receipt: receipt,
@@ -79,8 +104,10 @@ const ConfirmBooking = () => {
               `${NODE_API_ENDPOINT}/booking-payment/verifyPayment`,
               data
             );
-            alert(result.data.status);
+            // alert(result.data.status);
+            toast(result.data.status);
 
+            setPaymentGatewayLoading(false);
             navigate("/login");
           },
 
@@ -92,9 +119,12 @@ const ConfirmBooking = () => {
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();
       } catch (error) {
-        alert(error.message);
+        toast.error(error.message);
+
+        setPaymentGatewayLoading(false);
       } finally {
-        // setLoading(false);
+        setPaymentGatewayLoading(false);
+        dispatch(setClearBooking());
       }
     };
     document.body.appendChild(script);
@@ -102,151 +132,248 @@ const ConfirmBooking = () => {
 
   // const [phoneNumber, setPhoneNumber] = useState('');
 
-  const handleDisableButton = () => {
-    if (isDisabled) return;
+  // const handleDisableButton = () => {
+  //   if (isDisabled) return;
 
-    setIsDisabled(true);
-    setTimeout(() => {
-      setIsDisabled(false);
-    }, 30000);
-  };
+  //   setIsDisabled(true);
+  //   setTimeout(() => {
+  //     setIsDisabled(false);
+  //   }, 30000);
+  // };
 
   const handleSendOTP = () => {
-    handleDisableButton();
+    // handleDisableButton();
+    setOtpLoading(true);
     console.log("sendOTP");
-    const recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+    if (isFirst) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
         },
-      },
-      auth
-    );
+        auth
+      );
+      setIsfirst(false);
+    } else if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
 
     signInWithPhoneNumber(
       auth,
       "+91" + bookingData?.phoneNumber,
-      recaptchaVerifier
+      window.recaptchaVerifier
     )
       .then((confirmationResult) => {
         setVerificationId(confirmationResult.verificationId);
-        alert("OTP sent!");
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
       })
       .catch((error) => {
         console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
       });
   };
 
-  const handleVerifyOTP = () => {
+  const handleVerifyOTP = (e) => {
+    e.preventDefault();
+    setOtpLoading(true);
     const credential = PhoneAuthProvider.credential(verificationId, otp);
     localStorage.setItem("loginOtp", otp);
 
     signInWithCredential(auth, credential)
       .then((userCredential) => {
         const user = userCredential.user;
-        alert("Phone number verified successfully!");
+        toast.success("Phone number verified successfully!");
+        setOtpLoading(false);
         setProceedToPayment(true);
+        setOtpVerifySuccess(true);
+        setOtp("");
       })
       .catch((error) => {
         console.error("Error during OTP verification:", error);
-        setProceedToPayment(false);
+        toast.error("Error during OTP verification");
+        setOtp("");
+        setOtpLoading(false);
       });
   };
 
+  useEffect(() => {
+    let intervalId;
+    if (isDisabled && countdown > 0) {
+      intervalId = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (countdown === 0) {
+      clearInterval(intervalId);
+      setIsDisabled(false);
+      setCountdown(30); // Reset countdown
+    }
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [isDisabled, countdown]);
+
+  const handleRetryClick = (e) => {
+    e.preventDefault();
+    setIsDisabled(true);
+
+    //  API call here
+
+    console.log("sendOTP");
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
+
+    signInWithPhoneNumber(
+      auth,
+      "+91" + bookingData?.phoneNumber,
+      window.recaptchaVerifier
+    )
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
+  };
+
+  const handleCouponCode = (e) => {
+    e.preventDefault();
+    const couponFind = couponArr.find(
+      (x) => x.name.toLowerCase() === couponCode.toLowerCase()
+    );
+    if (couponFind) {
+      setDiscountPercentage(couponFind.discount);
+      setCouponApplied(true);
+      toast.success("Coupon applied successfully !");
+    } else {
+      toast.error("No coupon found!");
+      setCouponCode("");
+    }
+  };
+
+  const handleResetCode = (e) => {
+    e.preventDefault();
+    setCouponCode("");
+    setDiscountPercentage(null);
+    setCouponApplied(false);
+  };
+
   return (
-    <div className="flex flex-col p-5 w-full gap-2">
-      <div className="md:mx-32 p-1 flex flex-col md:flex-row  justify-between items-center bg-[#303030] rounded border-2 border-[#018585]">
-        <div className="py-2 flex items-center gap-2">
-          <p className="m-0">OTP sent to :</p>
-          <h2 className="font-bold m-0">{bookingData?.phoneNumber}</h2>
-        </div>
-        <div className="flex flex-col md:flex-row items-center gap-2">
-          <input
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter OTP"
-            className="p-2 rounded text-black"
-          />
-          <div className="flex items-center gap-2 cursor-pointer">
-            <svg
-              className="w-5 h-5"
-              stroke="#018585"
-              fill="#018585"
-              clip-rule="evenodd"
-              fill-rule="evenodd"
-              stroke-linejoin="round"
-              stroke-miterlimit="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+    <div className="flex flex-col w-[80%] p-5 m-auto gap-2">
+      <>
+        {couponApplied ? (
+          <form
+            onSubmit={handleResetCode}
+            className="flex flex-col md:flex-row justify-start items-center gap-3 py-3"
+          >
+            <p className="m-0">Have a Coupon Code ? Apply Here : </p>
+            <input
+              required
+              readOnly
+              className="p-2 rounded text-black"
+              placeholder="Enter Coupon Code"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-card-gradient px-3 py-2 rounded"
             >
-              <path
-                d="m3.508 6.726c1.765-2.836 4.911-4.726 8.495-4.726 5.518 0 9.997 4.48 9.997 9.997 0 5.519-4.479 9.999-9.997 9.999-5.245 0-9.553-4.048-9.966-9.188-.024-.302.189-.811.749-.811.391 0 .715.3.747.69.351 4.369 4.012 7.809 8.47 7.809 4.69 0 8.497-3.808 8.497-8.499 0-4.689-3.807-8.497-8.497-8.497-3.037 0-5.704 1.597-7.206 3.995l1.991.005c.414 0 .75.336.75.75s-.336.75-.75.75h-4.033c-.414 0-.75-.336-.75-.75v-4.049c0-.414.336-.75.75-.75s.75.335.75.75z"
-                fill-rule="nonzero"
-              />
-            </svg>
-            <p className="m-0">Retry in 30 seconds</p>
-          </div>
-        </div>
-        <div className="flex gap-2 m-2">
-          <motion.button
-            whileTap={{ scale: "0.95" }}
-            disabled={isDisabled}
-            className="border-2 rounded p-2"
-            style={{
-              borderColor: isDisabled ? "black" : "white",
-              color: isDisabled ? "black" : "white",
-              cursor: isDisabled ? "not-allowed" : "pointer",
-            }}
-            onClick={handleSendOTP}
+              Reset
+            </button>
+          </form>
+        ) : (
+          <form
+            onSubmit={handleCouponCode}
+            className="flex flex-col md:flex-row justify-start items-center gap-3 py-3"
           >
-            Send OTP
-          </motion.button>
-          <button
-            className="text-white bg-gradient-to-r from-[#008080] to-[#003131] rounded p-2"
-            onClick={() => handleVerifyOTP()}
-          >
-            Verify OTP
-          </button>
-          <div id="recaptcha-container"></div>
-        </div>
-      </div>
+            <p className="m-0">Have a Coupon Code ? Apply Here : </p>
+            <input
+              required
+              className="p-2 rounded text-black"
+              placeholder="Enter Coupon Code"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-card-gradient px-3 py-2 rounded"
+            >
+              Apply
+            </button>
+          </form>
+        )}
+      </>
       {/* Card Section */}
-      <section className="w-full h-max grid md:grid-cols-2 justify-center items-center  md:items-start gap-10 md:px-28">
+      <section className="w-full h-max grid md:grid-cols-[60%_40%] justify-center items-start gap-2">
         {/* Card 1 */}
-        <div className="p-4 border border-white h-max rounded-md bg-card-gradient flex flex-col gap-3">
+        <div className="p-4 border border-white w-full rounded-md bg-card-gradient flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <h3 className="font-bold">Confirm your booking</h3>
+            <h3 className="font-bold">Booking Details</h3>
             <div className="h-0.5 bg-white w-full" />
           </div>
-          <div className="mx-2">
-            <h3 className="font-semibold">CLAW courtroom</h3>
+          <div className="mx-2 flex flex-col ">
+            {/* <h3 className="font-semibold">CLAW courtroom</h3>
             <p className="text-neutral-200 text-sm">
               Access to AI Powered CLAW courtroom
-            </p>
+            </p> */}
 
-            <p>
-              UserId: <span className="font-bold">{bookingData.name}</span>
+            <p className="m-0">
+              User Id : <span className="font-bold">{bookingData.name}</span>
             </p>
-            <p>
-              Email: <span className="font-bold">{bookingData.email}</span>
+            <p className="m-0">
+              Email : <span className="font-bold">{bookingData.email}</span>
             </p>
-            <p>
-              Phone Number:{" "}
+            <p className="m-0">
+              Phone Number :{" "}
               <span className="font-bold">{bookingData.phoneNumber}</span>
             </p>
           </div>
           <div className="h-0.5 bg-white w-full" />
           {/* Time Slot */}
-          <div className="flex flex-col gap-3 w-full px-2">
-            <p>Timer Slot: </p>
-            <div className="flex flex-row flex-wrap justify-between items-center gap-2 w-full h-full">
+          <div className="flex flex-col gap-1 w-full px-2">
+            <p>Timer Slot : </p>
+            <div className="flex flex-row flex-wrap items-center gap-2 w-full h-full">
               {slots?.map((idx) => (
                 <div
                   key={idx}
-                  className="bg-slot-gradient flex flex-row flex-wrap  p-3 items-center align-baseline rounded-lg justify-center px-3 text-black font-bold text-xs"
+                  className="bg-slot-gradient flex flex-row flex-wrap items-center align-baseline rounded-lg justify-center px-2 py-3 text-black font-bold text-xs border"
                 >
                   {idx?.date}
                   {" ,"}
@@ -272,20 +399,28 @@ const ConfirmBooking = () => {
             <div className="h-0.5 bg-white w-full" />
           </div>
           <div className="mx-2 gap-2">
-            <h3 className="font-bold text-lg">
-              Price per slot: <span className="text-lg">Rs. 100</span> /-
+            <h3 className="text-lg m-0">
+              Price per slot : <span className="font-bold">₹ 100</span> /-
             </h3>
-            <h3 className="font-bold text-lg">
-              No. of slots booked: {slots?.length}
+            <h3 className="text-lg">
+              No. of slots booked :{" "}
+              <span className="font-bold">{slots?.length}</span>
             </h3>
           </div>
           <div className="h-0.5 bg-white w-full" />
           <br />
           {/* Amount to Pay */}
           <div className="flex flex-col w-full px-2">
-            <p className="text-xl font-bold">
-              Amount to Pay: {100 * slots?.length}
-            </p>
+            {discountPercentage ? (
+              <p className="text-xl font-bold">
+                Amount to Pay :{" "}
+                {100 * slots?.length * (discountPercentage / 100)}
+              </p>
+            ) : (
+              <p className="text-xl font-bold">
+                Amount to Pay : ₹ {100 * slots?.length}
+              </p>
+            )}
             <div className="flex flex-row w-full justify-end">
               <motion.button
                 whileTap={{ scale: "0.95" }}
@@ -320,6 +455,8 @@ const ConfirmBooking = () => {
           </div>
         </div>
       </section>
+
+      <div id="recaptcha-container"></div>
     </div>
   );
 };

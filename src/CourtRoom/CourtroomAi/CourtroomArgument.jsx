@@ -4,10 +4,11 @@ import aiLawyer from "../../assets/images/aiLawyer.png";
 import userIcon from "../../assets/images/userArgument.png";
 import Styles from "./CourtroomArgument.module.css";
 import markdownit from "markdown-it";
+import { setTutorial } from "../../features/sidebar/sidebarSlice";
 
 import { motion } from "framer-motion";
 import { Close, Co2Sharp, ResetTvSharp, Send } from "@mui/icons-material";
-import { Button, Menu, Modal } from "@mui/material";
+import { Button, Menu, Modal, StyledEngineProvider } from "@mui/material";
 import { MenuItem, IconButton } from "@mui/material";
 import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
@@ -28,13 +29,278 @@ import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
 import {
   setFightingSideModal,
   setFirstDraftAction,
+  setFirstDraftLoading,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
-
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { setTutorialFalse } from "../../features/popup/popupSlice";
 const CourtroomArgument = () => {
+  // var driverObj = driver({
+  //   showProgress: true,
+  //   steps:  [
+  //     {
+  //       element: "#side-selection",
+  //       popover: {
+  //         title: "sele",
+  //         description:
+  //           "This will show ai judge response to an argument  ",
+  //         side: "left",
+  //         align: "start",
+  //       },
+  //     },
+
+  //   ]
+  // })
+  useEffect(() => {
+    console.log("hiasd");
+    // driverObj.drive()
+  }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  
   const fightingModal = useSelector((state) => state.user.fightingSideModal);
+  const tutorial = useSelector((state) => state.popup.tutorial);
+  useEffect(() => {
+    console.log("hiasasdd");
+    if(tutorial){
+      console.log("adsd")
+      var driverObj = driver({
+        showProgress: true,
+        steps:  [
+          // {
+          //   element: "#side-selection",
+          //   popover: {
+          //     title: "Ai judgde",
+          //     description:
+          //       "This will show ai judge response to an argument  ",
+          //     side: "left",
+          //     align: "start",
+          //   },
+          // },
+          {
+            element: "#aijudge",
+            popover: {
+              title: "Ai judgde",
+              description: "This will show ai judge response to an argument  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#ailawyer",
+            popover: {
+              title: "Ai Lawyer",
+              description:
+                "This will show the response of the ai lawyer of the oppsing counsel",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#expand",
+            popover: {
+              title: "Exapnd",
+              description:
+                "click this button to exapnd response for better view   ",
+              side: "left",
+
+              align: "start",
+              onNextClick: () => {
+                console.log(myDivRef.current);
+                setAnchorElmenu(myDivRef.current);
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#swaplawyer",
+            popover: {
+              title: "Change side",
+              description:
+                "click this button to change the side you are representing   ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#relevant-case-menu",
+            popover: {
+              title: "menu",
+              description: "click this button to open mnenu  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#relevantcase-button",
+            popover: {
+              title: "menu",
+              description: "click this button to show relevant cases  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                setAnchorElmenu(null);
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#evidence-menu",
+            popover: {
+              title: "menu",
+              description: "click this button to show relevant cases  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                document.getElementById("evidence-menu").click();
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#edit_doc",
+            popover: {
+              title: "Edit Doc",
+              description: "click this button to edit the case law document  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#evidence-button",
+            popover: {
+              title: "Add Evidence",
+              description:
+                "click this button to add evidences a popup will open and you can add releavnt evidences t will also return its relevance  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#evidence-testimony",
+            popover: {
+              title: "Add Testimony",
+              description:
+                "click this button to add testimony a popup will open and you can add releavnt testimony t will also return its relevance  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                document.getElementById("long-menu").click();
+                driverObj.moveNext();
+              },
+            },
+          },
+          {
+            element: "#time-left",
+            popover: {
+              title: "Time Remaning ",
+              description: "It shows amount of time remaining ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#first-draft",
+            popover: {
+              title: "First Draft",
+              description:
+                "Click this button to open the first draft of the given case fle ",
+              side: "left",
+              align: "start",
+            },
+          },
+          
+          {
+            element: "#Ai-Drafter",
+            popover: {
+              title: "Document Drafter",
+              description:
+                "Click this button to open a popup to create documents reletaed to the case using ai  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#legalGpt",
+            popover: {
+              title: "Legal Gpt",
+              description:
+                "Click this button to open legal gpt popup to ask law releated queries ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#case-search",
+            popover: {
+              title: "Case Search",
+              description:
+                "Click this button to open a popup to search older cases related to your use case  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#claw-ai-ass",
+            popover: {
+              title: "Case AI Assistant",
+              description:
+                "Click this button to open a   popup to for ai assiatance for the case  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#download-session",
+            popover: {
+              title: "Download Session",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+          {
+            element: "#download-case",
+            popover: {
+              title: "Download Case",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+      
+       
+          {
+            element: "#NewCaseInput",
+            popover: {
+              title: "New Case",
+              description: "Click this button to open a new case file ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#userinput",
+            popover: {
+              title: "Enter Argument",
+              description:
+                "Enter your argumentnts here you can use either text and voice input  ",
+              side: "left",
+              align: "start",
+            },
+          },
+        ],
+      })
+      driverObj.drive()
+      dispatch(setTutorialFalse())
+
+    }
+
+  }, [tutorial]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
@@ -75,6 +341,7 @@ const CourtroomArgument = () => {
   const id = open ? "simple-popover" : undefined;
 
   const currentUser = useSelector((state) => state.user.user);
+  const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
   const lastItemRef = useRef(null);
   const editItemRef = useRef(null);
 
@@ -243,7 +510,6 @@ const CourtroomArgument = () => {
     setSelectedUserArgument(index);
     setSelectedUserArgumentContent(x);
     await RetieveDetails(index);
-
     // api call here
   };
   // const openDialog = (e) => {
@@ -302,6 +568,15 @@ const CourtroomArgument = () => {
           },
         }
       );
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/summary`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
 
       judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
       setJudgeArgument(judgeArgument);
@@ -311,12 +586,17 @@ const CourtroomArgument = () => {
       toast.error("Error in generating details");
     }
   };
+  const myDivRef = useRef(null);
   const handleMenuOpen = (event) => {
+    console.log(typeof event.currentTarget);
     setAnchorElmenu(event.currentTarget);
   };
   const handleMenuClose = () => {
     setAnchorElmenu(null);
   };
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   const handleAddArgument = async () => {
     try {
       setUserArgument([...userArgument, addArgumentInputText]);
@@ -324,6 +604,51 @@ const CourtroomArgument = () => {
 
       setAiJudgeLoading(true);
       setAiLawyerLoading(true);
+      // driverObj.destroy()
+      // driverObj=null
+      console.log(userArgument.length);
+      if (userArgument.length == 0) {
+        await sleep(2000);
+        const driverObj1 = driver({
+          showProgress: true,
+          steps: [
+            {
+              element: ".arguments:nth-child(1)",
+              popover: {
+                title: "Argument",
+                description: "Click on the argument for more option  ",
+                side: "left",
+                align: "start",
+                onNextClick: () => {
+                  console.log("asdad");
+                  handleArgumentSelect(0, userArgument[0]);
+
+                  driverObj1.moveNext();
+                },
+              },
+            },
+            {
+              element: ".arguments:nth-child(1)",
+              popover: {
+                title: "edit and objection",
+                description:
+                  "Click on red button to show objections and and the button beside to edit the argument ",
+                side: "left",
+                align: "start",
+
+                onNextClick: () => {
+                  // .. remove element
+                  console.log("asdasdasdasd");
+                  dispatch(setTutorial());
+                  console.log(sidebarTut);
+                  driverObj1.destroy();
+                },
+              },
+            },
+          ],
+        });
+        driverObj1.drive();
+      }
 
       const inserUserArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
@@ -487,6 +812,7 @@ const CourtroomArgument = () => {
   const handleFightingSide = async () => {
     // console.log(fightType);
     // console.log(otherFightType);
+
     let type;
     if (fightType === "others") {
       type = otherFightType;
@@ -509,6 +835,239 @@ const CourtroomArgument = () => {
       console.log(data);
       firstDraftApi();
       dispatch(setFightingSideModal(false));
+      // driverObj1.destroy()
+      var driverObj2 = driver({
+        showProgress: true,
+        steps: [
+          // {
+          //   element: "#side-selection",
+          //   popover: {
+          //     title: "Ai judgde",
+          //     description:
+          //       "This will show ai judge response to an argument  ",
+          //     side: "left",
+          //     align: "start",
+          //   },
+          // },
+          {
+            element: "#aijudge",
+            popover: {
+              title: "Ai judgde",
+              description: "This will show ai judge response to an argument  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#ailawyer",
+            popover: {
+              title: "Ai Lawyer",
+              description:
+                "This will show the response of the ai lawyer of the oppsing counsel",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#expand",
+            popover: {
+              title: "Exapnd",
+              description:
+                "click this button to exapnd response for better view   ",
+              side: "left",
+
+              align: "start",
+              onNextClick: () => {
+                console.log(myDivRef.current);
+                setAnchorElmenu(myDivRef.current);
+                driverObj2.moveNext();
+              },
+            },
+          },
+          {
+            element: "#swaplawyer",
+            popover: {
+              title: "Change side",
+              description:
+                "click this button to change the side you are representing   ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#relevant-case-menu",
+            popover: {
+              title: "menu",
+              description: "click this button to open mnenu  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#relevantcase-button",
+            popover: {
+              title: "menu",
+              description: "click this button to show relevant cases  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                setAnchorElmenu(null);
+                driverObj2.moveNext();
+              },
+            },
+          },
+          {
+            element: "#evidence-menu",
+            popover: {
+              title: "menu",
+              description: "click this button to show relevant cases  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                document.getElementById("evidence-menu").click();
+                driverObj2.moveNext();
+              },
+            },
+          },
+          {
+            element: "#edit_doc",
+            popover: {
+              title: "Edit Doc",
+              description: "click this button to edit the case law document  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#evidence-button",
+            popover: {
+              title: "Add Evidence",
+              description:
+                "click this button to add evidences a popup will open and you can add releavnt evidences t will also return its relevance  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#evidence-testimony",
+            popover: {
+              title: "Add Testimony",
+              description:
+                "click this button to add testimony a popup will open and you can add releavnt testimony t will also return its relevance  ",
+              side: "left",
+              align: "start",
+              onNextClick: () => {
+                document.getElementById("long-menu").click();
+                driverObj2.moveNext();
+              },
+            },
+          },
+          {
+            element: "#time-left",
+            popover: {
+              title: "Time Remaning ",
+              description: "It shows amount of time remaining ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#first-draft",
+            popover: {
+              title: "First Draft",
+              description:
+                "Click this button to open the first draft of the given case fle ",
+              side: "left",
+              align: "start",
+            },
+          },
+          
+          {
+            element: "#Ai-Drafter",
+            popover: {
+              title: "Document Drafter",
+              description:
+                "Click this button to open a popup to create documents reletaed to the case using ai  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#legalGpt",
+            popover: {
+              title: "Legal Gpt",
+              description:
+                "Click this button to open legal gpt popup to ask law releated queries ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#case-search",
+            popover: {
+              title: "Case Search",
+              description:
+                "Click this button to open a popup to search older cases related to your use case  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#claw-ai-ass",
+            popover: {
+              title: "Case AI Assistant",
+              description:
+                "Click this button to open a   popup to for ai assiatance for the case  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#download-session",
+            popover: {
+              title: "Download Session",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+          {
+            element: "#download-case",
+            popover: {
+              title: "Download Case",
+              description:
+                "Click this button to download the entire session histroy in pdf form ",
+              side: "left",
+              align: "start",
+            },
+          },
+        
+      
+       
+          {
+            element: "#NewCaseInput",
+            popover: {
+              title: "New Case",
+              description: "Click this button to open a new case file ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#userinput",
+            popover: {
+              title: "Enter Argument",
+              description:
+                "Enter your argumentnts here you can use either text and voice input  ",
+              side: "left",
+              align: "start",
+            },
+          },
+        ],
+      });
+      driverObj2.drive();
     } catch (error) {
       console.log(error);
       dispatch(setFightingSideModal(false));
@@ -516,6 +1075,7 @@ const CourtroomArgument = () => {
   };
 
   const firstDraftApi = async () => {
+    // dispatch(setFirstDraftLoading());
     try {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -532,10 +1092,14 @@ const CourtroomArgument = () => {
       // console.log("response is ", response.data.data.draft.detailed_draft);
       // setFirstDraft(response.data.data.draft.detailed_draft);
       dispatch(
-        setFirstDraftAction({ draft: response.data.data.draft.detailed_draft })
+        setFirstDraftAction({
+          draft: response?.data?.data?.draft?.detailed_draft,
+        })
       );
+      // dispatch(setFirstDraftLoading());
     } catch (error) {
       toast.error("Error in getting first draft");
+      // dispatch(setFirstDraftLoading());
     } finally {
       // setFirsDraftLoading(false);
       // setisApi(false);
@@ -561,7 +1125,10 @@ const CourtroomArgument = () => {
             <img alt="laoding" src={loader} className="w-28 h-28" />
           </div>
         ) : (
-          <div className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg">
+          <div
+            id="aijudge"
+            className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg"
+          >
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
@@ -571,7 +1138,7 @@ const CourtroomArgument = () => {
                 />
                 <h1 className="text-sm m-0">AI Judge</h1>
               </div>
-              <div>
+              <div id="relevant-case-menu">
                 <IconButton
                   sx={{ color: "white" }}
                   disabled={userArgument.length === 0}
@@ -580,6 +1147,7 @@ const CourtroomArgument = () => {
                   aria-haspopup="true"
                   id="judge"
                   onClick={handleMenuOpen}
+                  ref={myDivRef}
                 >
                   <MoreVert />
                 </IconButton>
@@ -604,6 +1172,7 @@ const CourtroomArgument = () => {
                   }}
                 >
                   <div
+                    id="relevantcase-button"
                     className="text-xs px-2 hover:cursor-pointer "
                     onClick={() => {
                       handleshowcaseaijudge();
@@ -636,6 +1205,7 @@ const CourtroomArgument = () => {
               </p>
             </div>
             <div
+              id="expand"
               onClick={() => setJudgeViewExpand(true)}
               className="h-[5vh] flex  items-center cursor-pointer px-2"
             >
@@ -659,7 +1229,10 @@ const CourtroomArgument = () => {
             <img alt="laoding" src={loader} className="w-28 h-28" />
           </div>
         ) : (
-          <div className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black">
+          <div
+            id="ailawyer"
+            className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black"
+          >
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
@@ -712,6 +1285,7 @@ const CourtroomArgument = () => {
                 <h1 className="text-xs m-[5px]">Expand</h1>
               </div>
               <motion.div
+                id="swaplawyer"
                 onClick={userArgument.length > 0 ? handleSwap : null}
                 whileTap={
                   tapAnimations[userArgument.length > 0 ? "true" : "false"]
@@ -771,7 +1345,7 @@ const CourtroomArgument = () => {
               >
                 {userArgument.map((x, index) => (
                   <div
-                    className=""
+                    className="arguments"
                     onClick={() => {
                       handleArgumentSelect(index, x);
                     }}
@@ -841,6 +1415,7 @@ const CourtroomArgument = () => {
                         </motion.button>
                       ) : (
                         <div
+                          id="asdsads"
                           onClick={(e) =>
                             editIndex !== index && handleEdit(e, index)
                           }
@@ -933,7 +1508,7 @@ const CourtroomArgument = () => {
       </div>
       {/* bottom container */}
       <div className="w-full grid grid-cols-[65%_35%] items-center">
-        <div className="pr-2 relative">
+        <div className="pr-2 relative" id="userinput">
           <input
             value={addArgumentInputText !== null ? addArgumentInputText : ""}
             disabled={aiJudgeLoading || aiLawyerLoading}
@@ -1328,7 +1903,7 @@ const CourtroomArgument = () => {
                 }}
               />
             </div>
-            <div className="flex flex-col gap-4">
+            <div id="side-selection" className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <p className="m-0 flex justify-center text-3xl font-bold text-[#00FFD1]">
                   Select Fighting Side

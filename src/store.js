@@ -28,5 +28,7 @@ export default configureStore({
     allowedBooking: allowedBookingReducer, // Add to the store
     laws: lawSlice,
     drafter: drafterSlice,
+    
+    
   },
 });

@@ -32,11 +32,9 @@ const CourtRoomAiLayout = () => {
   // }, [currentUser]);
 
   useEffect(() => {
-    // console.log(caseOverView);
     if (caseOverView !== "NA" && caseOverView !== "") {
       navigate("/courtroom-ai/arguments");
     }
-    // console.log("useEffect");
   }, [caseOverView]);
 
   const [showSplash, setShowSplash] = useState(true);

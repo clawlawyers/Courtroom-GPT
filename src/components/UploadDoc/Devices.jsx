@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Drive from "../../assets/icons/drive.svg";
 import DropBox from "../../assets/icons/dropbox.svg";
+import Document from "../../assets/icons/document5.svg";
 import pc from "../../assets/icons/local.svg";
 import styles from "../../CourtRoom/CourtroomAi/UploadDoc.module.css";
 import Dialog from "../ui/Dialog";
@@ -28,8 +29,43 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
 import useDrivePicker from "react-google-drive-picker";
-
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 const Devices = ({ uploadedFile, setUploadedFile }) => {
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: "#uploaddrive",
+        popover: {
+          title: "DrIve upload",
+          description:
+            "click this button to upload a case file (.docx , .pdf) directly from the drive  ",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#uploadtext",
+        popover: {
+          title: "Write text",
+          description: "click this button to write the case file   ",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#uploadpc",
+        popover: {
+          title: "PC upload",
+          description:
+            "click this button to upload a case file (.docx , .pdf) directly from the pc  ",
+          side: "left",
+          align: "start",
+        },
+      },
+    ],
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.user);
@@ -67,6 +103,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     console.log("Textarea changed:", e.target.value);
     setCaseOverview(e.target.value);
   };
+  useEffect(() => {
+    driverObj.drive();
+  }, []);
 
   const handleSave = async () => {
     // text save logic
@@ -90,11 +129,23 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        {
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
     } catch (error) {
       toast.error("Failed to save case overview");
     }
   };
   const handleClick = (source) => {
+    driverObj.destroy();
     switch (source) {
       case "local":
         handleUploadFromComputer();
@@ -167,8 +218,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             setUploadComplete(true);
           }, 3000);
         } catch (error) {
-          console.log(error?.response?.data?.error.split(":")[1]);
-          toast.error(error?.response?.data?.error.split(":")[1]);
+          console.log(error);
+          // console.log(error?.response?.data?.error.split(":")[1]);
+          // toast.error(error?.response?.data?.error.split(":")[1]);
           handleDialogClose();
         }
       }
@@ -385,6 +437,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           }}
         >
           <div
+            id="uploaddrive"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("drive")}
           >
@@ -395,16 +448,18 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </div>
           <div className={styles.verticalLine}></div>
           <div
+            id="uploadtext"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("dropbox")}
           >
-            <img className="p-5" src={DropBox} alt="" />
+            <img className="p-5 h-1 w-1 text-white" src={Document} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Write Your Own Text
             </h4>
           </div>
           <div className={styles.verticalLine}></div>
           <div
+            id="uploadpc"
             className={`${styles.images} gap-10 `}
             onClick={() => handleClick("local")}
           >

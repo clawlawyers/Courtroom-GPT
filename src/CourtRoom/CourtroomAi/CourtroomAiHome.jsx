@@ -13,10 +13,10 @@ const CourtroomAiHome = () => {
 
   const [overviewText, setOverViewText] = useState(null);
 
-  useEffect(() => {
-    if (caseOverView === "") return;
-    setOverViewText(caseOverView);
-  }, [caseOverView]);
+  // useEffect(() => {
+  //   if (caseOverView === "") return;
+  //   setOverViewText(caseOverView);
+  // }, [caseOverView]);
 
   const buttonStyles = {
     display: "flex",

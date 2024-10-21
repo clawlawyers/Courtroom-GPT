@@ -1,18 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assets/images/claw-login.png";
+import clawLogo from "../../assets/icons/clawlogo1.png";
 import Styles from "./AiSidebar.module.css";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Menu } from "@mui/material";
+import { Button, CircularProgress, Menu } from "@mui/material";
 import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
+import { IoReload } from "react-icons/io5";
 import { Popover } from "@mui/material";
 import {
   logout,
   setFirstDraftAction,
+  setFirstDraftLoading,
   setOverview,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import aiAssistant from "../../assets/images/aiAssistant.png";
@@ -45,6 +48,9 @@ import {
   retrieveCaseLaws,
   setCaseLaws,
 } from "../../features/laws/lawSlice";
+import { setTutorial } from "../../features/popup/popupSlice";
+import Rating from "@mui/material/Rating";
+import sendIcon from "../../assets/icons/Send.png";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -56,8 +62,20 @@ const drafterQuestions = [
 
 const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
+  const currentUser = useSelector((state) => state.user.user);
+
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
   const [countdownOver, setCountDownOver] = useState(false);
+  const [feedbackForm, setFeedbackForm] = useState(false);
+  const [rateValue, setRateValue] = React.useState(0);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("hi");
+  }, [dispatch]);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -80,13 +98,46 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     }
   });
 
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/feedback`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({
+            rating: rateValue.toString(),
+            feedback: feedbackMessage,
+            userId: "65589uh3nwsnm,os",
+          }),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      toast.success("Thankyou for the feedback!");
+      EndSessionToCourtroom();
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to submit feedback!");
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div
         className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
         style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
-        <h1 className="text-xs m-0">Time Remaining:</h1>
+        <h1 id="time-left" className="text-xs m-0 font-bold text-teal-800">
+          Time Remaining:
+        </h1>
         <h1
           className="text-xs m-0 font-semibold"
           style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
@@ -95,19 +146,6 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      {/* <div
-        className="flex justify-between items-center p-2 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
-      >
-        <h1 className="text-sm m-0">Time Used :</h1>
-        <h1
-          className="text-sm m-0 font-semibold"
-          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
-        >
-          {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
-          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
-        </h1>
-      </div> */}
       {countdownOver ? (
         <div
           style={{
@@ -125,39 +163,93 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             zIndex: "20",
           }}
         >
-          <div
-            className="flex flex-col justify-center gap-20 p-5"
-            style={{
-              background: "linear-gradient(to right,#0e1118,#008080)",
-              height: "450px",
-              width: "900px",
-              border: "4px solid red",
-              borderRadius: "10px",
-            }}
-          >
-            <div className="flex flex-col justify-center items-center gap-10">
-              <img className="w-28 h-28" alt="clock" src={countDown} />
-              <h1 className="text-3xl">Your Courtroom Time is Over</h1>
-            </div>
-            <div className="flex justify-center">
-              <motion.button
-                onClick={() => EndSessionToCourtroom()}
-                whileTap={{ scale: "0.95" }}
-                className="border border-white rounded-lg py-2 px-8"
-              >
-                Go Back To Homepage
-              </motion.button>
-              {/* <Link to={"/courtroom-ai/verdict"}>
+          {!feedbackForm ? (
+            <div
+              className="flex flex-col justify-center gap-20 p-5"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+                height: "450px",
+                width: "900px",
+                border: "4px solid red",
+                borderRadius: "10px",
+              }}
+            >
+              <div className="flex flex-col justify-center items-center gap-10">
+                <img className="w-28 h-28" alt="clock" src={countDown} />
+                <h1 className="text-3xl">Your Courtroom Time is Over</h1>
+              </div>
+              <div className="flex justify-center gap-5">
                 <motion.button
-                  onClick={() => setCountDownOver(false)}
+                  whileHover={{ scale: "1.01" }}
+                  onClick={() => EndSessionToCourtroom()}
+                  whileTap={{ scale: "0.95" }}
+                  className="border border-white rounded-lg py-2 px-8"
+                >
+                  Skip & Exit To Homepage
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: "1.01" }}
+                  onClick={() => setFeedbackForm(true)}
                   whileTap={{ scale: "0.95" }}
                   className="border border-white rounded-lg py-2 px-8 text-white"
                 >
-                  View Verdict
+                  Provide Feedback
                 </motion.button>
-              </Link> */}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div
+              className="flex flex-col justify-center gap-20 p-5"
+              style={{
+                background: "linear-gradient(to right,#0e1118,#008080)",
+                border: "4px solid white",
+                borderRadius: "10px",
+              }}
+            >
+              <div className="flex flex-col gap-5">
+                <h1 className="text-3xl">Provide your valuable feedback</h1>
+                <form
+                  onSubmit={handleFeedbackSubmit}
+                  className="flex flex-col gap-2"
+                >
+                  <div className="flex">
+                    <p>Rate your Experience :</p>
+                    <Rating
+                      required
+                      sx={{ color: "white" }}
+                      name="simple-controlled"
+                      value={rateValue}
+                      onChange={(event, newValue) => {
+                        setRateValue(newValue);
+                      }}
+                    />
+                  </div>
+                  <textarea
+                    required
+                    className="p-2 rounded text-black min-h-20 max-h-40"
+                    placeholder="Provide a detailed description...."
+                    value={feedbackMessage}
+                    onChange={(e) => setFeedbackMessage(e.target.value)}
+                  />
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => EndSessionToCourtroom()}
+                      className="border rounded px-4 py-2"
+                    >
+                      Skip & Exit
+                    </button>
+                    <button type="submit" className="border rounded px-4 py-2">
+                      {loading ? (
+                        <CircularProgress color="inherit" size={15} />
+                      ) : (
+                        "Submit Feedback"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         ""
@@ -196,14 +288,19 @@ const AiSidebar = () => {
   const dispatch = useDispatch();
   const [isApi, setisApi] = useState(false);
   const overViewDetails = useSelector((state) => state.user.caseOverview);
+  // console.log(overViewDetails);
 
   const firstDraftDetails = useSelector((state) => state.user.firstDraft);
+  // console.log(firstDraftDetails);
+  const firstDraftLoading = useSelector(
+    (state) => state.user.firstDraftLoading
+  );
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
 
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
-  const [firstDraftLoading, setFirsDraftLoading] = useState(false);
+  // const [firstDraftLoading, setFirsDraftLoading] = useState(false);
   const [text, setText] = useState("");
   const [aiIconHover, setAiIconHover] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
@@ -223,6 +320,9 @@ const AiSidebar = () => {
   const [caseSearchDialog, setCaseSearchDialog] = useState(false);
   const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
   const [caseSearchLoading, setCaseSearchLoading] = useState(false);
+  const [nextAppealLoading, setNextAppealLoading] = useState(false);
+  const [appealDialog, setAppealDialog] = useState(false);
+  const [appealData, setAppealData] = useState("");
 
   const scrollRef = useRef(null);
 
@@ -316,6 +416,17 @@ const AiSidebar = () => {
       );
       dispatch(setOverview(text));
       setEditDialog(false);
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        {
+          // user_id: currentUser.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
     } catch (error) {
       toast.error("Error in saving case");
       console.error("Error in saving case", error);
@@ -323,9 +434,9 @@ const AiSidebar = () => {
   };
 
   const handleFirstDraft = async () => {
-    if (isApi) {
-      setFirsDraftLoading(true);
-    }
+    // if (isApi) {
+    //   setFirsDraftLoading(true);
+    // }
 
     setFirstDraftDialog(true);
   };
@@ -349,6 +460,7 @@ const AiSidebar = () => {
   };
 
   const firstDraftApi = async () => {
+    // dispatch(setFirstDraftLoading());
     try {
       const response = await fetch(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -364,8 +476,8 @@ const AiSidebar = () => {
         //   },
         // }
       );
-
-      if (response.ok) {
+      // console.log(await response.data);
+      if (response.data !== undefined) {
         dispatch(
           setFirstDraftAction({
             draft: response?.data?.data?.draft?.detailed_draft,
@@ -373,29 +485,27 @@ const AiSidebar = () => {
         );
       }
 
+      // dispatch(setFirstDraftLoading());
       // console.log("response is ", response.data.data.draft.detailed_draft);
       // setFirstDraft(response.data.data.draft.detailed_draft);
       // console.log(response.data.data.draft);
     } catch (error) {
       console.log(error);
-      toast.error("Error in getting first draft");
-    } finally {
-      setFirsDraftLoading(false);
-      setisApi(false);
+      // toast.error("Error in getting first draft");
+      // dispatch(setFirstDraftLoading());
     }
   };
 
   useEffect(() => {
-    setFirstDraft(firstDraftDetails);
-  }, [firstDraftDetails]);
-
-  useEffect(() => {
-    if (overViewDetails !== "") {
-      setisApi(true);
-
+    if (overViewDetails !== "" || overViewDetails !== "NA") {
+      console.log(overViewDetails);
       firstDraftApi();
     }
   }, [overViewDetails]);
+
+  useEffect(() => {
+    setFirstDraft(firstDraftDetails);
+  }, [firstDraftDetails]);
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);
@@ -480,7 +590,7 @@ const AiSidebar = () => {
           }
         );
 
-        // console.log(overView.data.data.case_overview);
+        console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
         } else {
@@ -563,57 +673,6 @@ const AiSidebar = () => {
     }
   };
 
-  // const downloadSessionCaseHistory = async () => {
-  //   setDownloadSessionLoading(true);
-  //   try {
-  //     const history = await axios.get(
-  //       `${NODE_API_ENDPOINT}/courtroom/getHistory`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${currentUser.token}`,
-  //         },
-  //       }
-  //     );
-
-  //     const bold = "\x1b";
-  //     const reset = "\x1b";
-
-  //     let textArr = [`${bold}Case Session History${reset} \n\n`];
-
-  //     const arrays = {
-  //       Arguments: history.data.data.caseHistory.argument,
-  //       "Counter Arguments": history.data.data.caseHistory.counter_argument,
-  //       Judgement: history.data.data.caseHistory.judgement,
-  //       "Potential Objection":
-  //         history.data.data.caseHistory.potential_objection,
-  //     };
-
-  //     const arrayNames = Object.keys(arrays);
-
-  //     const maxLength = Math.max(
-  //       ...arrayNames.map((name) => arrays[name].length)
-  //     );
-
-  //     for (let i = 0; i < maxLength; i++) {
-  //       let elements = arrayNames.map((name) => {
-  //         const arr = arrays[name];
-  //         return arr[i] !== undefined
-  //           ? `\n ${bold}${name}${reset}: \n\n ${arr[i]}`
-  //           : `${bold}${name}${reset}: \n\n undefined`;
-  //       });
-
-  //       textArr.push(`${bold}Case ${i + 1}${reset}: \n ${elements.join("\n")}`);
-  //     }
-  //     setSessionHistoryText(textArr.join(""));
-  //     setDownloadHistoryPrompt(true);
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Error in fetching case history");
-  //   } finally {
-  //     setDownloadSessionLoading(false);
-  //   }
-  // };
-
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -628,7 +687,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
           // user_id: currentUser.userId,
           data: firstDraft,
@@ -732,6 +791,31 @@ const AiSidebar = () => {
     }
   };
 
+  const handleNextAppeal = async () => {
+    setNextAppealLoading(true);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/api/draft_next_appeal`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      // console.log(data);
+      setNextAppealLoading(false);
+      toast.success("Next appeal successfull");
+      setAppealDialog(true);
+      setAppealData(data.data.fetchedDraftNextAppeal.detailed_draft);
+    } catch (error) {
+      console.log(error);
+      setNextAppealLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-3 h-screen py-3 pl-3">
@@ -772,6 +856,7 @@ const AiSidebar = () => {
                   Edit
                 </motion.button> */}
                 <IconButton
+                  id="evidence-menu"
                   sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
@@ -788,6 +873,7 @@ const AiSidebar = () => {
                   onClose={handleMenuClose}
                 >
                   <MenuItem
+                    id="edit_doc"
                     onClick={() => {
                       handleMenuClose();
                       setEditDialog(true);
@@ -795,10 +881,13 @@ const AiSidebar = () => {
                   >
                     Edit
                   </MenuItem>
-                  <MenuItem onClick={handleEvidenceClick}>
+                  <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
-                  <MenuItem onClick={handleTestimonyClick}>
+                  <MenuItem
+                    id="evidence-testimony"
+                    onClick={handleTestimonyClick}
+                  >
                     Add Testimony
                   </MenuItem>
                 </Menu>
@@ -858,17 +947,20 @@ const AiSidebar = () => {
           <TimerComponent EndSessionToCourtroom={EndSessionToCourtroom} />
         </div>
         {/* bottom container */}
-        <div className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
+        <div
+          id="normal-div"
+          className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between"
+        >
           <div className="flex flex-col gap-1">
             <motion.div
+              onClick={handleFirstDraft}
+              whileTap={{ scale: "0.95" }}
+              whileHover={{ scale: "1.01" }}
               className={`${
                 overViewDetails === "NA" || overViewDetails === ""
                   ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : ""
+                  : "cursor-pointer"
               }`}
-              onClick={() => downloadSessionCaseHistory()}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -878,12 +970,12 @@ const AiSidebar = () => {
                 color: "#008080",
                 border: "2px solid white",
                 borderRadius: "5px",
-                // marginBottom: "5px",
-                cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
               }}
             >
-              <div>
-                <p className="text-xs m-0">Download Session History</p>
+              <div id="first-draft">
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  View First Draft
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -899,12 +991,7 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : ""
-              }`}
-              onClick={() => downloadCaseHistory()}
+              onClick={() => setShowDrafterQuestions(true)}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -916,12 +1003,13 @@ const AiSidebar = () => {
                 color: "#008080",
                 border: "2px solid white",
                 borderRadius: "5px",
-                cursor: `${downloadCaseLoading ? "wait" : "pointer"}`,
-                // marginBottom: "5px",
+                cursor: "pointer",
               }}
             >
-              <div>
-                <p className="text-xs m-0">Download Case History</p>
+              <div id="Ai-Drafter">
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  Ai Drafter
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -952,8 +1040,10 @@ const AiSidebar = () => {
                 cursor: "pointer",
               }}
             >
-              <div>
-                <p className="text-xs m-0">Ask LegalGPT</p>
+              <div id="legalGpt">
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  Ask LegalGPT
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -982,10 +1072,13 @@ const AiSidebar = () => {
                 border: "2px solid white",
                 borderRadius: "5px",
                 marginBottom: "5px",
+                cursor: "pointer",
               }}
             >
-              <div>
-                <p className="text-xs m-0">Case Search</p>
+              <div id="case-search">
+                <p className="text-xs m-0 font-bold text-teal-800">
+                  Case Search
+                </p>
               </div>
               <div style={{ width: "15px", margin: "0" }}>
                 <svg
@@ -1001,9 +1094,17 @@ const AiSidebar = () => {
               </div>
             </motion.div>
           </div>
-          <div className="flex justify-end cursor-pointer relative">
+          <div
+            id="claw-ai-ass"
+            className="flex justify-end cursor-pointer relative"
+          >
             <motion.img
-              className="h-9 w-9"
+              className={`${
+                overViewDetails === "NA" || overViewDetails === ""
+                  ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
+                  : "h-9 w-9"
+              }`}
+              // className="h-9 w-9"
               whileTap={{ scale: "0.95" }}
               alt="assistant"
               src={showAssistant ? assistantIcon2 : aiAssistant}
@@ -1035,29 +1136,21 @@ const AiSidebar = () => {
             </div>
             <div className="h-full flex flex-col justify-evenly">
               <motion.div
-                onClick={() => setShowDrafterQuestions(true)}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                className="px-1 flex items-center gap-[12px] cursor-pointer relative"
-              >
-                <img className="w-4" src={aiDrafter} alt="aiDrafter" />
-
-                <p className="m-0 text-xs text-white">Ai Drafter</p>
-              </motion.div>
-              <motion.div
-                onClick={handleFirstDraft}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
+                id="download-session"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
-                    : ""
+                    : "cursor-pointer"
                 }`}
+                onClick={() => downloadSessionCaseHistory()}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  cursor: "pointer",
+                  position: "relative",
+                  cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
                 }}
               >
                 <img
@@ -1065,10 +1158,25 @@ const AiSidebar = () => {
                   src={firstDraftLogo}
                   alt="firstdraft"
                 />
-
-                <p className="m-0 text-xs text-white">View first Draft</p>
+                <p className="m-0 text-xs text-white">
+                  Download Session History
+                </p>
               </motion.div>
               <motion.div
+                id="download-case"
+                className={`${
+                  overViewDetails === "NA" || overViewDetails === ""
+                    ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
+                    : " flex items-center gap-[12px] cursor-pointer relative"
+                }`}
+                onClick={() => downloadCaseHistory()}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+              >
+                <img className="w-4" src={aiDrafter} alt="aiDrafter" />
+                <p className="m-0 text-xs text-white">Download Case History</p>
+              </motion.div>
+              {/* <motion.div
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
@@ -1085,7 +1193,7 @@ const AiSidebar = () => {
               >
                 <img src={oldCaseLogo} />
                 <p className="m-0 text-xs text-white">Old Case Search</p>
-              </motion.div>
+              </motion.div> */}
               <Link to={"/courtroom-ai"}>
                 <motion.div
                   whileTap={{ scale: "0.95" }}
@@ -1099,8 +1207,14 @@ const AiSidebar = () => {
                 >
                   <img src={newCaseLogo} />
                   <p
+                    id="NewCaseInput"
                     className="m-0 text-xs text-white"
-                    onClick={() => saveHistory()}
+                    onClick={() => {
+                      saveHistory();
+
+                      dispatch(setOverview(""));
+                      dispatch(setFirstDraftAction({ draft: "" }));
+                    }}
                   >
                     New Case Input
                   </p>
@@ -1135,6 +1249,24 @@ const AiSidebar = () => {
                   Exit Courtroom
                 </p>
               </motion.div>
+              <motion.div
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  overViewDetails === "NA" || overViewDetails === ""
+                    ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
+                    : " flex items-center gap-[12px] cursor-pointer relative"
+                }`}
+              >
+                {/* <img className="h-4 w-4" src={exitLogo} /> */}
+                <IoReload />
+                <p
+                  className="m-0 text-xs"
+                  onClick={() => dispatch(setTutorial())}
+                >
+                  Restart Tutorial
+                </p>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -1155,7 +1287,7 @@ const AiSidebar = () => {
             overflow: "auto",
           }}
         >
-          {firstDraftLoading ? (
+          {/* {firstDraftLoading ? (
             <div
               className="border-2 border-white rounded-lg w-1/6 h-fit p-2 flex flex-row justify-center items-center"
               style={{
@@ -1164,40 +1296,41 @@ const AiSidebar = () => {
             >
               <img className="h-40 w-40 my-10" src={loader} alt="loader" />
             </div>
-          ) : (
-            <div
-              className="h-fit w-2/3 rounded-md border-2 border-white"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <svg
-                  onClick={() => {
-                    setFirstDraftDialog(false);
-                  }}
-                  style={{ margin: "20px", cursor: "pointer" }}
-                  width="30"
-                  height="30"
-                  fill="white"
-                  stroke="white"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-              </div>
-              <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-                <div className="flex h-full px-5 pb-5 flex-row justify-between items-center w-full gap-5">
-                  <div className="flex h-full  flex-row justify-center w-full items-center">
-                    <div className="flex flex-col w-full rounded-md bg-white text-black h-[80vh] overflow-y-auto">
+          ) : ( */}
+          <div
+            className="h-fit w-2/3 rounded-md border-2 border-white"
+            style={{
+              background: "linear-gradient(to right,#0e1118,#008080)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <svg
+                onClick={() => {
+                  setFirstDraftDialog(false);
+                }}
+                style={{ margin: "20px", cursor: "pointer" }}
+                width="30"
+                height="30"
+                fill="white"
+                stroke="white"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
+                  fill-rule="nonzero"
+                />
+              </svg>
+            </div>
+            <div className="m-0 h-2/3 flex flex-column justify-center items-center">
+              <div className="flex h-full px-5 pb-3 flex-row justify-between items-center w-full gap-5">
+                <div className="flex h-full  flex-col gap-2 justify-center w-full items-center">
+                  {firstDraft !== "" ? (
+                    <div className="flex flex-col w-full rounded-md bg-white text-black h-[75vh] overflow-y-auto">
                       <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                         <p className="uppercase font-bold my-2 w-full ">
                           First Draft Preview
@@ -1219,88 +1352,109 @@ const AiSidebar = () => {
                         onChange={(e) => setFirstDraft(e.target.value)}
                       />
                     </div>
-                  </div>
-                  <div className="h-[80vh] w-1 bg-neutral-200/40" />
-                  <div className="flex flex-col justify-between h-full w-full gap-4 ">
-                    {showRelevantLaws ? (
-                      <div className="overflow-auto border-2 border-white rounded bg-white text-black p-2">
-                        {relevantCaseLoading ? (
-                          <div className="flex justify-center items-center">
-                            <img
-                              className="h-40 w-40 my-10"
-                              src={loader}
-                              alt="loader"
-                            />
-                          </div>
-                        ) : (
-                          <p
-                            className="h-[60vh]"
-                            dangerouslySetInnerHTML={{
-                              __html: relevantLawsArr,
-                            }}
-                          />
-                          // {relevantLawsArr}</p>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col w-full gap-2">
-                        <img className="" src={logo} alt="logo" />
-                        <h3 className=" text-center">Draft Preview</h3>
-                      </div>
-                    )}
-                    {showRelevantLaws && !relevantCaseLoading && (
-                      <div className="w-full flex justify-end">
-                        <Link to={"/courtroom-ai/caseLaws"}>
-                          <button
-                            onClick={() => {
-                              dispatch(removeCaseLaws());
-                              dispatch(
-                                retrieveCaseLaws({
-                                  query: relevantLawData,
-                                  token: currentUser.token,
-                                })
-                              );
-                              setFirstDraftDialog(false);
-                            }}
-                            className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
-                          >
-                            View Case Laws
-                          </button>
-                        </Link>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-2 gap-2 relative">
-                      {showRelevantLaws ? (
-                        <motion.button
-                          disabled={!relevantLawsArr}
-                          className="border border-white rounded-md py-1"
-                          onClick={() => setShowRelevantLaws(false)}
-                        >
-                          Go Back
-                        </motion.button>
+                  ) : (
+                    <div className="flex flex-col w-full justify-center items-center rounded-md bg-white text-black h-[75vh] overflow-y-auto">
+                      <img
+                        className="h-40 w-40 my-10"
+                        src={loader}
+                        alt="loader"
+                      />
+                    </div>
+                  )}
+                  <div className="w-full flex justify-end">
+                    <button
+                      onClick={handleNextAppeal}
+                      className="px-4 py-1 rounded border"
+                    >
+                      {nextAppealLoading ? (
+                        <CircularProgress size={15} color="inherit" />
                       ) : (
-                        <motion.button
-                          onClick={() => {
-                            setShowRelevantLaws(true);
-                            getReventCaseLaw();
-                          }}
-                          className="border border-white rounded-md py-1"
-                        >
-                          Relevant Case Laws
-                        </motion.button>
+                        "Next Appeal"
                       )}
-                      <button
-                        onClick={() => dowloadFirstDraft()}
+                    </button>
+                  </div>
+                </div>
+                <div className="h-[75vh] w-1 bg-neutral-200/40" />
+                <div className="flex flex-col justify-between h-full w-full gap-4 ">
+                  {showRelevantLaws ? (
+                    <div className="overflow-auto border-2 border-white rounded bg-white text-black p-2">
+                      {relevantCaseLoading ? (
+                        <div className="flex justify-center items-center">
+                          <img
+                            className="h-40 w-40 my-10"
+                            src={loader}
+                            alt="loader"
+                          />
+                        </div>
+                      ) : (
+                        <p
+                          className="h-[60vh]"
+                          dangerouslySetInnerHTML={{
+                            __html: relevantLawsArr,
+                          }}
+                        />
+                        // {relevantLawsArr}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col w-full gap-2">
+                      <img className="" src={clawLogo} alt="logo" />
+                      <h3 className=" text-center">Draft Preview</h3>
+                    </div>
+                  )}
+                  {showRelevantLaws && !relevantCaseLoading && (
+                    <div className="w-full flex justify-end">
+                      <Link to={"/courtroom-ai/caseLaws"}>
+                        <button
+                          onClick={() => {
+                            dispatch(removeCaseLaws());
+                            dispatch(
+                              retrieveCaseLaws({
+                                query: relevantLawData,
+                                token: currentUser.token,
+                              })
+                            );
+                            setFirstDraftDialog(false);
+                          }}
+                          className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
+                        >
+                          View Case Laws
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-2 relative">
+                    {showRelevantLaws ? (
+                      <motion.button
+                        disabled={!relevantLawsArr}
+                        className="border border-white rounded-md py-1"
+                        onClick={() => setShowRelevantLaws(false)}
+                      >
+                        Go Back
+                      </motion.button>
+                    ) : (
+                      <motion.button
+                        onClick={() => {
+                          setShowRelevantLaws(true);
+                          getReventCaseLaw();
+                        }}
                         className="border border-white rounded-md py-1"
                       >
-                        <Download /> Download
-                      </button>
-                    </div>
+                        Relevant Case Laws
+                      </motion.button>
+                    )}
+                    <button
+                      onClick={() => dowloadFirstDraft()}
+                      className="border border-white rounded-md py-1"
+                    >
+                      <Download /> Download
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
+          {/* )} */}
         </div>
       ) : null}
       {editDialog ? (
@@ -1415,6 +1569,7 @@ const AiSidebar = () => {
         <div
           // md:left-[28rem] md:top-32
           // bg-[#eeeeee]
+
           className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               "
         >
@@ -1545,7 +1700,7 @@ const AiSidebar = () => {
               >
                 <input
                   className="flex-1 p-2 rounded text-black"
-                  placeholder="Enter Your Query Here"
+                  placeholder="Enter Your Query Here..."
                   value={askLegalGptPrompt}
                   onChange={(e) => setAskLegalGptPrompt(e.target.value)}
                 />
@@ -1553,12 +1708,8 @@ const AiSidebar = () => {
                   type="submit"
                   disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
-                  className="px-3 rounded"
-                  style={{
-                    background: "linear-gradient(180deg, #008080,#001A1A)",
-                  }}
                 >
-                  Send
+                  <img className="w-9 h-9" src={sendIcon} />
                 </motion.button>
               </form>
             </div>
@@ -1601,10 +1752,15 @@ const AiSidebar = () => {
                 <div className="">
                   {promptArr.length > 0 &&
                     promptArr.map((x, index) => (
-                      <div className="" key={index}>
-                        <div className="flex flex-col">
-                          <div className="flex gap-3">
-                            <svg
+                      <div
+                        className="flex flex-col"
+                        style={{
+                          alignSelf: x.prompt ? "flex-start" : "flex-end",
+                        }}
+                        key={index}
+                      >
+                        <div className="flex gap-3">
+                          {/* <svg
                               fill="white"
                               xmlns="http://www.w3.org/2000/svg"
                               width="24"
@@ -1612,23 +1768,30 @@ const AiSidebar = () => {
                               viewBox="0 0 24 24"
                             >
                               <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7.753 18.305c-.261-.586-.789-.991-1.871-1.241-2.293-.529-4.428-.993-3.393-2.945 3.145-5.942.833-9.119-2.489-9.119-3.388 0-5.644 3.299-2.489 9.119 1.066 1.964-1.148 2.427-3.393 2.945-1.084.25-1.608.658-1.867 1.246-1.405-1.723-2.251-3.919-2.251-6.31 0-5.514 4.486-10 10-10s10 4.486 10 10c0 2.389-.845 4.583-2.247 6.305z" />
-                            </svg>
-                            <p>
-                              <Markdown>{x.prompt}</Markdown>
-                            </p>
-                          </div>
-                          {x.promptResponse ? (
-                            <p className="border-2 border-white rounded bg-[#008080] p-2 text-sm">
-                              <Markdown>{x.promptResponse}</Markdown>
-                            </p>
-                          ) : (
-                            <div className="h-full w-full flex flex-col gap-2">
-                              <div className="w-full h-3 bg-slate-600 animate-pulse  rounded-full"></div>
-                              <div className="w-full h-3 bg-slate-600 animate-pulse  rounded-full"></div>
-                              <div className="w-[60%] h-3 bg-slate-600 animate-pulse  rounded-full"></div>
-                              <div className="w-[40%] h-3 bg-slate-600 animate-pulse  rounded-full"></div>
+                            </svg> */}
+                          {/* <p className="bg-[#D9D9D9]  text-black p-2 text-sm rounded-t-xl rounded-r-xl max-w-[75%]"> */}
+                          <div className="w-full flex justify-end">
+                            <div className="w-5/6 flex justify-end">
+                              <p className=" bg-[#D9D9D9] p-2 text-sm text-black rounded-t-xl rounded-l-xl">
+                                {x.prompt}
+                              </p>
                             </div>
-                          )}
+                          </div>
+                        </div>
+                        <div className="w-full flex justify-start">
+                          <div className="w-5/6 flex justify-start">
+                            {x.promptResponse ? (
+                              <p className=" bg-[#00C37B] p-2 text-sm text-black rounded-t-xl rounded-r-xl">
+                                <Markdown>{x.promptResponse}</Markdown>
+                              </p>
+                            ) : (
+                              <div className="bg-[#00C37B] p-2 text-sm text-black rounded-t-xl rounded-r-xl flex flex-col justify-end gap-1 w-14 mb-2">
+                                <div className="w-full h-1 bg-slate-600 animate-pulse  rounded-full"></div>
+                                <div className="w-[60%] h-1 bg-slate-600 animate-pulse  rounded-full"></div>
+                                <div className="w-[40%] h-1 bg-slate-600 animate-pulse  rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -1648,11 +1811,12 @@ const AiSidebar = () => {
                   ]);
                   setAskLegalGptPrompt("");
                 }}
-                className="px-4 flex gap-2 py-3"
+                className="px-4 flex gap-2 py-3 items-center"
               >
                 <input
+                  required
                   className="flex-1 p-2 rounded text-black"
-                  placeholder="Enter Your Query Here"
+                  placeholder="Enter Your Query Here..."
                   value={askLegalGptPrompt}
                   onChange={(e) => setAskLegalGptPrompt(e.target.value)}
                 />
@@ -1660,12 +1824,8 @@ const AiSidebar = () => {
                   type="submit"
                   disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
-                  className="px-3 rounded"
-                  style={{
-                    background: "linear-gradient(180deg, #008080,#001A1A)",
-                  }}
                 >
-                  Send
+                  <img className="w-9 h-9" src={sendIcon} />
                 </motion.button>
               </form>
             </div>
@@ -1860,6 +2020,42 @@ const AiSidebar = () => {
               )}
             </>
           </main>
+        </div>
+      )}
+      {appealDialog && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            left: "0",
+            right: "0",
+            top: "0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "10",
+          }}
+        >
+          <div className="w-1/2 h-[90%] overflow-auto bg-white text-black p-3 rounded">
+            <div className="flex justify-between">
+              <p className="text-xl font-semibold">Next Appeal</p>
+              <Close
+                className="cursor-pointer"
+                onClick={() => {
+                  setAppealDialog(false);
+                  setAppealData("");
+                }}
+              />
+            </div>
+            <div>
+              <p>
+                <Markdown>{appealData}</Markdown>
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </>

@@ -11,6 +11,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
+import { CircularProgress } from "@mui/material";
+import {
+  auth,
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "../../utils/firebase";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const TimerComponent = React.memo(() => {
@@ -46,6 +54,8 @@ function LoginToCourtRoom() {
   const currentUser = useSelector((state) => state.user.user);
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
+  const [verificationId, setVerificationId] = useState("");
+  const [isFirst, setIsfirst] = useState(true);
 
   // if (currentUser && caseOverView === "NA") {
   //   navigate("/courtroom-ai");
@@ -54,62 +64,220 @@ function LoginToCourtRoom() {
   // }
 
   const [isHovered, setIsHovered] = useState(false);
-  const [showPass, setShowPass] = useState(false);
   const [errorState, setErrorState] = useState(false);
   const [errorData, setErrorData] = useState([]);
   const [phone, setPhone] = useState(null);
-  const [password, setPassword] = useState(null);
-  // const currentUser = useSelector((state) => state.user.user);
+  const [otp, setOtp] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [countdown, setCountdown] = useState(30);
+  const [otpSuccess, setOtpSuccess] = useState(false);
+  const [loginDetails, setLoginDetails] = useState({});
 
   const dispatch = useDispatch();
-  const loginTime = new Date().toISOString();
 
-  // Import the action creator from the slice
-
-  const handleSave = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
-    // Get current time in ISO format
+    setOtpLoading(true);
 
-    axios
-      .post(`${NODE_API_ENDPOINT}/courtroom/login`, {
-        phoneNumber: phone,
-        password: password,
-      })
-      .then((response) => {
-        console.log(response.data);
+    const loginInfo = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phoneNumber: phone }),
+    });
 
-        // dispatch(setUser(response.data));
+    if (!loginInfo.ok) {
+      toast.error("Your phone number is not valid for current slot");
+      // throw new Error("Failed to send OTP");
+      return;
+    }
 
-        if (response.data === "No bookings found for the current time slot.") {
-          console.log("No bookings found for the current time slot");
-          setErrorState(true);
-          setErrorData([
-            response.data,
-            "Please comeback in your Booked Slot Timings",
-          ]);
-          toast.error(response.data);
-        } else if (response.data === "Invalid phone number or password.") {
-          console.log("Invalid phone number or password");
-          setErrorState(true);
-          setErrorData([response.data, "Please Try Again"]);
-          toast.error(response.data);
-        } else if (response.data.token) {
-          toast.success("You have successfully logged in");
-          console.log(response.data);
-          dispatch(login({ user: response.data }));
-          // console.log(currentUser);
-          navigate("/courtroom-ai");
-        }
+    const jsonData = await loginInfo.json();
+    if (jsonData === "No bookings found for the current time slot.") {
+      toast.error("No bookings found for the current time slot.");
+      setOtpLoading(false);
+      setErrorState(true);
+      setErrorData(["No bookings found for the current time slot."]);
+      return;
+      // throw new Error("No bookings found for the current time slot.");
+    }
+    setLoginDetails(jsonData);
 
-        console.log("error");
+    if (isFirst) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+      setIsfirst(false);
+    } else if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
 
-        // navigate("/courtroom-ai");
+    signInWithPhoneNumber(auth, "+91" + phone, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
       })
       .catch((error) => {
-        setErrorState(true);
-        setErrorData([error.message, "Please try again"]);
-        toast.error(error.message);
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
       });
+
+    //api call
+    // if (true) {
+    //   setOtpSuccess(true);
+    //   setOtpLoading(false);
+    //   setIsDisabled(true);
+    // }
+  };
+
+  useEffect(() => {
+    let intervalId;
+    if (isDisabled && countdown > 0) {
+      intervalId = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (countdown === 0) {
+      clearInterval(intervalId);
+      setIsDisabled(false);
+      setCountdown(30); // Reset countdown
+    }
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [isDisabled, countdown]);
+
+  const handleRetryClick = async (e) => {
+    e.preventDefault();
+    setIsDisabled(true);
+
+    // const loginInfo = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ phoneNumber: phone }),
+    // });
+
+    // if (!loginInfo.ok) {
+    //   toast.error("Your phone number is not valid for current slot");
+    //   throw new Error("Failed to send OTP");
+    // }
+
+    // const jsonData = await loginInfo.json();
+    // setLoginDetails(jsonData);
+
+    console.log("sendOTP");
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          },
+        },
+        auth
+      );
+    }
+
+    signInWithPhoneNumber(auth, "+91" + phone, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult.verificationId);
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.error("Error during OTP request:", error);
+        toast.error("Error in sending OTP");
+        setOtpLoading(false);
+      });
+
+    //  API call here
+  };
+
+  const handleVerifyOtp = (e) => {
+    e.preventDefault();
+    setOtpLoading(true);
+
+    if (otp.length === 6) {
+      const credential = PhoneAuthProvider.credential(verificationId, otp);
+      localStorage.setItem("loginOtp", otp);
+
+      signInWithCredential(auth, credential)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          toast.success("Phone number verified successfully!");
+          setOtpLoading(false);
+          setOtp("");
+
+          const loginInfo = await fetch(
+            `${NODE_API_ENDPOINT}/courtroom/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ phoneNumber: phone }),
+            }
+          );
+
+          if (!loginInfo.ok) {
+            toast.error("Your phone number is not valid for current slot");
+            // throw new Error("Failed to send OTP");
+            return;
+          }
+
+          const jsonData = await loginInfo.json();
+          if (jsonData === "No bookings found for the current time slot.") {
+            toast.error("No bookings found for the current time slot.");
+            setOtpLoading(false);
+            setErrorState(true);
+            setErrorData(["No bookings found for the current time slot."]);
+            return;
+            // throw new Error("No bookings found for the current time slot.");
+          }
+          setLoginDetails(jsonData);
+          dispatch(login({ user: loginDetails }));
+          navigate("/courtroom-ai");
+        })
+        .catch((error) => {
+          console.error("Error during OTP verification:", error);
+          toast.error("Error during OTP verification");
+          setOtp("");
+          setOtpLoading(false);
+        });
+    } else {
+      toast.error("Please enter a valid OTP");
+    }
   };
 
   return (
@@ -130,10 +298,7 @@ function LoginToCourtRoom() {
             alt="balance"
           />
         </div>
-        <form
-          className="relative w-full flex items-center justify-center"
-          onSubmit={handleSave}
-        >
+        <div className="relative w-full flex items-center justify-center">
           <div className="w-[80%]">
             <div
               style={{
@@ -161,118 +326,132 @@ function LoginToCourtRoom() {
                 />
                 <h1 style={{ fontSize: "15px" }}>COURTROOM</h1>
               </div>
-              <div style={{ margin: "20px 0px" }}>
-                <h1 style={{ fontSize: "15px", marginTop: "25px" }}>
-                  Enter your Mobile Number and Password that you used to book
-                  your Courtroom
-                </h1>
-                <div className={Styles.phoneContainer}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                  >
-                    <path d="M8.26 1.289l-1.564.772c-5.793 3.02 2.798 20.944 9.31 20.944.46 0 .904-.094 1.317-.284l1.542-.755-2.898-5.594-1.54.754c-.181.087-.384.134-.597.134-2.561 0-6.841-8.204-4.241-9.596l1.546-.763-2.875-5.612zm7.746 22.711c-5.68 0-12.221-11.114-12.221-17.832 0-2.419.833-4.146 2.457-4.992l2.382-1.176 3.857 7.347-2.437 1.201c-1.439.772 2.409 8.424 3.956 7.68l2.399-1.179 3.816 7.36s-2.36 1.162-2.476 1.215c-.547.251-1.129.376-1.733.376" />
-                  </svg>
-                  <input
-                    type="text"
-                    placeholder="Enter your Phone Number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </div>
-                <div className={Styles.phoneContainer}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                  >
-                    <path d="M16 1c-4.418 0-8 3.582-8 8 0 .585.063 1.155.182 1.704l-8.182 7.296v5h6v-2h2v-2h2l3.066-2.556c.909.359 1.898.556 2.934.556 4.418 0 8-3.582 8-8s-3.582-8-8-8zm-6.362 17l3.244-2.703c.417.164 1.513.703 3.118.703 3.859 0 7-3.14 7-7s-3.141-7-7-7c-3.86 0-7 3.14-7 7 0 .853.139 1.398.283 2.062l-8.283 7.386v3.552h4v-2h2v-2h2.638zm.168-4l-.667-.745-7.139 6.402v1.343l7.806-7zm10.194-7c0-1.104-.896-2-2-2s-2 .896-2 2 .896 2 2 2 2-.896 2-2zm-1 0c0-.552-.448-1-1-1s-1 .448-1 1 .448 1 1 1 1-.448 1-1z" />
-                  </svg>
-                  <input
-                    type={showPass ? "text" : "password"}
-                    placeholder="Enter your Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  {showPass ? (
-                    <div className="absolute right-[50px] top-[50%] flex items-center">
-                      <svg
-                        onClick={() => setShowPass(false)}
-                        style={{
-                          cursor: "pointer",
-                        }}
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                        stroke-linejoin="round"
-                        stroke-miterlimit="2"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="m11.998 5c-4.078 0-7.742 3.093-9.853 6.483-.096.159-.145.338-.145.517s.048.358.144.517c2.112 3.39 5.776 6.483 9.854 6.483 4.143 0 7.796-3.09 9.864-6.493.092-.156.138-.332.138-.507s-.046-.351-.138-.507c-2.068-3.403-5.721-6.493-9.864-6.493zm.002 3c2.208 0 4 1.792 4 4s-1.792 4-4 4-4-1.792-4-4 1.792-4 4-4zm0 1.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5z"
-                          fill-rule="nonzero"
-                        />
-                      </svg>
-                    </div>
-                  ) : (
-                    <div className="absolute right-[50px] top-[50%] flex items-center">
-                      <svg
-                        onClick={() => setShowPass(true)}
-                        style={{
-                          cursor: "pointer",
-                        }}
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                        stroke-linejoin="round"
-                        stroke-miterlimit="2"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="m17.069 6.546 2.684-2.359c.143-.125.32-.187.497-.187.418 0 .75.34.75.75 0 .207-.086.414-.254.562l-16.5 14.501c-.142.126-.319.187-.496.187-.415 0-.75-.334-.75-.75 0-.207.086-.414.253-.562l2.438-2.143c-1.414-1.132-2.627-2.552-3.547-4.028-.096-.159-.144-.338-.144-.517s.049-.358.145-.517c2.111-3.39 5.775-6.483 9.853-6.483 1.815 0 3.536.593 5.071 1.546zm2.318 1.83c.967.943 1.804 2.013 2.475 3.117.092.156.138.332.138.507s-.046.351-.138.507c-2.068 3.403-5.721 6.493-9.864 6.493-1.298 0-2.553-.313-3.73-.849l2.624-2.307c.352.102.724.156 1.108.156 2.208 0 4-1.792 4-4 0-.206-.016-.408-.046-.606zm-4.932.467c-.678-.528-1.53-.843-2.455-.843-2.208 0-4 1.792-4 4 0 .741.202 1.435.553 2.03l1.16-1.019c-.137-.31-.213-.651-.213-1.011 0-1.38 1.12-2.5 2.5-2.5.474 0 .918.132 1.296.362z"
-                          fill-rule="nonzero"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                  <div style={{ display: "flex", fontSize: "5px" }}>
-                    <h1 style={{ fontSize: "20px" }}>Current Time:</h1>
-                    {/* <h1 style={{ fontSize: "20px" }}>
-                      {currentTime.getHours()}:{currentTime.getMinutes()}:
-                      {currentTime.getSeconds()}
-                    </h1> */}
-                    <TimerComponent />
-                  </div>
-                  {/* <Link to={"/courtroom-ai"}> */}
-                  <motion.button
-                    type="submit"
-                    whileTap={{ scale: "0.95" }}
-                    className="px-3 py-2"
-                    style={{
-                      background: "none",
-                      border: "2px solid white",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    Enter Courtroom Now
-                  </motion.button>
-                  {/* </Link> */}
-                </div>
-                <hr
-                  style={{
-                    height: "0px",
-                    border: "none",
-                    borderTop: "5px solid white",
-                  }}
-                />
-                <h1 style={{ fontSize: "15px" }}>
-                  By signing up,you agree to our Terms of Service & Privacy
-                  Policy
-                </h1>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "5px 0px",
+                }}
+              >
+                <h1 style={{ fontSize: "20px" }}>Current Time:</h1>
+                <TimerComponent />
               </div>
+              {!otpSuccess ? (
+                <form onSubmit={handleSendOtp} style={{ margin: "20px 0px" }}>
+                  <h1
+                    className="flex"
+                    style={{ fontSize: "15px", marginTop: "25px" }}
+                  >
+                    Enter your verified phone number
+                  </h1>
+
+                  <div className={Styles.phoneContainer}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                    >
+                      <path d="M8.26 1.289l-1.564.772c-5.793 3.02 2.798 20.944 9.31 20.944.46 0 .904-.094 1.317-.284l1.542-.755-2.898-5.594-1.54.754c-.181.087-.384.134-.597.134-2.561 0-6.841-8.204-4.241-9.596l1.546-.763-2.875-5.612zm7.746 22.711c-5.68 0-12.221-11.114-12.221-17.832 0-2.419.833-4.146 2.457-4.992l2.382-1.176 3.857 7.347-2.437 1.201c-1.439.772 2.409 8.424 3.956 7.68l2.399-1.179 3.816 7.36s-2.36 1.162-2.476 1.215c-.547.251-1.129.376-1.733.376" />
+                    </svg>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Enter your Phone Number"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex  items-center justify-end">
+                    <motion.button
+                      type="submit"
+                      whileTap={{ scale: "0.95" }}
+                      className="px-3 py-2 w-28"
+                      style={{
+                        background: "none",
+                        border: "2px solid white",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {otpLoading ? (
+                        <CircularProgress size={15} color="inherit" />
+                      ) : (
+                        "Send OTP"
+                      )}
+                    </motion.button>
+                  </div>
+                  <hr
+                    style={{
+                      height: "0px",
+                      border: "none",
+                      borderTop: "5px solid white",
+                    }}
+                  />
+                  <h1 style={{ fontSize: "15px" }}>
+                    By signing up,you agree to our Terms of Service & Privacy
+                    Policy
+                  </h1>
+                </form>
+              ) : (
+                <form onSubmit={handleVerifyOtp} style={{ margin: "20px 0px" }}>
+                  <h1
+                    className="flex"
+                    style={{ fontSize: "15px", marginTop: "25px" }}
+                  >
+                    OTP
+                  </h1>
+
+                  <div className={Styles.phoneContainer}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path d="M22.548 9l.452-2h-5.364l1.364-6h-2l-1.364 6h-5l1.364-6h-2l-1.364 6h-6.184l-.452 2h6.182l-1.364 6h-5.36l-.458 2h5.364l-1.364 6h2l1.364-6h5l-1.364 6h2l1.364-6h6.185l.451-2h-6.182l1.364-6h5.366zm-8.73 6h-5l1.364-6h5l-1.364 6z" />
+                    </svg>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Enter your Otp"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex flex-col md:flex-row  items-center justify-end gap-2">
+                    <button
+                      onClick={handleRetryClick}
+                      disabled={isDisabled}
+                      className="bg-transparent border-2 rounded px-4 py-2"
+                    >
+                      {isDisabled ? `Wait ${countdown} seconds...` : "Retry"}
+                    </button>
+                    <motion.button
+                      type="submit"
+                      whileTap={{ scale: "0.95" }}
+                      className="px-3 py-2 w-32"
+                      style={{
+                        background: "none",
+                        border: "2px solid white",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {otpLoading ? (
+                        <CircularProgress size={15} color="inherit" />
+                      ) : (
+                        "Verify OTP"
+                      )}
+                    </motion.button>
+                  </div>
+                  <hr
+                    style={{
+                      height: "0px",
+                      border: "none",
+                      borderTop: "5px solid white",
+                    }}
+                  />
+                  <h1 style={{ fontSize: "15px" }}>
+                    By signing up,you agree to our Terms of Service & Privacy
+                    Policy
+                  </h1>
+                </form>
+              )}
             </div>
           </div>
           {errorState ? (
@@ -349,7 +528,7 @@ function LoginToCourtRoom() {
           ) : (
             ""
           )}
-        </form>
+        </div>
       </div>
       {/* bottom cont */}
       <div
@@ -429,6 +608,7 @@ function LoginToCourtRoom() {
           </div>
         </motion.div>
       </div>
+      <div id="recaptcha-container"></div>
     </div>
   );
 }
