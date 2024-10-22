@@ -291,7 +291,7 @@ const AiSidebar = () => {
   // console.log(overViewDetails);
 
   const firstDraftDetails = useSelector((state) => state.user.firstDraft);
-  // console.log(firstDraftDetails);
+  console.log(firstDraftDetails);
   const firstDraftLoading = useSelector(
     (state) => state.user.firstDraftLoading
   );
@@ -427,6 +427,7 @@ const AiSidebar = () => {
           },
         }
       );
+      dispatch(setFirstDraftAction({ draft: "" }));
     } catch (error) {
       toast.error("Error in saving case");
       console.error("Error in saving case", error);
@@ -461,29 +462,50 @@ const AiSidebar = () => {
 
   const firstDraftApi = async () => {
     // dispatch(setFirstDraftLoading());
+    // try {
+    //   const response = await fetch(
+    //     `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         Authorization: `Bearer ${currentUser.token}`,
+    //       },
+    //     }
+    //     // {
+    //     //   headers: {
+    //     //     Authorization: `Bearer ${currentUser.token}`,
+    //     //   },
+    //     // }
+    //   );
+    //   console.log(await response.data.data.draft.detailed_draft);
+    //   if (response.data !== undefined) {
+    //     dispatch(
+    //       setFirstDraftAction({
+    //         draft: response?.data?.data?.draft?.detailed_draft,
+    //       })
+    //     );
+    //   }
+
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
         {
-          method: "POST",
+          // user_id: currentUser.userId,
+        },
+        {
           headers: {
             Authorization: `Bearer ${currentUser.token}`,
           },
         }
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${currentUser.token}`,
-        //   },
-        // }
       );
-      // console.log(await response.data);
-      if (response.data !== undefined) {
-        dispatch(
-          setFirstDraftAction({
-            draft: response?.data?.data?.draft?.detailed_draft,
-          })
-        );
-      }
+
+      // console.log("response is ", response.data.data.draft.detailed_draft);
+      // setFirstDraft(response.data.data.draft.detailed_draft);
+      dispatch(
+        setFirstDraftAction({
+          draft: response?.data?.data?.draft?.detailed_draft,
+        })
+      );
 
       // dispatch(setFirstDraftLoading());
       // console.log("response is ", response.data.data.draft.detailed_draft);
