@@ -63,7 +63,7 @@ function AdminLogin() {
     e.preventDefault();
     setTokenCheckLoading(true);
 
-    if (token !== "9950866260ADMIN") {
+    if (token !== "9950866260ADMIN" || token !== "IIMINDORE") {
       toast.error("Invalid token. Please try again.");
       return;
     }
