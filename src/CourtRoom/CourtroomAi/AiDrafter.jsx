@@ -22,6 +22,13 @@ const AiDrafter = () => {
     navigate(-1);
   };
 
+  const formatText = (text) => {
+    return text
+      .replace(/\\n\\n/g, "<br/><br/>")
+      .replace(/\\n/g, "  <br/>")
+      .replace(/\\/g, " ");
+  };
+
   const handleEditDoc = async () => {
     dispatch(removeDrafter());
     try {

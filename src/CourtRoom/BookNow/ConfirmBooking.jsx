@@ -272,19 +272,40 @@ const ConfirmBooking = () => {
       });
   };
 
-  const handleCouponCode = (e) => {
+  const handleCouponCode = async (e) => {
     e.preventDefault();
-    const couponFind = couponArr.find(
-      (x) => x.name.toLowerCase() === couponCode.toLowerCase()
+    // const couponFind = couponArr.find(
+    //   (x) => x.name.toLowerCase() === couponCode.toLowerCase()
+    // );
+
+    const fetchCouponCode = await fetch(
+      `${NODE_API_ENDPOINT}/courtroom/verify-coupon`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          couponCode: couponCode,
+          phoneNumber: bookingData.phoneNumber,
+        }),
+      }
     );
-    if (couponFind) {
-      setDiscountPercentage(couponFind.discount);
-      setCouponApplied(true);
-      toast.success("Coupon applied successfully !");
-    } else {
-      toast.error("No coupon found!");
+
+    if (!fetchCouponCode.ok) {
+      toast.error("Failed to fetch coupon code. Please try again later.");
       setCouponCode("");
+      return;
     }
+
+    // if (couponFind) {
+    //   setDiscountPercentage(couponFind.discount);
+    //   setCouponApplied(true);
+    //   toast.success("Coupon applied successfully !");
+    // } else {
+    //   toast.error("No coupon found!");
+    //   setCouponCode("");
+    // }
   };
 
   const handleResetCode = (e) => {
