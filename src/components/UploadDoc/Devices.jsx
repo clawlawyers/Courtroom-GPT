@@ -347,10 +347,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   };
 
   const handleUploadFromDrive = async () => {
-    setuploaddrivedialog(true);
-    await handleOpenPicker();
-
-    setuploaddrivedialog(false);
+    // setuploaddrivedialog(true);
+    // await handleOpenPicker();
+    // setuploaddrivedialog(false);
   };
 
   const handleUploadFromDropBox = async () => {
