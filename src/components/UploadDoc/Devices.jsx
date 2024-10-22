@@ -208,6 +208,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           );
 
           // Handle response and update state
+          console.log(response.data.data.case_overview.case_overview)
           setPreviewContent(response.data.data.case_overview.case_overview);
           setInputText(response.data.data.case_overview.case_overview);
           setUploading(false);
