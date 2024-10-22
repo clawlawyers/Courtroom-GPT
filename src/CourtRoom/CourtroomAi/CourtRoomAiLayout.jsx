@@ -66,9 +66,9 @@ const CourtRoomAiLayout = () => {
     setVideoStarted(false);
   };
 
-  // if (currentUser === "") {
-  //   navigate("/");
-  // }
+  if (currentUser === "") {
+    navigate("/");
+  }
 
   return (
     <div className="">
