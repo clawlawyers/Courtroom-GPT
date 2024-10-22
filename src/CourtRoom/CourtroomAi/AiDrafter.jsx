@@ -50,7 +50,31 @@ const AiDrafter = () => {
   };
 
   useEffect(() => {
-    setDrafterText(drafterDoc);
+    console.log('asdasdadasdasd')
+
+    // var markdownDoc = drafterDoc.replaceAll("\\\\n\\\\n", "<br/>")
+    // .replaceAll("\\\\n", "<br/>")
+    // .replaceAll("\\n\\n", "<br/>")
+    // .replaceAll("\\n", "<br/>")
+    // .replaceAll("\n", "<br/>")
+    // .replaceAll("\\", "")
+    // .replaceAll('"', "")
+    // .replaceAll(":", " :")
+    // .replaceAll("#", "")
+    // .replaceAll(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    console.log(drafterDoc)
+    setDrafterText(drafterDoc.replaceAll("\\\\n\\\\n", "<br/>")
+     .replaceAll("\\\\n", "<br/>")
+     .replaceAll("\\n\\n", "<br/>")
+    .replaceAll("\\n", "<br/>")
+     .replaceAll("\n", "<br/>")
+     
+    .replaceAll("\\", "")
+     .replaceAll('"', "")
+    .replaceAll(":", " :")
+     .replaceAll("#", "")
+   );
+      console.log(drafterText)
   }, [drafterDoc]);
 
   const handleDownload = async () => {
@@ -95,8 +119,10 @@ const AiDrafter = () => {
           <div className="flex-1 grid grid-cols-[65%_35%] gap-2 px-3 h-[80%]">
             <div className="bg-[#00808034] rounded-md h-full overflow-scroll">
               {drafterText ? (
-                <p className="m-0 p-2 text-sm text-black h-full overflow-auto">
-                  <Markdown>{drafterText}</Markdown>
+                <p className="m-0 p-2 text-sm text-black h-full overflow-auto +" 
+                dangerouslySetInnerHTML={{ __html: drafterText.replaceAll(/\*([^*]+)\*/g, '<strong>$1</strong>')}}
+                >
+                  
                 </p>
               ) : (
                 <div className="h-full flex justify-center items-center">
