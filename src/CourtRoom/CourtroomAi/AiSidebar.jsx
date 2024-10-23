@@ -761,7 +761,7 @@ const AiSidebar = () => {
       const responseData = await getResponse.json();
 
       const data = responseData.data.fetchedAskQuery.answer;
-      console.log(data);
+      // console.log(data);
 
       setPromptArr([
         ...promptArr,
@@ -773,6 +773,10 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error in getting response:", error);
       toast.error("Error in getting response");
+      setSearchQuery(false);
+      let newArr = promptArr;
+      newArr.pop();
+      setPromptArr(newArr);
     }
     // setAskLegalGptPrompt(null);
   };
