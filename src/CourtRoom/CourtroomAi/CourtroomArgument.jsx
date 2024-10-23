@@ -614,7 +614,7 @@ const CourtroomArgument = () => {
               element: ".arguments:nth-child(1)",
               popover: {
                 title: "Argument",
-                description: "Click on the argument for more option  ",
+                description: "Click on the Argument for more option  ",
                 side: "left",
                 align: "start",
                 onNextClick: () => {
@@ -628,9 +628,9 @@ const CourtroomArgument = () => {
             {
               element: ".arguments:nth-child(1)",
               popover: {
-                title: "edit and objection",
+                title: "Edit and Objection",
                 description:
-                  "Click on red button to show objections and and the button beside to edit the argument ",
+                  "Click on red button to Show Objections and and the button beside to edit the Argument ",
                 side: "left",
                 align: "start",
 
@@ -1036,7 +1036,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Download Case",
               description:
-                "Click this button to download the entire Case Histroy in pdf form ",
+                "Click this button to download the Entire Case Histroy in pdf form ",
               side: "left",
               align: "start",
             },
@@ -1046,7 +1046,7 @@ const CourtroomArgument = () => {
             element: "#NewCaseInput",
             popover: {
               title: "New Case",
-              description: "Click this button to open a new Case File ",
+              description: "Click this button to open a New Case File ",
               side: "left",
               align: "start",
             },
@@ -1056,7 +1056,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Enter Argument",
               description:
-                "Enter your argumentnts here. You can use both text and voice input  ",
+                "Enter your Arguments here. You can use both text and voice input  ",
               side: "left",
               align: "start",
             },
