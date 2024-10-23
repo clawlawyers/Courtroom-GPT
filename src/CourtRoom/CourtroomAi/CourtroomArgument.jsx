@@ -57,16 +57,16 @@ const CourtroomArgument = () => {
   }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const fightingModal = useSelector((state) => state.user.fightingSideModal);
   const tutorial = useSelector((state) => state.popup.tutorial);
   useEffect(() => {
     console.log("hiasasdd");
-    if(tutorial){
-      console.log("adsd")
+    if (tutorial) {
+      console.log("adsd");
       var driverObj = driver({
         showProgress: true,
-        steps:  [
+        steps: [
           // {
           //   element: "#side-selection",
           //   popover: {
@@ -209,7 +209,7 @@ const CourtroomArgument = () => {
               align: "start",
             },
           },
-          
+
           {
             element: "#Ai-Drafter",
             popover: {
@@ -260,7 +260,7 @@ const CourtroomArgument = () => {
               align: "start",
             },
           },
-        
+
           {
             element: "#download-case",
             popover: {
@@ -271,9 +271,7 @@ const CourtroomArgument = () => {
               align: "start",
             },
           },
-        
-      
-       
+
           {
             element: "#NewCaseInput",
             popover: {
@@ -294,12 +292,10 @@ const CourtroomArgument = () => {
             },
           },
         ],
-      })
-      driverObj.drive()
-      dispatch(setTutorialFalse())
-
+      });
+      driverObj.drive();
+      dispatch(setTutorialFalse());
     }
-
   }, [tutorial]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -333,7 +329,8 @@ const CourtroomArgument = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    e.stopPropagation();
     setAnchorEl(null);
   };
 
@@ -597,6 +594,7 @@ const CourtroomArgument = () => {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
   const handleAddArgument = async () => {
     try {
       setUserArgument([...userArgument, addArgumentInputText]);
@@ -981,7 +979,7 @@ const CourtroomArgument = () => {
               align: "start",
             },
           },
-          
+
           {
             element: "#Ai-Drafter",
             popover: {
@@ -1032,7 +1030,7 @@ const CourtroomArgument = () => {
               align: "start",
             },
           },
-        
+
           {
             element: "#download-case",
             popover: {
@@ -1043,9 +1041,7 @@ const CourtroomArgument = () => {
               align: "start",
             },
           },
-        
-      
-       
+
           {
             element: "#NewCaseInput",
             popover: {
