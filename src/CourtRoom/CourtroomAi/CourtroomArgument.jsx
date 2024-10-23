@@ -80,8 +80,8 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "Ai judgde",
-              description: "This will show ai judge response to an argument  ",
+              title: "AI JUDGE",
+              description: "This will show Ai Judge response to an argument",
               side: "left",
               align: "start",
             },
@@ -89,9 +89,9 @@ const CourtroomArgument = () => {
           {
             element: "#ailawyer",
             popover: {
-              title: "Ai Lawyer",
+              title: "AI LAWYER",
               description:
-                "This will show the response of the ai lawyer of the oppsing counsel",
+                "This will show the response of the Ai Lawyer of the opposing counsel",
               side: "left",
               align: "start",
             },
@@ -101,7 +101,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Exapnd",
               description:
-                "click this button to exapnd response for better view   ",
+                "Click this button to Exapnd response for better view   ",
               side: "left",
 
               align: "start",
@@ -115,9 +115,9 @@ const CourtroomArgument = () => {
           {
             element: "#swaplawyer",
             popover: {
-              title: "Change side",
+              title: "Change Side",
               description:
-                "click this button to change the side you are representing   ",
+                "Click this button to Change the Side you are representing   ",
               side: "left",
               align: "start",
             },
@@ -125,8 +125,8 @@ const CourtroomArgument = () => {
           {
             element: "#relevant-case-menu",
             popover: {
-              title: "menu",
-              description: "click this button to open mnenu  ",
+              title: "Menu",
+              description: "Click this button to open Menu  ",
               side: "left",
               align: "start",
             },
@@ -134,8 +134,8 @@ const CourtroomArgument = () => {
           {
             element: "#relevantcase-button",
             popover: {
-              title: "menu",
-              description: "click this button to show relevant cases  ",
+              title: "Menu",
+              description: "Click this button to show Relevant Cases  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -147,8 +147,8 @@ const CourtroomArgument = () => {
           {
             element: "#evidence-menu",
             popover: {
-              title: "menu",
-              description: "click this button to show relevant cases  ",
+              title: "Menu",
+              description: "click this button to show Document Menu  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -160,8 +160,8 @@ const CourtroomArgument = () => {
           {
             element: "#edit_doc",
             popover: {
-              title: "Edit Doc",
-              description: "click this button to edit the case law document  ",
+              title: "Edit Document",
+              description: "Click this button to Edit the Case Law Document  ",
               side: "left",
               align: "start",
             },
@@ -171,7 +171,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Evidence",
               description:
-                "click this button to add evidences a popup will open and you can add releavnt evidences t will also return its relevance  ",
+                "Click this button to Add Evidences .A popup will open and you can Add Releavnt Evidences t will also return its relevance  ",
               side: "left",
               align: "start",
             },
@@ -181,7 +181,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "click this button to add testimony a popup will open and you can add releavnt testimony t will also return its relevance  ",
+                "Click this button to Add Testimony . A popup will open and you can Add Releavnt Testimony t will also return its relevance  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -194,7 +194,7 @@ const CourtroomArgument = () => {
             element: "#time-left",
             popover: {
               title: "Time Remaning ",
-              description: "It shows amount of time remaining ",
+              description: "It shows amount of Time Remaining for the Session ",
               side: "left",
               align: "start",
             },
@@ -204,7 +204,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "First Draft",
               description:
-                "Click this button to open the first draft of the given case fle ",
+                "Click this button to open the First Draft of the given case fIle ",
               side: "left",
               align: "start",
             },
@@ -215,7 +215,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Document Drafter",
               description:
-                "Click this button to open a popup to create documents reletaed to the case using ai  ",
+                "Click this button to open a popup to Create Documents reletaed to the case using AI ",
               side: "left",
               align: "start",
             },
@@ -225,7 +225,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Legal Gpt",
               description:
-                "Click this button to open legal gpt popup to ask law releated queries ",
+                "Click this button to open Legal Gpt popup to ask Law Releated Queries ",
               side: "left",
               align: "start",
             },
@@ -245,7 +245,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Case AI Assistant",
               description:
-                "Click this button to open a   popup to for ai assiatance for the case  ",
+                "Click this button to open a popup for Ai Assiatance for the case ",
               side: "left",
               align: "start",
             },
@@ -255,7 +255,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Download Session",
               description:
-                "Click this button to download the entire session histroy in pdf form ",
+                "Click this button to Download the entire Session Histroy in pdf form ",
               side: "left",
               align: "start",
             },
@@ -266,7 +266,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Download Case",
               description:
-                "Click this button to download the entire session histroy in pdf form ",
+                "Click this button to Download the current Case Histroy in pdf form ",
               side: "left",
               align: "start",
             },
@@ -278,7 +278,7 @@ const CourtroomArgument = () => {
             element: "#NewCaseInput",
             popover: {
               title: "New Case",
-              description: "Click this button to open a new case file ",
+              description: "Click this button to open a New Case File ",
               side: "left",
               align: "start",
             },
@@ -288,7 +288,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Enter Argument",
               description:
-                "Enter your argumentnts here you can use either text and voice input  ",
+                "Enter your Argumentnts here .You can use either Text and Voice Input  ",
               side: "left",
               align: "start",
             },
@@ -852,8 +852,8 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "Ai judgde",
-              description: "This will show ai judge response to an argument  ",
+              title: "AI Judgde",
+              description: "This will show AI Judge response to an argument from both sides  ",
               side: "left",
               align: "start",
             },
@@ -861,9 +861,9 @@ const CourtroomArgument = () => {
           {
             element: "#ailawyer",
             popover: {
-              title: "Ai Lawyer",
+              title: "AI Lawyer",
               description:
-                "This will show the response of the ai lawyer of the oppsing counsel",
+                "This will show the response of the AI Lawyer of the opposing counsel",
               side: "left",
               align: "start",
             },
@@ -873,7 +873,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Exapnd",
               description:
-                "click this button to exapnd response for better view   ",
+                "Click this button to Exapnd response for better view   ",
               side: "left",
 
               align: "start",
@@ -887,9 +887,9 @@ const CourtroomArgument = () => {
           {
             element: "#swaplawyer",
             popover: {
-              title: "Change side",
+              title: "Change Side",
               description:
-                "click this button to change the side you are representing   ",
+                "Click this button to change the side you are representing",
               side: "left",
               align: "start",
             },
@@ -897,8 +897,8 @@ const CourtroomArgument = () => {
           {
             element: "#relevant-case-menu",
             popover: {
-              title: "menu",
-              description: "click this button to open mnenu  ",
+              title: "Menu",
+              description: "Click this button to open Menu  ",
               side: "left",
               align: "start",
             },
@@ -906,8 +906,8 @@ const CourtroomArgument = () => {
           {
             element: "#relevantcase-button",
             popover: {
-              title: "menu",
-              description: "click this button to show relevant cases  ",
+              title: "Menu",
+              description: "Click this button to show Relevant Cases  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -919,8 +919,8 @@ const CourtroomArgument = () => {
           {
             element: "#evidence-menu",
             popover: {
-              title: "menu",
-              description: "click this button to show relevant cases  ",
+              title: "Menu",
+              description: "Click this button to open Document Menu  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -932,8 +932,8 @@ const CourtroomArgument = () => {
           {
             element: "#edit_doc",
             popover: {
-              title: "Edit Doc",
-              description: "click this button to edit the case law document  ",
+              title: "Edit Documnet",
+              description: "Click this button to edit the Case File",
               side: "left",
               align: "start",
             },
@@ -943,7 +943,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Evidence",
               description:
-                "click this button to add evidences a popup will open and you can add releavnt evidences t will also return its relevance  ",
+                "Click this button to Add Evidences.  A popup will open and you can Add Releavnt Evidences. After submitting it will also return its relevance.  ",
               side: "left",
               align: "start",
             },
@@ -953,7 +953,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "click this button to add testimony a popup will open and you can add releavnt testimony t will also return its relevance  ",
+                "Click this button to Add Testimony. A popup will open and you can Add Releavnt Testimony. After submitting  it will also return its relevance  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -966,7 +966,7 @@ const CourtroomArgument = () => {
             element: "#time-left",
             popover: {
               title: "Time Remaning ",
-              description: "It shows amount of time remaining ",
+              description: "It shows amount of Time Remaining for the Session ",
               side: "left",
               align: "start",
             },
@@ -976,7 +976,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "First Draft",
               description:
-                "Click this button to open the first draft of the given case fle ",
+                "Click this button to open the First Draft of the given case file ",
               side: "left",
               align: "start",
             },
@@ -987,7 +987,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Document Drafter",
               description:
-                "Click this button to open a popup to create documents reletaed to the case using ai  ",
+                "Click this button to open a popup to create Legal Documents reletaed to the case using AI  ",
               side: "left",
               align: "start",
             },
@@ -997,7 +997,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Legal Gpt",
               description:
-                "Click this button to open legal gpt popup to ask law releated queries ",
+                "Click this button to open Legal GPT popup to ask law releated queries ",
               side: "left",
               align: "start",
             },
@@ -1007,7 +1007,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Case Search",
               description:
-                "Click this button to open a popup to search older cases related to your use case  ",
+                "Click this button to open a popup to search older case files related to your use case  ",
               side: "left",
               align: "start",
             },
@@ -1017,7 +1017,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Case AI Assistant",
               description:
-                "Click this button to open a   popup to for ai assiatance for the case  ",
+                "Click this button to open a popup  for AI assiatance for the case  ",
               side: "left",
               align: "start",
             },
@@ -1027,7 +1027,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Download Session",
               description:
-                "Click this button to download the entire session histroy in pdf form ",
+                "Click this button to download the entire Session Histroy in pdf form ",
               side: "left",
               align: "start",
             },
@@ -1038,7 +1038,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Download Case",
               description:
-                "Click this button to download the entire session histroy in pdf form ",
+                "Click this button to download the entire Case Histroy in pdf form ",
               side: "left",
               align: "start",
             },
@@ -1050,7 +1050,7 @@ const CourtroomArgument = () => {
             element: "#NewCaseInput",
             popover: {
               title: "New Case",
-              description: "Click this button to open a new case file ",
+              description: "Click this button to open a new Case File ",
               side: "left",
               align: "start",
             },
@@ -1060,7 +1060,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Enter Argument",
               description:
-                "Enter your argumentnts here you can use either text and voice input  ",
+                "Enter your argumentnts here. You can use both text and voice input  ",
               side: "left",
               align: "start",
             },
