@@ -520,7 +520,7 @@ const AiSidebar = () => {
 
   useEffect(() => {
     if (overViewDetails !== "" || overViewDetails !== "NA") {
-      console.log(overViewDetails);
+      // console.log(overViewDetails);
       firstDraftApi();
     }
   }, [overViewDetails]);
