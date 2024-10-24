@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Markdown from "react-markdown";
 
 const courtIdMapping = [
   { name: "Supreme Court of India", id: "1bgi-zbCWObiTNjkegNXryni4ZJzZyCFV" },
@@ -187,80 +186,6 @@ const CaseLaws = () => {
                     >
                       View document
                     </button>
-
-                    <Modal
-                      open={modalOpen}
-                      onClose={handleClose}
-                      aria-labelledby="child-modal-title"
-                    >
-                      <div
-                        className={Styles.scrollable}
-                        style={{
-                          backgroundColor: "white",
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          width: "80%",
-                          height: "90%",
-                          color: "black",
-                          borderRadius: 10,
-                          // overflowY: "scroll",
-                          padding: 10,
-                          transform: "translate(-50%, -50%)",
-                          boxShadow: 24,
-                        }}
-                      >
-                        <div
-                          style={{
-                            position: "sticky",
-                            top: 0,
-                            display: "flex",
-                          }}
-                        >
-                          <div style={{ flex: 1 }} />
-                          <button
-                            onClick={handleClose}
-                            style={{
-                              border: "none",
-                              backgroundColor: "transparent",
-                            }}
-                          >
-                            <Close style={{ fontSize: 30, color: "black" }} />
-                          </button>
-                        </div>
-                        <div className="h-[90%] overflow-auto border border-black p-3">
-                          {loading ? (
-                            <div
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <CircularProgress style={{ color: "black" }} />
-                            </div>
-                          ) : (
-                            <div
-                              style={{
-                                whiteSpace: "pre-line",
-                                alignItems: "center",
-                                width: "100%",
-                                fontSize: 16,
-                                fontWeight: 500,
-                                fontFamily: "serif",
-                              }}
-                              dangerouslySetInnerHTML={{
-                                __html: documentData,
-                              }}
-                            >
-                              {/* <Markdown>{documentData}</Markdown> */}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </Modal>
                   </div>
                 ))}
               </div>
@@ -307,6 +232,79 @@ const CaseLaws = () => {
           </div>
         )}
       </div>
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        aria-labelledby="child-modal-title"
+      >
+        <div
+          className={Styles.scrollable}
+          style={{
+            backgroundColor: "white",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: "80%",
+            height: "90%",
+            color: "black",
+            borderRadius: 10,
+            // overflowY: "scroll",
+            padding: 10,
+            transform: "translate(-50%, -50%)",
+            boxShadow: 24,
+          }}
+        >
+          <div
+            style={{
+              position: "sticky",
+              top: 0,
+              display: "flex",
+            }}
+          >
+            <div style={{ flex: 1 }} />
+            <button
+              onClick={handleClose}
+              style={{
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Close style={{ fontSize: 30, color: "black" }} />
+            </button>
+          </div>
+          <div className="h-[90%] overflow-auto border border-black p-3">
+            {loading ? (
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress style={{ color: "black" }} />
+              </div>
+            ) : (
+              <div
+                style={{
+                  whiteSpace: "pre-line",
+                  alignItems: "center",
+                  width: "100%",
+                  fontSize: 16,
+                  fontWeight: 500,
+                  fontFamily: "serif",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: documentData,
+                }}
+              >
+                {/* <Markdown>{documentData}</Markdown> */}
+              </div>
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

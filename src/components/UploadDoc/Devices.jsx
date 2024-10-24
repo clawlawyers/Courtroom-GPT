@@ -489,24 +489,15 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           onButtonClick={handleSave}
           image={uploading ? uploadImage : analyzing ? analyzingImage : ""}
         >
-          {uploading && (
-            <img className="h-10 w-10" src={uploadImage} alt="uploading" />
-          )}
-          {analyzing && (
-            <img
-              className="w-full h-full fit-content flex items-center justify-center"
-              src={analyzingImage}
-              alt="uploading"
-            />
-          )}
-          {/* {uploaddrivedialog && <UploadDrive></UploadDrive>} */}
+          {/* {uploading && <img src={uploadImage} alt="uploading" />}
+          {analyzing && <img src={analyzingImage} alt="uploading" />}
           {uploadComplete && (
             <textarea
               className="w-full h-64  p-2.5 mb-4 text-black rounded-md "
               value={caseOverview}
               onChange={handleChange}
             />
-          )}
+          )} */}
         </Dialog>
       </motion.div>
       <Modal

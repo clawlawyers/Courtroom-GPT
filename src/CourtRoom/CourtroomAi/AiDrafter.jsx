@@ -6,6 +6,7 @@ import loader from "../../assets/images/evidenceLoad.gif";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { editDrafter, removeDrafter } from "../../features/laws/drafterSlice";
 import Markdown from "react-markdown";
+import { CircularProgress } from "@mui/material";
 
 const AiDrafter = () => {
   const drafterDoc = useSelector((state) => state.drafter.drafterDoc);
@@ -14,6 +15,7 @@ const AiDrafter = () => {
   const [promptText, setPromptText] = useState("");
   const [promptTextbox, setPromptTextbox] = useState(false);
   const [drafterText, setDrafterText] = useState(null);
+  const [editLoading, setEditLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ const AiDrafter = () => {
 
   const handleEditDoc = async () => {
     dispatch(removeDrafter());
+    setEditLoading(true);
     try {
       const props = await fetch(
         `${NODE_API_ENDPOINT}/courtroom/api/edit_application`,
@@ -51,13 +54,15 @@ const AiDrafter = () => {
       );
       setPromptTextbox(false);
       setPromptText("");
+      setEditLoading(false);
     } catch (error) {
       console.log(error);
+      setEditLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log('asdasdadasdasd')
+    console.log("asdasdadasdasd");
 
     // var markdownDoc = drafterDoc.replaceAll("\\\\n\\\\n", "<br/>")
     // .replaceAll("\\\\n", "<br/>")
@@ -69,19 +74,21 @@ const AiDrafter = () => {
     // .replaceAll(":", " :")
     // .replaceAll("#", "")
     // .replaceAll(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    console.log(drafterDoc)
-    setDrafterText(drafterDoc.replaceAll("\\\\n\\\\n", "<br/>")
-     .replaceAll("\\\\n", "<br/>")
-     .replaceAll("\\n\\n", "<br/>")
-    .replaceAll("\\n", "<br/>")
-     .replaceAll("\n", "<br/>")
-     .replaceAll(/\*([^*]+)\*/g, '<strong>$1</strong>')
-    .replaceAll("\\", "")
-     .replaceAll('"', "")
-    .replaceAll(":", " :")
-     .replaceAll("#", "")
-   );
-      console.log(drafterText)
+    console.log(drafterDoc);
+    setDrafterText(
+      drafterDoc
+        .replaceAll("\\\\n\\\\n", "<br/>")
+        .replaceAll("\\\\n", "<br/>")
+        .replaceAll("\\n\\n", "<br/>")
+        .replaceAll("\\n", "<br/>")
+        .replaceAll("\n", "<br/>")
+        .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+        .replaceAll("\\", "")
+        .replaceAll('"', "")
+        .replaceAll(":", " :")
+        .replaceAll("#", "")
+    );
+    console.log(drafterText);
   }, [drafterDoc]);
 
   const handleDownload = async () => {
@@ -105,7 +112,7 @@ const AiDrafter = () => {
     // Create a link to download the PDF
     const a = document.createElement("a");
     a.href = url;
-    a.download = "Rent_Agreement.pdf";
+    a.download = "Document.pdf";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -126,11 +133,10 @@ const AiDrafter = () => {
           <div className="flex-1 grid grid-cols-[65%_35%] gap-2 px-3 h-[80%]">
             <div className="bg-[#00808034] rounded-md h-full overflow-scroll">
               {drafterText ? (
-                <p className="m-0 p-2 text-sm text-black h-full overflow-auto +" 
-                dangerouslySetInnerHTML={{ __html: drafterText}}
-                >
-                  
-                </p>
+                <p
+                  className="m-0 p-2 text-sm text-black h-full overflow-auto +"
+                  dangerouslySetInnerHTML={{ __html: drafterText }}
+                ></p>
               ) : (
                 <div className="h-full flex justify-center items-center">
                   <img className="h-28 w-28" src={loader} />
@@ -147,14 +153,22 @@ const AiDrafter = () => {
                 </div>
               ) : (
                 <div className="flex-1 flex flex-col gap-2  py-2">
-                  <p className="h-[40vh] overflow-auto text-sm m-0">
-                    {promptText}
-                  </p>
+                  <textarea
+                    readOnly
+                    className="max-h-[40vh] overflow-auto text-sm m-0 text-black p-2 rounded"
+                    value={promptText}
+                  />
+                  {/* {promptText} */}
+                  {/* </p> */}
                   <button
                     onClick={handleEditDoc}
                     className="bg-[#002828] rounded text-white py-2"
                   >
-                    Confirm Update Document
+                    {editLoading ? (
+                      <CircularProgress color="inherit" size={15} />
+                    ) : (
+                      "Confirm Update Document"
+                    )}
                   </button>
                   <button
                     onClick={() => {
