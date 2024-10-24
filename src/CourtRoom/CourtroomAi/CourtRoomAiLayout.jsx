@@ -25,11 +25,11 @@ const CourtRoomAiLayout = () => {
 
   // console.log(currentUser);
 
-  // useEffect(() => {
-  //   if (currentUser === "") {
-  //     navigate("/");
-  //   }
-  // }, [currentUser]);
+  useEffect(() => {
+    if (currentUser === "") {
+      navigate("/");
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (caseOverView !== "NA" && caseOverView !== "") {

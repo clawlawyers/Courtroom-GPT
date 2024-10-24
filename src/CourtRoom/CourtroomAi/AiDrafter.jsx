@@ -75,7 +75,7 @@ const AiDrafter = () => {
      .replaceAll("\\n\\n", "<br/>")
     .replaceAll("\\n", "<br/>")
      .replaceAll("\n", "<br/>")
-     
+     .replaceAll(/\*([^*]+)\*/g, '<strong>$1</strong>')
     .replaceAll("\\", "")
      .replaceAll('"', "")
     .replaceAll(":", " :")
@@ -127,7 +127,7 @@ const AiDrafter = () => {
             <div className="bg-[#00808034] rounded-md h-full overflow-scroll">
               {drafterText ? (
                 <p className="m-0 p-2 text-sm text-black h-full overflow-auto +" 
-                dangerouslySetInnerHTML={{ __html: drafterText.replaceAll(/\*([^*]+)\*/g, '<strong>$1</strong>')}}
+                dangerouslySetInnerHTML={{ __html: drafterText}}
                 >
                   
                 </p>
