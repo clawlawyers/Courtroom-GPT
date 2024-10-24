@@ -164,7 +164,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const handleUploadFromComputer = async () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-    fileInput.accept = ".pdf,.doc,.docx,.txt,.jpg"; // Specify the accepted file types
+    fileInput.accept = ".pdf,.docx,.txt"; // Specify the accepted file types
     fileInput.multiple = true; // Allow multiple file selection
     fileInput.addEventListener("change", async (event) => {
       const files = Array.from(event.target.files);
@@ -208,7 +208,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           );
 
           // Handle response and update state
-          console.log(response.data.data.case_overview.case_overview)
+          console.log(response.data.data.case_overview.case_overview);
           setPreviewContent(response.data.data.case_overview.case_overview);
           setInputText(response.data.data.case_overview.case_overview);
           setUploading(false);
