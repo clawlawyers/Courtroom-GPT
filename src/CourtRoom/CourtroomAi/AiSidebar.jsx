@@ -688,11 +688,11 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
         {
           // user_id: currentUser.userId,
-          data: firstDraft,
-          type: "First Draft",
+          // data: firstDraft,
+          // type: "First Draft",
         },
         {
           headers: {
@@ -710,8 +710,8 @@ const AiSidebar = () => {
       link.click();
       link.remove();
     } catch (error) {
-      console.error("Error downloading case history:", error);
-      toast.error("Error downloading case history");
+      console.error("Error downloading First Draft:", error);
+      toast.error("Error downloading First Draft");
     }
   };
 
