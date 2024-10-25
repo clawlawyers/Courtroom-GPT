@@ -291,7 +291,7 @@ const AiSidebar = () => {
   // console.log(overViewDetails);
 
   const firstDraftDetails = useSelector((state) => state.user.firstDraft);
-  console.log(firstDraftDetails);
+  // console.log(firstDraftDetails);
   const firstDraftLoading = useSelector(
     (state) => state.user.firstDraftLoading
   );
@@ -594,6 +594,7 @@ const AiSidebar = () => {
         console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
+          dispatch(setFirstDraftAction({ draft: "" }));
         } else {
           dispatch(setOverview(overView.data.data.case_overview));
         }
