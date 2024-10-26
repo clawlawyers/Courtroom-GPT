@@ -50,6 +50,8 @@ const TimerComponent = React.memo(() => {
   );
 });
 
+const TOKENS = ["9950866260ADMIN", "IIMINDORE", "SHUBHAM"];
+
 function AdminLogin() {
   const navigate = useNavigate();
 
@@ -63,7 +65,9 @@ function AdminLogin() {
     e.preventDefault();
     setTokenCheckLoading(true);
 
-    if (token !== "9950866260ADMIN") {
+    const valisToken = TOKENS.includes(token);
+
+    if (!valisToken) {
       toast.error("Invalid token. Please try again.");
       return;
     }
@@ -112,7 +116,7 @@ function AdminLogin() {
         body: JSON.stringify({
           name: token,
           phoneNumber: token,
-          email: "admin@gmail.com",
+          email: token,
           bookingDate: currentDate,
           hour: currentHour,
         }),
@@ -138,7 +142,7 @@ function AdminLogin() {
           body: JSON.stringify({
             name: token,
             phoneNumber: token,
-            email: "admin@gmail.com",
+            email: token,
             slots: [{ date: currentDate, hour: currentHour }],
             recording: false,
             password: token,
@@ -153,18 +157,12 @@ function AdminLogin() {
       setTokenVerified(true);
       setTokenCheckLoading(false);
     } else if (
-      parsedSlotBooked === "Maximum of 6 courtrooms can be booked at same time"
+      parsedSlotBooked.data === "Maximum of 6 courtrooms can be booked"
     ) {
       toast.error("Maximum of 6 courtrooms can be booked");
       return;
-    } else if (
-      parsedSlotBooked ===
-      "User with phone number admin@gmail.com or email admin@gmail.com has already booked a courtroom at same time"
-    ) {
-      setTokenVerified(true);
-      setTokenCheckLoading(false);
     } else {
-      toast.error("Invalid token. Please try again.");
+      setTokenVerified(true);
       setTokenCheckLoading(false);
     }
 

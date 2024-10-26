@@ -39,7 +39,7 @@ const BookNow = () => {
   const [countdown, setCountdown] = useState(30);
   const [otpVerifySuccess, setOtpVerifySuccess] = useState(false);
 
-  const [showPass, setShowPass] = useState(false);
+  const [showPass, setShowPass] = useState(true);
   const [password, setPassword] = useState(null);
 
   const navigate = useNavigate();

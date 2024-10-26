@@ -45,12 +45,18 @@ import {
 } from "../../features/laws/drafterSlice";
 import {
   removeCaseLaws,
+  removeRelevantCaseLaws,
   retrieveCaseLaws,
   setCaseLaws,
+  setRelevantCaseLaws,
 } from "../../features/laws/lawSlice";
 import { setTutorial } from "../../features/popup/popupSlice";
 import Rating from "@mui/material/Rating";
 import sendIcon from "../../assets/icons/Send.png";
+import {
+  removeDrafterPro,
+  retrieveDrafterProQuestions,
+} from "../../features/laws/drafterProSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -316,7 +322,7 @@ const AiSidebar = () => {
   const [showRelevantLaws, setShowRelevantLaws] = useState(false);
   const [relevantCaseLoading, setRelevantCaseLoading] = useState(false);
   const [relevantLawsArr, setRelevantLawsArr] = useState(null);
-  const [relevantLawData, setRelevantLawData] = useState("");
+  const [relevantLawData, setRelevantLawData] = useState([]);
   const [caseSearchDialog, setCaseSearchDialog] = useState(false);
   const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
   const [caseSearchLoading, setCaseSearchLoading] = useState(false);
@@ -427,9 +433,12 @@ const AiSidebar = () => {
           },
         }
       );
+      dispatch(setFirstDraftAction({ draft: "" }));
     } catch (error) {
       toast.error("Error in saving case");
       console.error("Error in saving case", error);
+    } finally {
+      setIsEditing(false);
     }
   };
 
@@ -462,28 +471,27 @@ const AiSidebar = () => {
   const firstDraftApi = async () => {
     // dispatch(setFirstDraftLoading());
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
         {
-          method: "POST",
+          // user_id: currentUser.userId,
+        },
+        {
           headers: {
             Authorization: `Bearer ${currentUser.token}`,
           },
         }
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${currentUser.token}`,
-        //   },
-        // }
       );
-      // console.log(await response.data);
-      if (response.data !== undefined) {
-        dispatch(
-          setFirstDraftAction({
-            draft: response?.data?.data?.draft?.detailed_draft,
-          })
-        );
-      }
+
+      // console.log("response is ", response.data.data.draft.detailed_draft);
+      // setFirstDraft(response.data.data.draft.detailed_draft);
+
+      dispatch(setFirstDraftAction({ draft: "" }));
+      dispatch(
+        setFirstDraftAction({
+          draft: response?.data?.data?.draft?.detailed_draft,
+        })
+      );
 
       // dispatch(setFirstDraftLoading());
       // console.log("response is ", response.data.data.draft.detailed_draft);
@@ -498,7 +506,7 @@ const AiSidebar = () => {
 
   useEffect(() => {
     if (overViewDetails !== "" || overViewDetails !== "NA") {
-      console.log(overViewDetails);
+      // console.log(overViewDetails);
       firstDraftApi();
     }
   }, [overViewDetails]);
@@ -536,9 +544,16 @@ const AiSidebar = () => {
 
   const formatText = (text) => {
     return text
-      .replace(/\\n\\n/g, "<br/><br/>")
-      .replace(/\\n/g, "  <br/>")
-      .replace(/\\/g, " ");
+      .replaceAll("\\\\n\\\\n", "<br/>")
+      .replaceAll("\\\\n", "<br/>")
+      .replaceAll("\\n\\n", "<br/>")
+      .replaceAll("\\n", "<br/>")
+      .replaceAll("\n", "<br/>")
+      .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+      .replaceAll("\\", "")
+      .replaceAll('"', "")
+      .replaceAll(":", " :")
+      .replaceAll("#", "");
   };
 
   const getReventCaseLaw = async () => {
@@ -546,7 +561,7 @@ const AiSidebar = () => {
 
     try {
       const fetchedData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law`,
+        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law_updated`,
         {
           method: "POST",
           headers: {
@@ -565,7 +580,7 @@ const AiSidebar = () => {
       const formattedData = formatText(
         data.data.relevantCases.relevant_case_law
       );
-      setRelevantLawData(data.data.relevantCases.relevant_case_law);
+      setRelevantLawData(data.data.relevantCases.metadata);
       // console.log(data.data.relevantCases.relevant_case_law);
       setRelevantCaseLoading(false);
       setRelevantLawsArr(formattedData);
@@ -593,6 +608,7 @@ const AiSidebar = () => {
         console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
+          dispatch(setFirstDraftAction({ draft: "" }));
         } else {
           dispatch(setOverview(overView.data.data.case_overview));
         }
@@ -690,8 +706,8 @@ const AiSidebar = () => {
         `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
           // user_id: currentUser.userId,
-          data: firstDraft,
-          type: "First Draft",
+          // data: firstDraft,
+          // type: "First Draft",
         },
         {
           headers: {
@@ -709,8 +725,8 @@ const AiSidebar = () => {
       link.click();
       link.remove();
     } catch (error) {
-      console.error("Error downloading case history:", error);
-      toast.error("Error downloading case history");
+      console.error("Error downloading First Draft:", error);
+      toast.error("Error downloading First Draft");
     }
   };
 
@@ -739,7 +755,7 @@ const AiSidebar = () => {
       const responseData = await getResponse.json();
 
       const data = responseData.data.fetchedAskQuery.answer;
-      console.log(data);
+      // console.log(data);
 
       setPromptArr([
         ...promptArr,
@@ -751,6 +767,10 @@ const AiSidebar = () => {
     } catch (error) {
       console.error("Error in getting response:", error);
       toast.error("Error in getting response");
+      setSearchQuery(false);
+      let newArr = promptArr;
+      newArr.pop();
+      setPromptArr(newArr);
     }
     // setAskLegalGptPrompt(null);
   };
@@ -760,6 +780,14 @@ const AiSidebar = () => {
     setShowDrafterQuestions(false);
     dispatch(
       retrieveDrafterQuestions({ query: action, token: currentUser.token })
+    );
+  };
+
+  const handleDrafterProQuestions = (action) => {
+    dispatch(removeDrafterPro());
+    setShowDrafterQuestions(false);
+    dispatch(
+      retrieveDrafterProQuestions({ query: action, token: currentUser.token })
     );
   };
 
@@ -1287,50 +1315,25 @@ const AiSidebar = () => {
             overflow: "auto",
           }}
         >
-          {/* {firstDraftLoading ? (
-            <div
-              className="border-2 border-white rounded-lg w-1/6 h-fit p-2 flex flex-row justify-center items-center"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-              }}
-            >
-              <img className="h-40 w-40 my-10" src={loader} alt="loader" />
-            </div>
-          ) : ( */}
           <div
-            className="h-fit w-2/3 rounded-md border-2 border-white"
+            className="h-[95%] w-2/3 flex flex-col rounded-md border-2 border-white"
             style={{
               background: "linear-gradient(to right,#0e1118,#008080)",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <svg
+            <div className="flex justify-end p-2">
+              <Close
+                className="cursor-pointer"
                 onClick={() => {
                   setFirstDraftDialog(false);
                 }}
-                style={{ margin: "20px", cursor: "pointer" }}
-                width="30"
-                height="30"
-                fill="white"
-                stroke="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                  fill-rule="nonzero"
-                />
-              </svg>
+              />
             </div>
-            <div className="m-0 h-2/3 flex flex-column justify-center items-center">
-              <div className="flex h-full px-5 pb-3 flex-row justify-between items-center w-full gap-5">
+            <div className="flex-1 m-0 h-[90%] flex flex-column justify-center items-center">
+              <div className="flex h-full px-4 pb-3 flex-row justify-between items-center w-full gap-5">
                 <div className="flex h-full  flex-col gap-2 justify-center w-full items-center">
                   {firstDraft !== "" ? (
-                    <div className="flex flex-col w-full rounded-md bg-white text-black h-[75vh] overflow-y-auto">
+                    <div className="flex flex-col w-full h-full rounded-md bg-white text-black overflow-y-auto">
                       <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                         <p className="uppercase font-bold my-2 w-full ">
                           First Draft Preview
@@ -1353,7 +1356,7 @@ const AiSidebar = () => {
                       />
                     </div>
                   ) : (
-                    <div className="flex flex-col w-full justify-center items-center rounded-md bg-white text-black h-[75vh] overflow-y-auto">
+                    <div className="flex flex-col w-full justify-center items-center rounded-md bg-white text-black h-full overflow-y-auto">
                       <img
                         className="h-40 w-40 my-10"
                         src={loader}
@@ -1374,12 +1377,12 @@ const AiSidebar = () => {
                     </button>
                   </div>
                 </div>
-                <div className="h-[75vh] w-1 bg-neutral-200/40" />
-                <div className="flex flex-col justify-between h-full w-full gap-4 ">
+                <div className="h-full w-1 bg-neutral-200/40" />
+                <div className="flex flex-col justify-center h-full w-full gap-4 ">
                   {showRelevantLaws ? (
-                    <div className="overflow-auto border-2 border-white rounded bg-white text-black p-2">
+                    <div className="h-full overflow-auto border-2 border-white rounded bg-white text-black p-2">
                       {relevantCaseLoading ? (
-                        <div className="flex justify-center items-center">
+                        <div className="flex justify-center h-full items-center">
                           <img
                             className="h-40 w-40 my-10"
                             src={loader}
@@ -1404,16 +1407,16 @@ const AiSidebar = () => {
                   )}
                   {showRelevantLaws && !relevantCaseLoading && (
                     <div className="w-full flex justify-end">
-                      <Link to={"/courtroom-ai/caseLaws"}>
+                      <Link to={"/courtroom-ai/relevantCaseLaws"}>
                         <button
                           onClick={() => {
-                            dispatch(removeCaseLaws());
+                            dispatch(removeRelevantCaseLaws());
                             dispatch(
-                              retrieveCaseLaws({
-                                query: relevantLawData,
-                                token: currentUser.token,
+                              setRelevantCaseLaws({
+                                relevantLawData,
                               })
                             );
+                            // handleRelevantCaseLaws();
                             setFirstDraftDialog(false);
                           }}
                           className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
@@ -1473,12 +1476,12 @@ const AiSidebar = () => {
           }}
         >
           <div
-            className="h-fit w-2/3 rounded-md border-2 border-white"
+            className="h-[90%] w-2/3 rounded-md border-2 border-white relative"
             style={{
               background: "linear-gradient(to right,#0e1118,#008080)",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div className="flex justify-end absolute right-0">
               <svg
                 onClick={() => setEditDialog(false)}
                 style={{ margin: "20px", cursor: "pointer" }}
@@ -1500,12 +1503,12 @@ const AiSidebar = () => {
               </svg>
             </div>
             {/* <div className="m-0 flex flex-column justify-center items-center"> */}
-            <div className="grid grid-cols-2  px-5 pb-3 justify-between items-center w-full gap-5">
-              <div className="flex flex-row justify-center w-full items-center">
+            <div className="grid grid-cols-2  px-4 py-3 justify-between items-center w-full h-full gap-5">
+              <div className="flex flex-row justify-center w-full h-full items-center">
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-[70vh] overflow-y-auto`}
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}
                 >
                   <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
@@ -1533,7 +1536,7 @@ const AiSidebar = () => {
               {/* <div className="h-5/6 w-1 bg-neutral-200/40" /> */}
               <div className="flex flex-col justify-between py-20  w-full gap-4 ">
                 <div className="flex flex-col w-full gap-4">
-                  <img className="" src={logo} alt="logo" />
+                  <img className="" src={clawLogo} alt="logo" />
                   <h1 className="uppercase text-center font-bold text-4xl">
                     {" "}
                     Edit Your Document
@@ -1542,20 +1545,23 @@ const AiSidebar = () => {
                 <div className="flex flex-col w-full  justify-between">
                   <div className="flex flex-col w-full justify-center items-center gap-4">
                     <div className="flex flex-row justify-center gap-2 w-full">
-                      <Button
-                        className="lowercase border-2 text-sm border-white text-white"
-                        variant="outlined"
-                        onClick={handleSave} // Modify if needed
-                      >
-                        Save
-                      </Button>
-                      <Button
-                        className="text-white text-sm border-2 border-white"
-                        variant="outlined"
-                        onClick={handleEditToggle}
-                      >
-                        {isEditing ? "Save Changes" : "Edit current document"}
-                      </Button>
+                      {isEditing ? (
+                        <Button
+                          className="lowercase border-2 text-sm border-white text-white"
+                          variant="outlined"
+                          onClick={handleSave} // Modify if needed
+                        >
+                          Save Changes
+                        </Button>
+                      ) : (
+                        <Button
+                          className="text-white text-sm border-2 border-white"
+                          variant="outlined"
+                          onClick={handleEditToggle}
+                        >
+                          Edit current document
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1709,7 +1715,16 @@ const AiSidebar = () => {
                   disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
                 >
-                  <img className="w-9 h-9" src={sendIcon} />
+                  {/* <img className="w-9 h-9" src={sendIcon} /> */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                  >
+                    <path d="M22 12l-20 12 5-12-5-12z" />
+                  </svg>
                 </motion.button>
               </form>
             </div>
@@ -1825,7 +1840,16 @@ const AiSidebar = () => {
                   disabled={askLegalGptPrompt === ""}
                   whileTap={{ scale: "0.95" }}
                 >
-                  <img className="w-9 h-9" src={sendIcon} />
+                  {/* <img className="w-9 h-9" src={sendIcon} /> */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                  >
+                    <path d="M22 12l-20 12 5-12-5-12z" />
+                  </svg>
                 </motion.button>
               </form>
             </div>
@@ -1942,7 +1966,15 @@ const AiSidebar = () => {
                         onClick={() => handleDrafterQuestions(x.value)}
                         className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
                       >
-                        Create
+                        Normal
+                      </button>
+                    </Link>
+                    <Link to={"/courtroom-ai/aiDraftPro"}>
+                      <button
+                        onClick={() => handleDrafterProQuestions(x.value)}
+                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      >
+                        Pro
                       </button>
                     </Link>
                   </div>

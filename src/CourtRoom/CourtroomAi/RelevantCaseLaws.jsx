@@ -57,8 +57,10 @@ const newcourtIdMapping = [
   { name: "Rajasthan High Court", id: "18VP7y7NKx8jwSq87T2iSUEh4KnDyImOX" },
 ];
 
-const CaseLaws = () => {
-  const caseLaws = useSelector((state) => state.laws.caseLaws);
+const RelevantCaseLaws = () => {
+  const caseLaws = useSelector(
+    (state) => state.laws.relevantCaseLaws.relevantLawData
+  );
   const currentUser = useSelector((state) => state.user.user);
 
   const navigate = useNavigate();
@@ -67,39 +69,24 @@ const CaseLaws = () => {
   const [loading, setLoading] = useState(false);
   const [documentData, setDocumentData] = useState("");
 
-  const handleOpen = async (court, caseId, date) => {
+  const handleOpen = async (caseName) => {
     setModalOpen(true);
     setLoading(true);
-    let findFileId;
-    if (new Date(date) < new Date("16-July-2024")) {
-      findFileId = courtIdMapping.find(
-        (x) =>
-          x.name.split(" ").join("").toLowerCase() ===
-          court.split(" ").join("").toLowerCase()
-      );
-    } else {
-      findFileId = newcourtIdMapping.find(
-        (x) =>
-          x.name.split(" ").join("").toLowerCase() ===
-          court.split(" ").join("").toLowerCase()
-      );
-    }
-    const fieldId = findFileId.id.toString();
     try {
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/view_document`,
+        `${NODE_API_ENDPOINT}/courtroom/api/print_case_details`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${currentUser.token}`,
           },
-          body: JSON.stringify({ folder_id: fieldId, case_id: caseId }),
+          body: JSON.stringify({ filename: caseName }),
         }
       );
       const parsedProps = await props.json();
       console.log(parsedProps);
-      const reqContent = parsedProps.data.viewDocument.content
+      const reqContent = parsedProps.data.FetchedprintCaseDetails.data
         .replaceAll("\\\\n\\\\n", "<br/>")
         .replaceAll("\\\\n", "<br/>")
         .replaceAll("\\n\\n", "<br/>")
@@ -156,20 +143,18 @@ const CaseLaws = () => {
                     }}
                   >
                     <div style={{ flex: 1 }}>
-                      <h2 style={{ fontSize: 23, fontWeight: 700 }}>
-                        {x.Title}
-                      </h2>
-                      <div style={{ fontSize: 13, color: "#DBD8D8" }}>
+                      <h2 style={{ fontSize: 18, fontWeight: 700 }}>{x}</h2>
+                      {/* <div style={{ fontSize: 13, color: "#DBD8D8" }}>
                         <span>{x.Date}</span>,<span>{" " + x.court}</span>
                       </div>
                       <p style={{ fontSize: 13, color: "#DBD8D8", margin: 0 }}>
                         Number of citations- {x.num_cites}
-                      </p>
+                      </p> */}
                     </div>
 
                     <button
                       onClick={() => {
-                        handleOpen(x.court, x.case_id, x.Date);
+                        handleOpen(x);
                       }}
                       style={{
                         border: "none",
@@ -309,4 +294,4 @@ const CaseLaws = () => {
   );
 };
 
-export default CaseLaws;
+export default RelevantCaseLaws;
