@@ -25,7 +25,12 @@ import voiceIcon from "../../assets/images/voice.png";
 import VoiceSearch from "./VoiceSearch/VoiceSearch";
 import expand from "../../assets/images/expand.png";
 import collapse from "../../assets/images/collapse.png";
-import { removeCaseLaws, retrieveCaseLaws } from "../../features/laws/lawSlice";
+import {
+  removeCaseLaws,
+  removeRelevantCaseLaws,
+  retrieveCaseLaws,
+  setRelevantCaseLaws,
+} from "../../features/laws/lawSlice";
 import {
   setFightingSideModal,
   setFirstDraftAction,
@@ -300,7 +305,7 @@ const CourtroomArgument = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
-  const [relevantCasesData, setRelevantCasesData] = useState("");
+  const [relevantLawData, setRelevantLawData] = useState([]);
   const [showRelevantCaseJudge, setRelevantCaseJudge] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -781,7 +786,7 @@ const CourtroomArgument = () => {
 
     try {
       const res = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_cases_judge_lawyer`,
+        `${NODE_API_ENDPOINT}/courtroom/api/relevant_cases_judge_lawyer_updated`,
         {
           text_input: data,
         },
@@ -792,11 +797,21 @@ const CourtroomArgument = () => {
         }
       );
       console.log(res);
-      setRelevantCasesData(res.data.data.relevantCases.relevant_case_law);
-      var data = res.data.data.relevantCases.relevant_case_law;
-      data = data.replace(/\\n/g, "<br/>");
-      data = data.replace(/\\n\\n/g, "<br/><br/>");
-      data = data.replace(/\\/g, " ");
+      setRelevantLawData(res.data.data.relevantCases.metadata);
+      var data = res.data.data.relevantCases.relevant_case_law
+        .replaceAll("\\\\n\\\\n", "<br/>")
+        .replaceAll("\\\\n", "<br/>")
+        .replaceAll("\\n\\n", "<br/>")
+        .replaceAll("\\n", "<br/>")
+        .replaceAll("\n", "<br/>")
+        .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+        .replaceAll("\\", "")
+        .replaceAll('"', "")
+        .replaceAll(":", " :")
+        .replaceAll("#", "");
+      // data = data.replace(/\\n/g, "<br/>");
+      // data = data.replace(/\\n\\n/g, "<br/><br/>");
+      // data = data.replace(/\\/g, " ");
       setRelevantCases(data);
       setLoadingRelevantCases(false);
     } catch (error) {}
@@ -851,7 +866,8 @@ const CourtroomArgument = () => {
             element: "#aijudge",
             popover: {
               title: "AI Judgde",
-              description: "This will show AI Judge response to an argument from both sides  ",
+              description:
+                "This will show AI Judge response to an argument from both sides  ",
               side: "left",
               align: "start",
             },
@@ -1645,14 +1661,19 @@ const CourtroomArgument = () => {
             </div>
             {!loadingRelevantCases && (
               <div className="flex justify-end">
-                <Link to={"/courtroom-ai/caseLaws"}>
+                <Link to={"/courtroom-ai/relevantCaseLaws"}>
                   <button
                     onClick={() => {
-                      dispatch(removeCaseLaws());
+                      dispatch(removeRelevantCaseLaws());
+                      // dispatch(
+                      //   retrieveCaseLaws({
+                      //     query: relevantCasesData,
+                      //     token: currentUser.token,
+                      //   })
+                      // );
                       dispatch(
-                        retrieveCaseLaws({
-                          query: relevantCasesData,
-                          token: currentUser.token,
+                        setRelevantCaseLaws({
+                          relevantLawData,
                         })
                       );
                     }}

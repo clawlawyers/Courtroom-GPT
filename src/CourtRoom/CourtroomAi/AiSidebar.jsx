@@ -45,12 +45,18 @@ import {
 } from "../../features/laws/drafterSlice";
 import {
   removeCaseLaws,
+  removeRelevantCaseLaws,
   retrieveCaseLaws,
   setCaseLaws,
+  setRelevantCaseLaws,
 } from "../../features/laws/lawSlice";
 import { setTutorial } from "../../features/popup/popupSlice";
 import Rating from "@mui/material/Rating";
 import sendIcon from "../../assets/icons/Send.png";
+import {
+  removeDrafterPro,
+  retrieveDrafterProQuestions,
+} from "../../features/laws/drafterProSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -316,7 +322,7 @@ const AiSidebar = () => {
   const [showRelevantLaws, setShowRelevantLaws] = useState(false);
   const [relevantCaseLoading, setRelevantCaseLoading] = useState(false);
   const [relevantLawsArr, setRelevantLawsArr] = useState(null);
-  const [relevantLawData, setRelevantLawData] = useState("");
+  const [relevantLawData, setRelevantLawData] = useState([]);
   const [caseSearchDialog, setCaseSearchDialog] = useState(false);
   const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
   const [caseSearchLoading, setCaseSearchLoading] = useState(false);
@@ -537,9 +543,16 @@ const AiSidebar = () => {
 
   const formatText = (text) => {
     return text
-      .replace(/\\n\\n/g, "<br/><br/>")
-      .replace(/\\n/g, "  <br/>")
-      .replace(/\\/g, " ");
+      .replaceAll("\\\\n\\\\n", "<br/>")
+      .replaceAll("\\\\n", "<br/>")
+      .replaceAll("\\n\\n", "<br/>")
+      .replaceAll("\\n", "<br/>")
+      .replaceAll("\n", "<br/>")
+      .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+      .replaceAll("\\", "")
+      .replaceAll('"', "")
+      .replaceAll(":", " :")
+      .replaceAll("#", "");
   };
 
   const getReventCaseLaw = async () => {
@@ -547,7 +560,7 @@ const AiSidebar = () => {
 
     try {
       const fetchedData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law`,
+        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law_updated`,
         {
           method: "POST",
           headers: {
@@ -566,7 +579,7 @@ const AiSidebar = () => {
       const formattedData = formatText(
         data.data.relevantCases.relevant_case_law
       );
-      setRelevantLawData(data.data.relevantCases.relevant_case_law);
+      setRelevantLawData(data.data.relevantCases.metadata);
       // console.log(data.data.relevantCases.relevant_case_law);
       setRelevantCaseLoading(false);
       setRelevantLawsArr(formattedData);
@@ -766,6 +779,14 @@ const AiSidebar = () => {
     setShowDrafterQuestions(false);
     dispatch(
       retrieveDrafterQuestions({ query: action, token: currentUser.token })
+    );
+  };
+
+  const handleDrafterProQuestions = (action) => {
+    dispatch(removeDrafterPro());
+    setShowDrafterQuestions(false);
+    dispatch(
+      retrieveDrafterProQuestions({ query: action, token: currentUser.token })
     );
   };
 
@@ -1293,16 +1314,6 @@ const AiSidebar = () => {
             overflow: "auto",
           }}
         >
-          {/* {firstDraftLoading ? (
-            <div
-              className="border-2 border-white rounded-lg w-1/6 h-fit p-2 flex flex-row justify-center items-center"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-              }}
-            >
-              <img className="h-40 w-40 my-10" src={loader} alt="loader" />
-            </div>
-          ) : ( */}
           <div
             className="h-[95%] w-2/3 flex flex-col rounded-md border-2 border-white"
             style={{
@@ -1310,27 +1321,6 @@ const AiSidebar = () => {
             }}
           >
             <div className="flex justify-end p-2">
-              {/* <svg
-                onClick={() => {
-                  setFirstDraftDialog(false);
-                }}
-                style={{ margin: "20px", cursor: "pointer" }}
-                width="30"
-                height="30"
-                fill="white"
-                stroke="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                  fill-rule="nonzero"
-                />
-              </svg> */}
               <Close
                 className="cursor-pointer"
                 onClick={() => {
@@ -1416,16 +1406,16 @@ const AiSidebar = () => {
                   )}
                   {showRelevantLaws && !relevantCaseLoading && (
                     <div className="w-full flex justify-end">
-                      <Link to={"/courtroom-ai/caseLaws"}>
+                      <Link to={"/courtroom-ai/relevantCaseLaws"}>
                         <button
                           onClick={() => {
-                            dispatch(removeCaseLaws());
+                            dispatch(removeRelevantCaseLaws());
                             dispatch(
-                              retrieveCaseLaws({
-                                query: relevantLawData,
-                                token: currentUser.token,
+                              setRelevantCaseLaws({
+                                relevantLawData,
                               })
                             );
+                            // handleRelevantCaseLaws();
                             setFirstDraftDialog(false);
                           }}
                           className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
@@ -1975,7 +1965,15 @@ const AiSidebar = () => {
                         onClick={() => handleDrafterQuestions(x.value)}
                         className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
                       >
-                        Create
+                        Normal
+                      </button>
+                    </Link>
+                    <Link to={"/courtroom-ai/aiDraftPro"}>
+                      <button
+                        onClick={() => handleDrafterProQuestions(x.value)}
+                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      >
+                        Pro
                       </button>
                     </Link>
                   </div>
