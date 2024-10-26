@@ -87,12 +87,12 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [open, setOpen] = useState(false);
   const [content, setconetnt] = useState("");
   const [toBeUploadedFiles, setToBeUploadedFiles] = useState([]);
-  console.log(toBeUploadedFiles.length);
+  // console.log(toBeUploadedFiles.length);
 
   // const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedSuccessFully, setUploadedSuccessFully] = useState([]);
-  console.log(uploadedSuccessFully);
+  // console.log(uploadedSuccessFully);
   // const [uploadUrl, setUploadUrl] = useState('');
 
   const style = {
