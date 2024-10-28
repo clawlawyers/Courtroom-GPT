@@ -154,6 +154,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
       </div>
       {countdownOver ? (
         <div
+          className="z-50"
           style={{
             width: "100%",
             height: "100vh",
@@ -166,7 +167,6 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: "20",
           }}
         >
           {!feedbackForm ? (
@@ -901,6 +901,9 @@ const AiSidebar = () => {
                 >
                   <MenuItem
                     id="edit_doc"
+                    disabled={
+                      overViewDetails === "NA" || overViewDetails === ""
+                    }
                     onClick={() => {
                       handleMenuClose();
                       setEditDialog(true);

@@ -101,9 +101,9 @@ const ConfirmBooking = () => {
           `${NODE_API_ENDPOINT}/booking-payment/create-order`,
           {
             amount: discountPercentage
-              ? slots.length * 100 -
-                slots.length * 100 * (discountPercentage / 100)
-              : slots.length * 100,
+              ? slots.length * 1499 -
+                Math.ceil(slots.length * 1499 * (discountPercentage / 100))
+              : slots.length * 1499,
             phoneNumber: bookingData.phoneNumber,
             currency: "INR",
             receipt: receipt,
@@ -455,7 +455,7 @@ const ConfirmBooking = () => {
           </div>
           <div className="mx-2 gap-2">
             <h3 className="text-lg m-0">
-              Price per slot : <span className="font-bold">₹ 100</span> /-
+              Price per slot : <span className="font-bold">₹ 1499</span> /-
             </h3>
             <h3 className="text-lg">
               No. of slots booked :{" "}
@@ -469,12 +469,12 @@ const ConfirmBooking = () => {
             {discountPercentage ? (
               <p className="text-xl font-bold">
                 Amount to Pay : ₹{" "}
-                {100 * slots?.length -
-                  100 * slots?.length * (discountPercentage / 100)}
+                {1499 * slots?.length -
+                  Math.ceil(1499 * slots?.length * (discountPercentage / 100))}
               </p>
             ) : (
               <p className="text-xl font-bold">
-                Amount to Pay : ₹ {100 * slots?.length}
+                Amount to Pay : ₹ {1499 * slots?.length}
               </p>
             )}
             <div className="flex flex-row w-full justify-end">

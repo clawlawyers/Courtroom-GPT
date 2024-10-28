@@ -20,6 +20,30 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const randomSlots = [
+  {
+    _id: {
+      date: "2024-10-28",
+      hour: 10,
+    },
+    bookingCount: 2,
+  },
+  {
+    _id: {
+      date: "2024-10-28",
+      hour: 11,
+    },
+    bookingCount: 3,
+  },
+  {
+    _id: {
+      date: "2024-10-28",
+      hour: 12,
+    },
+    bookingCount: 2,
+  },
+];
+
 const Container = styled.div`
   padding: 15px;
   display: flex;
@@ -92,6 +116,23 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
+  const mergeArrays = (arr1, arr2) => {
+    const mergedMap = new Map();
+
+    const addToMap = (obj) => {
+      const key = obj._id ? `${obj._id.date}-${obj._id.hour}` : "no-date-hour";
+      const existing = mergedMap.get(key) || { ...obj, bookingCount: 0 };
+
+      existing.bookingCount += obj.bookingCount;
+      mergedMap.set(key, existing);
+    };
+
+    arr1.forEach(addToMap);
+    arr2.forEach(addToMap);
+
+    return Array.from(mergedMap.values());
+  };
+
   useEffect(() => {
     const getBookingDetails = async () => {
       try {
@@ -99,10 +140,12 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
           `${NODE_API_ENDPOINT}/courtroom/book-courtroom`
         );
         const bookedDatesData = response.data;
-        setBookingData(bookedDatesData);
+        const mergedArray = mergeArrays(bookedDatesData, randomSlots);
+        console.log(mergedArray);
+        setBookingData(mergedArray);
 
         // Extract dates from the API response
-        const formattedBookedDates = bookedDatesData.map((slot) =>
+        const formattedBookedDates = mergedArray.map((slot) =>
           dayjs(slot._id.date).format("YYYY-MM-DD")
         );
         setBookedDates(formattedBookedDates);

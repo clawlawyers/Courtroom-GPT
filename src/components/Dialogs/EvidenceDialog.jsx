@@ -1,5 +1,5 @@
 import { Close, Send } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import fileUpload from "../../assets/icons/fileUpload.svg";
 import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
@@ -7,23 +7,74 @@ import { useSelector } from "react-redux";
 import evidenceLoad from "../../assets/images/evidenceLoad.gif";
 import { Popover } from "@mui/material";
 import Markdown from "react-markdown";
+import axios from "axios";
 
 const EvidenceDialog = ({ handleEvidenceClose }) => {
   const [evidence, setEvidence] = useState("");
   const [evidenceGenerated, setEvidenceGenerated] = useState(false);
   const [evidenceRelevance, setEvidenceRelevance] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const currentUser = useSelector((state) => state.user.user);
 
   const handleChangeEvidence = (e) => {
     setEvidence(e.target.value);
   };
 
-  // const handleFileUpload = (e) => {
-  //   const files = Array.from(e.target.files);
-  //   setUploadedFiles((prevFiles) => [...prevFiles, ...files]);
-  // };
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setUploadedFiles((prevFiles) => [...prevFiles, ...files]);
+  };
+
+  useEffect(() => {
+    if (uploadedFiles.length > 0) {
+      handleFileSubmit();
+    }
+  }, [uploadedFiles]);
+
+  const handleFileSubmit = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    uploadedFiles.forEach((file, index) => {
+      formData.append(`file${index === 0 ? "" : index}`, file);
+    });
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/api/document_evidence`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+
+      const data = response.data;
+      const evidenceData = data.data.evidence.Evidence_Relevance.replaceAll(
+        "\\\\n\\\\n",
+        "\n"
+      )
+        .replaceAll("\\\\n", "\n")
+        .replaceAll("\\n\\n", "\n")
+        .replaceAll("\\n", "\n")
+        .replaceAll("\n", "\n")
+        .replaceAll("\\", "")
+        .replaceAll('"', "")
+        .replaceAll(":", " :")
+        .replaceAll("#", "");
+      setEvidenceRelevance(evidenceData);
+      setLoading(false);
+
+      toast.success("Evidence submitted successfully");
+      setEvidenceGenerated(true);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error in submitting evidence", error);
+      setUploadedFiles([]);
+    }
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -99,7 +150,14 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
                 Add your evidence in textual form
               </h3>
             </div>
-            <div className="cursor-pointer" onClick={handleEvidenceClose}>
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                handleEvidenceClose();
+
+                setUploadedFiles([]);
+              }}
+            >
               <Close />
             </div>
           </section>
@@ -116,16 +174,16 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
           </section>
 
           <section className="flex space-x-5 flex-row w-full items-center justify-end">
-            {/* <label htmlFor="file-upload" className="cursor-pointer">
-          <img src={fileUpload} alt="fileUploadIcon" />
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          multiple
-          onChange={handleFileUpload}
-          style={{ display: "none" }}
-        /> */}
+            <label htmlFor="file-upload" className="cursor-pointer">
+              <img src={fileUpload} alt="fileUploadIcon" />
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
             <Send
               className="text-teal-800 cursor-pointer"
               onClick={handleSubmit}

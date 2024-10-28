@@ -30,14 +30,14 @@ const Button = styled.button`
     `}
 
   ${(props) => {
-    if (props.bookingCount >= 4) {
+    if (props.bookingCount >= 5) {
       return css`
         background-color: red;
         opacity: 0.5;
         pointer-events: none;
         cursor: not-allowed;
       `;
-    } else if (props.bookingCount === 2) {
+    } else if (props.bookingCount >= 3) {
       return css`
         background-color: yellow;
       `;
@@ -64,18 +64,62 @@ const Container = styled.div`
   overflow-y: scroll;
 `;
 
+const randomSlots = [
+  {
+    _id: {
+      date: "2024-10-28",
+      hour: 10,
+    },
+    bookingCount: 2,
+  },
+  {
+    _id: {
+      date: "2024-10-28",
+      hour: 11,
+    },
+    bookingCount: 3,
+  },
+  {
+    _id: {
+      date: "2024-10-28",
+      hour: 12,
+    },
+    bookingCount: 2,
+  },
+];
+
 export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
   const [bookingData, setBookingData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const storedSelectedDate = localStorage.getItem('SelectedDate');
+  const storedSelectedDate = localStorage.getItem("SelectedDate");
+
+  const mergeArrays = (arr1, arr2) => {
+    const mergedMap = new Map();
+
+    const addToMap = (obj) => {
+      const key = obj._id ? `${obj._id.date}-${obj._id.hour}` : "no-date-hour";
+      const existing = mergedMap.get(key) || { ...obj, bookingCount: 0 };
+
+      existing.bookingCount += obj.bookingCount;
+      mergedMap.set(key, existing);
+    };
+
+    arr1.forEach(addToMap);
+    arr2.forEach(addToMap);
+
+    return Array.from(mergedMap.values());
+  };
 
   useEffect(() => {
     const getBookingDetails = async () => {
       try {
-        const response = await axios.get(`${NODE_API_ENDPOINT}/courtroom/book-courtroom`);
+        const response = await axios.get(
+          `${NODE_API_ENDPOINT}/courtroom/book-courtroom`
+        );
         const bookedDatesData = response.data;
+        const mergedArray = mergeArrays(bookedDatesData, randomSlots);
 
-        const dateHourMap = bookedDatesData.reduce((acc, slot) => {
+        const dateHourMap = mergedArray.reduce((acc, slot) => {
           const date = dayjs(slot._id.date).format("YYYY-MM-DD");
           const hour = slot._id.hour;
           const bookingCount = slot.bookingCount;
