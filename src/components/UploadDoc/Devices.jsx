@@ -87,6 +87,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [open, setOpen] = useState(false);
   const [content, setconetnt] = useState("");
   const [toBeUploadedFiles, setToBeUploadedFiles] = useState([]);
+  const [fileNames, setFileNames] = useState([""]);
   // console.log(toBeUploadedFiles.length);
 
   // const [uploadProgress, setUploadProgress] = useState(0);
@@ -181,6 +182,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       if (files.length > 0) {
         const maxFileSize = 15 * 1024 * 1024; // 15 MB in bytes
         const validFiles = [];
+        setUploadedSuccessFully([]);
+        setUploadProgress({});
 
         for (const file of files) {
           if (file.size <= maxFileSize) {
@@ -259,6 +262,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
               },
             }
           );
+          setFileNames((prev) => [...prev, response.data.data.fileName]);
           // console.log(response.data);
           uploadFileWithProgress(
             response.data.data.uploadUrl,
@@ -288,9 +292,10 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         }));
       }
     };
-
     xhr.open("PUT", url, true);
     xhr.setRequestHeader("Content-Type", file.type);
+    xhr.setRequestHeader("x-goog-resumable", "start");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", `*`);
 
     // Send the file
     xhr.send(file);
@@ -315,6 +320,30 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   };
 
   useEffect(() => {
+    fileNames.forEach((fileName) => {
+      if (
+        uploadProgress[fileName] === 100 &&
+        !uploadedSuccessFully.includes(fileName)
+      ) {
+        setUploadProgress((prevProgress) => {
+          const newProgress = { ...prevProgress };
+          delete newProgress[fileName];
+          return newProgress;
+        });
+        // setUploadedSuccessFully([...uploadedSuccessFully, fileId]);
+        setUploadedSuccessFully((prevSuccessfullyUploaded) => [
+          ...prevSuccessfullyUploaded,
+          fileName,
+        ]);
+      }
+    });
+  }, [uploadProgress]);
+
+  console.log(uploadProgress);
+  console.log(uploadedSuccessFully);
+  console.log(toBeUploadedFiles);
+
+  useEffect(() => {
     if (
       uploadedSuccessFully.length > 0 &&
       toBeUploadedFiles.length === uploadedSuccessFully.length
@@ -322,6 +351,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
       console.log("here");
       callOverView();
     }
+    console.log("I AM HERE");
   }, [uploadedSuccessFully]);
 
   const callOverView = async () => {
