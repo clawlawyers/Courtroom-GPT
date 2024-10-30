@@ -733,7 +733,7 @@ const AiSidebar = () => {
     try {
       setSearchQuery(true);
       const getResponse = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/ask_query`,
+        `${NODE_API_ENDPOINT}/courtroom/api/consultant`,
         {
           method: "POST",
           headers: {
@@ -741,7 +741,7 @@ const AiSidebar = () => {
             Authorization: `Bearer ${currentUser.token}`,
           },
           body: JSON.stringify({
-            action: "Generate",
+            // action: "Generate",
             query: askLegalGptPrompt,
           }),
         }
@@ -753,7 +753,7 @@ const AiSidebar = () => {
 
       const responseData = await getResponse.json();
 
-      const data = responseData.data.fetchedAskQuery.answer;
+      const data = responseData.data.fetchedConsultant.Answer;
       // console.log(data);
 
       setPromptArr([
