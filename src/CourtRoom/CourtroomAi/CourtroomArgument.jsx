@@ -5,6 +5,7 @@ import userIcon from "../../assets/images/userArgument.png";
 import Styles from "./CourtroomArgument.module.css";
 import markdownit from "markdown-it";
 import { setTutorial } from "../../features/sidebar/sidebarSlice";
+import Select, { components } from 'react-select';
 
 import { motion } from "framer-motion";
 import { Close, Co2Sharp, ResetTvSharp, Send } from "@mui/icons-material";
@@ -40,22 +41,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { setTutorialFalse } from "../../features/popup/popupSlice";
 const CourtroomArgument = () => {
-  // var driverObj = driver({
-  //   showProgress: true,
-  //   steps:  [
-  //     {
-  //       element: "#side-selection",
-  //       popover: {
-  //         title: "sele",
-  //         description:
-  //           "This will show ai judge response to an argument  ",
-  //         side: "left",
-  //         align: "start",
-  //       },
-  //     },
-
-  //   ]
-  // })
+  //
   useEffect(() => {
     console.log("hiasd");
     // driverObj.drive()
@@ -65,244 +51,261 @@ const CourtroomArgument = () => {
 
   const fightingModal = useSelector((state) => state.user.fightingSideModal);
   const tutorial = useSelector((state) => state.popup.tutorial);
-  useEffect(() => {
-    console.log("hiasasdd");
-    if (tutorial) {
-      console.log("adsd");
-      var driverObj = driver({
-        showProgress: true,
-        steps: [
-          // {
-          //   element: "#side-selection",
-          //   popover: {
-          //     title: "Ai judgde",
-          //     description:
-          //       "This will show ai judge response to an argument  ",
-          //     side: "left",
-          //     align: "start",
-          //   },
-          // },
-          {
-            element: "#aijudge",
-            popover: {
-              title: "AI JUDGE",
-              description: "This will show Ai Judge response to an argument",
-              side: "left",
-              align: "start",
-            },
+  
+  const options = [
+    { value: 'english', label: 'English' },
+    // { value: 'hindi', label: 'Hindi' },
+    // { value: 'gujrati', label: 'Gujrati' },
+];
+            
+useEffect(() => {
+  console.log("hiasasdd");
+  if (tutorial) {
+    console.log("adsd");
+    var driverObj = driver({
+      showProgress: true,
+      steps: [
+        // {
+        //   element: "#side-selection",
+        //   popover: {
+        //     title: "Ai judgde",
+        //     description:
+        //       "This will show ai judge response to an argument  ",
+        //     side: "left",
+        //     align: "start",
+        //   },
+        // },
+        {
+          element: "#aijudge",
+          popover: {
+            title: "AI Judgde",
+            description:
+              "This will show AI Judge response to an argument from both sides  ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#ailawyer",
-            popover: {
-              title: "AI LAWYER",
-              description:
-                "This will show the response of the Ai Lawyer of the opposing counsel",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#ailawyer",
+          popover: {
+            title: "AI Lawyer",
+            description:
+              "This will show the response of the AI Lawyer of the opposing counsel",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#expand",
-            popover: {
-              title: "Exapnd",
-              description:
-                "Click this button to Exapnd response for better view   ",
-              side: "left",
+        },
+        {
+          element: "#expand",
+          popover: {
+            title: "Exapnd",
+            description:
+              "Click this button to Exapnd response for better view   ",
+            side: "left",
 
-              align: "start",
-              onNextClick: () => {
-                console.log(myDivRef.current);
-                setAnchorElmenu(myDivRef.current);
-                driverObj.moveNext();
-              },
+            align: "start",
+            onNextClick: () => {
+              console.log(myDivRef.current);
+              setAnchorElmenu(myDivRef.current);
+              driverObj.moveNext();
             },
           },
-          {
-            element: "#swaplawyer",
-            popover: {
-              title: "Change Side",
-              description:
-                "Click this button to Change the Side you are representing   ",
-              side: "left",
-              align: "start",
+        },
+        {
+          element: "#swaplawyer",
+          popover: {
+            title: "Change Side",
+            description:
+              "Click this button to change the side you are representing",
+            side: "left",
+            align: "start",
+          },
+        },
+        {
+          element: "#relevant-case-menu",
+          popover: {
+            title: "Additional Features",
+            description: "Click this button to open Menu  ",
+            side: "left",
+            align: "start",
+          },
+        },
+        {
+          element: "#relevantcase-button",
+          popover: {
+            title: "Relevant Case Laws",
+            description: "Click this button to show Relevant Cases  ",
+            side: "left",
+            align: "start",
+            onNextClick: () => {
+              setAnchorElmenu(null);
+              driverObj.moveNext();
             },
           },
-          {
-            element: "#relevant-case-menu",
-            popover: {
-              title: "Menu",
-              description: "Click this button to open Menu  ",
-              side: "left",
-              align: "start",
+        },
+        {
+          element: "#evidence-menu",
+          popover: {
+            title: "Menu",
+            description: "Click this button to open Document Menu  ",
+            side: "left",
+            align: "start",
+            onNextClick: () => {
+              document.getElementById("evidence-menu").click();
+              driverObj.moveNext();
             },
           },
-          {
-            element: "#relevantcase-button",
-            popover: {
-              title: "Menu",
-              description: "Click this button to show Relevant Cases  ",
-              side: "left",
-              align: "start",
-              onNextClick: () => {
-                setAnchorElmenu(null);
-                driverObj.moveNext();
-              },
+        },
+        {
+          element: "#edit_doc",
+          popover: {
+            title: "Edit Documnet",
+            description: "Click this button to edit the Case File",
+            side: "left",
+            align: "start",
+          },
+        },
+        {
+          element: "#evidence-button",
+          popover: {
+            title: "Add Evidence",
+            description:
+              "Add details about your evidence or upload our evidence to see if it will be appreciated by the court and to what extent.  ",
+            side: "left",
+            align: "start",
+          },
+        },
+        {
+          element: "#evidence-testimony",
+          popover: {
+            title: "Add Testimony",
+            description:
+              "Add details about the situation your testimony was in or how is he supposed to be related to your case and get relevant cross examination questions for your testimony  ",
+            side: "left",
+            align: "start",
+            onNextClick: () => {
+              document.getElementById("long-menu").click();
+              driverObj.moveNext();
             },
           },
-          {
-            element: "#evidence-menu",
-            popover: {
-              title: "Menu",
-              description: "click this button to show Document Menu  ",
-              side: "left",
-              align: "start",
-              onNextClick: () => {
-                document.getElementById("evidence-menu").click();
-                driverObj.moveNext();
-              },
-            },
+        },
+        {
+          element: "#time-left",
+          popover: {
+            title: "Time Remaning ",
+            description: "It shows amount of Time Remaining for the Session ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#edit_doc",
-            popover: {
-              title: "Edit Document",
-              description: "Click this button to Edit the Case Law Document  ",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#first-draft",
+          popover: {
+            title: "First Draft",
+            description:
+              "Get a list of arguments for your case to begin with ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#evidence-button",
-            popover: {
-              title: "Add Evidence",
-              description:
-                "Click this button to Add Evidences .A popup will open and you can Add Releavnt Evidences t will also return its relevance  ",
-              side: "left",
-              align: "start",
-            },
-          },
-          {
-            element: "#evidence-testimony",
-            popover: {
-              title: "Add Testimony",
-              description:
-                "Click this button to Add Testimony . A popup will open and you can Add Releavnt Testimony t will also return its relevance  ",
-              side: "left",
-              align: "start",
-              onNextClick: () => {
-                document.getElementById("long-menu").click();
-                driverObj.moveNext();
-              },
-            },
-          },
-          {
-            element: "#time-left",
-            popover: {
-              title: "Time Remaning ",
-              description: "It shows amount of Time Remaining for the Session ",
-              side: "left",
-              align: "start",
-            },
-          },
-          {
-            element: "#first-draft",
-            popover: {
-              title: "First Draft",
-              description:
-                "Click this button to open the First Draft of the given case fIle ",
-              side: "left",
-              align: "start",
-            },
-          },
+        },
 
-          {
-            element: "#Ai-Drafter",
-            popover: {
-              title: "Document Drafter",
-              description:
-                "Click this button to open a popup to Create Documents reletaed to the case using AI ",
-              side: "left",
-              align: "start",
-            },
+        {
+          element: "#Ai-Drafter",
+          popover: {
+            title: "Document Drafter",
+            description:
+              " Directly draft and edit agreements and applications ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#legalGpt",
-            popover: {
-              title: "Legal Gpt",
-              description:
-                "Click this button to open Legal Gpt popup to ask Law Releated Queries ",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#legalGpt",
+          popover: {
+            title: "Legal Gpt",
+            description:
+              "Click this button to open Legal GPT popup to ask law releated queries ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#case-search",
-            popover: {
-              title: "Case Search",
-              description:
-                "Click this button to open a popup to search older cases related to your use case  ",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#case-search",
+          popover: {
+            title: "Case Search",
+            description:
+              "Click this button to open a popup to search older case files related to your use case  ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#claw-ai-ass",
-            popover: {
-              title: "Case AI Assistant",
-              description:
-                "Click this button to open a popup for Ai Assiatance for the case ",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#claw-ai-ass",
+          popover: {
+            title: "Case AI Assistant",
+            description:
+              " Details on judge questions for your case and the things that you missed in your case while doing your research ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#download-session",
-            popover: {
-              title: "Download Session",
-              description:
-                "Click this button to Download the entire Session Histroy in pdf form ",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#download-session",
+          popover: {
+            title: "Download Session",
+            description:
+              "Click this button to download the entire Session Histroy in pdf form ",
+            side: "left",
+            align: "start",
           },
+        },
 
-          {
-            element: "#download-case",
-            popover: {
-              title: "Download Case",
-              description:
-                "Click this button to Download the current Case Histroy in pdf form ",
-              side: "left",
-              align: "start",
-            },
+        {
+          element: "#download-case",
+          popover: {
+            title: "Download Case",
+            description:
+              "Click this button to download the Entire Case Histroy in pdf form ",
+            side: "left",
+            align: "start",
           },
+        },
 
-          {
-            element: "#NewCaseInput",
-            popover: {
-              title: "New Case",
-              description: "Click this button to open a New Case File ",
-              side: "left",
-              align: "start",
-            },
+        {
+          element: "#NewCaseInput",
+          popover: {
+            title: "New Case",
+            description: "Click this button to open a New Case File ",
+            side: "left",
+            align: "start",
           },
-          {
-            element: "#userinput",
-            popover: {
-              title: "Enter Argument",
-              description:
-                "Enter your Argumentnts here .You can use either Text and Voice Input  ",
-              side: "left",
-              align: "start",
-            },
+        },
+        {
+          element: "#userinput",
+          popover: {
+            title: "Enter Argument",
+            description:
+              "Enter your Arguments here. You can use both text and voice input  ",
+            side: "left",
+            align: "start",
           },
-        ],
-      });
-      driverObj.drive();
-      dispatch(setTutorialFalse());
-    }
-  }, [tutorial]);
-
+        },
+        {
+          element: "#rest-your-case",
+          popover: {
+            title: "Rest Your Casr",
+            description:
+              "Rest your case for the final veridct form the AI Judge   ",
+            side: "left",
+            align: "start",
+          },
+        },
+      ],
+    });
+    driverObj.drive();
+    dispatch(setTutorialFalse());
+  }
+}, [tutorial]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
   const [relevantLawData, setRelevantLawData] = useState([]);
@@ -329,6 +332,7 @@ const CourtroomArgument = () => {
   const [lawyerViewExpand, setLawyerViewExpand] = useState(false);
   const [fightType, setFightType] = useState("");
   const [otherFightType, setOtherFightType] = useState("");
+  const [language, setLanguage] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -911,7 +915,7 @@ const CourtroomArgument = () => {
           {
             element: "#relevant-case-menu",
             popover: {
-              title: "Menu",
+              title: "Additional Features",
               description: "Click this button to open Menu  ",
               side: "left",
               align: "start",
@@ -920,7 +924,7 @@ const CourtroomArgument = () => {
           {
             element: "#relevantcase-button",
             popover: {
-              title: "Menu",
+              title: "Relevant Case Laws",
               description: "Click this button to show Relevant Cases  ",
               side: "left",
               align: "start",
@@ -957,7 +961,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Evidence",
               description:
-                "Click this button to Add Evidences.  A popup will open and you can Add Releavnt Evidences. After submitting it will also return its relevance.  ",
+                "Add details about your evidence or upload our evidence to see if it will be appreciated by the court and to what extent.  ",
               side: "left",
               align: "start",
             },
@@ -967,7 +971,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "Click this button to Add Testimony. A popup will open and you can Add Releavnt Testimony. After submitting  it will also return its relevance  ",
+                "Add details about the situation your testimony was in or how is he supposed to be related to your case and get relevant cross examination questions for your testimony  ",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -990,7 +994,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "First Draft",
               description:
-                "Click this button to open the First Draft of the given case file ",
+                "Get a list of arguments for your case to begin with ",
               side: "left",
               align: "start",
             },
@@ -1001,7 +1005,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Document Drafter",
               description:
-                "Click this button to open a popup to create Legal Documents reletaed to the case using AI  ",
+                " Directly draft and edit agreements and applications ",
               side: "left",
               align: "start",
             },
@@ -1031,7 +1035,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Case AI Assistant",
               description:
-                "Click this button to open a popup  for AI assiatance for the case  ",
+                " Details on judge questions for your case and the things that you missed in your case while doing your research ",
               side: "left",
               align: "start",
             },
@@ -1073,6 +1077,16 @@ const CourtroomArgument = () => {
               title: "Enter Argument",
               description:
                 "Enter your Arguments here. You can use both text and voice input  ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#rest-your-case",
+            popover: {
+              title: "Rest Your Casr",
+              description:
+                "Rest your case for the final veridct form the AI Judge   ",
               side: "left",
               align: "start",
             },
@@ -1570,6 +1584,7 @@ const CourtroomArgument = () => {
             <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
           </motion.button>
           <motion.button
+          id="rest-your-case"
             whileTap={{ scale: "0.95" }}
             onClick={handleVerdict}
             className="flex-1 my-2"
@@ -1586,7 +1601,7 @@ const CourtroomArgument = () => {
               color: "white",
             }}
           >
-            <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
+            <h2  style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
           </motion.button>
         </div>
       </div>
@@ -1974,14 +1989,63 @@ const CourtroomArgument = () => {
                     placeholder="Enter Your Choice of Side..."
                   />
                 ) : null}
-                <button
+                {
+                fightType==="others"?
+                  <div className="flex flex-row gap-3 ">
+                   <Select
+                    options={options}
+                    value={language}
+                    onChange={ (option) =>  setLanguage(option)}
+                    className=" rounded w-[70%] text-black"
+                    placeholder="Choose Language of Document Uploaded"
+                  >
+                      
+  {/* <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option> */}
+  </Select>
+                  <button
+                  
+                  // onClick={() => dispatch(setFightingSideModal(false))}
+                  disabled={fightType === ""}
+                  onClick={() => handleFightingSide()}
+                  className="bg-[#003131] p-2 rounded w-[30%]"
+                  >
+                  Confirm
+                  </button>
+                    </div>
+                  :
+                  <div className="flex flex-col gap-3">
+
+                  <button
+                  // onClick={() => dispatch(setFightingSideModal(false))}
+                  disabled={fightType === ""}
+                  onClick={() => handleFightingSide()}
+                  className="bg-[#003131] p-2 rounded"
+                  >
+                  Confirm
+                  </button>
+                  <Select
+                  options={options}
+                    value={language}
+                    onChange={ (option) =>  setLanguage(option)}
+
+                    className=" rounded  text-black"
+                    placeholder="Choose Language of Document Uploaded"
+                  >
+                   
+  {/* <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option> */}
+  </Select>
+                    </div>
+                }
+                {/* <button
                   // onClick={() => dispatch(setFightingSideModal(false))}
                   disabled={fightType === ""}
                   onClick={() => handleFightingSide()}
                   className="bg-[#003131] p-2 rounded"
                 >
                   Confirm
-                </button>
+                </button> */}
                 <div>
                   <hr />
                   <p className="m-0 text-xs flex justify-center">
