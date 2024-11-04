@@ -20,29 +20,29 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const randomSlots = [
-  {
-    _id: {
-      date: "2024-10-28",
-      hour: 10,
-    },
-    bookingCount: 2,
-  },
-  {
-    _id: {
-      date: "2024-10-28",
-      hour: 11,
-    },
-    bookingCount: 3,
-  },
-  {
-    _id: {
-      date: "2024-10-28",
-      hour: 12,
-    },
-    bookingCount: 2,
-  },
-];
+// const randomSlots = [
+//   {
+//     _id: {
+//       date: "2024-10-28",
+//       hour: 10,
+//     },
+//     bookingCount: 2,
+//   },
+//   {
+//     _id: {
+//       date: "2024-10-28",
+//       hour: 11,
+//     },
+//     bookingCount: 3,
+//   },
+//   {
+//     _id: {
+//       date: "2024-10-28",
+//       hour: 12,
+//     },
+//     bookingCount: 2,
+//   },
+// ];
 
 const Container = styled.div`
   padding: 15px;
@@ -93,6 +93,55 @@ const CalendarComponent = ({ scheduledSlots, setScheduledSlots }) => {
   const calendarRef = useRef();
   const [bookedDates, setBookedDates] = useState([]);
   const [bookingData, setBookingData] = useState([]);
+  const [randomSlots, setRandomSlots] = useState([]);
+  console.log(randomSlots);
+
+  useEffect(() => {
+    getRandomSlots();
+  }, []);
+
+  const getRandomSlots = async () => {
+    const presentDate =
+      new Date().getDate() < 10
+        ? `0${new Date().getDate()}`
+        : new Date().getDate();
+    const presentMonth =
+      new Date().getMonth() + 1 < 10
+        ? `0${new Date().getMonth() + 1}`
+        : new Date().getMonth() + 1;
+    try {
+      const response = await axios.get(
+        `${NODE_API_ENDPOINT}/courtroom/random-arrays`
+      );
+      const data = response.data;
+      // console.log(data);
+      const yellowSlots = data.array1.map((x) => {
+        const newObj = {
+          _id: {
+            date: `${new Date().getFullYear()}-${presentMonth}-${presentDate}`,
+            hour: x,
+          },
+          bookingCount: 3,
+        };
+        return newObj;
+      });
+      const redSlots = data.array2.map((x) => {
+        const newObj = {
+          _id: {
+            date: `${new Date().getFullYear()}-${presentMonth}-${presentDate}`,
+            hour: x,
+          },
+          bookingCount: 5,
+        };
+        return newObj;
+      });
+
+      const randomSlotArr = [...yellowSlots, ...redSlots];
+      setRandomSlots(randomSlotArr);
+    } catch (error) {
+      console.error("Error fetching random slot details:", error);
+    }
+  };
 
   useEffect(() => {
     const updateScale = () => {

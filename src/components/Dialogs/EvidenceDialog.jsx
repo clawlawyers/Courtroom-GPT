@@ -181,6 +181,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
               id="file-upload"
               type="file"
               multiple
+              accept=".docx, .pdf,.txt"
               onChange={handleFileUpload}
               style={{ display: "none" }}
             />
