@@ -57,6 +57,7 @@ import {
   removeDrafterPro,
   retrieveDrafterProQuestions,
 } from "../../features/laws/drafterProSlice";
+import NewFileUploadDialog from "../../components/Dialogs/NewFileUploadDialog";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -280,6 +281,7 @@ const AiSidebar = () => {
   const [searchQuery, setSearchQuery] = useState(false);
   const [evidenceAnchorEl, setEvidenceAnchorEl] = useState(null);
   const [testimonyAnchorEl, setTestimonyAnchorEl] = useState(null);
+  const [addNewFileAnchorEl, setAddNewFileAnchorEl] = useState(null);
   const [showDrafterQuestions, setShowDrafterQuestions] = useState(false);
 
   useEffect(() => {
@@ -327,7 +329,8 @@ const AiSidebar = () => {
   const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
   const [caseSearchLoading, setCaseSearchLoading] = useState(false);
   const [nextAppealLoading, setNextAppealLoading] = useState(false);
-  const [reserachArgumentsLoading, setReserachArgumentsLoading] = useState(false);
+  const [reserachArgumentsLoading, setReserachArgumentsLoading] =
+    useState(false);
   const [appealDialog, setAppealDialog] = useState(false);
   const [reaseachDialog, setReaseachDialog] = useState(false);
   const [appealData, setAppealData] = useState("");
@@ -468,6 +471,15 @@ const AiSidebar = () => {
 
   const handleTestimonyClose = () => {
     setTestimonyAnchorEl(null);
+  };
+
+  const handleAddNewFileClick = (event) => {
+    setAddNewFileAnchorEl(event.currentTarget);
+    handleMenuClose();
+  };
+
+  const handleAddNewFileClose = () => {
+    setAddNewFileAnchorEl(null);
   };
 
   const firstDraftApi = async () => {
@@ -937,6 +949,9 @@ const AiSidebar = () => {
                   >
                     Edit
                   </MenuItem>
+                  <MenuItem id="new-file" onClick={handleAddNewFileClick}>
+                    Add New File
+                  </MenuItem>
                   <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
@@ -990,6 +1005,29 @@ const AiSidebar = () => {
                 >
                   <TestimonyDialog
                     handleTestimonyClose={handleTestimonyClose}
+                  />
+                </Popover>
+                <Popover
+                  open={Boolean(addNewFileAnchorEl)}
+                  anchorEl={addNewFileAnchorEl}
+                  onClose={handleAddNewFileClose}
+                  anchorOrigin={{
+                    vertical: "center",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "center",
+                    horizontal: "left",
+                  }}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      width: "600px", // Adjust the width as needed
+                      padding: "16px", // Adjust the padding as needed
+                    },
+                  }}
+                >
+                  <NewFileUploadDialog
+                    handleAddNewFileClose={handleAddNewFileClose}
                   />
                 </Popover>
               </div>
@@ -1393,11 +1431,11 @@ const AiSidebar = () => {
                     </div>
                   )}
                   <div className="w-full gap-2 text-sm flex justify-end">
-                  <button
+                    <button
                       onClick={handleResearchArguments}
                       className="px-4 py-1 rounded border"
                     >
-                      {reserachArgumentsLoading? (
+                      {reserachArgumentsLoading ? (
                         <CircularProgress size={15} color="inherit" />
                       ) : (
                         "Research Arguments"
@@ -2111,16 +2149,15 @@ const AiSidebar = () => {
         >
           <div className="w-1/2 h-[90%] overflow-auto bg-white text-black p-3 rounded">
             <div className="flex justify-between">
-              <p className="text-xl font-semibold">{appealDialog?"Next Appeal":"Research Arguments"}</p>
+              <p className="text-xl font-semibold">
+                {appealDialog ? "Next Appeal" : "Research Arguments"}
+              </p>
               <Close
                 className="cursor-pointer"
                 onClick={() => {
-                  if(reaseachDialog){
+                  if (reaseachDialog) {
                     setReaseachDialog(false);
-
-                  }
-                  else{
-
+                  } else {
                     setAppealDialog(false);
                   }
                   setAppealData("");

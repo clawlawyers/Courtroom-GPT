@@ -90,10 +90,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [fileNames, setFileNames] = useState([""]);
   // console.log(toBeUploadedFiles.length);
 
-  // const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedSuccessFully, setUploadedSuccessFully] = useState([]);
-  // console.log(uploadedSuccessFully);
+  const [fileUploading, setFileUploading] = useState(false);
   // const [uploadUrl, setUploadUrl] = useState('');
 
   const style = {
@@ -246,6 +245,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
   useEffect(() => {
     const uploadFiles = async () => {
+      setFileUploading(true);
       for (const file of toBeUploadedFiles) {
         try {
           const formData = new FormData();
@@ -269,8 +269,10 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             file,
             response.data.data.fileName
           );
+          setFileUploading(false);
         } catch (error) {
           console.error(`Error uploading ${file.name}:`, error);
+          setFileUploading(false);
         }
       }
     };
@@ -711,6 +713,34 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </div>
         ))}
       </div>
+      {fileUploading && (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "3",
+            overflow: "auto",
+            left: 0,
+            top: 0,
+          }}
+        >
+          <div
+            className="w-1/4 p-3 text-center rounded-lg border"
+            style={{
+              background: "linear-gradient(90deg,#0e1118,#008080)",
+            }}
+          >
+            <p className="text-lg font-semibold">Uploading your files</p>
+            <img src={uploadImage} />
+          </div>
+        </div>
+      )}
     </>
   );
 };
