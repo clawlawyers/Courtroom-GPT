@@ -39,6 +39,11 @@ const Devices = ({
   languageArr,
   appendFile,
 }) => {
+
+  const inputCaseTutorial = useSelector((state) => state.sidebar.inputCaseTutorial);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
+  const driveUpload = useSelector((state)=> state.sidebar.driveUpload)
+
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -119,7 +124,10 @@ const Devices = ({
     setCaseOverview(e.target.value);
   };
   useEffect(() => {
-    driverObj.drive();
+    if(!driveUpload){
+      if (caseOverView == "NA" || caseOverView == "") {
+      driverObj.drive();
+    }}
   }, []);
 
   const handleSave = async () => {
