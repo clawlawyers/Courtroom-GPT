@@ -10,7 +10,7 @@ import { setTutorial } from "../../features/sidebar/sidebarSlice";
 import { useSelector, useDispatch } from "react-redux";
 import LanguageSelectionModal from "../../components/Language Card/LanguageSelectionModel"; // Import the modal
 
-const UploadDoc = () => {
+const UploadAdditionalDoc = () => {
   const dispatch = useDispatch();
   const tutorial = useSelector((state) => state.sidebar.tutorial);
 
@@ -95,6 +95,7 @@ const UploadDoc = () => {
             uploadedFile={uploadedFile}
             setUploadedFile={setUploadedFile}
             languageArr={selectedLanguage}
+            appendFile
           />
         </motion.div>
       ) : (
@@ -112,4 +113,4 @@ const UploadDoc = () => {
   );
 };
 
-export default UploadDoc;
+export default UploadAdditionalDoc;

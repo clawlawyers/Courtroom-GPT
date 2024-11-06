@@ -33,7 +33,12 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import "./Devices.css";
 
-const Devices = ({ uploadedFile, setUploadedFile }) => {
+const Devices = ({
+  uploadedFile,
+  setUploadedFile,
+  languageArr,
+  appendFile,
+}) => {
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -341,19 +346,17 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     });
   }, [uploadProgress]);
 
-  console.log(uploadProgress);
-  console.log(uploadedSuccessFully);
-  console.log(toBeUploadedFiles);
+  // console.log(uploadProgress);
+  // console.log(uploadedSuccessFully);
+  // console.log(toBeUploadedFiles);
 
   useEffect(() => {
     if (
       uploadedSuccessFully.length > 0 &&
       toBeUploadedFiles.length === uploadedSuccessFully.length
     ) {
-      console.log("here");
       callOverView();
     }
-    console.log("I AM HERE");
   }, [uploadedSuccessFully]);
 
   const callOverView = async () => {
@@ -363,6 +366,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         `${NODE_API_ENDPOINT}/courtroom/getoverview-formfilename`,
         {
           // user_id: currentUser.userId,
+          action: appendFile ? "append" : "add",
+          language: languageArr.join(","),
           fileNameArray: uploadedSuccessFully,
           isMultilang: true,
         },
@@ -530,6 +535,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     try {
       let data = JSON.stringify({
         case_overview: content,
+        action: "add",
       });
 
       let config = {
@@ -668,10 +674,13 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style} className="overflow-scroll  gap-6 flex flex-col">
+        <Box
+          sx={style}
+          className="overflow-scroll  gap-6 flex flex-col rounded-lg"
+        >
           <textarea
             id="content"
-            className="p-2 border-2"
+            className="p-2 border-2 border-black rounded-lg"
             name="w3review"
             rows="20"
             cols="50"

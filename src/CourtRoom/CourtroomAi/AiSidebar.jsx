@@ -57,7 +57,6 @@ import {
   removeDrafterPro,
   retrieveDrafterProQuestions,
 } from "../../features/laws/drafterProSlice";
-import NewFileUploadDialog from "../../components/Dialogs/NewFileUploadDialog";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -281,7 +280,6 @@ const AiSidebar = () => {
   const [searchQuery, setSearchQuery] = useState(false);
   const [evidenceAnchorEl, setEvidenceAnchorEl] = useState(null);
   const [testimonyAnchorEl, setTestimonyAnchorEl] = useState(null);
-  const [addNewFileAnchorEl, setAddNewFileAnchorEl] = useState(null);
   const [showDrafterQuestions, setShowDrafterQuestions] = useState(false);
 
   useEffect(() => {
@@ -471,15 +469,6 @@ const AiSidebar = () => {
 
   const handleTestimonyClose = () => {
     setTestimonyAnchorEl(null);
-  };
-
-  const handleAddNewFileClick = (event) => {
-    setAddNewFileAnchorEl(event.currentTarget);
-    handleMenuClose();
-  };
-
-  const handleAddNewFileClose = () => {
-    setAddNewFileAnchorEl(null);
   };
 
   const firstDraftApi = async () => {
@@ -949,7 +938,16 @@ const AiSidebar = () => {
                   >
                     Edit
                   </MenuItem>
-                  <MenuItem id="new-file" onClick={handleAddNewFileClick}>
+                  <MenuItem
+                    id="new-file"
+                    disabled={
+                      overViewDetails === "NA" || overViewDetails === ""
+                    }
+                    onClick={() => {
+                      handleMenuClose();
+                      navigate("/courtroom-ai/addFile");
+                    }}
+                  >
                     Add New File
                   </MenuItem>
                   <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
@@ -1005,29 +1003,6 @@ const AiSidebar = () => {
                 >
                   <TestimonyDialog
                     handleTestimonyClose={handleTestimonyClose}
-                  />
-                </Popover>
-                <Popover
-                  open={Boolean(addNewFileAnchorEl)}
-                  anchorEl={addNewFileAnchorEl}
-                  onClose={handleAddNewFileClose}
-                  anchorOrigin={{
-                    vertical: "center",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "center",
-                    horizontal: "left",
-                  }}
-                  sx={{
-                    "& .MuiPaper-root": {
-                      width: "600px", // Adjust the width as needed
-                      padding: "16px", // Adjust the padding as needed
-                    },
-                  }}
-                >
-                  <NewFileUploadDialog
-                    handleAddNewFileClose={handleAddNewFileClose}
                   />
                 </Popover>
               </div>
