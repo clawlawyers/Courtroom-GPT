@@ -2115,16 +2115,16 @@ const AiSidebar = () => {
               <Close
                 className="cursor-pointer"
                 onClick={() => {
-                  if(reaseachDialog){
-                    setReaseachDialog(false);
+                    if(reaseachDialog){
+                      setReaseachDialog(false);
 
-                  }
-                  else{
+                    }
+                    else{
 
-                    setAppealDialog(false);
-                  }
-                  setAppealData("");
-                }}
+                      setAppealDialog(false);
+                    }
+                    setAppealData("");
+                  }}
               />
             </div>
             <div>
