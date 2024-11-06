@@ -33,13 +33,12 @@ const Button = styled.button`
     if (props.bookingCount >= 5) {
       return css`
         background-color: red;
-        opacity: 0.5;
-        pointer-events: none;
-        cursor: not-allowed;
+        color: black;
       `;
     } else if (props.bookingCount >= 3) {
       return css`
         background-color: yellow;
+        color: black;
       `;
     } else {
       return css`
@@ -64,34 +63,83 @@ const Container = styled.div`
   overflow-y: scroll;
 `;
 
-const randomSlots = [
-  {
-    _id: {
-      date: "2024-10-28",
-      hour: 10,
-    },
-    bookingCount: 2,
-  },
-  {
-    _id: {
-      date: "2024-10-28",
-      hour: 11,
-    },
-    bookingCount: 3,
-  },
-  {
-    _id: {
-      date: "2024-10-28",
-      hour: 12,
-    },
-    bookingCount: 2,
-  },
-];
+// const randomSlots = [
+//   {
+//     _id: {
+//       date: "2024-10-28",
+//       hour: 10,
+//     },
+//     bookingCount: 2,
+//   },
+//   {
+//     _id: {
+//       date: "2024-10-28",
+//       hour: 11,
+//     },
+//     bookingCount: 3,
+//   },
+//   {
+//     _id: {
+//       date: "2024-10-28",
+//       hour: 12,
+//     },
+//     bookingCount: 2,
+//   },
+// ];
 
 export default function TimePickerValue({ selectedTimes, setSelectedTimes }) {
   const [bookingData, setBookingData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [randomSlots, setRandomSlots] = useState([]);
   const storedSelectedDate = localStorage.getItem("SelectedDate");
+
+  useEffect(() => {
+    getRandomSlots();
+  }, []);
+
+  const getRandomSlots = async () => {
+    const presentDate =
+      new Date().getDate() < 10
+        ? `0${new Date().getDate()}`
+        : new Date().getDate();
+    const presentMonth =
+      new Date().getMonth() + 1 < 10
+        ? `0${new Date().getMonth() + 1}`
+        : new Date().getMonth() + 1;
+    try {
+      const response = await axios.get(
+        `${NODE_API_ENDPOINT}/courtroom/random-arrays`
+      );
+      const data = response.data;
+      console.log(data);
+      const yellowSlots = data.array1.map((x) => {
+        const newObj = {
+          _id: {
+            date: `${new Date().getFullYear()}-${presentMonth}-${presentDate}`,
+            hour: x,
+          },
+          bookingCount: 3,
+        };
+        return newObj;
+      });
+      const redSlots = data.array2.map((x) => {
+        const newObj = {
+          _id: {
+            date: `${new Date().getFullYear()}-${presentMonth}-${presentDate}`,
+            hour: x,
+          },
+          bookingCount: 5,
+        };
+        return newObj;
+      });
+
+      const randomSlotArr = [...yellowSlots, ...redSlots];
+      console.log(randomSlotArr);
+      setRandomSlots(randomSlotArr);
+    } catch (error) {
+      console.error("Error fetching random slot details:", error);
+    }
+  };
 
   const mergeArrays = (arr1, arr2) => {
     const mergedMap = new Map();

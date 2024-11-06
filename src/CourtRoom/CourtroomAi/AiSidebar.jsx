@@ -327,7 +327,8 @@ const AiSidebar = () => {
   const [caseSearchPrompt, setCaseSearchPrompt] = useState("");
   const [caseSearchLoading, setCaseSearchLoading] = useState(false);
   const [nextAppealLoading, setNextAppealLoading] = useState(false);
-  const [reserachArgumentsLoading, setReserachArgumentsLoading] = useState(false);
+  const [reserachArgumentsLoading, setReserachArgumentsLoading] =
+    useState(false);
   const [appealDialog, setAppealDialog] = useState(false);
   const [reaseachDialog, setReaseachDialog] = useState(false);
   const [appealData, setAppealData] = useState("");
@@ -937,6 +938,18 @@ const AiSidebar = () => {
                   >
                     Edit
                   </MenuItem>
+                  <MenuItem
+                    id="new-file"
+                    disabled={
+                      overViewDetails === "NA" || overViewDetails === ""
+                    }
+                    onClick={() => {
+                      handleMenuClose();
+                      navigate("/courtroom-ai/addFile");
+                    }}
+                  >
+                    Add New File
+                  </MenuItem>
                   <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
                     Add Evidences
                   </MenuItem>
@@ -1393,11 +1406,11 @@ const AiSidebar = () => {
                     </div>
                   )}
                   <div className="w-full gap-2 text-sm flex justify-end">
-                  <button
+                    <button
                       onClick={handleResearchArguments}
                       className="px-4 py-1 rounded border"
                     >
-                      {reserachArgumentsLoading? (
+                      {reserachArgumentsLoading ? (
                         <CircularProgress size={15} color="inherit" />
                       ) : (
                         "Research Arguments"
@@ -2111,20 +2124,19 @@ const AiSidebar = () => {
         >
           <div className="w-1/2 h-[90%] overflow-auto bg-white text-black p-3 rounded">
             <div className="flex justify-between">
-              <p className="text-xl font-semibold">{appealDialog?"Next Appeal":"Research Arguments"}</p>
+              <p className="text-xl font-semibold">
+                {appealDialog ? "Next Appeal" : "Research Arguments"}
+              </p>
               <Close
                 className="cursor-pointer"
                 onClick={() => {
-                    if(reaseachDialog){
-                      setReaseachDialog(false);
-
-                    }
-                    else{
-
-                      setAppealDialog(false);
-                    }
-                    setAppealData("");
-                  }}
+                  if (reaseachDialog) {
+                    setReaseachDialog(false);
+                  } else {
+                    setAppealDialog(false);
+                  }
+                  setAppealData("");
+                }}
               />
             </div>
             <div>

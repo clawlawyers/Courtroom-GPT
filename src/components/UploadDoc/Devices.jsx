@@ -33,7 +33,12 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import "./Devices.css";
 
-const Devices = ({ uploadedFile, setUploadedFile }) => {
+const Devices = ({
+  uploadedFile,
+  setUploadedFile,
+  languageArr,
+  appendFile,
+}) => {
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -90,10 +95,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const [fileNames, setFileNames] = useState([""]);
   // console.log(toBeUploadedFiles.length);
 
-  // const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadedSuccessFully, setUploadedSuccessFully] = useState([]);
-  // console.log(uploadedSuccessFully);
+  const [fileUploading, setFileUploading] = useState(false);
   // const [uploadUrl, setUploadUrl] = useState('');
 
   const style = {
@@ -246,6 +250,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
   useEffect(() => {
     const uploadFiles = async () => {
+      setFileUploading(true);
       for (const file of toBeUploadedFiles) {
         try {
           const formData = new FormData();
@@ -269,8 +274,10 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
             file,
             response.data.data.fileName
           );
+          setFileUploading(false);
         } catch (error) {
           console.error(`Error uploading ${file.name}:`, error);
+          setFileUploading(false);
         }
       }
     };
@@ -339,19 +346,17 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     });
   }, [uploadProgress]);
 
-  console.log(uploadProgress);
-  console.log(uploadedSuccessFully);
-  console.log(toBeUploadedFiles);
+  // console.log(uploadProgress);
+  // console.log(uploadedSuccessFully);
+  // console.log(toBeUploadedFiles);
 
   useEffect(() => {
     if (
       uploadedSuccessFully.length > 0 &&
       toBeUploadedFiles.length === uploadedSuccessFully.length
     ) {
-      console.log("here");
       callOverView();
     }
-    console.log("I AM HERE");
   }, [uploadedSuccessFully]);
 
   const callOverView = async () => {
@@ -361,6 +366,8 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         `${NODE_API_ENDPOINT}/courtroom/getoverview-formfilename`,
         {
           // user_id: currentUser.userId,
+          action: appendFile ? "append" : "add",
+          language: languageArr.join(","),
           fileNameArray: uploadedSuccessFully,
           isMultilang: true,
         },
@@ -528,6 +535,7 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     try {
       let data = JSON.stringify({
         case_overview: content,
+        action: "add",
       });
 
       let config = {
@@ -666,10 +674,13 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style} className="overflow-scroll  gap-6 flex flex-col">
+        <Box
+          sx={style}
+          className="overflow-scroll  gap-6 flex flex-col rounded-lg"
+        >
           <textarea
             id="content"
-            className="p-2 border-2"
+            className="p-2 border-2 border-black rounded-lg"
             name="w3review"
             rows="20"
             cols="50"
@@ -711,6 +722,34 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </div>
         ))}
       </div>
+      {fileUploading && (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "3",
+            overflow: "auto",
+            left: 0,
+            top: 0,
+          }}
+        >
+          <div
+            className="w-1/4 p-3 text-center rounded-lg border"
+            style={{
+              background: "linear-gradient(90deg,#0e1118,#008080)",
+            }}
+          >
+            <p className="text-lg font-semibold">Uploading your files</p>
+            <img src={uploadImage} />
+          </div>
+        </div>
+      )}
     </>
   );
 };
