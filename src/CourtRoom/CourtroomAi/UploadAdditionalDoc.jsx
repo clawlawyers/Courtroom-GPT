@@ -6,18 +6,13 @@ import uploadImage from "../../assets/icons/upload.svg";
 import { useNavigate } from "react-router-dom";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-import { setTutorial , setdevices, setinputCaseTutorial } from "../../features/sidebar/sidebarSlice";
+import { setTutorial } from "../../features/sidebar/sidebarSlice";
 import { useSelector, useDispatch } from "react-redux";
 import LanguageSelectionModal from "../../components/Language Card/LanguageSelectionModel"; // Import the modal
 
-const UploadDoc = () => {
+const UploadAdditionalDoc = () => {
   const dispatch = useDispatch();
   const tutorial = useSelector((state) => state.sidebar.tutorial);
-  const driveUpload = useSelector((state) => state.sidebar.driveUpload);
-  const caseOverView = useSelector((state) => state.user.caseOverview);
-
-  
-  
 
   const driverObj = driver({
     showProgress: true,
@@ -43,8 +38,8 @@ const UploadDoc = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(null); // New state for selected language
 
   const handleClick = () => {
-    driverObj.destroy();
     setShowLanguageModal(true); // Show language modal on upload click
+    driverObj.destroy();
   };
 
   const handleLanguageSelect = (language) => {
@@ -59,15 +54,8 @@ const UploadDoc = () => {
 
   useEffect(() => {
     if (!tutorial) {
-      if(!driveUpload){
-        if (caseOverView == "NA" || caseOverView == "") {
-
-          
-          driverObj.drive();
-        }
-        dispatch(setdevices())
-        dispatch(setTutorial(true));
-      }
+      driverObj.drive();
+      dispatch(setTutorial(true));
     }
   }, [driverObj, tutorial, dispatch]);
 
@@ -107,6 +95,7 @@ const UploadDoc = () => {
             uploadedFile={uploadedFile}
             setUploadedFile={setUploadedFile}
             languageArr={selectedLanguage}
+            appendFile
           />
         </motion.div>
       ) : (
@@ -124,4 +113,4 @@ const UploadDoc = () => {
   );
 };
 
-export default UploadDoc;
+export default UploadAdditionalDoc;

@@ -41,6 +41,7 @@ const ConfirmBooking = () => {
   const [couponApplied, setCouponApplied] = useState(false);
   const [discountPercentage, setDiscountPercentage] = useState(null);
   const [isFirst, setIsfirst] = useState(true);
+  const [couponName, setCouponName] = useState("");
 
   // console.log(bookingData.phoneNumber);
 
@@ -49,6 +50,36 @@ const ConfirmBooking = () => {
       navigate("/book-now");
     }
   }, [bookingData]);
+
+  const handleFirstVisitPayment = async () => {
+    setPaymentGatewayLoading(true);
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/book-courtroom  `,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookingData),
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Something went wrong.Please try again");
+      }
+      // const data = await response.json();
+      // console.log(response);
+      setPaymentGatewayLoading(false);
+      navigate("/login");
+    } catch (err) {
+      toast.error("Something went wrong.Please try again");
+      console.log(err);
+      setPaymentGatewayLoading(false);
+      setCouponCode("");
+      setCouponName("");
+    }
+  };
 
   const handlePayment = async () => {
     setPaymentGatewayLoading(true);
@@ -70,8 +101,9 @@ const ConfirmBooking = () => {
           `${NODE_API_ENDPOINT}/booking-payment/create-order`,
           {
             amount: discountPercentage
-              ? slots.length * 100 * (discountPercentage / 100)
-              : slots.length * 100,
+              ? slots.length * 1499 -
+                Math.ceil(slots.length * 1499 * (discountPercentage / 100))
+              : slots.length * 1499,
             phoneNumber: bookingData.phoneNumber,
             currency: "INR",
             receipt: receipt,
@@ -272,18 +304,41 @@ const ConfirmBooking = () => {
       });
   };
 
-  const handleCouponCode = (e) => {
+  const handleCouponCode = async (e) => {
     e.preventDefault();
-    const couponFind = couponArr.find(
-      (x) => x.name.toLowerCase() === couponCode.toLowerCase()
-    );
-    if (couponFind) {
-      setDiscountPercentage(couponFind.discount);
-      setCouponApplied(true);
-      toast.success("Coupon applied successfully !");
-    } else {
-      toast.error("No coupon found!");
-      setCouponCode("");
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroom/verify-coupon`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            couponCode: couponCode.toUpperCase(),
+            phoneNumber: bookingData.phoneNumber,
+          }),
+        }
+      );
+
+      // if (!fetchCouponCode.ok) {
+      //   toast.error("Coupon code not found");
+      //   setCouponCode("");
+      //   return;
+      // }
+      // console.log(await response.json());
+      const couponData = await response.json();
+      if (couponData.success) {
+        setCouponName(couponData.data.couponCode);
+        setDiscountPercentage(couponData.data.discout);
+        setCouponApplied(true);
+        toast.success("Coupon applied successfully !");
+      } else {
+        toast.error(couponData.error);
+        setCouponCode("");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -400,7 +455,7 @@ const ConfirmBooking = () => {
           </div>
           <div className="mx-2 gap-2">
             <h3 className="text-lg m-0">
-              Price per slot : <span className="font-bold">₹ 100</span> /-
+              Price per slot : <span className="font-bold">₹ 1499</span> /-
             </h3>
             <h3 className="text-lg">
               No. of slots booked :{" "}
@@ -413,19 +468,24 @@ const ConfirmBooking = () => {
           <div className="flex flex-col w-full px-2">
             {discountPercentage ? (
               <p className="text-xl font-bold">
-                Amount to Pay :{" "}
-                {100 * slots?.length * (discountPercentage / 100)}
+                Amount to Pay : ₹{" "}
+                {1499 * slots?.length -
+                  Math.ceil(1499 * slots?.length * (discountPercentage / 100))}
               </p>
             ) : (
               <p className="text-xl font-bold">
-                Amount to Pay : ₹ {100 * slots?.length}
+                Amount to Pay : ₹ {1499 * slots?.length}
               </p>
             )}
             <div className="flex flex-row w-full justify-end">
               <motion.button
                 whileTap={{ scale: "0.95" }}
                 // disabled={!proceedToPayment}
-                onClick={handlePayment}
+                onClick={
+                  couponName === "FIRSTVISIT"
+                    ? handleFirstVisitPayment
+                    : handlePayment
+                }
                 className="border-2 font-semibold border-white rounded-md p-2"
                 // style={{
                 //   borderColor: !proceedToPayment ? "grey" : "white",

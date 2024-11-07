@@ -50,6 +50,8 @@ const TimerComponent = React.memo(() => {
   );
 });
 
+const TOKENS = ["9950866260ADMIN", "IIMINDORE", "SHUBHAM"];
+
 function AdminLogin() {
   const navigate = useNavigate();
 
@@ -63,7 +65,9 @@ function AdminLogin() {
     e.preventDefault();
     setTokenCheckLoading(true);
 
-    if (token !== "9950866260ADMIN") {
+    const valisToken = TOKENS.includes(token);
+
+    if (!valisToken) {
       toast.error("Invalid token. Please try again.");
       return;
     }
@@ -112,7 +116,7 @@ function AdminLogin() {
         body: JSON.stringify({
           name: token,
           phoneNumber: token,
-          email: "admin@gmail.com",
+          email: token,
           bookingDate: currentDate,
           hour: currentHour,
         }),
@@ -138,7 +142,7 @@ function AdminLogin() {
           body: JSON.stringify({
             name: token,
             phoneNumber: token,
-            email: "admin@gmail.com",
+            email: token,
             slots: [{ date: currentDate, hour: currentHour }],
             recording: false,
             password: token,

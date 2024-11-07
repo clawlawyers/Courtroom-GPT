@@ -32,6 +32,9 @@ import AiDrafter from "./CourtRoom/CourtroomAi/AiDrafter.jsx";
 import CaseLaws from "./CourtRoom/CourtroomAi/CaseLaws.jsx";
 import AdminLogin from "./CourtRoom/Login/AdminLogin.jsx";
 import Login from "./CourtRoom/Login/Login.jsx";
+import RelevantCaseLaws from "./CourtRoom/CourtroomAi/RelevantCaseLaws.jsx";
+import AiDrafterPro from "./CourtRoom/CourtroomAi/AiDrafterPro.jsx";
+import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -156,10 +159,10 @@ function App() {
           path: "",
           element: <UploadDoc />,
         },
-        // {
-        //   path: "",
-        //   element: <CourtroomAiHome />,
-        // },
+        {
+          path: "/courtroom-ai/addFile",
+          element: <UploadAdditionalDoc />,
+        },
         {
           path: "/courtroom-ai/arguments",
           element: <CourtroomArgument />,
@@ -173,8 +176,16 @@ function App() {
           element: <AiDrafter />,
         },
         {
+          path: "/courtroom-ai/aiDraftPro",
+          element: <AiDrafterPro />,
+        },
+        {
           path: "/courtroom-ai/caseLaws",
           element: <CaseLaws />,
+        },
+        {
+          path: "/courtroom-ai/relevantCaseLaws",
+          element: <RelevantCaseLaws />,
         },
       ],
     },

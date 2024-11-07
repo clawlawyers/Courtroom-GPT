@@ -12,6 +12,7 @@ import courtroomAdminAddUserSlice from "./features/admin/courtroomAdminAddUserSl
 import allowedBookingReducer from "./features/admin/allowedBookingSlice";
 import lawSlice from "./features/laws/lawSlice";
 import drafterSlice from "./features/laws/drafterSlice";
+import drafterProSlice from "./features/laws/drafterProSlice";
 
 export default configureStore({
   reducer: {
@@ -28,7 +29,6 @@ export default configureStore({
     allowedBooking: allowedBookingReducer, // Add to the store
     laws: lawSlice,
     drafter: drafterSlice,
-    
-    
+    drafterPro: drafterProSlice,
   },
 });

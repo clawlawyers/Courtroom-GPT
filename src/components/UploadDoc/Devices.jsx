@@ -21,7 +21,7 @@ import {
   setOverview,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast, { ToastBar, Toaster } from "react-hot-toast";
 import uploadImage from "../../assets/images/uploading.gif";
 import analyzingImage from "../../assets/images/analyzing.gif";
 
@@ -31,7 +31,19 @@ import Box from "@mui/material/Box";
 import useDrivePicker from "react-google-drive-picker";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-const Devices = ({ uploadedFile, setUploadedFile }) => {
+import "./Devices.css";
+
+const Devices = ({
+  uploadedFile,
+  setUploadedFile,
+  languageArr,
+  appendFile,
+}) => {
+
+  const inputCaseTutorial = useSelector((state) => state.sidebar.inputCaseTutorial);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
+  const driveUpload = useSelector((state)=> state.sidebar.driveUpload)
+
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -84,6 +96,14 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   // const [openPicker, authResponse] = useDrivePicker();
   const [open, setOpen] = useState(false);
   const [content, setconetnt] = useState("");
+  const [toBeUploadedFiles, setToBeUploadedFiles] = useState([]);
+  const [fileNames, setFileNames] = useState([""]);
+  // console.log(toBeUploadedFiles.length);
+
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [uploadedSuccessFully, setUploadedSuccessFully] = useState([]);
+  const [fileUploading, setFileUploading] = useState(false);
+  // const [uploadUrl, setUploadUrl] = useState('');
 
   const style = {
     position: "absolute",
@@ -104,7 +124,10 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     setCaseOverview(e.target.value);
   };
   useEffect(() => {
-    driverObj.drive();
+    if(!driveUpload){
+      if (caseOverView == "NA" || caseOverView == "") {
+      driverObj.drive();
+    }}
   }, []);
 
   const handleSave = async () => {
@@ -164,13 +187,15 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   const handleUploadFromComputer = async () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-    fileInput.accept = ".pdf,.doc,.docx,.txt,.jpg"; // Specify the accepted file types
+    fileInput.accept = ".pdf,.docx,.txt"; // Specify the accepted file types
     fileInput.multiple = true; // Allow multiple file selection
     fileInput.addEventListener("change", async (event) => {
       const files = Array.from(event.target.files);
       if (files.length > 0) {
         const maxFileSize = 15 * 1024 * 1024; // 15 MB in bytes
         const validFiles = [];
+        setUploadedSuccessFully([]);
+        setUploadProgress({});
 
         for (const file of files) {
           if (file.size <= maxFileSize) {
@@ -184,20 +209,64 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
 
         if (validFiles.length === 0) {
           return; // No valid files, exit the function
+        } else {
+          setToBeUploadedFiles(validFiles);
         }
 
-        setUploading(true);
+        // setUploading(true);
 
-        const formData = new FormData();
-        validFiles.forEach((file, index) => {
-          formData.append(`file${index === 0 ? "" : index}`, file); // Append files under the same key
-        });
+        // const formData = new FormData();
+        // validFiles.forEach((file, index) => {
+        //   formData.append(`file${index === 0 ? "" : index}`, file); // Append files under the same key
+        // });
 
-        formData.append("isMultilang", true); // this is for multilang
+        // formData.append("isMultilang", true); // this is for multilang
 
+        // try {
+        //   const response = await axios.post(
+        //     `${NODE_API_ENDPOINT}/courtroom/newcase`,
+        //     formData,
+        //     {
+        //       headers: {
+        //         "Content-Type": "multipart/form-data",
+        //         Authorization: `Bearer ${currentUser.token}`,
+        //       },
+        //     }
+        //   );
+
+        //   // Handle response and update state
+        //   console.log(response.data.data.case_overview.case_overview);
+        //   setPreviewContent(response.data.data.case_overview.case_overview);
+        //   setInputText(response.data.data.case_overview.case_overview);
+        //   setUploading(false);
+        //   setAnalyzing(true);
+
+        //   setTimeout(() => {
+        //     setAnalyzing(false);
+        //     setUploadComplete(true);
+        //   }, 3000);
+        // } catch (error) {
+        //   console.log(error);
+        //   // console.log(error?.response?.data?.error.split(":")[1]);
+        //   // toast.error(error?.response?.data?.error.split(":")[1]);
+        //   handleDialogClose();
+        // }
+      }
+    });
+    fileInput.click();
+  };
+
+  useEffect(() => {
+    const uploadFiles = async () => {
+      setFileUploading(true);
+      for (const file of toBeUploadedFiles) {
         try {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("isMultilang", true);
+
           const response = await axios.post(
-            `${NODE_API_ENDPOINT}/courtroom/newcase`,
+            `${NODE_API_ENDPOINT}/courtroom/fileUpload`,
             formData,
             {
               headers: {
@@ -206,26 +275,130 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
               },
             }
           );
-
-          // Handle response and update state
-          setPreviewContent(response.data.data.case_overview.case_overview);
-          setInputText(response.data.data.case_overview.case_overview);
-          setUploading(false);
-          setAnalyzing(true);
-
-          setTimeout(() => {
-            setAnalyzing(false);
-            setUploadComplete(true);
-          }, 3000);
+          setFileNames((prev) => [...prev, response.data.data.fileName]);
+          // console.log(response.data);
+          uploadFileWithProgress(
+            response.data.data.uploadUrl,
+            file,
+            response.data.data.fileName
+          );
+          setFileUploading(false);
         } catch (error) {
-          console.log(error);
-          // console.log(error?.response?.data?.error.split(":")[1]);
-          // toast.error(error?.response?.data?.error.split(":")[1]);
-          handleDialogClose();
+          console.error(`Error uploading ${file.name}:`, error);
+          setFileUploading(false);
         }
       }
+    };
+
+    if (toBeUploadedFiles.length > 0) {
+      uploadFiles();
+    }
+  }, [toBeUploadedFiles]);
+
+  const uploadFileWithProgress = async (url, file, fileId) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded * 100) / event.total);
+        setUploadProgress((prevProgress) => ({
+          ...prevProgress,
+          [fileId]: progress,
+        }));
+      }
+    };
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader("Content-Type", file.type);
+    xhr.setRequestHeader("x-goog-resumable", "start");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", `*`);
+
+    // Send the file
+    xhr.send(file);
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        console.log("File uploaded successfully!");
+        setUploadProgress((prevProgress) => {
+          const newProgress = { ...prevProgress };
+          delete newProgress[fileId];
+          return newProgress;
+        });
+        // setUploadedSuccessFully([...uploadedSuccessFully, fileId]);
+        setUploadedSuccessFully((prevSuccessfullyUploaded) => [
+          ...prevSuccessfullyUploaded,
+          fileId,
+        ]);
+      } else {
+        console.error("Error uploading file:", xhr.responseText);
+      }
+    };
+  };
+
+  useEffect(() => {
+    fileNames.forEach((fileName) => {
+      if (
+        uploadProgress[fileName] === 100 &&
+        !uploadedSuccessFully.includes(fileName)
+      ) {
+        setUploadProgress((prevProgress) => {
+          const newProgress = { ...prevProgress };
+          delete newProgress[fileName];
+          return newProgress;
+        });
+        // setUploadedSuccessFully([...uploadedSuccessFully, fileId]);
+        setUploadedSuccessFully((prevSuccessfullyUploaded) => [
+          ...prevSuccessfullyUploaded,
+          fileName,
+        ]);
+      }
     });
-    fileInput.click();
+  }, [uploadProgress]);
+
+  // console.log(uploadProgress);
+  // console.log(uploadedSuccessFully);
+  // console.log(toBeUploadedFiles);
+
+  useEffect(() => {
+    if (
+      uploadedSuccessFully.length > 0 &&
+      toBeUploadedFiles.length === uploadedSuccessFully.length
+    ) {
+      callOverView();
+    }
+  }, [uploadedSuccessFully]);
+
+  const callOverView = async () => {
+    setAnalyzing(true);
+    try {
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroom/getoverview-formfilename`,
+        {
+          // user_id: currentUser.userId,
+          action: appendFile ? "append" : "add",
+          language: languageArr.join(","),
+          fileNameArray: uploadedSuccessFully,
+          isMultilang: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
+      toast.success("Overview fetched successfully!");
+      console.log(response.data);
+      setPreviewContent(response.data.data.case_overview);
+      setInputText(response.data.data.case_overview);
+      setAnalyzing(false);
+      setUploadComplete(true);
+    } catch (error) {
+      setAnalyzing(false);
+      toast.error("Failed to load case overview");
+    } finally {
+      setToBeUploadedFiles([]);
+      setUploadProgress({});
+      setUploadedSuccessFully([]);
+    }
   };
 
   const handleOpenPicker = () => {
@@ -347,10 +520,9 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
   };
 
   const handleUploadFromDrive = async () => {
-    setuploaddrivedialog(true);
-    await handleOpenPicker();
-
-    setuploaddrivedialog(false);
+    // setuploaddrivedialog(true);
+    // await handleOpenPicker();
+    // setuploaddrivedialog(false);
   };
 
   const handleUploadFromDropBox = async () => {
@@ -364,12 +536,14 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
     setUploadComplete(false);
     setPreviewContent("");
   };
+
   const handleTextInputUpload = async () => {
     setUploading(true);
     setOpen(false);
     try {
       let data = JSON.stringify({
         case_overview: content,
+        action: "add",
       });
 
       let config = {
@@ -471,42 +645,33 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         </section>
         <Dialog
           setOnChange={handleChange}
-          open={uploading || analyzing || uploadComplete}
+          // open={uploading || analyzing || uploadComplete}
+
+          open={analyzing || uploadComplete}
           onClose={handleDialogClose}
           title={
-            uploading
-              ? "Uploading Your Document"
-              : analyzing
+            analyzing
               ? "Analyzing the Document"
               : uploadComplete
               ? "Upload Complete"
               : ""
           }
-          text={uploading || analyzing ? "" : previewContent}
+          text={analyzing ? "" : previewContent}
           inputText={inputText}
           setInputText={setInputText}
           buttonText={`${uploadComplete ? "" : ""}`}
           onButtonClick={handleSave}
-          image={uploading ? uploadImage : analyzing ? analyzingImage : ""}
+          image={analyzing ? analyzingImage : ""}
         >
-          {uploading && (
-            <img className="h-10 w-10" src={uploadImage} alt="uploading" />
-          )}
-          {analyzing && (
-            <img
-              className="w-full h-full fit-content flex items-center justify-center"
-              src={analyzingImage}
-              alt="uploading"
-            />
-          )}
-          {/* {uploaddrivedialog && <UploadDrive></UploadDrive>} */}
+          {/* {uploading && <img src={uploadImage} alt="uploading" />}
+          {analyzing && <img src={analyzingImage} alt="uploading" />}
           {uploadComplete && (
             <textarea
               className="w-full h-64  p-2.5 mb-4 text-black rounded-md "
               value={caseOverview}
               onChange={handleChange}
             />
-          )}
+          )} */}
         </Dialog>
       </motion.div>
       <Modal
@@ -517,10 +682,13 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style} className="overflow-scroll  gap-6 flex flex-col">
+        <Box
+          sx={style}
+          className="overflow-scroll  gap-6 flex flex-col rounded-lg"
+        >
           <textarea
             id="content"
-            className="p-2 border-2"
+            className="p-2 border-2 border-black rounded-lg"
             name="w3review"
             rows="20"
             cols="50"
@@ -539,6 +707,57 @@ const Devices = ({ uploadedFile, setUploadedFile }) => {
           </button>
         </Box>
       </Modal>
+      {/* {uploadProgress > 0 && (
+        <div>
+          <p>Upload Progress: {uploadProgress}%</p>
+          <progress value={uploadProgress} max="100">
+            {uploadProgress}%
+          </progress>
+        </div>
+      )} */}
+      <div className="absolute right-5 bottom-10 h-screen overflow-auto flex flex-col-reverse gap-2">
+        {Object.entries(uploadProgress).map(([fileId, progress], index) => (
+          <div className="w-60 bg-white text-black rounded-lg p-2" key={fileId}>
+            <p className="m-0 text-xs text-[#008080]">
+              Uploading File : {index + 1}
+            </p>
+            <div className="flex gap-2 items-center">
+              <progress value={progress} style={{ color: "blue" }} max="100">
+                {progress}%
+              </progress>
+              <p className="m-0 text-[#008080]">{progress}%</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {fileUploading && (
+        <div
+          style={{
+            width: "100%",
+            height: "100vh",
+            position: "absolute",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "3",
+            overflow: "auto",
+            left: 0,
+            top: 0,
+          }}
+        >
+          <div
+            className="w-1/4 p-3 text-center rounded-lg border"
+            style={{
+              background: "linear-gradient(90deg,#0e1118,#008080)",
+            }}
+          >
+            <p className="text-lg font-semibold">Uploading your files</p>
+            <img src={uploadImage} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

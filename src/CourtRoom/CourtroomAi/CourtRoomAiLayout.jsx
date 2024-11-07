@@ -72,7 +72,7 @@ const CourtRoomAiLayout = () => {
 
   return (
     <div className="">
-      {showSplash ? (
+      {/* {showSplash ? (
         <div className="flex flex-col justify-center  items-center h-screen w-full relative">
           {!videoStarted && (
             <img
@@ -110,18 +110,18 @@ const CourtRoomAiLayout = () => {
             />
           )}
         </div>
-      ) : (
-        <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
-          {/* <div > */}
-          <AiSidebar className="h-screen m-0 overflow-hidden" />
-          {/* </div> */}
-          <div>
-            <div className="h-screen m-0 overflow-hidden">
-              <Outlet />
-            </div>
+      ) : ( */}
+      <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
+        {/* <div > */}
+        <AiSidebar className="h-screen m-0 overflow-hidden" />
+        {/* </div> */}
+        <div>
+          <div className="h-screen m-0 overflow-hidden">
+            <Outlet />
           </div>
         </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   );
 };

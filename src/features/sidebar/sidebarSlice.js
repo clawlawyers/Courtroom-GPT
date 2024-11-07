@@ -4,7 +4,9 @@ export const SidebarSlice = createSlice({
     name: "sidebar",
     initialState: {
         collapsed: false,
-        sidebarTut:false
+        sidebarTut:false,
+        inputCaseTutorial : false,
+        driveUpload:false
         
     },
 
@@ -23,10 +25,16 @@ export const SidebarSlice = createSlice({
         },
         setTutorialFalse(state) {
             state.collapsed = false;
+        },
+        setinputCaseTutorial(state) {
+            state.inputCaseTutorial = true;
+        },
+        setdevices(state) {
+            state.driveUpload = true;
         }
     }
 });
 
-export const { toggle, collapse, expand, setTutorial, setTutorialFalse } = SidebarSlice.actions;
+export const { toggle, collapse, expand, setTutorial, setTutorialFalse, setinputCaseTutorial, setdevices } = SidebarSlice.actions;
 
 export default SidebarSlice.reducer;
