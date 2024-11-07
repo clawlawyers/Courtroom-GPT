@@ -472,6 +472,7 @@ const AiSidebar = () => {
   };
 
   const firstDraftApi = async () => {
+    // dispatch(setFirstDraftLoading());
     try {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/draft`,
@@ -705,7 +706,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
+        `${NODE_API_ENDPOINT}/courtroom/api/download`,
         {
           // user_id: currentUser.userId,
           // data: firstDraft,
