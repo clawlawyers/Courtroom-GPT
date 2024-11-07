@@ -13,6 +13,8 @@ import LanguageSelectionModal from "../../components/Language Card/LanguageSelec
 const UploadAdditionalDoc = () => {
   const dispatch = useDispatch();
   const tutorial = useSelector((state) => state.sidebar.tutorial);
+  const inputCaseTutorial = useSelector((state)=>state.sidebar.inputCaseTutorial)
+  const caseOverView = useSelector((state) => state.user.caseOverview);
 
   const driverObj = driver({
     showProgress: true,
@@ -54,7 +56,11 @@ const UploadAdditionalDoc = () => {
 
   useEffect(() => {
     if (!tutorial) {
-      driverObj.drive();
+      if(!inputCaseTutorial){
+        if (caseOverView == "NA" || caseOverView == "") {
+
+        driverObj.drive();
+      }}
       dispatch(setTutorial(true));
     }
   }, [driverObj, tutorial, dispatch]);

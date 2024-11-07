@@ -13,7 +13,7 @@ import LanguageSelectionModal from "../../components/Language Card/LanguageSelec
 const UploadDoc = () => {
   const dispatch = useDispatch();
   const tutorial = useSelector((state) => state.sidebar.tutorial);
-  const driveUpload = useSelector((state) => state.sidebar.driveUpload);
+  const driveUpload = useSelector((state) => state.sidebar.inputCaseTutorial);
   const caseOverView = useSelector((state) => state.user.caseOverview);
 
   
