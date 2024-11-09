@@ -137,7 +137,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
 
   return (
     <>
-      <div
+      {/* <div
         className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
         style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
@@ -151,8 +151,8 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
-      </div>
-      {countdownOver ? (
+      </div> */}
+      {/* {countdownOver ? (
         <div
           className="z-50"
           style={{
@@ -259,7 +259,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
     </>
   );
 });
@@ -1263,7 +1263,7 @@ const AiSidebar = () => {
                 <img src={oldCaseLogo} />
                 <p className="m-0 text-xs text-white">Old Case Search</p>
               </motion.div> */}
-              <Link to={"/courtroom-ai"}>
+              <Link to={"/courtroom-ai"} className="no-underline">
                 <motion.div
                   whileTap={{ scale: "0.95" }}
                   whileHover={{ scale: "1.01" }}

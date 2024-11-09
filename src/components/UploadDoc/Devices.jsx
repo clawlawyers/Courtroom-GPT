@@ -32,6 +32,7 @@ import useDrivePicker from "react-google-drive-picker";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import "./Devices.css";
+import { setinputCaseTutorial } from "../../features/sidebar/sidebarSlice";
 
 const Devices = ({
   uploadedFile,
@@ -124,9 +125,10 @@ const Devices = ({
     setCaseOverview(e.target.value);
   };
   useEffect(() => {
-    if(!driveUpload){
+    if(!inputCaseTutorial){
       if (caseOverView == "NA" || caseOverView == "") {
       driverObj.drive();
+      dispatch(setinputCaseTutorial())
     }}
   }, []);
 

@@ -4,7 +4,7 @@ import aiLawyer from "../../assets/images/aiLawyer.png";
 import userIcon from "../../assets/images/userArgument.png";
 import Styles from "./CourtroomArgument.module.css";
 import markdownit from "markdown-it";
-import { setTutorial } from "../../features/sidebar/sidebarSlice";
+import { setmaintut, setTutorial } from "../../features/sidebar/sidebarSlice";
 import Select, { components } from "react-select";
 
 import { motion } from "framer-motion";
@@ -51,6 +51,7 @@ const CourtroomArgument = () => {
 
   const fightingModal = useSelector((state) => state.user.fightingSideModal);
   const tutorial = useSelector((state) => state.popup.tutorial);
+  const driveUpload = useSelector((state) => state.sidebar.driveUpload);
 
   const options = [
     { value: "english", label: "English" },
@@ -348,6 +349,7 @@ const CourtroomArgument = () => {
 
   const currentUser = useSelector((state) => state.user.user);
   const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
+  const mainTut = useSelector((state) => state.sidebar.mainTut);
   const lastItemRef = useRef(null);
   const editItemRef = useRef(null);
 
@@ -1093,7 +1095,11 @@ const CourtroomArgument = () => {
           },
         ],
       });
-      driverObj2.drive();
+      if(!mainTut){
+
+        driverObj2.drive();
+        dispatch(setmaintut())
+      }
     } catch (error) {
       console.log(error);
       dispatch(setFightingSideModal(false));
