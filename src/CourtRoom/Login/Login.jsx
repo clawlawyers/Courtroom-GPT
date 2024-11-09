@@ -176,7 +176,7 @@ function Login() {
                   </svg>
                   <input
                     type="text"
-                    placeholder="Enter your Phone Number"
+                    placeholder="Enter your user Id"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
