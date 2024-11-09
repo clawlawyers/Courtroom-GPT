@@ -1371,9 +1371,13 @@ const CourtroomArgument = () => {
               >
                 {userArgument.map((x, index) => (
                   <div
-                    className="arguments"
+                 
+                    className={`arguments ${ !aiLawyerLoading ?' cursor-pointer':  'cursor-not-allowed' }`}
                     onClick={() => {
-                      handleArgumentSelect(index, x);
+                      if(!aiLawyerLoading){
+
+                        handleArgumentSelect(index, x);
+                      }
                     }}
                     key={index}
                     ref={index === userArgument.length - 1 ? lastItemRef : null}
@@ -1392,7 +1396,7 @@ const CourtroomArgument = () => {
                       borderRadius: "10px",
                       padding: "5px",
                       margin: "5px",
-                      cursor: "pointer",
+                     
                     }}
                   >
                     <div className="flex items-center w-full pointer-events-auto">
