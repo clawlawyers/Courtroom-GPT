@@ -78,7 +78,7 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "AI Judgde",
+              title: "AI Judge",
               description:
                 "This will show AI Judge response to an argument from both sides  ",
               side: "left",
@@ -869,7 +869,7 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "AI Judgde",
+              title: "AI Judge",
               description:
                 "This will show AI Judge response to an argument from both sides  ",
               side: "left",
@@ -1272,7 +1272,7 @@ const CourtroomArgument = () => {
                 {" "}
                 <IconButton
                   sx={{ color: "white" }}
-                  disabled={userArgument.length === 0}
+                  disabled={userArgument.length === 0 && (!aiLawyerLoading)}
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
