@@ -66,10 +66,10 @@ const UploadDoc = () => {
           driverObj.drive();
         }
         dispatch(setdevices())
-        dispatch(setTutorial(true));
+        // dispatch(setTutorial(true));
       }
     }
-  }, [driverObj, tutorial, dispatch]);
+  }, [ tutorial, dispatch]);
 
   const handleSubmit = () => {
     if (!chooseDevice && !inputText) {

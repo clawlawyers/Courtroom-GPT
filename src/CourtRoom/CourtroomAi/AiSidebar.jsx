@@ -1263,7 +1263,7 @@ const AiSidebar = () => {
                 <img src={oldCaseLogo} />
                 <p className="m-0 text-xs text-white">Old Case Search</p>
               </motion.div> */}
-              <Link to={"/courtroom-ai"}>
+              <Link to={"/courtroom-ai"} className="no-underline">
                 <motion.div
                   whileTap={{ scale: "0.95" }}
                   whileHover={{ scale: "1.01" }}
