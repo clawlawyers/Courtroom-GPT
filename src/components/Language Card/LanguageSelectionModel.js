@@ -28,7 +28,7 @@ const MenuProps = {
 };
 
 const languagesArr = [
-  "English",
+  "nglish",
   "Hindi",
   "Bengali",
   "Punjabi",
@@ -99,7 +99,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               MenuProps={MenuProps}
             >
               {languagesArr.map((name) => (
-                <MenuItem key={name} value={name}>
+                <MenuItem key={name} value={name.toLowerCase()}>
                   <Checkbox checked={languageName.includes(name)} />
                   <ListItemText primary={name} />
                 </MenuItem>
