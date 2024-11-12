@@ -28,7 +28,7 @@ const MenuProps = {
 };
 
 const languagesArr = [
-  "nglish",
+  "English",
   "Hindi",
   "Bengali",
   "Punjabi",
