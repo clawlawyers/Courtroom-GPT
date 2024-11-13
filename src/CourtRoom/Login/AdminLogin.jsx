@@ -50,7 +50,7 @@ const TimerComponent = React.memo(() => {
   );
 });
 
-const TOKENS = ["9950866260ADMIN", "IIMINDORE", "SHUBHAM"];
+const TOKENS = ["9950866260ADMIN", "IIMINDORE", "SHUBHAM", "8767875563ADMIN"];
 
 function AdminLogin() {
   const navigate = useNavigate();
