@@ -99,7 +99,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               MenuProps={MenuProps}
             >
               {languagesArr.map((name) => (
-                <MenuItem key={name} value={name.toLowerCase()}>
+                <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
                   <ListItemText primary={name} />
                 </MenuItem>

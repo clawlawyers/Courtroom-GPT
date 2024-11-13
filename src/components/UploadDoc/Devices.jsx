@@ -377,7 +377,7 @@ const Devices = ({
         {
           // user_id: currentUser.userId,
           action: appendFile ? "append" : "add",
-          language: languageArr.join(","),
+          language: languageArr.map(a => a.toLowerCase()).join(","),
           fileNameArray: uploadedSuccessFully,
           isMultilang: true,
         },
