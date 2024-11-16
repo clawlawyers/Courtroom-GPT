@@ -53,21 +53,18 @@ const PricingPlans = () => {
         <h3 className="text-[32px] font-medium leading-[40.32px] tracking-[-0.01em] text-center text-white mb-2">
           Get Started With
         </h3>
-        
-        <div 
+
+        <div
           className="text-center mb-6 font-extrabold text-transparent bg-clip-text"
-          style={{ 
+          style={{
             background: 'linear-gradient(179.42deg, #018585 30.96%, #00FFA3 99.5%)',
-            backgroundClip: 'text', 
+            backgroundClip: 'text',
             color: 'transparent',
             fontFamily: 'Plus Jakarta Sans',
             fontWeight: 800,
             letterSpacing: '-0.01em',
-            fontSize: '48px', 
+            fontSize: '48px',
             lineHeight: '60px',
-            '@media (min-width: 640px)': { fontSize: '56px', lineHeight: '70px' }, 
-            '@media (min-width: 768px)': { fontSize: '64px', lineHeight: '80px' }, 
-            '@media (min-width: 1024px)': { fontSize: '72px', lineHeight: '90.72px' }, 
           }}
         >
           AI COURTROOM
@@ -92,18 +89,19 @@ const PricingPlans = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-full mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-400 mx-auto">
           {plans.map((plan) => (
-            <div 
-              key={plan.title} 
-              className={`relative rounded-lg shadow-lg overflow-hidden flex flex-col bg-[rgba(217,217,217,0.37)] border-4 border-white w-[470] h-[285px]`}
+            <div
+              key={plan.title}
+              className={`relative rounded-lg shadow-lg overflow-hidden flex flex-col bg-[rgba(217,217,217,0.37)] border-4 border-white w-[470] h-[285px] ${
+                plan.popular ? 'popular-plan' : ''
+              }`}
             >
               <div className="p-6 flex flex-col h-full">
                 <h2 className="text-xl font-bold text-white mb-4">{plan.title}</h2>
-                <ul className="flex-grow space-y-0">
+                <ul className="list-disc pl-5 space-y-2">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center text-white">
-                      <span className="mr-2">•</span>
+                    <li key={feature} className="text-white">
                       {feature}
                     </li>
                   ))}
@@ -114,10 +112,10 @@ const PricingPlans = () => {
                     <hr className="border-t border-white my-4" />
                     <div className="flex justify-between items-center mb-4">
                       <div className="text-white font-bold">CONNECT TO ADMINISTRATOR</div>
-                      <button 
+                      <button
                         className="text-white py-2 px-8 rounded transition-colors border border-white font-bold"
                         style={{
-                          background: 'linear-gradient(180deg, #006E6E 0%, #003131 100%)'
+                          background: 'linear-gradient(180deg, #006E6E 0%, #003131 100%)',
                         }}
                       >
                         CONTACT US
@@ -125,14 +123,17 @@ const PricingPlans = () => {
                     </div>
                   </>
                 ) : (
-                  <div className="mt-2 flex justify-between items-center mb-4">
-                    <div className="text-3xl font-bold text-white w-[170px] h-[50px] "> 
-                      {billingCycle === 'daily' ? plan.price?.daily : plan.price?.monthly || "N/A"}
+                  <div className=
+
+                  "mt-2 flex justify-between items-center mb-4"
+                  >
+                    <div className="text-3xl font-bold text-white w-[170px] h-[50px] ">
+                      {billingCycle === 'daily' ? plan.price?.daily : plan.price?.monthly}
                     </div>
-                    <button 
-                      className="text-white py-2 px-8 rounded transition-colors border-2 border-white" 
+                    <button
+                      className="text-white py-2 px-8 rounded transition-colors border-2 border-white"
                       style={{
-                        background: 'linear-gradient(180deg, #006E6E 0%, #003131 100%)'
+                        background: 'linear-gradient(180deg, #006E6E 0%, #003131 100%)',
                       }}
                     >
                       Get It Now
@@ -141,8 +142,12 @@ const PricingPlans = () => {
                 )}
 
                 {plan.popular && (
-                  <div className="absolute bottom-0 left-0 w-full text-center py-1 text-sm text-gray-900 font-medium mt-2" 
-                    style={{ backgroundColor: 'rgba(141, 255, 190, 1)' }}
+                  <div
+                    className="absolute bottom-0 left-0 w-full text-center text-sm text-gray-900 font-medium mt-2"
+                    style={{
+                      backgroundColor: 'rgba(141, 255, 190, 1)'
+                      
+                    }}
                   >
                     MOST OPTED SUBSCRIPTION
                   </div>
