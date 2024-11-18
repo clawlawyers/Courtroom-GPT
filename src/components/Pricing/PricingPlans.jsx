@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './Pricing.css';
+import UserForm from "./UserForm.jsx";
 
 const PricingPlans = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
+  const [showForm, setShowForm] = useState(false); 
 
   const plans = [
     {
@@ -28,6 +30,9 @@ const PricingPlans = () => {
     }
   ];
 
+  const handleOpenForm = () => setShowForm(true);
+  const handleCloseForm = () => setShowForm(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
@@ -52,17 +57,13 @@ const PricingPlans = () => {
 
         <div className="flex justify-center gap-4 sm:gap-6 mb-8">
           <button
-            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base ${
-              billingCycle === 'daily' ? 'bg-[#9AFFDB] text-[#018585]' : 'bg-white text-[#018585]'
-            }`}
+            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base ${billingCycle === 'daily' ? 'bg-[#9AFFDB] text-[#018585]' : 'bg-white text-[#018585]'}`}
             onClick={() => setBillingCycle('daily')}
           >
             Daily
           </button>
           <button
-            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base ${
-              billingCycle === 'monthly' ? 'bg-[#9AFFDB] text-[#018585]' : 'bg-white text-[#018585]'
-            }`}
+            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base ${billingCycle === 'monthly' ? 'bg-[#9AFFDB] text-[#018585]' : 'bg-white text-[#018585]'}`}
             onClick={() => setBillingCycle('monthly')}
           >
             Monthly
@@ -73,9 +74,7 @@ const PricingPlans = () => {
           {plans.map((plan) => (
             <div
               key={plan.title}
-              className={`relative rounded-lg shadow-lg overflow-hidden flex flex-col bg-[rgba(217,217,217,0.37)] border-4 border-white p-6 ${
-                plan.popular ? 'popular-plan' : ''
-              }`}
+              className={`relative rounded-lg shadow-lg overflow-hidden flex flex-col bg-[rgba(217,217,217,0.37)] border-4 border-white p-6 ${plan.popular ? 'popular-plan' : ''}`}
               style={{ height: '100%' }}
             >
               <h2 className="text-lg sm:text-xl font-bold text-white mb-4">{plan.title}</h2>
@@ -107,29 +106,29 @@ const PricingPlans = () => {
                   <div className="text-2xl sm:text-3xl font-bold text-white">
                     {billingCycle === 'daily' ? plan.price?.daily : plan.price?.monthly}
                   </div>
-                  {/* Consistent Get It Now button styling */}
+                 
                   <button
                     className="text-white py-2 px-6 rounded transition-colors border border-white font-bold"
                     style={{
                       background: 'linear-gradient(180deg, #006E6E 0%, #003131 100%)',
                     }}
+                    onClick={handleOpenForm} 
                   >
                     Get It Now
                   </button>
-                </div>
-              )}
-
-              {plan.popular && (
-                <div
-                  className="absolute bottom-0 left-0 w-full text-center text-sm font-medium mt-2 text-gray-900 bg-green-200 py-1"
-                >
-                  MOST OPTED SUBSCRIPTION
                 </div>
               )}
             </div>
           ))}
         </div>
       </div>
+
+      
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <UserForm handleCloseForm={handleCloseForm} />
+        </div>
+      )}
     </div>
   );
 };
