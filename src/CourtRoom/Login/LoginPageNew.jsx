@@ -86,7 +86,7 @@ const LoginPageNew = () => {
                 onClick={() => setShowUserForm(true)}
                 className="w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2"
               >
-                Get it now
+                Verify Number
               </button>
             </div>
           </div>

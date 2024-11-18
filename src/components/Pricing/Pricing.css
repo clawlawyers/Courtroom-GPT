@@ -6,3 +6,18 @@ body {
     margin-bottom: 40px !important;
   }
   
+  .popular-badge {
+    background-color: #9AFFDB; /* Light green background */
+    color: #006E6E; /* Matching green text */
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Full width */
+    border-top: 2px solid white; /* Optional styling */
+    border-radius: 0 0 10px 10px; /* Rounded corners */
+  }
+  
