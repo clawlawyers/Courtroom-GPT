@@ -153,7 +153,8 @@ function App() {
         {
           path:"/pricing-plans",
           element:<PricingPlans/>
-        }
+        },
+       
       ],
     },
     {
