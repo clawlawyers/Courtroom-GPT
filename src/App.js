@@ -36,6 +36,7 @@ import RelevantCaseLaws from "./CourtRoom/CourtroomAi/RelevantCaseLaws.jsx";
 import AiDrafterPro from "./CourtRoom/CourtroomAi/AiDrafterPro.jsx";
 import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx";
 import PricingPlans from "./components/Pricing/PricingPlans.jsx";
+import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -154,6 +155,10 @@ function App() {
           path:"/pricing-plans",
           element:<PricingPlans/>
         },
+        {
+          path:"/login-new",
+          element:<LoginPageNew/>
+        }
        
       ],
     },

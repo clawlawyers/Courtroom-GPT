@@ -3,7 +3,7 @@ import TableImage from "../../assets/images/table.png";
 import LoginImage from "../../assets/images/loginImage.png";
 import UserForm from '../../components/Pricing/UserForm';
 
-const LoginPage = () => {
+const LoginPageNew = () => {
   const [showUserForm, setShowUserForm] = useState(false);
 
   return (
@@ -123,4 +123,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginPageNew;

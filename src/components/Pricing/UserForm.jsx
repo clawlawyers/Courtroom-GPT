@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, X } from 'lucide-react';
 import clawCourtRoomImage from "../../assets/images/clawcourtroom.png"
 
-const UserForm = () => {
+const UserForm = ({handleCloseForm}) => {
   const [showPassword, setShowPassword] = useState(false);
   
   return (
@@ -22,7 +22,9 @@ const UserForm = () => {
       
         <div className="w-3/5 bg-slate-600/90 p-8 relative">
          
-          <button className="absolute top-6 right-6 text-white hover:text-gray-300">
+          <button className="absolute top-6 right-6 text-white hover:text-gray-300"
+          onClick={handleCloseForm}
+          >
             <X size={24} />
           </button>
 

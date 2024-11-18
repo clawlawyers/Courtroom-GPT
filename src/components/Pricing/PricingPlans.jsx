@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Pricing.css';
 import UserForm from "./UserForm.jsx";
 
+
 const PricingPlans = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [showForm, setShowForm] = useState(false); 
@@ -34,6 +35,8 @@ const PricingPlans = () => {
   const handleCloseForm = () => setShowForm(false);
 
   return (
+    <>
+    
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         <h3 className="text-2xl sm:text-3xl font-medium leading-snug text-center text-white mb-2">
@@ -130,6 +133,7 @@ const PricingPlans = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
