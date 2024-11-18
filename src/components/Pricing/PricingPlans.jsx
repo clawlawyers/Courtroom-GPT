@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Pricing.css';
 import UserForm from './UserForm.jsx';
+import Header from '../Header/Header.jsx';
 
 
 const PricingPlans = () => {
@@ -38,6 +39,7 @@ const PricingPlans = () => {
     <>
       
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 sm:p-8">
+        <Header/>  {/* header component*/}
         <div className="max-w-6xl mx-auto">
           <h3 className="text-2xl sm:text-3xl font-medium leading-snug text-center text-white mb-2">
             Get Started With

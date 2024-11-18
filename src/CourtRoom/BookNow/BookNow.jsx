@@ -18,6 +18,8 @@ import {
   signInWithCredential,
   signInWithPhoneNumber,
 } from "../../utils/firebase";
+import Header from "../../components/Header/Header";
+
 
 const BookNow = () => {
   const dispatch = useDispatch();
@@ -230,6 +232,7 @@ const BookNow = () => {
 
   return (
     <div className={styles.topContainer}>
+      <Header/>
       <div className="p-5">
         <h1
           style={{

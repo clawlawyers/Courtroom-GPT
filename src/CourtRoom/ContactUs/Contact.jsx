@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import toast, { LoaderIcon } from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import successIcon from "../../assets/images/Successfully Done.gif";
+import Header from "../../components/Header/Header";
 
 const Contact = () => {
   const [firstName, setFirstName] = useState("");
@@ -81,6 +82,7 @@ const Contact = () => {
     radial-gradient(circle at 0% 100%, #018585, transparent 50%)`,
       }}
     >
+       <Header/>  {/* header component*/}
       <div className="flex flex-col justify-center items-center text-center">
         <h1 className="text-white text-6xl font-bold">Get In Touch</h1>
         <p className="m-0  mt-5 text-white text-lg font-bold">

@@ -38,6 +38,7 @@ import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx
 import PricingPlans from "./components/Pricing/PricingPlans.jsx";
 import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
 
+
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
   const currentUser = useSelector((state) => state.auth.user);
@@ -92,7 +93,8 @@ function App() {
   const CourtRoomLayout = () => {
     return (
       <div className="">
-        <div className="h-full ">
+        <div className="h-full">
+        
           <Outlet />
         </div>
         <FooterBanner />

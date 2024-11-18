@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TableImage from "../../assets/images/table.png";
 import LoginImage from "../../assets/images/loginImage.png";
 import UserForm from '../../components/Pricing/UserForm';
+import Header from '../../components/Header/Header';
 
 const LoginPageNew = () => {
   const [showUserForm, setShowUserForm] = useState(false);
@@ -9,6 +10,7 @@ const LoginPageNew = () => {
   return (
     <>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-teal-900 to-gray-900 text-white p-4">
+        <Header/>  {/* header component*/}
         <div className="text-center space-y-2 mb-8">
           <div 
             className="text-7xl font-bold mt-6"

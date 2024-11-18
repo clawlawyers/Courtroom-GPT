@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { setClearBooking } from "../../features/bookCourtRoom/bookingSlice";
+import Header from "../../components/Header/Header";
 
 const couponArr = [{ name: "exam50", discount: 50 }];
 
@@ -351,6 +352,7 @@ const ConfirmBooking = () => {
 
   return (
     <div className="flex flex-col w-[80%] p-5 m-auto gap-2">
+    
       <>
         {couponApplied ? (
           <form
