@@ -7,10 +7,10 @@ const UserForm = ({handleCloseForm}) => {
   const [showPassword, setShowPassword] = useState(false);
   
   return (
-    <div className="min-h-screen bg-slate-800 flex items-center justify-center p-4">
+   
       <div className="w-full max-w-5xl bg-transparent flex rounded-lg overflow-hidden border-2 border-blue-400">
        
-        <div className="w-2/5 relative bg-amber-900">
+        <div className="hidden sm:block w-2/5 relative bg-amber-900">
           <img
             src={clawCourtRoomImage}
             alt="Courtroom"
@@ -20,7 +20,7 @@ const UserForm = ({handleCloseForm}) => {
         </div>
 
       
-        <div className="w-3/5 bg-slate-600/90 p-8 relative">
+        <div className=" w-full sm:w-3/5 bg-slate-600/90 p-8 relative">
          
           <button className="absolute top-6 right-6 text-white hover:text-gray-300"
           onClick={handleCloseForm}
@@ -85,7 +85,7 @@ const UserForm = ({handleCloseForm}) => {
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 
