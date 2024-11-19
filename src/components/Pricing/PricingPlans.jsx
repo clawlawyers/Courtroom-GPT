@@ -3,7 +3,6 @@ import './Pricing.css';
 import UserForm from './UserForm.jsx';
 import Header from '../Header/Header.jsx';
 
-
 const PricingPlans = () => {
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [showForm, setShowForm] = useState(false);
@@ -23,7 +22,7 @@ const PricingPlans = () => {
       title: 'JUNIOR ADVOCATE',
       price: { daily: '₹499/-', monthly: '₹4,499/-' },
       features: ['All Features of INTERN', 'Testimony + Evidence', 'LegalGPT', 'First Draft of Arguments'],
-      popular: true, // Marking this as the "Most Opted Subscription"
+      popular: true,
     },
     {
       title: 'LAW FIRM',
@@ -37,10 +36,13 @@ const PricingPlans = () => {
 
   return (
     <>
-      
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4 sm:p-8">
-        <Header/>  {/* header component*/}
-        <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 relative">
+        <Header /> {/* header component */}
+        <div
+          className={`p-4 sm:p-8 max-w-6xl mx-auto transition-all duration-300 ${
+            showForm ? 'blur-sm' : ''
+          }`}
+        >
           <h3 className="text-2xl sm:text-3xl font-medium leading-snug text-center text-white mb-2">
             Get Started With
           </h3>
@@ -128,7 +130,7 @@ const PricingPlans = () => {
                 )}
                 {plan.popular && (
                   <div className="popular-badge">
-                    Most Opted Subscription
+                    MOST OPTED SUBSCRIPTION
                   </div>
                 )}
               </div>

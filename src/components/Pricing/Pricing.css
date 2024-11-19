@@ -7,12 +7,12 @@ body {
   }
   
   .popular-badge {
-    background-color: #9AFFDB; /* Light green background */
-    color: #006E6E; /* Matching green text */
+    background-color: #8DFFBE; /* Light green background */
+    color: #021313; /* Matching green text */
     text-align: center;
     font-weight: bold;
-    font-size: 14px;
-    padding: 10px 0;
+    font-size: 20px;
+  
     position: absolute;
     bottom: 0;
     left: 0;
