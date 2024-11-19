@@ -32,10 +32,6 @@ const Header = () => {
     <div className="bg-[#0E1118] bg-opacity-50 flex items-center justify-between p-4 rounded-lg shadow-lg w-11/12 mx-auto my-5 h-[90px] relative">
       <div className="flex flex-col items-center justify-center h-full"> 
         <img src={clawlogo} alt="CLAW Logo" className="w-[140px] h-auto" />
-        <span className="courtroom-text text-white text-lg mb-2" style={{
-            position:'absolute',
-            top:'49px'
-        }}>COURTROOM</span> 
       </div>
 
       {/* Hamburger Icon */}
@@ -56,7 +52,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div ref={menuRef} className="absolute top-[90px] left-0 right-0 bg-[#0E1118] bg-opacity-50 rounded-lg p-4 md:hidden">
+        <div ref={menuRef} className="absolute top-[90px] left-0 right-0 bg-[#0E1118] bg-opacity-100 rounded-lg p-4 md:hidden">
           {/* Close Icon */}
           <button onClick={() => setIsOpen(false)} className="text-white mb-2 flex justify-end w-full">
             {/* SVG for close icon */}
