@@ -37,6 +37,7 @@ import AiDrafterPro from "./CourtRoom/CourtroomAi/AiDrafterPro.jsx";
 import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx";
 import PricingPlans from "./components/Pricing/PricingPlans.jsx";
 import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
+import TimeUp from "./components/TimeUpComponent/TimeUp.jsx";
 
 
 function App() {
@@ -160,6 +161,10 @@ function App() {
         {
           path:"/login-new",
           element:<LoginPageNew/>
+        },
+        {
+          path:'/test', /* this route is only for testing not a real route */
+          element:<TimeUp/>  
         }
        
       ],
