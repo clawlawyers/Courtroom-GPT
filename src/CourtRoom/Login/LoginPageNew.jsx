@@ -22,17 +22,20 @@ const LoginPageNew = () => {
       {/* Header Section */}
       <div className="text-center space-y-2 mb-8">
         <div
-          className="text-7xl font-bold mt-6"
+          className="text-8xl font-bold mt-6"
           style={{
             background: "linear-gradient(to bottom, #003131 0%, #00FFA3 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            
             color: "transparent",
           }}
         >
           War Room
         </div>
+        
+
+        
         <h2 className="text-lg font-semibold">
           By <span className="text-white py-8">AI Courtroom</span>
         </h2>
