@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TableImage from "../../assets/images/table.png";
 import LoginImage from "../../assets/images/loginImage.png";
+import loginnewImage from "../../assets/images/loginnewImage.jpeg"
 
 const LoginPageNew = () => {
   const [isOTPMode, setIsOTPMode] = useState(false);
@@ -10,10 +11,8 @@ const LoginPageNew = () => {
 
   const handleVerify = () => {
     if (isOTPMode) {
-      // Verify OTP action
       setIsVerified(true);
     } else {
-      // Switch to OTP mode
       setIsOTPMode(true);
     }
   };
@@ -37,18 +36,22 @@ const LoginPageNew = () => {
         <h2 className="text-lg font-semibold">
           By <span className="text-white py-8">AI Courtroom</span>
         </h2>
-        <div className="border-t border-white w-2/3 mx-auto my-2"></div>
-        <p className="text-white-400 max-w-xl mx-auto mt-2">
-          Experience fighting your case in front of a senior advocate of the
-          Supreme Court. Try to defeat the factually heaviest lawyer,{" "}
-          <span className="font-semibold">the Claw AI</span>, if you ever want
-          the chance to defeat an actual lawyer in that case.
-        </p>
+        <div className="border-t border-white w-full mx-auto my-3">
+          <p className="text-white-400 mt-4">
+            Experience fighting your case in front of a senior advocate of supreme court
+          </p>
+          <p>
+            Try to defeat the factually heaviest lawyer, <span className="font-semibold">the Claw AI,</span>{" "}
+            
+          </p>
+          <p>if you ever want the chance to defeat an actual lawyer in that case</p>
+        </div>
       </div>
 
+     
       {/* Form Section */}
       <div
-        className="w-full max-w-4xl rounded-lg shadow-lg p-8 flex flex-col md:flex-row items-center"
+        className="w-full max-w-4xl rounded-lg shadow-lg p-8 flex flex-col md:flex-row items-center border-2 border-white sm:h-[447px]"
         style={{
           background:
             "linear-gradient(to right,#018585 0%,#016666 37%,#004040 82%,#003737 93%,#003131 100%)",
@@ -59,21 +62,24 @@ const LoginPageNew = () => {
           <img
             src={TableImage}
             alt="Table"
-            className="w-1/2 h-auto absolute bottom-0"
+            className="w-1/2 h-auto absolute bottom-0 z-20"
           />
           <img
             src={LoginImage}
             alt="Girl with Laptop"
-            className="w-1/3 h-auto relative"
-            style={{ bottom: "0.5rem" }}
+            className="w-1/3 h-auto relative z-10"
+            style={{ bottom: "0.5rem",zIndex:"2"}}
           />
+          {/* <img 
+            src={loginnewImage}
+            alt='loginimage'
+            className='w-1/2 h-auto relative'
+            /> */}
         </div>
 
-        {/* Right Content Section */}
         <div className="w-full md:w-1/2 mt-4 md:mt-0">
           {!isVerified ? (
             <>
-              {/* Before Verification */}
               <h3 className="text-left mb-6 text-white">
                 <span className="block text-3xl font-bold">
                   {isOTPMode ? "Welcome" : "Enter"}
@@ -85,7 +91,6 @@ const LoginPageNew = () => {
               <form className="space-y-4">
                 {!isOTPMode && (
                   <>
-                    {/* Full Name Input */}
                     <div>
                       <label
                         className="block text-gray-300 text-sm font-semibold mb-1"
@@ -99,10 +104,10 @@ const LoginPageNew = () => {
                         placeholder="Enter Your Full Name"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        className="w-full p-3 bg-gray-700 text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-teal-400"
+                        className="w-full p-3  rounded-lg outline-none focus:ring-2 focus:ring-teal-400 border border-white"
+                        style={{backgroundColor:'#FFFFFF35'}}
                       />
                     </div>
-                    {/* Mobile Number Input */}
                     <div>
                       <label
                         className="block text-gray-300 text-sm font-semibold mb-1"
@@ -116,37 +121,34 @@ const LoginPageNew = () => {
                         placeholder="Enter Your Mobile Number"
                         value={mobileNumber}
                         onChange={(e) => setMobileNumber(e.target.value)}
-                        className="w-full p-3 bg-gray-700 text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-teal-400"
+                        className="w-full p-3  rounded-lg outline-none focus:ring-2 focus:ring-teal-400 border border-white"
+                        style={{backgroundColor:'#FFFFFF35'}}
                       />
                     </div>
                   </>
                 )}
                 {isOTPMode && (
-                  <>
-                    {/* OTP Input */}
-                    <div>
-                      <label
-                        className="block text-gray-300 text-sm font-semibold mb-1"
-                        htmlFor="otp"
-                      >
-                        Enter OTP
-                      </label>
-                      <input
-                        type="text"
-                        id="otp"
-                        placeholder="Enter OTP"
-                        className="w-full p-3 bg-gray-700 text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-teal-400"
-                      />
-                    </div>
-                  </>
+                  <div>
+                    <label
+                      className="block text-gray-300 text-sm font-semibold mb-1"
+                      htmlFor="otp"
+                    >
+                      Enter OTP
+                    </label>
+                    <input
+                      type="text"
+                      id="otp"
+                      placeholder="Enter OTP"
+                      className="w-full p-3 bg-gray-700 text-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-teal-400"
+                    />
+                  </div>
                 )}
               </form>
-              {/* Button */}
               <div className="flex justify-end mt-4">
                 <button
                   type="button"
                   onClick={handleVerify}
-                  className="w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
+                  className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
                 >
                   {isOTPMode ? "Verify OTP" : "Verify Number"}
                 </button>
@@ -154,7 +156,6 @@ const LoginPageNew = () => {
             </>
           ) : (
             <>
-              {/* After Verification */}
               <h3 className="text-center mb-6 text-white">
                 <span className="block text-3xl font-bold">Welcome</span>
                 <span className="block text-4xl font-bold text-teal-300">
@@ -167,7 +168,7 @@ const LoginPageNew = () => {
               <div className="flex justify-center">
                 <button
                   type="button"
-                  className="w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
+                  className="w-full sm:w-2/5 sm:h-12 w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
                 >
                   Enter War Room
                 </button>
