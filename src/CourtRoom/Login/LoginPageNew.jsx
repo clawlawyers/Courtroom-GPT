@@ -41,10 +41,10 @@ const LoginPageNew = () => {
             Experience fighting your case in front of a senior advocate of supreme court
           </p>
           <p>
-            Try to defeat the factually heaviest lawyer, <span className="font-semibold">the Claw AI,</span>{" "}
+            Try to defeat the factually heaviest lawyer, <span className="font-semibold">the Claw AI,</span>
             
           </p>
-          <p>if you ever want the chance to defeat an actual lawyer in that case</p>
+          <p className="relative top-[-1rem]">if you ever want the chance to defeat an actual lawyer in that case</p>
         </div>
       </div>
 
