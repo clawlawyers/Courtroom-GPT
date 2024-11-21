@@ -39,7 +39,6 @@ import PricingPlans from "./components/Pricing/PricingPlans.jsx";
 import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
 import TimeUp from "./components/TimeUpComponent/TimeUp.jsx";
 
-
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
   const currentUser = useSelector((state) => state.auth.user);
@@ -95,7 +94,6 @@ function App() {
     return (
       <div className="">
         <div className="h-full">
-        
           <Outlet />
         </div>
         <FooterBanner />
@@ -108,65 +106,18 @@ function App() {
       path: "/",
       element: <CourtRoomLayout />,
       children: [
-        {
-          path: "",
-          element: <CourtRoom />,
-        },
-        {
-          path: "/admin",
-          element: <AdminLayout />,
-          children: [
-            {
-              path: "/admin/court-room",
-              element: <CourtRoomUsers />,
-            },
-            {
-              path: "/admin/allowed-booking",
-              element: <AllowedBooking />,
-            },
-            {
-              path: "/admin/allowed-login",
-              element: <AllowedLogin />,
-            },
-          ],
-        },
         // {
-        //   path: "/login",
-        //   element: <LoginToCourtRoom />,
+        //   path: "",
+        //   element: <CourtRoom />,
         // },
         {
-          path: "/login",
-          element: <Login />,
+          path: "/",
+          element: <LoginPageNew />,
         },
         {
-          path: "/admin-login",
-          element: <AdminLogin />,
+          path: "/test" /* this route is only for testing not a real route */,
+          element: <TimeUp />,
         },
-        {
-          path: "/book-now",
-          element: <BookNow />,
-        },
-        {
-          path: "/confirm-booking",
-          element: <ConfirmBooking />,
-        },
-        {
-          path: "/contact",
-          element: <Contact />,
-        },
-        {
-          path:"/pricing-plans",
-          element:<PricingPlans/>
-        },
-        {
-          path:"/login-new",
-          element:<LoginPageNew/>
-        },
-        {
-          path:'/test', /* this route is only for testing not a real route */
-          element:<TimeUp/>  
-        }
-       
       ],
     },
     {
