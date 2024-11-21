@@ -40,10 +40,11 @@ const Devices = ({
   languageArr,
   appendFile,
 }) => {
-
-  const inputCaseTutorial = useSelector((state) => state.sidebar.inputCaseTutorial);
+  const inputCaseTutorial = useSelector(
+    (state) => state.sidebar.inputCaseTutorial
+  );
   const caseOverView = useSelector((state) => state.user.caseOverview);
-  const driveUpload = useSelector((state)=> state.sidebar.driveUpload)
+  const driveUpload = useSelector((state) => state.sidebar.driveUpload);
 
   const driverObj = driver({
     showProgress: true,
@@ -81,7 +82,11 @@ const Devices = ({
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user.user);
+  // const currentUser = useSelector((state) => state.user.user);
+  const currentUser = {
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhODEyODk0Zi0xYTUxLTQwOGUtODhjZi0yNTViMWU3OWM5NTkiLCJpZCI6IjY3M2VkOTk1OWE1OWI4ODE4NzdiNWRkMyIsImlhdCI6MTczMjE3Mjg0OH0.DfGw9_UQq_rlAUK3CpArVGN4162f8ab6Mc8G6PC3L74",
+  };
   // console.log(currentUser);
   const [openPicker, data, authResponse] = useDrivePicker();
 
@@ -125,11 +130,12 @@ const Devices = ({
     setCaseOverview(e.target.value);
   };
   useEffect(() => {
-    if(!inputCaseTutorial){
+    if (!inputCaseTutorial) {
       if (caseOverView == "NA" || caseOverView == "") {
-      driverObj.drive();
-      dispatch(setinputCaseTutorial())
-    }}
+        driverObj.drive();
+        dispatch(setinputCaseTutorial());
+      }
+    }
   }, []);
 
   const handleSave = async () => {
@@ -268,7 +274,7 @@ const Devices = ({
           formData.append("isMultilang", true);
 
           const response = await axios.post(
-            `${NODE_API_ENDPOINT}/courtroom/fileUpload`,
+            `${NODE_API_ENDPOINT}/courtroomFree/fileUpload`,
             formData,
             {
               headers: {
@@ -377,7 +383,7 @@ const Devices = ({
         {
           // user_id: currentUser.userId,
           action: appendFile ? "append" : "add",
-          language: languageArr.map(a => a.toLowerCase()).join(","),
+          language: languageArr.map((a) => a.toLowerCase()).join(","),
           fileNameArray: uploadedSuccessFully,
           isMultilang: true,
         },
