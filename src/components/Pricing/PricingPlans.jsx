@@ -36,7 +36,7 @@ const PricingPlans = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 relative">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 relative pt-0">
         <Header /> {/* header component */}
         <div
           className={`p-4 sm:p-8 max-w-6xl mx-auto transition-all duration-300 ${
