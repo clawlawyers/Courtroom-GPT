@@ -82,11 +82,11 @@ const Devices = ({
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const currentUser = useSelector((state) => state.user.user);
-  const currentUser = {
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhODEyODk0Zi0xYTUxLTQwOGUtODhjZi0yNTViMWU3OWM5NTkiLCJpZCI6IjY3M2VkOTk1OWE1OWI4ODE4NzdiNWRkMyIsImlhdCI6MTczMjE3Mjg0OH0.DfGw9_UQq_rlAUK3CpArVGN4162f8ab6Mc8G6PC3L74",
-  };
+  const currentUser = useSelector((state) => state.user.user);
+  // const currentUser = {
+  //   token:
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhODEyODk0Zi0xYTUxLTQwOGUtODhjZi0yNTViMWU3OWM5NTkiLCJpZCI6IjY3M2VkOTk1OWE1OWI4ODE4NzdiNWRkMyIsImlhdCI6MTczMjE3Mjg0OH0.DfGw9_UQq_rlAUK3CpArVGN4162f8ab6Mc8G6PC3L74",
+  // };
   // console.log(currentUser);
   const [openPicker, data, authResponse] = useDrivePicker();
 
@@ -143,7 +143,7 @@ const Devices = ({
 
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        `${NODE_API_ENDPOINT}/courtroomFree/edit_case`,
         {
           // user_id: currentUser.userId,
           case_overview: inputText,
@@ -161,7 +161,7 @@ const Devices = ({
       setUploadComplete(false);
       setPreviewContent("");
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/case_summary`,
         {
           // user_id: currentUser.userId,
         },
@@ -271,7 +271,7 @@ const Devices = ({
         try {
           const formData = new FormData();
           formData.append("file", file);
-          formData.append("isMultilang", true);
+          // formData.append("isMultilang", true);
 
           const response = await axios.post(
             `${NODE_API_ENDPOINT}/courtroomFree/fileUpload`,
@@ -379,7 +379,7 @@ const Devices = ({
     setAnalyzing(true);
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/getoverview-formfilename`,
+        `${NODE_API_ENDPOINT}/courtroomFree/getoverview-formfilename`,
         {
           // user_id: currentUser.userId,
           action: appendFile ? "append" : "add",
@@ -495,7 +495,7 @@ const Devices = ({
 
     formData.append("isMultilang", true); // this is for multilang
 
-    const response = await fetch(`${NODE_API_ENDPOINT}/courtroom/newcase`, {
+    const response = await fetch(`${NODE_API_ENDPOINT}/courtroomFree/newcase`, {
       method: "POST",
       body: formData,
       headers: {
@@ -557,7 +557,7 @@ const Devices = ({
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${NODE_API_ENDPOINT}/courtroom/api/new_case/text`,
+        url: `${NODE_API_ENDPOINT}/courtroomFree/api/new_case/text`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${currentUser.token}`,

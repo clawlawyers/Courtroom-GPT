@@ -396,7 +396,7 @@ const CourtroomArgument = () => {
     setEditIndex(null);
 
     const inserUserArgument = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
+      `${NODE_API_ENDPOINT}/courtroomFree/user_arguemnt`,
       {
         // user_id: currentUser.userId,
         argument: editValue,
@@ -417,7 +417,7 @@ const CourtroomArgument = () => {
   const handleSwap = async () => {
     try {
       const swapedData = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/change_states`,
         {
           // user_id: currentUser.userId,
         },
@@ -467,7 +467,7 @@ const CourtroomArgument = () => {
     try {
       setAiLawyerLoading(true);
       const laywerArgument1 = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/lawyer`,
         {
           // user_id: currentUser.userId,
           action: "Retrieve",
@@ -491,7 +491,7 @@ const CourtroomArgument = () => {
       setAiJudgeLoading(true);
 
       let judgeArgument = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/judge`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/judge`,
         {
           // user_id: currentUser.userId,
           action: "Retrieve",
@@ -540,7 +540,7 @@ const CourtroomArgument = () => {
       setAiLawyerLoading(true);
 
       const laywerArgument1 = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/lawyer`,
         {
           // user_id: currentUser.userId,
           action: "Generate",
@@ -564,7 +564,7 @@ const CourtroomArgument = () => {
       setAiJudgeLoading(true);
 
       let judgeArgument = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/judge`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/judge`,
         {
           // user_id: currentUser.userId,
           action: "Generate",
@@ -577,7 +577,7 @@ const CourtroomArgument = () => {
         }
       );
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/summary`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/summary`,
         {},
         {
           headers: {
@@ -660,7 +660,7 @@ const CourtroomArgument = () => {
       }
 
       const inserUserArgument = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
+        `${NODE_API_ENDPOINT}/courtroomFree/user_arguemnt`,
         {
           // user_id: currentUser.userId,
           argument: addArgumentInputText,
@@ -699,7 +699,7 @@ const CourtroomArgument = () => {
     const getHistory = async () => {
       try {
         const history = await axios.get(
-          `${NODE_API_ENDPOINT}/courtroom/getHistory`,
+          `${NODE_API_ENDPOINT}/courtroomFree/getHistory`,
           {
             headers: {
               Authorization: `Bearer ${currentUser.token}`,
@@ -792,7 +792,7 @@ const CourtroomArgument = () => {
 
     try {
       const res = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_cases_judge_lawyer_updated`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/relevant_cases_judge_lawyer_updated`,
         {
           text_input: data,
         },
@@ -1110,7 +1110,7 @@ const CourtroomArgument = () => {
     // dispatch(setFirstDraftLoading());
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/draft`,
         {
           // user_id: currentUser.userId,
         },
@@ -1178,7 +1178,7 @@ const CourtroomArgument = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   id="judge"
-                  onClick={handleMenuOpen}
+                  // onClick={handleMenuOpen}
                   ref={myDivRef}
                 >
                   <MoreVert />
@@ -1283,7 +1283,7 @@ const CourtroomArgument = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   id="lawyer"
-                  onClick={handleMenuOpen}
+                  // onClick={handleMenuOpen}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1591,6 +1591,7 @@ const CourtroomArgument = () => {
           </motion.button>
           <motion.button
             id="rest-your-case"
+            disabled={true}
             whileTap={{ scale: "0.95" }}
             onClick={handleVerdict}
             className="flex-1 my-2"
@@ -1744,7 +1745,7 @@ const CourtroomArgument = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   id="judge"
-                  onClick={handleMenuOpen}
+                  // onClick={handleMenuOpen}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1847,7 +1848,7 @@ const CourtroomArgument = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   id="lawyer"
-                  onClick={handleMenuOpen}
+                  // onClick={handleMenuOpen}
                 >
                   <MoreVert />
                 </IconButton>

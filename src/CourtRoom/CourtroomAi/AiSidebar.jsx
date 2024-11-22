@@ -109,7 +109,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/feedback`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/feedback`,
         {
           method: "POST",
           headers: {
@@ -369,7 +369,7 @@ const AiSidebar = () => {
     // await saveHistory();
     if (overViewDetails !== "") {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/end`,
         {
           userId: currentUser.userId,
         },
@@ -392,7 +392,7 @@ const AiSidebar = () => {
     try {
       if (overViewDetails !== "NA") {
         await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/api/history`,
+          `${NODE_API_ENDPOINT}/courtroomFree/api/history`,
           {
             // user_id: currentUser.userId,
           },
@@ -412,7 +412,7 @@ const AiSidebar = () => {
   const handleSave = async () => {
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        `${NODE_API_ENDPOINT}/courtroomFree/edit_case`,
         {
           // user_id: currentUser.userId,
           case_overview: text,
@@ -474,7 +474,7 @@ const AiSidebar = () => {
   const firstDraftApi = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        `${NODE_API_ENDPOINT}/courtcourtroomFreeroom/api/draft`,
         {
           // user_id: currentUser.userId,
         },
@@ -664,7 +664,7 @@ const AiSidebar = () => {
       await saveHistory();
 
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/downloadSessionCaseHistory`,
         {
           // user_id: currentUser.userId,
         },
@@ -915,7 +915,7 @@ const AiSidebar = () => {
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
-                  onClick={handleMenuOpen}
+                  // onClick={handleMenuOpen}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1022,7 +1022,8 @@ const AiSidebar = () => {
         >
           <div className="flex flex-col gap-1">
             <motion.div
-              onClick={handleFirstDraft}
+             disabled={true}
+              // onClick={handleFirstDraft}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               className={`${
@@ -1060,7 +1061,8 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-              onClick={() => setShowDrafterQuestions(true)}
+              // onClick={() => setShowDrafterQuestions(true)}
+              disabled={true}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -1094,7 +1096,8 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-              onClick={() => setShowAskLegalGPT(true)}
+             disabled={true}
+              // onClick={() => setShowAskLegalGPT(true)}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -1179,10 +1182,10 @@ const AiSidebar = () => {
               src={showAssistant ? assistantIcon2 : aiAssistant}
               onHoverStart={() => setAiIconHover(true)}
               onHoverEnd={() => setAiIconHover(false)}
-              onClick={() => {
-                setShowAssistant(true);
-                getAiQuestions();
-              }}
+              // onClick={() => {
+              //   setShowAssistant(true);
+              //   getAiQuestions();
+              // }}
             />
             {aiIconHover ? (
               <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
@@ -1211,7 +1214,8 @@ const AiSidebar = () => {
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
                     : "cursor-pointer"
                 }`}
-                onClick={() => downloadSessionCaseHistory()}
+                // onClick={() => downloadSessionCaseHistory()}
+                disabled={true}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1232,13 +1236,14 @@ const AiSidebar = () => {
                 </p>
               </motion.div>
               <motion.div
+               disabled={true}
                 id="download-case"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
                     ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
                     : " flex items-center gap-[12px] cursor-pointer relative"
                 }`}
-                onClick={() => downloadCaseHistory()}
+                // onClick={() => downloadCaseHistory()}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
               >
@@ -1332,6 +1337,7 @@ const AiSidebar = () => {
                 <p
                   className="m-0 text-xs"
                   onClick={() => dispatch(setTutorial())}
+
                 >
                   Restart Tutorial
                 </p>
@@ -1407,7 +1413,7 @@ const AiSidebar = () => {
                   )}
                   <div className="w-full gap-2 text-sm flex justify-end">
                     <button
-                      onClick={handleResearchArguments}
+                      // onClick={handleResearchArguments}
                       className="px-4 py-1 rounded border"
                     >
                       {reserachArgumentsLoading ? (

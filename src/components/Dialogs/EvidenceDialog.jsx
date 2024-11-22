@@ -40,7 +40,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
     });
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/document_evidence`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/document_evidence`,
         formData,
         {
           headers: {

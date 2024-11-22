@@ -12,9 +12,12 @@ import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const LoginPageNew = () => {
   const navigate = useNavigate();
+  const dispatch =useDispatch()
 
   const [isOTPMode, setIsOTPMode] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -37,42 +40,43 @@ const LoginPageNew = () => {
 
   const handleVerifyNumber = async (e) => {
     e.preventDefault();
-    setOtpLoading(true);
-    // console.log(window.recaptchaVerifier);
-    if (isFirst) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          console.log(response);
-        },
-        auth,
-      });
-      setIsfirst(false);
-    } else if (!window.recaptchaVerifier) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-        size: "invisible",
-        callback: (response) => {
-          console.log(response);
-        },
-        auth,
-      });
-    }
-    signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
-      .then((confirmationResult) => {
-        setVerificationId(confirmationResult?.verificationId);
-        toast.success("OTP sent successfully !");
-        setIsOTPMode(true);
-        setOtpLoading(false);
-        // setIsDisabled(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Error during OTP request");
-        setOtpLoading(false);
-      });
+    setIsOTPMode(true);
+    // setOtpLoading(true);
+    // // console.log(window.recaptchaVerifier);
+    // if (isFirst) {
+    //   console.log("recaptchaVerifier");
+    //   window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+    //     size: "invisible",
+    //     callback: (response) => {
+    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+    //       console.log(response);
+    //     },
+    //     auth,
+    //   });
+    //   setIsfirst(false);
+    // } else if (!window.recaptchaVerifier) {
+    //   console.log("recaptchaVerifier");
+    //   window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+    //     size: "invisible",
+    //     callback: (response) => {
+    //       console.log(response);
+    //     },
+    //     auth,
+    //   });
+    // }
+    // signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
+    //   .then((confirmationResult) => {
+    //     setVerificationId(confirmationResult?.verificationId);
+    //     toast.success("OTP sent successfully !");
+    //     setIsOTPMode(true);
+    //     setOtpLoading(false);
+    //     // setIsDisabled(true);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     toast.error("Error during OTP request");
+    //     setOtpLoading(false);
+    //   });
   };
 
   const handleVerifyOtp = async (e) => {
@@ -81,8 +85,8 @@ const LoginPageNew = () => {
 
     try {
       if (otp.length === 6) {
-        const credential = PhoneAuthProvider.credential(verificationId, otp);
-        await signInWithCredential(auth, credential);
+        // const credential = PhoneAuthProvider.credential(verificationId, otp);
+        // await signInWithCredential(auth, credential);
 
         const response = await fetch(
           `${NODE_API_ENDPOINT}/courtroomFree/login`,
@@ -98,8 +102,10 @@ const LoginPageNew = () => {
           }
         );
         var data = await response.json();
+        console.log(data)
         if (data.token) {
           localStorage.setItem("userToken", data.token);
+          dispatch(login({ user: data }));
           setIsVerified(true);
         } else {
           toast.error("Something went wrong.Please try again!");
