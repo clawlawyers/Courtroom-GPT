@@ -1131,7 +1131,7 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-              onClick={() => setCaseSearchDialog(true)}
+              // onClick={() => setCaseSearchDialog(true)}y
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
