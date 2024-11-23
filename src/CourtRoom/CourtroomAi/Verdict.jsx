@@ -15,7 +15,7 @@ const Verdict = () => {
       setLoading(true);
       try {
         const response = await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/api/rest`,
+          `${NODE_API_ENDPOINT}/courtroomFree/api/rest`,
           {
             // user_id: currentUser.userId,
           },
@@ -35,10 +35,10 @@ const Verdict = () => {
       }
     };
 
-    if (currentUser.userId) {
+    if (currentUser.token) {
       getVerdict();
     }
-  }, [currentUser.userId]);
+  }, [currentUser.token]);
 
   return (
     <main className="flex flex-row justify-center items-center h-full w-full space-x-4">

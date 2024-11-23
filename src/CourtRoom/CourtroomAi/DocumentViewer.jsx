@@ -26,7 +26,7 @@ const DocumentViewer = ({ text }) => {
   const downloadVerdict = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/download`,
         {
           // user_id: currentUser.userId,
           data: text,

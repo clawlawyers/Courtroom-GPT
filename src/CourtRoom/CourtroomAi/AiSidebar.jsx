@@ -97,15 +97,15 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
       const realcurrentItcTime = new Date(currentItcTime.getFullYear(), currentItcTime.getMonth(), currentItcTime.getDate(), currentItcTime.getHours(), currentItcTime.getMinutes(), currentItcTime.getSeconds())
       const slotrealcurrentItcTime = new Date(slotcurrentItcTime.getFullYear(), slotcurrentItcTime.getMonth(), slotcurrentItcTime.getDate(), slotcurrentItcTime.getHours(), slotcurrentItcTime.getMinutes(), slotcurrentItcTime.getSeconds())
 
-console.log(slotrealcurrentItcTime)
-console.log(realcurrentItcTime)
+// console.log(slotrealcurrentItcTime)
+// console.log(realcurrentItcTime)
       
       const main = realcurrentItcTime.getTime()-slotrealcurrentItcTime.getTime()
 
 const totalSeconds = Math.floor(main / 1000)
       const minutes = Math.floor(totalSeconds / 60);
 const seconds = totalSeconds  % 60;
-      console.log(main)
+      // console.log(main)
       let minutesLeft
       // if(now.getMinutes()>30){
 
@@ -679,7 +679,7 @@ const AiSidebar = () => {
     try {
       await saveHistory();
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
+        `${NODE_API_ENDPOINT}/courtroomFree/api/downloadCaseHistory`,
         {
           // user_id: currentUser.userId,
         },
@@ -1262,8 +1262,8 @@ const AiSidebar = () => {
                     ? "opacity-75 pointer-events-none cursor-not-allowed"
                     : "cursor-pointer"
                 }`}
-                // onClick={() => downloadSessionCaseHistory()}
-                disabled={true}
+                onClick={() => downloadSessionCaseHistory()}
+     
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1291,7 +1291,7 @@ const AiSidebar = () => {
                     ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
                     : " flex items-center gap-[12px] cursor-pointer relative"
                 }`}
-                // onClick={() => downloadCaseHistory()}
+                onClick={() => downloadCaseHistory()}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
               >

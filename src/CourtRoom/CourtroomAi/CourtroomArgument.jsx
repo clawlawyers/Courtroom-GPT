@@ -1591,7 +1591,7 @@ const CourtroomArgument = () => {
           </motion.button>
           <motion.button
             id="rest-your-case"
-            disabled={true}
+        
             whileTap={{ scale: "0.95" }}
             onClick={handleVerdict}
             className="flex-1 my-2"
