@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, CircularProgress, Menu } from "@mui/material";
-import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
+import { ArrowRight, Close, Download, Send, ShareLocationOutlined } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
 import { IoReload } from "react-icons/io5";
@@ -67,7 +67,8 @@ const drafterQuestions = [
 ];
 
 const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
-  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
+  var slotTimeInterval = useSelector((state) => state.user.user.slot);
+
   const currentUser = useSelector((state) => state.user.user);
 
   const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
@@ -85,9 +86,48 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const now = new Date();
-      const minutesLeft = 60 - now.getMinutes() - 1;
-      const secondsLeft = 60 - now.getSeconds();
+      const slot = new Date(slotTimeInterval);
+     
+      const currenttime = new Date()
+      const utcTime = currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
+      const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
+      const istOffset = 5.5 * 60 * 60000;
+      const currentItcTime = new Date(utcTime+istOffset)
+      const slotcurrentItcTime = new Date(slotutcTime)
+      const realcurrentItcTime = new Date(currentItcTime.getFullYear(), currentItcTime.getMonth(), currentItcTime.getDate(), currentItcTime.getHours(), currentItcTime.getMinutes(), currentItcTime.getSeconds())
+      const slotrealcurrentItcTime = new Date(slotcurrentItcTime.getFullYear(), slotcurrentItcTime.getMonth(), slotcurrentItcTime.getDate(), slotcurrentItcTime.getHours(), slotcurrentItcTime.getMinutes(), slotcurrentItcTime.getSeconds())
+
+console.log(slotrealcurrentItcTime)
+console.log(realcurrentItcTime)
+      
+      const main = realcurrentItcTime.getTime()-slotrealcurrentItcTime.getTime()
+
+const totalSeconds = Math.floor(main / 1000)
+      const minutes = Math.floor(totalSeconds / 60);
+const seconds = totalSeconds  % 60;
+      console.log(main)
+      let minutesLeft
+      // if(now.getMinutes()>30){
+
+      //    minutesLeft = now.getMinutes()  - slot.getMinutes() - 1;
+      // }
+      // else{
+
+         minutesLeft =30- minutes-1;
+
+      // }
+      // console.log(now.getMinutes())
+      // console.log(slot.getMinutes())
+      const secondsLeft =60- seconds
+
+      // console.log("minutesLeft")
+      // console.log(minutesLeft)
+      // console.log("seconds")
+      // console.log(secondsLeft)
+      if(minutesLeft ==-1 && secondsLeft==60 ){
+        setCountDownOver(true)
+        
+      }
       setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
     };
 
@@ -96,10 +136,18 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     const timer = setInterval(calculateTimeLeft, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slotTimeInterval]);
 
   useEffect(() => {
-    if (slotTimeInterval < new Date().getHours()) {
+    let todaysSlot =new Date(slotTimeInterval)
+    const todaysSlotTime = todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
+    const Offset = 0.5 * 60 * 60000;
+    const slot = new Date(todaysSlotTime+Offset)
+    let date = new Date()
+    // console.log(slot)
+    // console.log(date)
+  
+    if (slot <date) {
       setCountDownOver(true);
     }
   });
@@ -367,19 +415,19 @@ const AiSidebar = () => {
     localStorage.setItem("FileUploaded", false);
 
     // await saveHistory();
-    if (overViewDetails !== "") {
-      await axios.post(
-        `${NODE_API_ENDPOINT}/courtroomFree/api/end`,
-        {
-          userId: currentUser.userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-        }
-      );
-    }
+    // if (overViewDetails !== "") {
+    //   await axios.post(
+    //     `${NODE_API_ENDPOINT}/courtroomFree/api/end`,
+    //     {
+    //       userId: currentUser.userId,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${currentUser.token}`,
+    //       },
+    //     }
+    //   );
+    // }
 
     dispatch(logout());
 
