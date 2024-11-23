@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // Step 2: Define the initial state
 const initialState = {
   bookingData: "",
+  planData: "",
 };
 
 // Step 3: Create the slice
@@ -14,6 +15,9 @@ const bookingSlice = createSlice({
     setBookingData: (state, action) => {
       state.bookingData = action.payload;
     },
+    setPlanData: (state, action) => {
+      state.planData = action.payload;
+    },
     setClearBooking: (state, action) => {
       state = initialState;
     },
@@ -21,5 +25,6 @@ const bookingSlice = createSlice({
 });
 
 // Step 4: Export the actions and reducer
-export const { setBookingData, setClearBooking } = bookingSlice.actions;
+export const { setBookingData, setClearBooking, setPlanData } =
+  bookingSlice.actions;
 export default bookingSlice.reducer;

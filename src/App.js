@@ -37,11 +37,14 @@ import AiDrafterPro from "./CourtRoom/CourtroomAi/AiDrafterPro.jsx";
 import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx";
 import PricingPlans from "./components/Pricing/PricingPlans.jsx";
 import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
-
+import Header from "./components/Header/Header.jsx";
+import UserForm from "./components/Pricing/UserForm.jsx";
+import BuyPlan from "./components/Pricing/BuyPlan.jsx";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
-  const currentUser = useSelector((state) => state.auth.user);
+  const currentUser = useSelector((state) => state.user.user);
+  const handleSignForm = useSelector((state) => state.user.signUpModal);
 
   const currentUserRef = useRef(currentUser);
 
@@ -52,7 +55,7 @@ function App() {
   const updateEngagementTime = useCallback(async (engagementData) => {
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/cron/engagement/time`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/storeTime`,
         engagementData
       );
     } catch (error) {
@@ -87,16 +90,19 @@ function App() {
   // this should be run only once per application lifetime
   useEffect(() => {
     // store.dispatch(retrieveAuth());
+    // if (localStorage.getItem()) {
     store.dispatch(retrieveCourtroomAuth());
+    // }
   }, []);
 
   const CourtRoomLayout = () => {
     return (
       <div className="">
+        <Header />
         <div className="h-full">
-        
           <Outlet />
         </div>
+        {/* {handleSignForm && <UserForm />} */}
         <FooterBanner />
       </div>
     );
@@ -154,14 +160,17 @@ function App() {
           element: <Contact />,
         },
         {
-          path:"/pricing-plans",
-          element:<PricingPlans/>
+          path: "/pricing-plans",
+          element: <PricingPlans />,
         },
         {
-          path:"/login-new",
-          element:<LoginPageNew/>
-        }
-       
+          path: "/buy-plan",
+          element: <BuyPlan />,
+        },
+        {
+          path: "/login-new",
+          element: <LoginPageNew />,
+        },
       ],
     },
     {

@@ -66,95 +66,70 @@ const drafterQuestions = [
   { name: "Criminal Petition", value: "criminal_petition" },
 ];
 
-const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
-  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
-  const currentUser = useSelector((state) => state.user.user);
+const TimerComponent = React.memo(({ ExitToCourtroom }) => {
+  const totalHours = useSelector(
+    (state) => state.user.user.plan.plan.totalTime
+  );
+  const totalHoursUsed = useSelector((state) => state.user.user.plan.usedHours);
 
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  const [countdownOver, setCountDownOver] = useState(false);
-  const [feedbackForm, setFeedbackForm] = useState(false);
-  const [rateValue, setRateValue] = React.useState(0);
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
+  // Format totalHours and totalHoursUsed for display
+  const formatHours = (hours) => {
+    if (isNaN(hours) || typeof hours !== "number") {
+      hours = 0;
+    }
+    const hrs = Math.floor(hours);
+    const mins = Math.round((hours - hrs) * 60);
+    return `${hrs} hr ${mins} min`;
+  };
 
-  const dispatch = useDispatch();
+  // Calculate initial time in seconds for timer
+  const initialTime = totalHoursUsed * 3600;
+
+  const [time, setTime] = useState(initialTime);
+  const [timeOver, setTimeOver] = useState(false);
+
   useEffect(() => {
-    console.log("hi");
-  }, [dispatch]);
+    const intervalId = setInterval(() => {
+      setTime((prevTime) => prevTime + 1);
+    }, 1000);
 
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date();
-      const minutesLeft = 60 - now.getMinutes() - 1;
-      const secondsLeft = 60 - now.getSeconds();
-      setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
-    };
-
-    calculateTimeLeft();
-
-    const timer = setInterval(calculateTimeLeft, 1000);
-
-    return () => clearInterval(timer);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
-    if (slotTimeInterval < new Date().getHours()) {
-      setCountDownOver(true);
+    if (totalHours * 3600 <= parseInt(time)) {
+      setTimeOver(true);
     }
-  });
+  }, [totalHours, time]);
 
-  const handleFeedbackSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/feedback`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-          body: JSON.stringify({
-            rating: rateValue.toString(),
-            feedback: feedbackMessage,
-            userId: "65589uh3nwsnm,os",
-          }),
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-      toast.success("Thankyou for the feedback!");
-      EndSessionToCourtroom();
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to submit feedback!");
-      setLoading(false);
+  const formatTime = (seconds) => {
+    if (isNaN(seconds) || typeof seconds !== "number") {
+      seconds = 0;
     }
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(secs).padStart(2, "0")}`;
   };
-
   return (
     <>
-      <div
-        className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
-      >
-        <h1 id="time-left" className="text-xs m-0 font-bold text-teal-800">
-          Time Remaining:
-        </h1>
-        <h1
-          className="text-xs m-0 font-semibold"
-          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
-        >
-          {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
-          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
+      <div className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+        <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
+        <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
+      </div>
+      <div className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+        <h1 className="text-xs m-0 font-bold text-teal-800">Time Used Up:</h1>
+        <h1 className="text-xs m-0 font-semibold">
+          {/* {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
+          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds} */}
+          {formatTime(time)}
         </h1>
       </div>
-      {countdownOver ? (
+      {timeOver ? (
         <div
-          className="z-50"
           style={{
             width: "100%",
             height: "100vh",
@@ -167,95 +142,33 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: "20",
           }}
         >
-          {!feedbackForm ? (
-            <div
-              className="flex flex-col justify-center gap-20 p-5"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-                height: "450px",
-                width: "900px",
-                border: "4px solid red",
-                borderRadius: "10px",
-              }}
-            >
-              <div className="flex flex-col justify-center items-center gap-10">
-                <img className="w-28 h-28" alt="clock" src={countDown} />
-                <h1 className="text-3xl">Your Courtroom Time is Over</h1>
-              </div>
-              <div className="flex justify-center gap-5">
-                <motion.button
-                  whileHover={{ scale: "1.01" }}
-                  onClick={() => EndSessionToCourtroom()}
-                  whileTap={{ scale: "0.95" }}
-                  className="border border-white rounded-lg py-2 px-8"
-                >
-                  Skip & Exit To Homepage
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: "1.01" }}
-                  onClick={() => setFeedbackForm(true)}
-                  whileTap={{ scale: "0.95" }}
-                  className="border border-white rounded-lg py-2 px-8 text-white"
-                >
-                  Provide Feedback
-                </motion.button>
-              </div>
+          <div
+            className="flex flex-col justify-center gap-20 p-5"
+            style={{
+              background: "linear-gradient(to right,#0e1118,#008080)",
+              height: "450px",
+              width: "900px",
+              border: "4px solid red",
+              borderRadius: "10px",
+            }}
+          >
+            <div className="flex flex-col justify-center items-center gap-10">
+              <img className="w-28 h-28" alt="clock" src={countDown} />
+              <h1 className="text-3xl">Your Courtroom Time is Over</h1>
             </div>
-          ) : (
-            <div
-              className="flex flex-col justify-center gap-20 p-5"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-                border: "4px solid white",
-                borderRadius: "10px",
-              }}
-            >
-              <div className="flex flex-col gap-5">
-                <h1 className="text-3xl">Provide your valuable feedback</h1>
-                <form
-                  onSubmit={handleFeedbackSubmit}
-                  className="flex flex-col gap-2"
-                >
-                  <div className="flex">
-                    <p>Rate your Experience :</p>
-                    <Rating
-                      required
-                      sx={{ color: "white" }}
-                      name="simple-controlled"
-                      value={rateValue}
-                      onChange={(event, newValue) => {
-                        setRateValue(newValue);
-                      }}
-                    />
-                  </div>
-                  <textarea
-                    required
-                    className="p-2 rounded text-black min-h-20 max-h-40"
-                    placeholder="Provide a detailed description...."
-                    value={feedbackMessage}
-                    onChange={(e) => setFeedbackMessage(e.target.value)}
-                  />
-                  <div className="flex justify-end gap-3">
-                    <button
-                      onClick={() => EndSessionToCourtroom()}
-                      className="border rounded px-4 py-2"
-                    >
-                      Skip & Exit
-                    </button>
-                    <button type="submit" className="border rounded px-4 py-2">
-                      {loading ? (
-                        <CircularProgress color="inherit" size={15} />
-                      ) : (
-                        "Submit Feedback"
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
+            <div className="flex justify-center">
+              <motion.button
+                onClick={() => ExitToCourtroom()}
+                whileTap={{ scale: "0.95" }}
+                className="border border-white rounded-lg py-2 px-8"
+              >
+                Go Back To Homepage
+              </motion.button>
             </div>
-          )}
+          </div>
         </div>
       ) : (
         ""
@@ -302,7 +215,6 @@ const AiSidebar = () => {
     (state) => state.user.firstDraftLoading
   );
   const currentUser = useSelector((state) => state.user.user);
-  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
 
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
@@ -352,7 +264,6 @@ const AiSidebar = () => {
   };
 
   const ExitToCourtroom = async () => {
-    localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
     // await saveHistory();
@@ -375,7 +286,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -398,7 +309,7 @@ const AiSidebar = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser.token}`,
+              Authorization: `Bearer ${currentUser.jwt}`,
             },
           }
         );
@@ -419,7 +330,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -432,7 +343,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -480,7 +391,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -508,7 +419,6 @@ const AiSidebar = () => {
 
   useEffect(() => {
     if (overViewDetails !== "" || overViewDetails !== "NA") {
-      // console.log(overViewDetails);
       firstDraftApi();
     }
   }, [overViewDetails]);
@@ -527,7 +437,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -568,7 +478,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -602,7 +512,7 @@ const AiSidebar = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser.token}`,
+              Authorization: `Bearer ${currentUser.jwt}`,
             },
           }
         );
@@ -621,8 +531,6 @@ const AiSidebar = () => {
     };
     if (currentUser.userId) {
       getOverview();
-
-      // console.log(currentUser.userId);
     }
   }, [currentUser.userId]);
 
@@ -637,7 +545,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
           responseType: "blob", // Important
         }
@@ -670,7 +578,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
           responseType: "blob", // Important
         }
@@ -713,7 +621,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
           responseType: "blob", // Important
         }
@@ -741,7 +649,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
           body: JSON.stringify({
             // action: "Generate",
@@ -781,7 +689,7 @@ const AiSidebar = () => {
     dispatch(removeDrafter());
     setShowDrafterQuestions(false);
     dispatch(
-      retrieveDrafterQuestions({ query: action, token: currentUser.token })
+      retrieveDrafterQuestions({ query: action, token: currentUser.jwt })
     );
   };
 
@@ -789,7 +697,7 @@ const AiSidebar = () => {
     dispatch(removeDrafterPro());
     setShowDrafterQuestions(false);
     dispatch(
-      retrieveDrafterProQuestions({ query: action, token: currentUser.token })
+      retrieveDrafterProQuestions({ query: action, token: currentUser.jwt })
     );
   };
 
@@ -802,7 +710,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
           body: JSON.stringify({ context: caseSearchPrompt }),
         }
@@ -830,7 +738,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );
@@ -854,7 +762,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser.jwt}`,
           },
         }
       );

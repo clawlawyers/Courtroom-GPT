@@ -32,6 +32,7 @@ function SamplePrevArrow(props) {
 
 function Home() {
   const currentUser = useSelector((state) => state.user.user);
+  console.log(currentUser);
   const navigate = useNavigate();
 
   const [submitHover, setSubmitHover] = useState(false);
@@ -100,7 +101,7 @@ function Home() {
           </div>
 
           <div className="flex justify-center gap-5">
-            <Link to="/book-now">
+            <Link to="/pricing-plans">
               <motion.button
                 style={{
                   position: "relative",
@@ -143,7 +144,7 @@ function Home() {
                 </span>
               </motion.button>
             </Link>
-            <Link to="/login">
+            <Link to="/courtroom-ai">
               <motion.button
                 style={{
                   position: "relative",

@@ -9,7 +9,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
+import { login, setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
@@ -71,39 +71,33 @@ function Login() {
     // Get current time in ISO format
 
     axios
-      .post(`${NODE_API_ENDPOINT}/courtroom/login`, {
+      .post(`${NODE_API_ENDPOINT}/courtroomPricing/login`, {
         phoneNumber: phone,
         password: password,
       })
       .then((response) => {
         console.log(response.data);
 
-        // dispatch(setUser(response.data));
-
-        if (response.data === "No bookings found for the current time slot.") {
-          console.log("No bookings found for the current time slot");
-          setErrorState(true);
-          setErrorData([
-            response.data,
-            "Please comeback in your Booked Slot Timings",
-          ]);
-          toast.error(response.data);
-        } else if (response.data === "Invalid phone number or password.") {
+        if (
+          response.data === "Invalid phone number" ||
+          response.data === "Invalid phone number or password."
+        ) {
           console.log("Invalid phone number or password");
           setErrorState(true);
           setErrorData([response.data, "Please Try Again"]);
           toast.error(response.data);
-        } else if (response.data.token) {
-          toast.success("You have successfully logged in");
-          console.log(response.data);
-          dispatch(login({ user: response.data }));
-          // console.log(currentUser);
+        } else {
+          dispatch(setUser(response.data));
+          localStorage.setItem(
+            "userToken",
+            JSON.stringify({
+              token: response.data.jwt,
+              expiresAt: response.data.expiresAt,
+            })
+          );
           navigate("/courtroom-ai");
+          toast.success("You have successfully logged in");
         }
-
-        console.log("error");
-
-        // navigate("/courtroom-ai");
       })
       .catch((error) => {
         setErrorState(true);
@@ -121,6 +115,7 @@ function Login() {
       radial-gradient(circle at 0% 90%, #018585, transparent 60%)`,
       }}
     >
+      <div className="h-10"></div>
       {/* top cont */}
       <div className="grid md:grid-cols-2 items-center">
         <div className="w-full flex items-center justify-center">
@@ -163,8 +158,7 @@ function Login() {
               </div>
               <div style={{ margin: "20px 0px" }}>
                 <h1 style={{ fontSize: "15px", marginTop: "25px" }}>
-                  Enter your Mobile Number and Password that you used to book
-                  your Courtroom
+                  Enter your Mobile Number and Password
                 </h1>
                 <div className={Styles.phoneContainer}>
                   <svg
@@ -273,6 +267,15 @@ function Login() {
                   Policy
                 </h1>
               </div>
+              <p className="">
+                Not registered yet ? {"  "}
+                <span
+                  onClick={() => navigate("/login-new")}
+                  className="text-[#00ffa3] font-semibold cursor-pointer"
+                >
+                  Signup Now
+                </span>
+              </p>
             </div>
           </div>
           {errorState ? (

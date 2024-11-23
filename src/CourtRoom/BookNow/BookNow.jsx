@@ -20,7 +20,6 @@ import {
 } from "../../utils/firebase";
 import Header from "../../components/Header/Header";
 
-
 const BookNow = () => {
   const dispatch = useDispatch();
   const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
@@ -232,7 +231,7 @@ const BookNow = () => {
 
   return (
     <div className={styles.topContainer}>
-      <Header/>
+      {/* <Header/> */}
       <div className="p-5">
         <h1
           style={{
