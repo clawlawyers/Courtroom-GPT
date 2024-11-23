@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import loginnewImage from "../../assets/images/loginImg.png";
 
 import {
@@ -11,13 +11,73 @@ import {
 import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 const LoginPageNew = () => {
   const navigate = useNavigate();
   const dispatch =useDispatch()
+  const [params,setparams] = useSearchParams()
+
+  let user= params.get("user")
+  if(!user){
+   console.log(user)
+  }
+  else{
+    user=atob(user)
+   
+   
+}
+const [userParam , setuserParam]=useState(user)
+
+  
+  
+  useEffect(()=>{
+
+    if(userParam=="null" || userParam==null){
+      params.delete("user");
+      setparams(params)
+    }
+    else{
+   
+
+      const handleRequest = async (userParam) =>{
+      
+        const response=   await fetch(
+          `${NODE_API_ENDPOINT}/courtroomFree/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              phoneNumber: userParam.phoneNumber,
+              name: "Guest",
+            }),
+          }
+        );
+        var data = await response.json();
+        console.log(data)
+        if (data.token) {
+          localStorage.setItem("userToken", data.token);
+          dispatch(login({ user: data }));
+          // setIsVerified(true);
+          navigate("/courtroom-ai")
+        } else {
+          toast.error("Something went wrong.Please try again!");
+          // setIsOTPMode(false);
+        }
+
+        return data
+      } 
+      handleRequest(JSON.parse(userParam))
+    }
+    },[])
+    
+  
+
 
   const [isOTPMode, setIsOTPMode] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -29,6 +89,7 @@ const LoginPageNew = () => {
 
   const [verificationId, setVerificationId] = useState("");
   const [isFirst, setIsfirst] = useState(true);
+  
 
   const handleVerify = () => {
     if (isOTPMode) {
