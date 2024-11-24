@@ -396,7 +396,7 @@ const CourtroomArgument = () => {
     setEditIndex(null);
 
     const inserUserArgument = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
+      `${NODE_API_ENDPOINT}/courtroomPricing/user_arguemnt`,
       {
         // user_id: currentUser.userId,
         argument: editValue,
@@ -417,7 +417,7 @@ const CourtroomArgument = () => {
   const handleSwap = async () => {
     try {
       const swapedData = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/change_states`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/change_states`,
         {
           // user_id: currentUser.userId,
         },
@@ -467,7 +467,7 @@ const CourtroomArgument = () => {
     try {
       setAiLawyerLoading(true);
       const laywerArgument1 = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/lawyer`,
         {
           // user_id: currentUser.userId,
           action: "Retrieve",
@@ -491,7 +491,7 @@ const CourtroomArgument = () => {
       setAiJudgeLoading(true);
 
       let judgeArgument = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/judge`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/judge`,
         {
           // user_id: currentUser.userId,
           action: "Retrieve",
@@ -540,7 +540,7 @@ const CourtroomArgument = () => {
       setAiLawyerLoading(true);
 
       const laywerArgument1 = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/lawyer`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/lawyer`,
         {
           // user_id: currentUser.userId,
           action: "Generate",
@@ -564,7 +564,7 @@ const CourtroomArgument = () => {
       setAiJudgeLoading(true);
 
       let judgeArgument = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/judge`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/judge`,
         {
           // user_id: currentUser.userId,
           action: "Generate",
@@ -577,7 +577,7 @@ const CourtroomArgument = () => {
         }
       );
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/summary`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/summary`,
         {},
         {
           headers: {
@@ -660,7 +660,7 @@ const CourtroomArgument = () => {
       }
 
       const inserUserArgument = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/user_arguemnt`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/user_arguemnt`,
         {
           // user_id: currentUser.userId,
           argument: addArgumentInputText,
@@ -699,7 +699,7 @@ const CourtroomArgument = () => {
     const getHistory = async () => {
       try {
         const history = await axios.get(
-          `${NODE_API_ENDPOINT}/courtroom/getHistory`,
+          `${NODE_API_ENDPOINT}/courtroomPricing/getHistory`,
           {
             headers: {
               Authorization: `Bearer ${currentUser.token}`,
@@ -792,7 +792,7 @@ const CourtroomArgument = () => {
 
     try {
       const res = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_cases_judge_lawyer_updated`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_cases_judge_lawyer_updated`,
         {
           text_input: data,
         },
@@ -840,7 +840,7 @@ const CourtroomArgument = () => {
     }
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/setFavor`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/setFavor`,
         {
           method: "POST",
           headers: {
@@ -1096,9 +1096,9 @@ const CourtroomArgument = () => {
         ],
       });
       // driverObj2.drive();
-      if(!mainTut){
+      if (!mainTut) {
         driverObj2.drive();
-        dispatch(setmaintut())
+        dispatch(setmaintut());
       }
     } catch (error) {
       console.log(error);
@@ -1110,7 +1110,7 @@ const CourtroomArgument = () => {
     // dispatch(setFirstDraftLoading());
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/draft`,
         {
           // user_id: currentUser.userId,
         },

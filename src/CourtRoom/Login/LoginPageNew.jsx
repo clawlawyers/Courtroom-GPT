@@ -69,13 +69,14 @@ const LoginPageNew = () => {
         localStorage.setItem(
           "userToken",
           JSON.stringify({
-            token: response.data.respo.jwt,
+            token: response.data.respo.token,
             expiresAt: response.data.respo.expiresAt,
           })
         );
         // dispatch(setBookingData(bookingData));
         setLoading(false);
-        navigate(-1);
+        // navigate(-1);  // make it conditional and also make a cart slice where users selected plan will store
+        navigate("/pricing-plans");
       } catch (error) {
         console.log(error);
         toast.error("Sign in failed!");

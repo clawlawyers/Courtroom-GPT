@@ -56,7 +56,7 @@ const ConfirmBooking = () => {
     setPaymentGatewayLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/book-courtroom  `,
+        `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom  `,
         {
           method: "POST",
           headers: {
@@ -309,7 +309,7 @@ const ConfirmBooking = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/verify-coupon`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/verify-coupon`,
         {
           method: "POST",
           headers: {
@@ -352,7 +352,6 @@ const ConfirmBooking = () => {
 
   return (
     <div className="flex flex-col w-[80%] p-5 m-auto gap-2">
-    
       <>
         {couponApplied ? (
           <form

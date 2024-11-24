@@ -142,7 +142,7 @@ const Devices = ({
 
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/edit_case`,
         {
           // user_id: currentUser.userId,
           case_overview: inputText,
@@ -218,7 +218,7 @@ const Devices = ({
         formData.append("isMultilang", true);
 
         const response = await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/fileUpload`,
+          `${NODE_API_ENDPOINT}/courtroomPricing/fileUpload`,
           formData,
           {
             headers: {
@@ -332,7 +332,7 @@ const Devices = ({
     setAnalyzing(true);
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/getoverview-formfilename`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/getoverview-formfilename`,
         {
           // user_id: currentUser.userId,
           action: appendFile ? "append" : "add",
@@ -352,7 +352,7 @@ const Devices = ({
       const totalLength = response.data.data.case_overview.split(" ").length;
       totalTimeLength(totalLength);
       const summaryResponse = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/case_summary`,
         {
           // user_id: currentUser.userId,
         },
@@ -489,14 +489,17 @@ const Devices = ({
 
     formData.append("isMultilang", true); // this is for multilang
 
-    const response = await fetch(`${NODE_API_ENDPOINT}/courtroom/newcase`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        // "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${currentUser.token}`,
-      },
-    });
+    const response = await fetch(
+      `${NODE_API_ENDPOINT}/courtroomPricing/newcase`,
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          // "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to upload file to backend");
@@ -556,7 +559,7 @@ const Devices = ({
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${NODE_API_ENDPOINT}/courtroom/api/new_case/text`,
+        url: `${NODE_API_ENDPOINT}/courtroomPricing/api/new_case/text`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${currentUser.token}`,

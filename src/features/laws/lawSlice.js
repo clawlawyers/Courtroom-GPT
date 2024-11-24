@@ -7,7 +7,7 @@ export const retrieveCaseLaws = createAsyncThunk(
     console.log(query);
     try {
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/case_search`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/case_search`,
         {
           method: "POST",
           headers: {

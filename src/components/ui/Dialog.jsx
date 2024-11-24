@@ -99,7 +99,7 @@ const Dialog = ({
   const handleSave = async () => {
     try {
       setUploading(true);
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
+      await axios.post(`${NODE_API_ENDPOINT}/courtroomPricing/edit_case`, {
         user_id: currentUser.userId,
         case_overview: inputText,
       });

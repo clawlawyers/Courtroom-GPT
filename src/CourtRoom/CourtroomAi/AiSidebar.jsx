@@ -280,13 +280,13 @@ const AiSidebar = () => {
     // await saveHistory();
     if (overViewDetails !== "") {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/end`,
         {
           userId: currentUser.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
@@ -303,13 +303,13 @@ const AiSidebar = () => {
     try {
       if (overViewDetails !== "NA") {
         await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/api/history`,
+          `${NODE_API_ENDPOINT}/courtroomPricing/api/history`,
           {
             // user_id: currentUser.userId,
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser.jwt}`,
+              Authorization: `Bearer ${currentUser.token}`,
             },
           }
         );
@@ -323,27 +323,27 @@ const AiSidebar = () => {
   const handleSave = async () => {
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/edit_case`,
         {
           // user_id: currentUser.userId,
           case_overview: text,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
       dispatch(setOverview(text));
       setEditDialog(false);
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/case_summary`,
         {
           // user_id: currentUser.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
@@ -385,13 +385,13 @@ const AiSidebar = () => {
   const firstDraftApi = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/draft`,
         {
           // user_id: currentUser.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
@@ -431,13 +431,13 @@ const AiSidebar = () => {
     setAiAssistantLoading(true);
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/hallucination_questions`,
         {
           // user_id: currentUser.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
@@ -473,12 +473,12 @@ const AiSidebar = () => {
 
     try {
       const fetchedData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law_updated`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_case_law_updated`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
@@ -506,13 +506,13 @@ const AiSidebar = () => {
     const getOverview = async () => {
       try {
         const overView = await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
+          `${NODE_API_ENDPOINT}/courtroomPricing/getCaseOverview`,
           {
             // user_id: currentUser.userId,
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser.jwt}`,
+              Authorization: `Bearer ${currentUser.token}`,
             },
           }
         );
@@ -539,13 +539,13 @@ const AiSidebar = () => {
     try {
       await saveHistory();
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/downloadCaseHistory`,
         {
           // user_id: currentUser.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
           responseType: "blob", // Important
         }
@@ -572,13 +572,13 @@ const AiSidebar = () => {
       await saveHistory();
 
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/downloadSessionCaseHistory`,
         {
           // user_id: currentUser.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
           responseType: "blob", // Important
         }
@@ -613,7 +613,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/downloadFirtDraft`,
         {
           // user_id: currentUser.userId,
           // data: firstDraft,
@@ -621,7 +621,7 @@ const AiSidebar = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
           responseType: "blob", // Important
         }
@@ -644,12 +644,12 @@ const AiSidebar = () => {
     try {
       setSearchQuery(true);
       const getResponse = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/consultant`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/consultant`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
           body: JSON.stringify({
             // action: "Generate",
@@ -689,7 +689,7 @@ const AiSidebar = () => {
     dispatch(removeDrafter());
     setShowDrafterQuestions(false);
     dispatch(
-      retrieveDrafterQuestions({ query: action, token: currentUser.jwt })
+      retrieveDrafterQuestions({ query: action, token: currentUser.token })
     );
   };
 
@@ -697,7 +697,7 @@ const AiSidebar = () => {
     dispatch(removeDrafterPro());
     setShowDrafterQuestions(false);
     dispatch(
-      retrieveDrafterProQuestions({ query: action, token: currentUser.jwt })
+      retrieveDrafterProQuestions({ query: action, token: currentUser.token })
     );
   };
 
@@ -705,12 +705,12 @@ const AiSidebar = () => {
     setCaseSearchLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/sidebar-casesearch`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/sidebar-casesearch`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
           body: JSON.stringify({ context: caseSearchPrompt }),
         }
@@ -733,12 +733,12 @@ const AiSidebar = () => {
     setNextAppealLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft_next_appeal`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/draft_next_appeal`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );
@@ -757,12 +757,12 @@ const AiSidebar = () => {
     setReserachArgumentsLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/generate_hypo_draft`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/generate_hypo_draft`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.jwt}`,
+            Authorization: `Bearer ${currentUser.token}`,
           },
         }
       );

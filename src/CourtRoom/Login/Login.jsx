@@ -91,11 +91,15 @@ function Login() {
           localStorage.setItem(
             "userToken",
             JSON.stringify({
-              token: response.data.jwt,
+              token: response.data.token,
               expiresAt: response.data.expiresAt,
             })
           );
-          navigate("/courtroom-ai");
+          if (response.data.plan === null) {
+            navigate("/pricing-plans");
+          } else {
+            navigate("/courtroom-ai");
+          }
           toast.success("You have successfully logged in");
         }
       })

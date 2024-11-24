@@ -107,7 +107,7 @@ function AdminLogin() {
     console.log(currentHour);
 
     const slotBooked = await fetch(
-      `${NODE_API_ENDPOINT}/courtroom/admin-login-validation`,
+      `${NODE_API_ENDPOINT}/courtroomPricing/admin-login-validation`,
       {
         method: "POST",
         headers: {
@@ -176,13 +176,16 @@ function AdminLogin() {
   const handleCheckPassword = async (e) => {
     e.preventDefault();
     setTokenCheckLoading(true);
-    const slotBooked = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phoneNumber: token, password: token }),
-    });
+    const slotBooked = await fetch(
+      `${NODE_API_ENDPOINT}/courtroomPricing/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phoneNumber: token, password: token }),
+      }
+    );
 
     if (!slotBooked.ok) {
       toast.error("Invalid token. Please try again.");
@@ -210,7 +213,7 @@ function AdminLogin() {
       radial-gradient(circle at 0% 90%, #018585, transparent 60%)`,
       }}
     >
-      <Header/>
+      <Header />
       {/* top cont */}
       <div className="grid md:grid-cols-2 items-center">
         <div className="w-full flex items-center justify-center">

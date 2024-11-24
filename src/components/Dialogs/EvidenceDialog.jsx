@@ -40,7 +40,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
     });
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/document_evidence`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/document_evidence`,
         formData,
         {
           headers: {
@@ -83,7 +83,7 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
     // console.log("Uploaded Files:", uploadedFiles);
     try {
       const fetchData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/evidence`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/evidence`,
         {
           method: "POST",
           headers: {

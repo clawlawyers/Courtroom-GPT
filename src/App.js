@@ -52,11 +52,20 @@ function App() {
     currentUserRef.current = currentUser;
   }, [currentUser]);
 
+  console.log(currentUser?.token);
+  console.log(currentUserRef.current);
+
   const updateEngagementTime = useCallback(async (engagementData) => {
+    console.log(currentUser?.token);
     try {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroomPricing/api/storeTime`,
-        engagementData
+        engagementData,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.token}`,
+          },
+        }
       );
     } catch (error) {
       console.error("Error updating engagement time:", error);

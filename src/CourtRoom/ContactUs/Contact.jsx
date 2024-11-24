@@ -36,7 +36,7 @@ const Contact = () => {
     try {
       // Make the API request
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/add/ContactUsQuery`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/add/ContactUsQuery`,
         {
           method: "POST",
           headers: {
@@ -82,7 +82,7 @@ const Contact = () => {
     radial-gradient(circle at 0% 100%, #018585, transparent 50%)`,
       }}
     >
-       <Header/>  {/* header component*/}
+      <Header /> {/* header component*/}
       <div className="flex flex-col justify-center items-center text-center">
         <h1 className="text-white text-6xl font-bold">Get In Touch</h1>
         <p className="m-0  mt-5 text-white text-lg font-bold">

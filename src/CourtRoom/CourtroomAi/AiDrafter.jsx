@@ -29,7 +29,7 @@ const AiDrafter = () => {
     setEditLoading(true);
     try {
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/edit_application`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/edit_application`,
         {
           method: "POST",
           headers: {
@@ -74,14 +74,17 @@ const AiDrafter = () => {
   }, [drafterDoc]);
 
   const handleDownload = async () => {
-    const response = await fetch(`${NODE_API_ENDPOINT}/courtroom/get_pdf`, {
-      // Replace with your backend URL
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ document: drafterDoc }),
-    });
+    const response = await fetch(
+      `${NODE_API_ENDPOINT}/courtroomPricing/get_pdf`,
+      {
+        // Replace with your backend URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ document: drafterDoc }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to generate PDF");

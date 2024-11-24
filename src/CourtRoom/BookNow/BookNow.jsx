@@ -86,7 +86,7 @@ const BookNow = () => {
         slots: formattedBookings, // Add scheduledSlots to bookingData
       };
       const respos = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/book-courtroom-validation`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom-validation`,
         {
           ...bookingData,
         }

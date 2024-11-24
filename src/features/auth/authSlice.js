@@ -9,7 +9,7 @@ export const retrieveAuth = createAsyncThunk("auth/retrieveAuth", async () => {
     const props = await fetch(`${NODE_API_ENDPOINT}/client/auth/me`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${parsedUser.jwt}`,
+        Authorization: `Bearer ${parsedUser.token}`,
       },
     });
     const parsedProps = await props.json();

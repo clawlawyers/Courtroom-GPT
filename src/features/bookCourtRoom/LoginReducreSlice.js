@@ -24,7 +24,7 @@ export const retrieveCourtroomAuth = createAsyncThunk(
       // console.log(parsedProps.data);
       if (parsedProps.success) {
         return {
-          user: parsedProps.data,
+          user: { ...parsedProps.data, ...parsedUser },
         };
       } else {
         return { user: null };
