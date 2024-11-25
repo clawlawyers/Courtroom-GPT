@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import AiSidebar from "./AiSidebar";
 import { Outlet } from "react-router-dom";
 import Styles from "./CourtroomAiLayout.module.css";
@@ -10,22 +10,69 @@ import { useNavigate } from "react-router-dom";
 import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+import axios from "axios";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
-  console.log(currentUser);
+  // console.log(currentUser);
 
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (!currentUser?.plan?.isActive) {
-  //     toast.error("Please login to continue !");
-  //     navigate("/login");
-  //   }
-  // }, []);
+  const BATCH_INTERVAL = 60 * 1000;
+
+  const currentUserRef = useRef(currentUser);
+
+  useEffect(() => {
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
+
+  console.log(currentUser?.token);
+  console.log(currentUserRef.current);
+
+  const updateEngagementTime = useCallback(async (engagementData) => {
+    // console.log(currentUser?.token);
+    try {
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/storeTime`,
+        engagementData,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating engagement time:", error);
+    }
+  }, []);
+
+  const flushQueue = useCallback(() => {
+    const user = currentUserRef.current;
+    if (user) {
+      updateEngagementTime([
+        {
+          phoneNumber: user.phoneNumber,
+          engagementTime: 60,
+          timestamp: Date.now(),
+        },
+      ]);
+    }
+  }, [updateEngagementTime]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      flushQueue();
+    }, BATCH_INTERVAL);
+
+    return () => {
+      clearInterval(interval);
+      flushQueue();
+    };
+  }, [flushQueue]);
 
   useEffect(() => {
     if (!currentUser) {
