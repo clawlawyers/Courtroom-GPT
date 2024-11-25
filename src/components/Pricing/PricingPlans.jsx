@@ -5,6 +5,7 @@ import Header from "../Header/Header.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPlanData } from "../../features/bookCourtRoom/bookingSlice.js";
+import toast from "react-hot-toast";
 
 const pricingArr = [
   {
@@ -216,6 +217,7 @@ const PricingPlans = () => {
         navigate("/buy-plan");
       }
     } else {
+      toast.error("Please signin or login first");
       navigate("/login-new");
     }
   };
