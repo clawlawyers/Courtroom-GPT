@@ -597,8 +597,8 @@ function Home() {
         Instantly find and access case laws and precedents tailored to your case as well as legal queries in seconds. <br />
       <span>LegalGPT:</span>
       Dive Deep in research with our AI-powered tool,
-      offering quick,accurate summaries and insights <br />
-      <span>AI Assistant::</span>
+      offering quick,accurate summaries and insights. <br />
+      <span>AI Assistant:</span>
       Highlights grey areas,provides strategic insights,
       and strea,lines your preparation. <br />
     </motion.h5>
@@ -668,7 +668,7 @@ function Home() {
       }}
     >
       BEST-IN-CLASS<br/>
-      VERFIFICATION AND <br/>
+      VERIFICATION AND <br/>
       VALIDATION
     </motion.h1>
     <motion.h5
@@ -681,7 +681,7 @@ function Home() {
     >
       <span>Evidence:</span>
       Evaluate and assess evidence validity to get insights on how it will play in the court. <br />
-      <span>Testimony::</span>
+      <span>Testimony:</span>
       Get 3 sets of cross examination questions from the perspective of a petitioner,respondent and the judge. <br />
     </motion.h5>
   </div>
@@ -704,7 +704,8 @@ function Home() {
             }}
           >
            HIGHEST EFFICIENCY <br/>
-           FEATURES
+           FEATURES 
+           
           </motion.h1>
           <motion.h5
       style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
