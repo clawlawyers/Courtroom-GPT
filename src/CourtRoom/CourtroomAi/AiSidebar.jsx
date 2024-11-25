@@ -964,6 +964,8 @@ const AiSidebar = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   // onClick={handleMenuOpen}
+              onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
                 >
                   <MoreVert />
                 </IconButton>
@@ -1072,6 +1074,8 @@ const AiSidebar = () => {
             <motion.div
              disabled={true}
               // onClick={handleFirstDraft}
+              onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               className={`${
@@ -1111,6 +1115,8 @@ const AiSidebar = () => {
             <motion.div
               // onClick={() => setShowDrafterQuestions(true)}
               disabled={true}
+              onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -1145,6 +1151,8 @@ const AiSidebar = () => {
             </motion.div>
             <motion.div
              disabled={true}
+             onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
               // onClick={() => setShowAskLegalGPT(true)}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
@@ -1180,6 +1188,7 @@ const AiSidebar = () => {
             </motion.div>
             <motion.div
               // onClick={() => setCaseSearchDialog(true)}y
+              onClick={()=>toast.error("ONLY FOR PAID USERS")}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -1234,6 +1243,8 @@ const AiSidebar = () => {
               //   setShowAssistant(true);
               //   getAiQuestions();
               // }}
+              onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
             />
             {aiIconHover ? (
               <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">

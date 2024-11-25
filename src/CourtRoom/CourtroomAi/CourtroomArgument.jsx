@@ -1179,6 +1179,7 @@ const CourtroomArgument = () => {
                   aria-haspopup="true"
                   id="judge"
                   // onClick={handleMenuOpen}
+                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
                   ref={myDivRef}
                 >
                   <MoreVert />
@@ -1284,6 +1285,7 @@ const CourtroomArgument = () => {
                   aria-haspopup="true"
                   id="lawyer"
                   // onClick={handleMenuOpen}
+                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1746,6 +1748,7 @@ const CourtroomArgument = () => {
                   aria-haspopup="true"
                   id="judge"
                   // onClick={handleMenuOpen}
+                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1849,6 +1852,7 @@ const CourtroomArgument = () => {
                   aria-haspopup="true"
                   id="lawyer"
                   // onClick={handleMenuOpen}
+                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
                 >
                   <MoreVert />
                 </IconButton>
