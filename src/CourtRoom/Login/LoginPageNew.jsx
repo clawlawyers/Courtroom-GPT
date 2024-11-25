@@ -69,7 +69,7 @@ const LoginPageNew = () => {
         localStorage.setItem(
           "userToken",
           JSON.stringify({
-            token: response.data.respo.token,
+            token: response.data.respo.jwt,
             expiresAt: response.data.respo.expiresAt,
           })
         );
