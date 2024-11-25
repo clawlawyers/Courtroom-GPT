@@ -7,7 +7,10 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { setClearBooking } from "../../features/bookCourtRoom/bookingSlice";
-import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducreSlice";
+import {
+  retrieveCourtroomAuth,
+  setUser,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const BuyPlan = () => {
   const navigate = useNavigate();
@@ -79,9 +82,10 @@ const BuyPlan = () => {
               `${NODE_API_ENDPOINT}/courtroomPayment/verifyPayment`,
               data
             );
-            toast(result.data.status);
+            toast.success(result.data.status);
 
             setPaymentGatewayLoading(false);
+            dispatch(setUser(null));
             dispatch(retrieveCourtroomAuth());
             navigate("/courtroom-ai");
           },
@@ -97,10 +101,11 @@ const BuyPlan = () => {
         toast.error(error.message);
 
         setPaymentGatewayLoading(false);
-      } finally {
-        setPaymentGatewayLoading(false);
-        dispatch(retrieveCourtroomAuth());
       }
+      // finally {
+      //   setPaymentGatewayLoading(false);
+      //   dispatch(retrieveCourtroomAuth());
+      // }
     };
     document.body.appendChild(script);
   };

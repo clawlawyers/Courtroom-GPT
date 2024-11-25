@@ -30,11 +30,11 @@ const CourtRoomAiLayout = () => {
     currentUserRef.current = currentUser;
   }, [currentUser]);
 
-  console.log(currentUser?.token);
-  console.log(currentUserRef.current);
+  // console.log(currentUser?.token);
+  // console.log(currentUserRef.current);
 
   const updateEngagementTime = useCallback(async (engagementData) => {
-    // console.log(currentUser?.token);
+    console.log(currentUser?.token);
     try {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroomPricing/api/storeTime`,
@@ -82,7 +82,7 @@ const CourtRoomAiLayout = () => {
     }
 
     if (currentUser && !currentUser?.plan?.isActive) {
-      toast.error("Please login to continue!");
+      // toast.error("Please login to continue");
       navigate("/login");
     }
   }, [currentUser]);
