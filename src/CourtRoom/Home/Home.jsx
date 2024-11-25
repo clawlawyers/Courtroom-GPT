@@ -501,6 +501,256 @@ function Home() {
         </motion.div>
       </motion.div>
 
+     
+      <motion.div className="flex flex-col md:flex-row items-center mt-[150px] mx-10 gap-10">
+  {/* Left Section: Laptop with Video */}
+  <motion.div
+    initial={{ x: "-50%" }}
+    whileInView={{ x: "0%" }}
+    transition={{ type: "spring", stiffness: 120, damping: 10 }}
+  >
+    <div className="relative flex justify-center items-center md:h-[400px] md:w-max">
+      <img
+        alt="courtRoom Preview"
+        src={laptop}
+        style={{ borderRadius: 0, width: "100%", height: "100%" }}
+      />
+      <video
+        className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
+        src={""}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+    </div>
+  </motion.div>
+
+  {/* Right Section: Text Content */}
+  <div className="flex flex-col gap-6">
+    <motion.h1
+      initial={{ y: -60 }}
+      whileInView={{ y: 0 }}
+      transition={{
+        y: { type: "tween", duration: 0.8 },
+      }}
+      style={{
+        fontWeight: "bold",
+        fontSize: "2rem",
+        color: "#FFFFFF",
+        textAlign: "left",
+      }}
+    >
+      EXPERIENCE THE MAJESTIC WAR ROOM
+    </motion.h1>
+    <motion.h5
+      style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{
+        x: { type: "slide", duration: 1 },
+      }}
+    >
+      <span>AI Judge:</span>
+      Delivers unbiased, multi-perspective evaluations, generates judgments,
+      and predicts case precedents efficiently. <br />
+      <span>AI Lawyer:</span>
+      Crafts compelling counterarguments using case facts, legal precedents,
+      and relevant case laws. <br />
+      <span>Objection:</span>
+      Understand what Objections can be raised for a specific argument in
+      real-time, enhancing your preparation. <br />
+      <span>Verdict:</span>
+      Generates accurate, well-structured verdicts based on arguments,
+      evidence, and case law analysis.
+    </motion.h5>
+  </div>
+</motion.div>
+
+
+<motion.div className="flex flex-col-reverse gap-3 md:flex-row mt-[150px] mx-10 items-center">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <motion.h1
+            initial={{ y: -60 }}
+            whileInView={{ y: 0 }}
+            transition={{
+              y: { type: "tween", duration: 0.8 },
+            }}
+          >
+           UNBEATABLE LEGAL ASSISTANCE
+          </motion.h1>
+          <motion.h5
+      style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{
+        x: { type: "slide", duration: 1 },
+      }}
+    >
+      <span>Case Search:</span>
+        Instantly find and access case laws and precedents tailored to your case as well as legal queries in seconds. <br />
+      <span>LegalGPT:</span>
+      Dive Deep in research with our AI-powered tool,
+      offering quick,accurate summaries and insights <br />
+      <span>AI Assistant::</span>
+      Highlights grey areas,provides strategic insights,
+      and strea,lines your preparation. <br />
+    </motion.h5>
+        </div>
+        <motion.div
+          initial={{ x: "50%" }}
+          whileInView={{ x: "0%" }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
+        >
+          <div className="flex justify-center items-center">
+            <div className="relative md:h-[400px] md:w-max">
+              <img
+                alt="courtRoom Preiview"
+                src={laptop}
+                style={{ borderRadius: 0, width: "100%", height: "100%" }}
+              />
+              <video
+                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
+                src={""}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div className="flex flex-col md:flex-row items-center mt-[150px] mx-10 gap-10">
+  {/* Left Section: Laptop with Video */}
+  <motion.div
+    initial={{ x: "-50%" }}
+    whileInView={{ x: "0%" }}
+    transition={{ type: "spring", stiffness: 120, damping: 10 }}
+  >
+    <div className="relative flex justify-center items-center md:h-[400px] md:w-max">
+      <img
+        alt="courtRoom Preview"
+        src={laptop}
+        style={{ borderRadius: 0, width: "100%", height: "100%" }}
+      />
+      <video
+        className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
+        src={""}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+    </div>
+  </motion.div>
+
+  {/* Right Section: Text Content */}
+  <div className="flex flex-col gap-6">
+    <motion.h1
+      initial={{ y: -60 }}
+      whileInView={{ y: 0 }}
+      transition={{
+        y: { type: "tween", duration: 0.8 },
+      }}
+      style={{
+        fontWeight: "bold",
+        fontSize: "2rem",
+        color: "#FFFFFF",
+        textAlign: "left",
+      }}
+    >
+      BEST-IN-CLASS<br/>
+      VERFIFICATION AND <br/>
+      VALIDATION
+    </motion.h1>
+    <motion.h5
+      style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{
+        x: { type: "slide", duration: 1 },
+      }}
+    >
+      <span>Evidence:</span>
+      Evaluate and assess evidence validity to get insights on how it will play in the court. <br />
+      <span>Testimony::</span>
+      Get 3 sets of cross examination questions from the perspective of a petitioner,respondent and the judge. <br />
+    </motion.h5>
+  </div>
+</motion.div>
+
+
+<motion.div className="flex flex-col-reverse gap-3 md:flex-row mt-[150px] mx-10 items-center">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <motion.h1
+            initial={{ y: -60 }}
+            whileInView={{ y: 0 }}
+            transition={{
+              y: { type: "tween", duration: 0.8 },
+            }}
+          >
+           HIGHEST EFFICIENCY <br/>
+           FEATURES
+          </motion.h1>
+          <motion.h5
+      style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{
+        x: { type: "slide", duration: 1 },
+      }}
+    >
+      <span>First Draft:</span>
+        Generate precise initial drafts of legal arguments with relevant case laws working as a foundation for your preparation,saving time and effort. <br />
+      <span>Relevant Case Laws:</span>
+       Quickly access case laws directly relevant to that pecific argument with citations and the ability to read the full case document. <br />
+      <span>AI Drafter:</span>
+       Draft,edit,and customize legal documents
+       needed for your case with AI precision and seamless 
+       efficiency with a single click. <br />
+       <span>Multilingual Support:</span>
+        Work effortlessly in multiple languages like English,Hindi,Gujarati,Marathi and many more,breaking barriers expanding accessibility.<br/>
+    </motion.h5>
+        </div>
+        <motion.div
+          initial={{ x: "50%" }}
+          whileInView={{ x: "0%" }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
+        >
+          <div className="flex justify-center items-center">
+            <div className="relative md:h-[400px] md:w-max">
+              <img
+                alt="courtRoom Preiview"
+                src={laptop}
+                style={{ borderRadius: 0, width: "100%", height: "100%" }}
+              />
+              <video
+                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
+                src={""}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+
       <div className={Styles.whyCourtRoom}>
         <div>
           <h1 style={{ fontWeight: "700" }}>Why Claw Courtroom ?</h1>
