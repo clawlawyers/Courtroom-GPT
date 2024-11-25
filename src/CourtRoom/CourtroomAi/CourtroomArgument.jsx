@@ -8,7 +8,13 @@ import Select, { components } from "react-select";
 
 import { motion } from "framer-motion";
 import { Close, Co2Sharp, ResetTvSharp, Send } from "@mui/icons-material";
-import { Button, Menu, Modal, StyledEngineProvider } from "@mui/material";
+import {
+  Button,
+  Menu,
+  Modal,
+  StyledEngineProvider,
+  Tooltip,
+} from "@mui/material";
 import { MenuItem, IconButton } from "@mui/material";
 import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
@@ -53,6 +59,9 @@ const CourtroomArgument = () => {
   const tutorial = useSelector((state) => state.popup.tutorial);
   const mainTut = useSelector((state) => state.sidebar.mainTut);
   const driveUpload = useSelector((state) => state.sidebar.driveUpload);
+  const { Verdict, RelevantCaseLaws, caseSearch } = useSelector(
+    (state) => state.user.user.plan.plan.features
+  );
 
   const options = [
     { value: "english", label: "English" },
@@ -308,6 +317,7 @@ const CourtroomArgument = () => {
       dispatch(setTutorialFalse());
     }
   }, [tutorial]);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [relevantCases, setRelevantCases] = useState("");
   const [relevantLawData, setRelevantLawData] = useState([]);
@@ -1203,17 +1213,23 @@ const CourtroomArgument = () => {
                     },
                   }}
                 >
-                  <div
-                    id="relevantcase-button"
-                    className="text-xs px-2 hover:cursor-pointer "
-                    onClick={() => {
-                      handleshowcaseaijudge();
-                      handleMenuClose();
-                    }}
+                  <Tooltip
+                    title="Upgrade plan to use this feature"
+                    disableHoverListener={RelevantCaseLaws}
                   >
-                    View Relevant Case Laws
-                  </div>
-                  {/* <MenuItem>Save</MenuItem> */}
+                    <div
+                      id="relevantcase-button"
+                      className="text-xs px-2 hover:cursor-pointer "
+                      onClick={() => {
+                        if (RelevantCaseLaws) {
+                          handleshowcaseaijudge();
+                          handleMenuClose();
+                        }
+                      }}
+                    >
+                      View Relevant Case Laws
+                    </div>
+                  </Tooltip>
                 </Menu>
               </div>
             </div>
@@ -1589,26 +1605,31 @@ const CourtroomArgument = () => {
           >
             <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
           </motion.button>
-          <motion.button
-            id="rest-your-case"
-            whileTap={{ scale: "0.95" }}
-            onClick={handleVerdict}
-            className="flex-1 my-2"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "5px",
-              border: "2px solid #00ffa3",
-              borderRadius: "20px",
-              background: "#008080",
-              padding: "10px",
-              cursor: "pointer",
-              color: "white",
-            }}
+          <Tooltip
+            title="Upgrade plan to use this feature"
+            disableHoverListener={Verdict}
           >
-            <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
-          </motion.button>
+            <motion.button
+              id="rest-your-case"
+              whileTap={{ scale: "0.95" }}
+              onClick={Verdict ? handleVerdict : null}
+              className="flex-1 my-2"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+                border: "2px solid #00ffa3",
+                borderRadius: "20px",
+                background: "#008080",
+                padding: "10px",
+                cursor: "pointer",
+                color: "white",
+              }}
+            >
+              <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
+            </motion.button>
+          </Tooltip>
         </div>
       </div>
       {voiceSearchInitiate ? (
@@ -1682,27 +1703,27 @@ const CourtroomArgument = () => {
             </div>
             {!loadingRelevantCases && (
               <div className="flex justify-end">
-                <Link to={"/courtroom-ai/relevantCaseLaws"}>
-                  <button
-                    onClick={() => {
-                      dispatch(removeRelevantCaseLaws());
-                      // dispatch(
-                      //   retrieveCaseLaws({
-                      //     query: relevantCasesData,
-                      //     token: currentUser.token,
-                      //   })
-                      // );
-                      dispatch(
-                        setRelevantCaseLaws({
-                          relevantLawData,
-                        })
-                      );
-                    }}
-                    className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
-                  >
-                    View Case Laws
-                  </button>
-                </Link>
+                <Tooltip
+                  title="Upgrade plan to use this feature"
+                  disableHoverListener={caseSearch}
+                >
+                  <Link to={"/courtroom-ai/relevantCaseLaws"}>
+                    <button
+                      disabled={!caseSearch}
+                      onClick={() => {
+                        dispatch(removeRelevantCaseLaws());
+                        dispatch(
+                          setRelevantCaseLaws({
+                            relevantLawData,
+                          })
+                        );
+                      }}
+                      className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
+                    >
+                      View Case Laws
+                    </button>
+                  </Link>
+                </Tooltip>
               </div>
             )}
           </div>
@@ -1738,16 +1759,21 @@ const CourtroomArgument = () => {
                 <h1 className="text-sm m-0">AI Judge</h1>
               </div>
               <div>
-                <IconButton
-                  sx={{ color: "white" }}
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  id="judge"
-                  onClick={handleMenuOpen}
+                <Tooltip
+                  title="Upgrade plan to use this feature"
+                  disableHoverListener={RelevantCaseLaws}
                 >
-                  <MoreVert />
-                </IconButton>
+                  <IconButton
+                    sx={{ color: "white" }}
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    id="judge"
+                    onClick={RelevantCaseLaws ? handleMenuOpen : null}
+                  >
+                    <MoreVert />
+                  </IconButton>
+                </Tooltip>
                 <Menu
                   id="long-menu"
                   anchorEl={anchorElmenu}
@@ -1777,7 +1803,6 @@ const CourtroomArgument = () => {
                   >
                     View Relevant Case Laws
                   </div>
-                  {/* <MenuItem>Save</MenuItem> */}
                 </Menu>
               </div>
             </div>
@@ -1841,16 +1866,21 @@ const CourtroomArgument = () => {
               </div>
               <div>
                 {" "}
-                <IconButton
-                  sx={{ color: "white" }}
-                  aria-label="more"
-                  aria-controls="long-menu"
-                  aria-haspopup="true"
-                  id="lawyer"
-                  onClick={handleMenuOpen}
+                <Tooltip
+                  title="Upgrade plan to use this feature"
+                  disableHoverListener={RelevantCaseLaws}
                 >
-                  <MoreVert />
-                </IconButton>
+                  <IconButton
+                    sx={{ color: "white" }}
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    id="lawyer"
+                    onClick={RelevantCaseLaws ? handleMenuOpen : null}
+                  >
+                    <MoreVert />
+                  </IconButton>
+                </Tooltip>
               </div>
             </div>
             <div

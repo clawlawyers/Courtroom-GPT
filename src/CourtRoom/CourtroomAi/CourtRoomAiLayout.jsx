@@ -15,6 +15,7 @@ import axios from "axios";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
   // console.log(currentUser);
 
   const [loading, setLoading] = useState(true);
@@ -53,13 +54,11 @@ const CourtRoomAiLayout = () => {
   const flushQueue = useCallback(() => {
     const user = currentUserRef.current;
     if (user) {
-      updateEngagementTime([
-        {
-          phoneNumber: user.phoneNumber,
-          engagementTime: 60,
-          timestamp: Date.now(),
-        },
-      ]);
+      updateEngagementTime({
+        phoneNumber: user.phoneNumber,
+        engagementTime: 60,
+        timestamp: Date.now(),
+      });
     }
   }, [updateEngagementTime]);
 
@@ -75,17 +74,30 @@ const CourtRoomAiLayout = () => {
   }, [flushQueue]);
 
   useEffect(() => {
+    let timer;
     if (!currentUser) {
       setLoading(true); // set loading while waiting for user data
+      timer = setTimeout(() => {
+        toast.error("Please Login First");
+        navigate("/login");
+      }, 2000);
     } else {
       setLoading(false);
     }
 
     if (currentUser && !currentUser?.plan?.isActive) {
-      // toast.error("Please login to continue");
-      navigate("/login");
+      toast.error("You donot have any active plans");
+      navigate("/pricing-plans");
     }
+
+    return () => clearTimeout(timer);
   }, [currentUser]);
+
+  useEffect(() => {
+    if (caseOverView !== "NA" && caseOverView !== "") {
+      navigate("/courtroom-ai/arguments");
+    }
+  }, [caseOverView]);
 
   return (
     <>

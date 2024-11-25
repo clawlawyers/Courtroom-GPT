@@ -69,7 +69,7 @@ const LoginPageNew = () => {
         localStorage.setItem(
           "userToken",
           JSON.stringify({
-            token: response.data.respo.jwt,
+            token: response.data.respo.token,
             expiresAt: response.data.respo.expiresAt,
           })
         );
@@ -411,6 +411,15 @@ const LoginPageNew = () => {
               )}
             </motion.button>
           </form>
+          <p className="">
+            Have an account already ? {"  "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-[#00ffa3] font-semibold cursor-pointer"
+            >
+              Login Here
+            </span>
+          </p>
         </div>
       </div>
       <div id="recaptcha-container"></div>

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, CircularProgress, Menu } from "@mui/material";
+import { Button, CircularProgress, Menu, Tooltip } from "@mui/material";
 import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
@@ -215,6 +215,18 @@ const AiSidebar = () => {
     (state) => state.user.firstDraftLoading
   );
   const currentUser = useSelector((state) => state.user.user);
+
+  const {
+    AiAssistant,
+    AiDrafterNormal,
+    AiDrafterPro,
+    FirstDraft,
+    RelevantCaseLaws,
+    Evidences,
+    LegalGPT,
+    caseSearch,
+    testimonyAssessment,
+  } = useSelector((state) => state.user.user.plan.plan.features);
 
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
@@ -858,15 +870,31 @@ const AiSidebar = () => {
                   >
                     Add New File
                   </MenuItem>
-                  <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
-                    Add Evidences
-                  </MenuItem>
-                  <MenuItem
-                    id="evidence-testimony"
-                    onClick={handleTestimonyClick}
+                  <Tooltip
+                    title="Upgrade plan to use this feature"
+                    disableHoverListener={Evidences}
                   >
-                    Add Testimony
-                  </MenuItem>
+                    <MenuItem
+                      id="evidence-button"
+                      onClick={Evidences ? handleEvidenceClick : null}
+                    >
+                      Add Evidences
+                    </MenuItem>
+                  </Tooltip>
+
+                  <Tooltip
+                    title="Upgrade plan to use this feature"
+                    disableHoverListener={testimonyAssessment}
+                  >
+                    <MenuItem
+                      id="evidence-testimony"
+                      onClick={
+                        testimonyAssessment ? handleTestimonyClick : null
+                      }
+                    >
+                      Add Testimony
+                    </MenuItem>
+                  </Tooltip>
                 </Menu>
 
                 <Popover
@@ -929,44 +957,51 @@ const AiSidebar = () => {
           className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between"
         >
           <div className="flex flex-col gap-1">
-            <motion.div
-              onClick={handleFirstDraft}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : "cursor-pointer"
-              }`}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0px 10px",
-                background: "#C5C5C5",
-                color: "#008080",
-                border: "2px solid white",
-                borderRadius: "5px",
-              }}
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={FirstDraft}
             >
-              <div id="first-draft">
-                <p className="text-xs m-0 font-bold text-teal-800">
-                  View First Draft
-                </p>
-              </div>
-              <div style={{ width: "15px", margin: "0" }}>
-                <svg
-                  width="24"
-                  height="24"
-                  style={{ fill: "#008080", cursor: "pointer" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                >
-                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                </svg>
-              </div>
-            </motion.div>
+              <motion.div
+                onClick={FirstDraft ? handleFirstDraft : null}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  overViewDetails === "NA" ||
+                  overViewDetails === "" ||
+                  !FirstDraft
+                    ? "opacity-75  cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "0px 10px",
+                  background: "#C5C5C5",
+                  color: "#008080",
+                  border: "2px solid white",
+                  borderRadius: "5px",
+                }}
+              >
+                <div id="first-draft">
+                  <p className="text-xs m-0 font-bold text-teal-800">
+                    View First Draft
+                  </p>
+                </div>
+                <div style={{ width: "15px", margin: "0" }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    style={{ fill: "#008080", cursor: "pointer" }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                  </svg>
+                </div>
+              </motion.div>
+            </Tooltip>
             <motion.div
               onClick={() => setShowDrafterQuestions(true)}
               whileTap={{ scale: "0.95" }}
@@ -1001,104 +1036,139 @@ const AiSidebar = () => {
                 </svg>
               </div>
             </motion.div>
-            <motion.div
-              onClick={() => setShowAskLegalGPT(true)}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0px 10px",
-                background: "#C5C5C5",
-                color: "#008080",
-                border: "2px solid white",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={LegalGPT}
             >
-              <div id="legalGpt">
-                <p className="text-xs m-0 font-bold text-teal-800">
-                  Ask LegalGPT
-                </p>
-              </div>
-              <div style={{ width: "15px", margin: "0" }}>
-                <svg
-                  width="24"
-                  height="24"
-                  style={{ fill: "#008080", cursor: "pointer" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                >
-                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                </svg>
-              </div>
-            </motion.div>
-            <motion.div
-              onClick={() => setCaseSearchDialog(true)}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0px 10px",
-                background: "#C5C5C5",
-                color: "#008080",
-                border: "2px solid white",
-                borderRadius: "5px",
-                marginBottom: "5px",
-                cursor: "pointer",
-              }}
+              <motion.div
+                onClick={() => {
+                  if (LegalGPT) {
+                    setShowAskLegalGPT(true);
+                  }
+                }}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  !LegalGPT
+                    ? "opacity-75  cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "0px 10px",
+                  background: "#C5C5C5",
+                  color: "#008080",
+                  border: "2px solid white",
+                  borderRadius: "5px",
+                }}
+              >
+                <div id="legalGpt">
+                  <p className="text-xs m-0 font-bold text-teal-800">
+                    Ask LegalGPT
+                  </p>
+                </div>
+                <div style={{ width: "15px", margin: "0" }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    style={{ fill: "#008080", cursor: "pointer" }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                  </svg>
+                </div>
+              </motion.div>
+            </Tooltip>
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={caseSearch}
             >
-              <div id="case-search">
-                <p className="text-xs m-0 font-bold text-teal-800">
-                  Case Search
-                </p>
-              </div>
-              <div style={{ width: "15px", margin: "0" }}>
-                <svg
-                  width="24"
-                  height="24"
-                  style={{ fill: "#008080", cursor: "pointer" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                >
-                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                </svg>
-              </div>
-            </motion.div>
+              <motion.div
+                onClick={() => {
+                  if (caseSearch) {
+                    setCaseSearchDialog(true);
+                  }
+                }}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  !caseSearch
+                    ? "opacity-75  cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "0px 10px",
+                  background: "#C5C5C5",
+                  color: "#008080",
+                  border: "2px solid white",
+                  borderRadius: "5px",
+                  marginBottom: "5px",
+                }}
+              >
+                <div id="case-search">
+                  <p className="text-xs m-0 font-bold text-teal-800">
+                    Case Search
+                  </p>
+                </div>
+                <div style={{ width: "15px", margin: "0" }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    style={{ fill: "#008080", cursor: "pointer" }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                  </svg>
+                </div>
+              </motion.div>
+            </Tooltip>
           </div>
           <div
             id="claw-ai-ass"
             className="flex justify-end cursor-pointer relative"
           >
-            <motion.img
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
-                  : "h-9 w-9"
-              }`}
-              // className="h-9 w-9"
-              whileTap={{ scale: "0.95" }}
-              alt="assistant"
-              src={showAssistant ? assistantIcon2 : aiAssistant}
-              onHoverStart={() => setAiIconHover(true)}
-              onHoverEnd={() => setAiIconHover(false)}
-              onClick={() => {
-                setShowAssistant(true);
-                getAiQuestions();
-              }}
-            />
-            {aiIconHover ? (
-              <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
-                CLAW AI Assistant
-              </h1>
-            ) : (
-              ""
-            )}
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={AiAssistant}
+            >
+              <motion.img
+                className={`${
+                  overViewDetails === "NA" ||
+                  overViewDetails === "" ||
+                  !AiAssistant
+                    ? "opacity-75 cursor-not-allowed h-9 w-9"
+                    : "h-9 w-9"
+                }`}
+                // className="h-9 w-9"
+                whileTap={{ scale: "0.95" }}
+                alt="assistant"
+                src={showAssistant ? assistantIcon2 : aiAssistant}
+                onHoverStart={() => setAiIconHover(true)}
+                onHoverEnd={() => setAiIconHover(false)}
+                onClick={() => {
+                  if (AiAssistant) {
+                    setShowAssistant(true);
+                    getAiQuestions();
+                  }
+                }}
+              />
+              {aiIconHover ? (
+                <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+                  CLAW AI Assistant
+                </h1>
+              ) : (
+                ""
+              )}
+            </Tooltip>
           </div>
           <div className="flex flex-col w-full h-full justify-start items-center gap-2">
             <div
@@ -1198,6 +1268,7 @@ const AiSidebar = () => {
                 </motion.div>
               </Link>
               <motion.div
+                onClick={() => navigate("/")}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1395,15 +1466,21 @@ const AiSidebar = () => {
                         Go Back
                       </motion.button>
                     ) : (
-                      <motion.button
-                        onClick={() => {
-                          setShowRelevantLaws(true);
-                          getReventCaseLaw();
-                        }}
-                        className="border border-white rounded-md py-1"
+                      <Tooltip
+                        title="Upgrade plan to use this feature"
+                        disableHoverListener={RelevantCaseLaws}
                       >
-                        Relevant Case Laws
-                      </motion.button>
+                        <motion.button
+                          disabled={!RelevantCaseLaws}
+                          onClick={() => {
+                            setShowRelevantLaws(true);
+                            getReventCaseLaw();
+                          }}
+                          className="border border-white rounded-md py-1"
+                        >
+                          Relevant Case Laws
+                        </motion.button>
+                      </Tooltip>
                     )}
                     <button
                       onClick={() => dowloadFirstDraft()}
@@ -1921,20 +1998,32 @@ const AiSidebar = () => {
                       {x.name}
                     </p>
                     <Link to={"/courtroom-ai/aiDraft"}>
-                      <button
-                        onClick={() => handleDrafterQuestions(x.value)}
-                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      <Tooltip
+                        title="Upgrade plan to use this feature"
+                        disableHoverListener={AiDrafterNormal}
                       >
-                        Normal
-                      </button>
+                        <button
+                          disabled={!AiDrafterNormal}
+                          onClick={() => handleDrafterQuestions(x.value)}
+                          className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                        >
+                          Normal
+                        </button>
+                      </Tooltip>
                     </Link>
                     <Link to={"/courtroom-ai/aiDraftPro"}>
-                      <button
-                        onClick={() => handleDrafterProQuestions(x.value)}
-                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      <Tooltip
+                        title="Upgrade plan to use this feature"
+                        disableHoverListener={AiDrafterPro}
                       >
-                        Pro
-                      </button>
+                        <button
+                          disabled={!AiDrafterPro}
+                          onClick={() => handleDrafterProQuestions(x.value)}
+                          className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                        >
+                          Pro
+                        </button>
+                      </Tooltip>
                     </Link>
                   </div>
                 ))}

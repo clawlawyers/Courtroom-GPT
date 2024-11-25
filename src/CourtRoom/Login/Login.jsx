@@ -91,7 +91,7 @@ function Login() {
           localStorage.setItem(
             "userToken",
             JSON.stringify({
-              token: response.data.jwt,
+              token: response.data.token,
               expiresAt: response.data.expiresAt,
             })
           );

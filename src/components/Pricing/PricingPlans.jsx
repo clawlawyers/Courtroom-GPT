@@ -218,7 +218,7 @@ const PricingPlans = () => {
       }
     } else {
       toast.error("Please signin or login first");
-      navigate("/login-new");
+      navigate("/login");
     }
   };
 

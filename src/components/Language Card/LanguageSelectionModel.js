@@ -118,7 +118,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               variant="contained"
               style={{
                 backgroundColor: "#008080",
-                color: "#FFFFFF",
+                color: "white",
                 fontWeight: "bold",
                 width: "150px",
               }}
