@@ -35,6 +35,7 @@ import {
   setFightingSideModal,
   setFirstDraftAction,
   setFirstDraftLoading,
+  setNewCaseInput,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
@@ -50,6 +51,7 @@ const CourtroomArgument = () => {
   const dispatch = useDispatch();
 
   const fightingModal = useSelector((state) => state.user.fightingSideModal);
+  const newCaseInput = useSelector((state) => state.user.newCaseInput);
   const tutorial = useSelector((state) => state.popup.tutorial);
   const mainTut = useSelector((state) => state.sidebar.mainTut);
   const driveUpload = useSelector((state) => state.sidebar.driveUpload);
@@ -762,7 +764,11 @@ const CourtroomArgument = () => {
     };
 
     if (currentUser.token) {
-      getHistory();
+      if(!newCaseInput){
+
+        getHistory();
+      }
+      dispatch(setNewCaseInput(false))
     }
     console.log("asdhasjdkas")
   }, [currentUser.token]);

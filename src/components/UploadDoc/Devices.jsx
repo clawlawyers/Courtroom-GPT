@@ -18,6 +18,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { useDispatch } from "react-redux";
 import {
   setFightingSideModal,
+  setNewCaseInput,
   setOverview,
 } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
@@ -44,6 +45,7 @@ const Devices = ({
     (state) => state.sidebar.inputCaseTutorial
   );
   const caseOverView = useSelector((state) => state.user.caseOverview);
+  // const newCaseInput = useSelector((state) => state.user.newCaseInput);
   const driveUpload = useSelector((state) => state.sidebar.driveUpload);
 
   const driverObj = driver({
@@ -160,6 +162,7 @@ const Devices = ({
       setAnalyzing(false);
       setUploadComplete(false);
       setPreviewContent("");
+      dispatch(setNewCaseInput(true))
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/case_summary`,
         {
@@ -581,6 +584,7 @@ const Devices = ({
       console.log(response);
       setPreviewContent(response.data.data.fetchedOverview.case_overview);
       setInputText(response.data.data.fetchedOverview.case_overview);
+      // dispatch(setNewCaseInput(true))
       setUploading(false);
       setAnalyzing(true);
 

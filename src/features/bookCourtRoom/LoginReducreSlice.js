@@ -36,6 +36,7 @@ const userSlice = createSlice({
     firstDraft: "",
     firstDraftLoading: false,
     fightingSideModal: false,
+    newCaseInput:false
   },
   reducers: {
     login(state, action) {
@@ -63,6 +64,9 @@ const userSlice = createSlice({
     setFirstDraftAction(state, action) {
       state.firstDraft = action.payload.draft;
     },
+    setNewCaseInput(state, action) {
+      state.newCaseInput = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(retrieveCourtroomAuth.fulfilled, (state, action) => {
@@ -82,6 +86,7 @@ export const {
   setFightingSideModal,
   setFirstDraftAction,
   setFirstDraftLoading,
+  setNewCaseInput
 } = userSlice.actions;
 
 // Export the reducer to be used in the store
