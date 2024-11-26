@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Close } from "@mui/icons-material";
 import logo from "../../assets/icons/clawlogo.png";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -208,7 +208,10 @@ const Dialog = ({
             <>
               {image === "/static/media/analyzing.e4732f49b92ee72868c4.gif" ? (
                 <div className="flex flex-col justify-center items-center align-middle">
-                  <img className="h-72 w-auto" src={image} alt="" />
+                  {/* <img className="h-72 w-auto" src={image} alt="" /> */}
+                  <div className="flex justify-center items-center h-72 w-auto">
+                    <CircularProgress size={100} sx={{ color: "white" }} />
+                  </div>
                   <div className="w-[30rem] h-16">
                     <TipsComponent />
                   </div>

@@ -15,8 +15,8 @@ import axios from "axios";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
-  const caseOverView = useSelector((state) => state.user.caseOverview);
-  // console.log(currentUser);
+  const { caseOverView, status } = useSelector((state) => state.user);
+  console.log(status);
 
   const [loading, setLoading] = useState(true);
 
@@ -75,7 +75,7 @@ const CourtRoomAiLayout = () => {
 
   useEffect(() => {
     let timer;
-    if (!currentUser) {
+    if (!currentUser || status === "loading") {
       setLoading(true); // set loading while waiting for user data
       timer = setTimeout(() => {
         toast.error("Please Login First");
@@ -85,19 +85,21 @@ const CourtRoomAiLayout = () => {
       setLoading(false);
     }
 
-    if (currentUser && !currentUser?.plan?.isActive) {
-      toast.error("You donot have any active plans");
+    if (currentUser && !currentUser?.plan) {
+      toast.error("You don't have any active plans");
       navigate("/pricing-plans");
     }
 
     return () => clearTimeout(timer);
-  }, [currentUser]);
+  }, [currentUser, status]);
 
   useEffect(() => {
-    if (caseOverView !== "NA" && caseOverView !== "") {
-      navigate("/courtroom-ai/arguments");
+    if (currentUser?.plan) {
+      if (caseOverView !== "NA" && caseOverView !== "") {
+        navigate("/courtroom-ai/arguments");
+      }
     }
-  }, [caseOverView]);
+  }, [caseOverView, currentUser]);
 
   return (
     <>

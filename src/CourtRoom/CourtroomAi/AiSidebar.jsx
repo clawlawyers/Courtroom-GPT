@@ -116,18 +116,18 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
   };
   return (
     <>
-      <div className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
-        <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
-        <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
+      <div className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+        <div className="w-full flex justify-between items-center">
+          <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
+          <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
+        </div>
+        <div className="w-full flex justify-between items-center">
+          <h1 className="text-xs m-0 font-bold text-teal-800">Time Used Up:</h1>
+          <h1 className="text-xs m-0 font-semibold">{formatTime(time)}</h1>
+        </div>
       </div>
-      <div className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
-        <h1 className="text-xs m-0 font-bold text-teal-800">Time Used Up:</h1>
-        <h1 className="text-xs m-0 font-semibold">
-          {/* {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
-          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds} */}
-          {formatTime(time)}
-        </h1>
-      </div>
+      {/* <div className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+      </div> */}
       {timeOver ? (
         <div
           style={{

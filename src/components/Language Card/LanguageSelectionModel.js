@@ -15,6 +15,7 @@ import {
   ListItemText,
   OutlinedInput,
 } from "@mui/material";
+import "./LanguageCard.css";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -101,7 +102,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               {languagesArr.map((name) => (
                 <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
-                  <ListItemText primary={name} />
+                  <ListItemText className="list-text" primary={name} />
                 </MenuItem>
               ))}
             </Select>

@@ -4,6 +4,10 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import {
+  retrieveCourtroomAuth,
+  setUser,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const BuyPlan = () => {
   const navigate = useNavigate();
@@ -37,7 +41,7 @@ const BuyPlan = () => {
         const { planType, ...rest } = bookingData;
         const result = await axios.post(
           `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
-          { ...rest }
+          { ...rest, phoneNumber: currentUser.phoneNumber }
         );
 
         const { amount, id, currency } = result.data.razorpayOrder;
@@ -57,10 +61,7 @@ const BuyPlan = () => {
               _id,
               bookingData: {
                 planId: rest.planId,
-                endDate:
-                  planType === "Monthly"
-                    ? new Date(new Date().setDate(new Date().getDate() + 30))
-                    : new Date(),
+                endDate: rest.expiryDate,
               },
               amount: rest.amount,
               mongoId: currentUser.mongoId,
@@ -71,7 +72,13 @@ const BuyPlan = () => {
               data
             );
             toast.success(result.data.status);
-
+            // dispatch(retrieveCourtroomAuth());
+            const newPlanData = {
+              ...currentUser,
+              plan: result.data.respo.updatePlan,
+            };
+            console.log(newPlanData);
+            dispatch(setUser(newPlanData));
             setPaymentGatewayLoading(false);
             navigate("/courtroom-ai");
           },

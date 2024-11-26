@@ -152,7 +152,7 @@ const PricingPlans = () => {
   const handleSignForm = useSelector((state) => state.user.signUpModal);
   const currentUser = useSelector((state) => state.user.user);
 
-  const [billingCycle, setBillingCycle] = useState("monthly");
+  const [billingCycle, setBillingCycle] = useState("daily");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -198,27 +198,63 @@ const PricingPlans = () => {
   const handleBuyPlan = (plan) => {
     // console.log(plan);
     // console.log(currentUser);
+    let newObj;
+    const findPlanData = pricingArr.find(
+      (x) =>
+        x.planName.toLowerCase() === plan.title.toLowerCase() &&
+        x.duration.toLowerCase() === billingCycle
+    );
     if (currentUser) {
-      const findPlanData = pricingArr.find(
-        (x) =>
-          x.planName.toLowerCase() === plan.title.toLowerCase() &&
-          x.duration.toLowerCase() === billingCycle
-      );
       if (findPlanData) {
-        const newObj = {
-          amount: findPlanData.price,
-          currency: "INR",
-          receipt: `receipt_${Date.now()}`,
-          planId: findPlanData._id,
-          phoneNumber: currentUser.phoneNumber,
-          planType: findPlanData.duration,
-        };
-        dispatch(setPlanData(newObj));
-        navigate("/buy-plan");
+        if (currentUser?.plan) {
+          if (findPlanData.price > currentUser.plan.plan.price) {
+            newObj = {
+              amount: findPlanData.price - currentUser.plan.plan.price,
+              currency: "INR",
+              receipt: `receipt_${Date.now()}`,
+              planId: findPlanData._id,
+              planType: findPlanData.duration,
+              expiryDate: currentUser.plan.endData,
+            };
+            // console.log(newObj);
+            dispatch(setPlanData(newObj));
+            navigate("/buy-plan");
+          } else {
+            toast.error("Please subscribe to a higher plan than current plan!");
+          }
+        } else {
+          newObj = {
+            amount: findPlanData.price,
+            currency: "INR",
+            receipt: `receipt_${Date.now()}`,
+            planId: findPlanData._id,
+            planType: findPlanData.duration,
+            expiryDate:
+              billingCycle === "monthly"
+                ? new Date(new Date().setDate(new Date().getDate() + 30))
+                : new Date(),
+          };
+          dispatch(setPlanData(newObj));
+          navigate("/buy-plan");
+        }
+      } else {
+        toast.error("Details not found for selected plan!");
       }
     } else {
+      newObj = {
+        amount: findPlanData.price,
+        currency: "INR",
+        receipt: `receipt_${Date.now()}`,
+        planId: findPlanData._id,
+        planType: findPlanData.duration,
+        expiryDate:
+          billingCycle === "monthly"
+            ? new Date(new Date().setDate(new Date().getDate() + 30))
+            : new Date(),
+      };
+      dispatch(setPlanData(newObj));
       toast.error("Please signin or login first");
-      navigate("/login");
+      navigate("/login-new");
     }
   };
 
