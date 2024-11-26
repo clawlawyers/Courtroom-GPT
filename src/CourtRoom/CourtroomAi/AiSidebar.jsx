@@ -141,13 +141,21 @@ const seconds = totalSeconds  % 60;
   useEffect(() => {
     let todaysSlot =new Date(slotTimeInterval)
     const todaysSlotTime = todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
-    const Offset = 0.5 * 60 * 60000;
-    const slot = new Date(todaysSlotTime+Offset)
-    let date = new Date()
-    // console.log(slot)
-    // console.log(date)
+    const Offset = 0.5 * 60 * 60000 +5.5 * 60 * 60000
+    var slot = new Date(todaysSlotTime+Offset)
+  //  slot =new Date(slot.getFullYear(), slot.getMonth(), slot.getDate(), slot.getHours(), slot.getMinutes(), slot.getSeconds())
+    const currenttime = new Date()
+      const utcTime = currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
+      const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
+      const istOffset = 5.5 * 60 * 60000;
+      const currentItcTime = new Date(utcTime+istOffset)
+      const slotcurrentItcTime = new Date(slotutcTime)
+      const realcurrentItcTime = new Date(currentItcTime.getFullYear(), currentItcTime.getMonth(), currentItcTime.getDate(), currentItcTime.getHours(), currentItcTime.getMinutes(), currentItcTime.getSeconds())
+      const slotrealcurrentItcTime = new Date(slotcurrentItcTime.getFullYear(), slotcurrentItcTime.getMonth(), slotcurrentItcTime.getDate(), slotcurrentItcTime.getHours(), slotcurrentItcTime.getMinutes(), slotcurrentItcTime.getSeconds())
+    console.log(realcurrentItcTime)
+    console.log(slotrealcurrentItcTime)
   
-    if (slot <date) {
+    if (slotrealcurrentItcTime <realcurrentItcTime) {
       setCountDownOver(true);
     }
   });
