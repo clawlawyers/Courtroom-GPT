@@ -196,8 +196,8 @@ const PricingPlans = () => {
   ];
 
   const handleBuyPlan = (plan) => {
-    console.log(plan);
-    console.log(currentUser);
+    // console.log(plan);
+    // console.log(currentUser);
     if (currentUser) {
       const findPlanData = pricingArr.find(
         (x) =>
