@@ -37,6 +37,8 @@ const CourtRoomAiLayout = () => {
     }
   }, [caseOverView]);
 
+  
+
   const [showSplash, setShowSplash] = useState(true);
 
   const [videoStarted, setVideoStarted] = useState(false);

@@ -13,7 +13,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../features/bookCourtRoom/LoginReducreSlice";
+import { login, setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { ConstructionOutlined } from "@mui/icons-material";
 
 const LoginPageNew = () => {
@@ -65,7 +65,9 @@ const [userParam , setuserParam]=useState(user)
         }
         if (data.token) {
           localStorage.setItem("userToken", data.token);
+          console.log(data.caseOverview)
           dispatch(login({ user: data }));
+        
           // setIsVerified(true);
           navigate("/courtroom-ai")
         } else {
@@ -105,43 +107,43 @@ const [userParam , setuserParam]=useState(user)
 
   const handleVerifyNumber = async (e) => {
     e.preventDefault();
-    // setIsOTPMode(true);
-    setOtpLoading(true);
+    setIsOTPMode(true);
+    // setOtpLoading(true);
     // console.log(window.recaptchaVerifier);
-    if (isFirst) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          console.log(response);
-        },
-        auth,
-      });
-      setIsfirst(false);
-    } else if (!window.recaptchaVerifier) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-        size: "invisible",
-        callback: (response) => {
-          console.log(response);
-        },
-        auth,
-      });
-    }
-    signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
-      .then((confirmationResult) => {
-        setVerificationId(confirmationResult?.verificationId);
-        toast.success("OTP sent successfully !");
-        setIsOTPMode(true);
-        setOtpLoading(false);
-        // setIsDisabled(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Error during OTP request");
-        setOtpLoading(false);
-      });
+    // if (isFirst) {
+    //   console.log("recaptchaVerifier");
+    //   window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+    //     size: "invisible",
+    //     callback: (response) => {
+    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
+    //       console.log(response);
+    //     },
+    //     auth,
+    //   });
+    //   setIsfirst(false);
+    // } else if (!window.recaptchaVerifier) {
+    //   console.log("recaptchaVerifier");
+    //   window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+    //     size: "invisible",
+    //     callback: (response) => {
+    //       console.log(response);
+    //     },
+    //     auth,
+    //   });
+    // }
+    // signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
+    //   .then((confirmationResult) => {
+    //     setVerificationId(confirmationResult?.verificationId);
+    //     toast.success("OTP sent successfully !");
+    //     setIsOTPMode(true);
+    //     setOtpLoading(false);
+    //     // setIsDisabled(true);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     toast.error("Error during OTP request");
+    //     setOtpLoading(false);
+    //   });
   };
 
   const handleVerifyOtp = async (e) => {
@@ -150,12 +152,12 @@ const [userParam , setuserParam]=useState(user)
 
     try {
       if (otp.length === 6) {
-        if(!isverified){
+        // if(!isverified){
 
-          const credential = PhoneAuthProvider.credential(verificationId, otp);
-          await signInWithCredential(auth, credential);
-          setVerified(true)
-        }
+        //   const credential = PhoneAuthProvider.credential(verificationId, otp);
+        //   await signInWithCredential(auth, credential);
+        //   setVerified(true)
+        // }
 
         const response = await fetch(
           `${NODE_API_ENDPOINT}/courtroomFree/login`,
@@ -171,14 +173,15 @@ const [userParam , setuserParam]=useState(user)
           }
         );
         var data = await response.json();
-        // if(data.message=="inavlid session"){
-        //   toast.error("Something went wrong.Please try again!");
-        //   setIsOTPMode(false);
-        // }
-        console.log(data)
-        if (data.token) {
+        if(data.message == "inavlid session"){
+          toast.error("DAILY LIMIT EXCEDED");
+          setIsOTPMode(false);
+        }
+       
+        else if (data.token) {
           localStorage.setItem("userToken", data.token);
           dispatch(login({ user: data }));
+          dispatch(setOverview(data.caseOverview))
           setIsVerified(true);
         } else {
           toast.error("Something went wrong.Please try again!");

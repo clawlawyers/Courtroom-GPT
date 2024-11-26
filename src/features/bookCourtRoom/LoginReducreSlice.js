@@ -48,6 +48,7 @@ const userSlice = createSlice({
       localStorage.removeItem("courtroom-auth");
     },
     setOverview(state, action) {
+      console.log(action.payload)
       state.caseOverview = action.payload;
     },
     setUser(state, action) {

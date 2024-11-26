@@ -295,7 +295,7 @@ const CourtroomArgument = () => {
           {
             element: "#rest-your-case",
             popover: {
-              title: "Rest Your Casr",
+              title: "Rest Your Case",
               description:
                 "Rest your case for the final veridct form the AI Judge   ",
               side: "left",
@@ -630,7 +630,8 @@ const CourtroomArgument = () => {
                 align: "start",
                 onNextClick: () => {
                   console.log("asdad");
-                  handleArgumentSelect(0, userArgument[0]);
+                  setSelectedUserArgument(0);
+                  setSelectedUserArgumentContent(userArgument[0]);
 
                   driverObj1.moveNext();
                 },
@@ -648,6 +649,8 @@ const CourtroomArgument = () => {
                 onNextClick: () => {
                   // .. remove element
                   console.log("asdasdasdasd");
+                  setSelectedUserArgument(null);
+                  setSelectedUserArgumentContent(null);
                   dispatch(setTutorial());
                   console.log(sidebarTut);
                   driverObj1.destroy();
@@ -758,10 +761,11 @@ const CourtroomArgument = () => {
       }
     };
 
-    if (currentUser.userId) {
+    if (currentUser.token) {
       getHistory();
     }
-  }, [currentUser.userId]);
+    console.log("asdhasjdkas")
+  }, [currentUser.token]);
 
   useEffect(() => {
     if (lastItemRef.current) {
@@ -1178,8 +1182,8 @@ const CourtroomArgument = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   id="judge"
-                  // onClick={handleMenuOpen}
-                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
+                  onClick={handleMenuOpen}
+                  // onClick={()=>toast.error("ONLY FOR PAID USERS")}
                   ref={myDivRef}
                 >
                   <MoreVert />
@@ -1284,8 +1288,8 @@ const CourtroomArgument = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   id="lawyer"
-                  // onClick={handleMenuOpen}
-                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
+                  onClick={handleMenuOpen}
+                  // onClick={()=>toast.error("ONLY FOR PAID USERS")}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1320,10 +1324,12 @@ const CourtroomArgument = () => {
               </div>
               <motion.div
                 id="swaplawyer"
-                onClick={userArgument.length > 0 ? handleSwap : null}
-                whileTap={
-                  tapAnimations[userArgument.length > 0 ? "true" : "false"]
-                }
+                // onClick={userArgument.length > 0 ? handleSwap : null}
+                // whileTap={
+                //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
+                // }
+                onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
                 className="flex gap-1 items-center"
               >
                 <svg
@@ -1381,7 +1387,13 @@ const CourtroomArgument = () => {
                   <div
                     className="arguments"
                     onClick={() => {
-                      handleArgumentSelect(index, x);
+                      if(!aiJudgeLoading){
+
+                        handleArgumentSelect(index, x);
+                      }
+                      else{
+                        toast('let the arguments load first');
+                      }
                     }}
                     key={index}
                     ref={index === userArgument.length - 1 ? lastItemRef : null}
@@ -1595,7 +1607,9 @@ const CourtroomArgument = () => {
             id="rest-your-case"
         
             whileTap={{ scale: "0.95" }}
-            onClick={handleVerdict}
+            // onClick={handleVerdict}
+            onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
             className="flex-1 my-2"
             style={{
               display: "flex",
@@ -1685,27 +1699,29 @@ const CourtroomArgument = () => {
             </div>
             {!loadingRelevantCases && (
               <div className="flex justify-end">
-                <Link to={"/courtroom-ai/relevantCaseLaws"}>
+       {/* {}  <Link to={"/courtroom-ai/relevantCaseLaws"}> */}
                   <button
-                    onClick={() => {
-                      dispatch(removeRelevantCaseLaws());
-                      // dispatch(
-                      //   retrieveCaseLaws({
-                      //     query: relevantCasesData,
-                      //     token: currentUser.token,
-                      //   })
-                      // );
-                      dispatch(
-                        setRelevantCaseLaws({
-                          relevantLawData,
-                        })
-                      );
-                    }}
+                  onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
+                    // onClick={() => {
+                    //   dispatch(removeRelevantCaseLaws());
+                    //   // dispatch(
+                    //   //   retrieveCaseLaws({
+                    //   //     query: relevantCasesData,
+                    //   //     token: currentUser.token,
+                    //   //   })
+                    //   // );
+                    //   dispatch(
+                    //     setRelevantCaseLaws({
+                    //       relevantLawData,
+                    //     })
+                    //   );
+                    // }}
                     className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
                   >
                     View Case Laws
                   </button>
-                </Link>
+                {/* </Link> */}
               </div>
             )}
           </div>
@@ -1882,14 +1898,16 @@ const CourtroomArgument = () => {
                 onClick={() => setLawyerViewExpand(false)}
                 className="flex gap-1 items-center"
               >
-                <img className="h-4 w-4" alt="expand" src={expand} />
+                <img className="h-4 w-4" alt="expand" src={collapse} />
                 <h1 className="text-xs m-[5px]">Collapse</h1>
               </div>
               <motion.div
-                onClick={userArgument.length > 0 ? handleSwap : null}
-                whileTap={
-                  tapAnimations[userArgument.length > 0 ? "true" : "false"]
-                }
+                // onClick={userArgument.length > 0 ? handleSwap : null}
+                // whileTap={
+                //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
+                // }
+            onClick={()=>toast.error("ONLY FOR PAID USERS")}
+
                 className="flex gap-1 items-center"
               >
                 <svg
