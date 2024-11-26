@@ -61,12 +61,13 @@ const [userParam , setuserParam]=useState(user)
         var data = await response.json();
         console.log(data)
         if(data?.message =="inavlid session"){
-          toast.error("Something went wrong.Please try !");
+          toast.error("DAILY LIMIT EXCEDED");
         }
         if (data.token) {
           localStorage.setItem("userToken", data.token);
           console.log(data.caseOverview)
           dispatch(login({ user: data }));
+          dispatch(setOverview(data.caseOverview))
         
           // setIsVerified(true);
           navigate("/courtroom-ai")
