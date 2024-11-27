@@ -65,7 +65,7 @@ const DocumentViewer = ({ text }) => {
 
     try {
       const res = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_cases_judge_lawyer`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_cases_judge_lawyer_updated`,
         {
           text_input: text,
         },

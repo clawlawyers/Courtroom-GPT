@@ -15,7 +15,8 @@ import axios from "axios";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
-  const { caseOverView, status } = useSelector((state) => state.user);
+  const { status } = useSelector((state) => state.user);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
   console.log(status);
 
   const [loading, setLoading] = useState(true);
@@ -94,9 +95,17 @@ const CourtRoomAiLayout = () => {
   }, [currentUser, status]);
 
   useEffect(() => {
+    console.log(currentUser);
     if (currentUser?.plan) {
+      console.log("inside ai");
+      console.log(caseOverView);
+
       if (caseOverView !== "NA" && caseOverView !== "") {
+        console.log("inside condition");
+        console.log(caseOverView);
         navigate("/courtroom-ai/arguments");
+      } else {
+        navigate("/courtroom-ai");
       }
     }
   }, [caseOverView, currentUser]);

@@ -345,10 +345,12 @@ const CourtroomArgument = () => {
   const [fightType, setFightType] = useState("");
   const [otherFightType, setOtherFightType] = useState("");
   const [language, setLanguage] = useState("");
+  const [addArgumentLoader, setAddArgumentLoader] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  console.log(addArgumentLoader, " Loading");
 
   const handleClose = (e) => {
     e.stopPropagation();
@@ -586,6 +588,11 @@ const CourtroomArgument = () => {
           },
         }
       );
+      judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
+      setJudgeArgument(judgeArgument);
+      setAiJudgeLoading(false);
+      setAddArgumentInputText(null);
+
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroomPricing/api/summary`,
         {},
@@ -595,10 +602,7 @@ const CourtroomArgument = () => {
           },
         }
       );
-
-      judgeArgument = judgeArgument.data.data.judgeArguemnt.judgement;
-      setJudgeArgument(judgeArgument);
-      setAiJudgeLoading(false);
+      setAddArgumentLoader(false);
     } catch (error) {
       console.error(error);
       toast.error("Error in generating details");
@@ -617,12 +621,17 @@ const CourtroomArgument = () => {
   }
 
   const handleAddArgument = async () => {
+    if (addArgumentLoader) {
+      toast.success("Generating Summary Wait...");
+      return;
+    }
     try {
       setUserArgument([...userArgument, addArgumentInputText]);
       //api calls here
 
       setAiJudgeLoading(true);
       setAiLawyerLoading(true);
+      setAddArgumentLoader(true);
       // driverObj.destroy()
       // driverObj=null
       console.log(userArgument.length);
@@ -698,7 +707,6 @@ const CourtroomArgument = () => {
       setAiLawyerLoading(false);
 
       //clear input text
-      setAddArgumentInputText(null);
     } catch (error) {
       console.error(error);
       toast.error("Error in adding argument");
@@ -1588,6 +1596,8 @@ const CourtroomArgument = () => {
             onClick={handleAddArgument}
             disabled={
               addArgumentInputText === null || aiJudgeLoading || aiLawyerLoading
+              //  ||
+              // addArgumentLoader
             }
             className="flex-1 my-2"
             style={{
