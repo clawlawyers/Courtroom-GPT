@@ -1370,7 +1370,8 @@ const AiSidebar = () => {
                         </div>
                       </div>
                       <textarea
-                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
+                        readOnly
+                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none cursor-default"
                         value={firstDraft}
                         onChange={(e) => setFirstDraft(e.target.value)}
                       />

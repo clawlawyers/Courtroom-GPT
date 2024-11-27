@@ -350,7 +350,8 @@ const Devices = ({
       // console.log(response.data);
       // setPreviewContent(response.data.data.case_overview);
       const totalLength = response.data.data.case_overview.split(" ").length;
-      totalTimeLength(totalLength);
+      const temp = totalTimeLength(totalLength);
+      console.log(temp);
       const summaryResponse = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomPricing/api/case_summary`,
         {

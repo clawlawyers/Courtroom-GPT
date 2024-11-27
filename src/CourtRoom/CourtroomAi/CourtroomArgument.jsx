@@ -609,8 +609,8 @@ const CourtroomArgument = () => {
     }
   };
   const myDivRef = useRef(null);
+
   const handleMenuOpen = (event) => {
-    console.log(typeof event.currentTarget);
     setAnchorElmenu(event.currentTarget);
   };
   const handleMenuClose = () => {
@@ -1741,217 +1741,219 @@ const CourtroomArgument = () => {
       ) : (
         ""
       )}
-      {judgeViewExpand ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            left: "0",
-            right: "0",
-            top: "0",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(3px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "20",
-          }}
-        >
-          <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
-            <div className="flex justify-between">
-              <div className="h-[5vh] p-[10px] flex gap-[10px]">
-                <img
-                  style={{ width: "25px", height: "25px" }}
-                  src={aiJudge}
-                  alt="judge-icon"
-                />
-                <h1 className="text-sm m-0">AI Judge</h1>
-              </div>
-              <div>
-                <Tooltip
-                  title="Upgrade plan to use this feature"
-                  disableHoverListener={RelevantCaseLaws}
-                >
-                  <IconButton
-                    sx={{ color: "white" }}
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    id="judge"
-                    onClick={RelevantCaseLaws ? handleMenuOpen : null}
-                  >
-                    <MoreVert />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  id="long-menu"
-                  anchorEl={anchorElmenu}
-                  keepMounted
-                  open={Boolean(anchorElmenu)}
-                  onClose={handleMenuClose}
-                  anchorOrigin={{
-                    vertical: "center",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "center",
-                    horizontal: "right",
-                  }}
-                  PaperProps={{
-                    style: {
-                      marginRight: "16px", // Adjust this value for the desired gap
-                    },
-                  }}
-                >
-                  <div
-                    className="text-xs px-2 hover:cursor-pointer "
-                    onClick={() => {
-                      handleshowcaseaijudge();
-                      handleMenuClose();
-                    }}
-                  >
-                    View Relevant Case Laws
-                  </div>
-                </Menu>
-              </div>
+      <Modal
+        className="text-white flex justify-center items-center"
+        open={judgeViewExpand}
+        onClose={() => setJudgeViewExpand(false)}
+      >
+        <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
+          <div className="flex justify-between">
+            <div className="h-[5vh] p-[10px] flex gap-[10px]">
+              <img
+                style={{ width: "25px", height: "25px" }}
+                src={aiJudge}
+                alt="judge-icon"
+              />
+              <h1 className="text-sm m-0">AI Judge</h1>
             </div>
-            <div
-              className="flex-1 overflow-auto"
-              style={{
-                margin: "15px",
-                overflow: "hidden",
-                overflowY: "scroll",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "13px",
-                  lineHeight: "20px",
-                  wordSpacing: "4px",
-                  padding: "0px 10px",
+            <div>
+              <Tooltip
+                title="Upgrade plan to use this feature"
+                disableHoverListener={RelevantCaseLaws}
+              >
+                <IconButton
+                  sx={{ color: "white" }}
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  id="judge"
+                  onClick={RelevantCaseLaws ? handleMenuOpen : null}
+                >
+                  <MoreVert />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                id="long-menu"
+                anchorEl={anchorElmenu}
+                keepMounted
+                open={Boolean(anchorElmenu)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: "center",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "center",
+                  horizontal: "right",
+                }}
+                PaperProps={{
+                  style: {
+                    marginRight: "16px", // Adjust this value for the desired gap
+                  },
                 }}
               >
-                <Markdown>{judgeArgument}</Markdown>
-              </p>
+                <div
+                  className="text-xs px-2 hover:cursor-pointer "
+                  onClick={() => {
+                    handleshowcaseaijudge();
+                    handleMenuClose();
+                    setJudgeViewExpand(false);
+                  }}
+                >
+                  View Relevant Case Laws
+                </div>
+              </Menu>
             </div>
-            <div
-              onClick={() => setJudgeViewExpand(false)}
-              className="h-[5vh] flex  items-center cursor-pointer px-2"
+          </div>
+          <div
+            className="flex-1 overflow-auto"
+            style={{
+              margin: "15px",
+              overflow: "hidden",
+              overflowY: "scroll",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "13px",
+                lineHeight: "20px",
+                wordSpacing: "4px",
+                padding: "0px 10px",
+              }}
             >
-              <img className="h-4 w-4" alt="expand" src={collapse} />
+              <Markdown>{judgeArgument}</Markdown>
+            </p>
+          </div>
+          <div
+            onClick={() => setJudgeViewExpand(false)}
+            className="h-[5vh] flex  items-center cursor-pointer px-2"
+          >
+            <img className="h-4 w-4" alt="expand" src={collapse} />
+            <h1 className="text-xs m-[5px]">Collapse</h1>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="text-white flex justify-center items-center"
+        open={lawyerViewExpand}
+        onClose={() => setLawyerViewExpand(false)}
+      >
+        <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
+          <div className="flex justify-between">
+            <div className="h-[5vh] p-[10px] flex gap-[10px]">
+              <img
+                style={{ width: "25px", height: "25px" }}
+                src={aiLawyer}
+                alt="judge-icon"
+              />
+              <h1 className="text-sm m-0">AI Lawyer</h1>
+            </div>
+            <div>
+              {" "}
+              <Tooltip
+                title="Upgrade plan to use this feature"
+                disableHoverListener={RelevantCaseLaws}
+              >
+                <IconButton
+                  sx={{ color: "white" }}
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  id="lawyer"
+                  onClick={RelevantCaseLaws ? handleMenuOpen : null}
+                >
+                  <MoreVert />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                id="long-menu"
+                anchorEl={anchorElmenu}
+                keepMounted
+                open={Boolean(anchorElmenu)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: "center",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "center",
+                  horizontal: "right",
+                }}
+                PaperProps={{
+                  style: {
+                    marginRight: "16px", // Adjust this value for the desired gap
+                  },
+                }}
+              >
+                <div
+                  className="text-xs px-2 hover:cursor-pointer "
+                  onClick={() => {
+                    handleshowcaseaijudge();
+                    handleMenuClose();
+                    setLawyerViewExpand(false);
+                  }}
+                >
+                  View Relevant Case Laws
+                </div>
+              </Menu>
+            </div>
+          </div>
+          <div
+            className="flex-1 overflow-auto"
+            style={{
+              margin: "15px",
+              overflow: "hidden",
+              overflowY: "scroll",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "13px",
+                lineHeight: "20px",
+                wordSpacing: "4px",
+                padding: "0px 10px",
+              }}
+            >
+              <Markdown>{lawyerArgument}</Markdown>
+            </p>
+          </div>
+          <div className="h-[5vh] flex justify-between items-center cursor-pointer px-2">
+            <div
+              onClick={() => setLawyerViewExpand(false)}
+              className="flex gap-1 items-center"
+            >
+              <img className="h-4 w-4" alt="expand" src={expand} />
               <h1 className="text-xs m-[5px]">Collapse</h1>
             </div>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
-      {lawyerViewExpand ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            left: "0",
-            right: "0",
-            top: "0",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(3px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "20",
-          }}
-        >
-          <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
-            <div className="flex justify-between">
-              <div className="h-[5vh] p-[10px] flex gap-[10px]">
-                <img
-                  style={{ width: "25px", height: "25px" }}
-                  src={aiLawyer}
-                  alt="judge-icon"
-                />
-                <h1 className="text-sm m-0">AI Lawyer</h1>
-              </div>
-              <div>
-                {" "}
-                <Tooltip
-                  title="Upgrade plan to use this feature"
-                  disableHoverListener={RelevantCaseLaws}
-                >
-                  <IconButton
-                    sx={{ color: "white" }}
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    id="lawyer"
-                    onClick={RelevantCaseLaws ? handleMenuOpen : null}
-                  >
-                    <MoreVert />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            </div>
-            <div
-              className="flex-1 overflow-auto"
-              style={{
-                margin: "15px",
-                overflow: "hidden",
-                overflowY: "scroll",
-              }}
+            <motion.div
+              onClick={userArgument.length > 0 ? handleSwap : null}
+              whileTap={
+                tapAnimations[userArgument.length > 0 ? "true" : "false"]
+              }
+              className="flex gap-1 items-center"
             >
-              <p
-                style={{
-                  fontSize: "13px",
-                  lineHeight: "20px",
-                  wordSpacing: "4px",
-                  padding: "0px 10px",
-                }}
+              <svg
+                width="20"
+                height="20"
+                stroke="white"
+                fill="white"
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                stroke-linejoin="round"
+                stroke-miterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <Markdown>{lawyerArgument}</Markdown>
-              </p>
-            </div>
-            <div className="h-[5vh] flex justify-between items-center cursor-pointer px-2">
-              <div
-                onClick={() => setLawyerViewExpand(false)}
-                className="flex gap-1 items-center"
-              >
-                <img className="h-4 w-4" alt="expand" src={expand} />
-                <h1 className="text-xs m-[5px]">Collapse</h1>
-              </div>
-              <motion.div
-                onClick={userArgument.length > 0 ? handleSwap : null}
-                whileTap={
-                  tapAnimations[userArgument.length > 0 ? "true" : "false"]
-                }
-                className="flex gap-1 items-center"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  stroke="white"
-                  fill="white"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-                <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
-              </motion.div>
-            </div>
+                <path
+                  d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
+                  fill-rule="nonzero"
+                />
+              </svg>
+              <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
+            </motion.div>
           </div>
         </div>
-      ) : (
-        ""
-      )}
+      </Modal>
       {fightingModal && (
         <div
           style={{
