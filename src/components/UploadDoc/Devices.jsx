@@ -312,6 +312,7 @@ const Devices = ({
   const checkUploadSuccessfull = () => {
     console.log(toBeUploadedFiles);
     console.log(uploadedSuccessFully);
+
     if (
       uploadedSuccessFully.length > 0 &&
       toBeUploadedFiles.length === uploadedSuccessFully.length
@@ -319,12 +320,19 @@ const Devices = ({
       callOverView();
       setHandleLocalUploadDialog(false);
     } else {
-      toast.error("Error in file upload!");
-      setHandleLocalUploadDialog(false);
-      setToBeUploadedFiles([]);
-      setUploadProgress({});
-      setUploadedSuccessFully([]);
-      setFileNames({});
+      toast("First Add Files..!", {
+        icon: "⚠️",
+        style: {
+          // border: "1px solid #ffa726", // Warning color (orange)
+          padding: "16px",
+          // color: "#ff9800", // Text color (orange)
+        },
+      });
+      // setHandleLocalUploadDialog(false);
+      // setToBeUploadedFiles([]);
+      // setUploadProgress({});
+      // setUploadedSuccessFully([]);
+      // setFileNames({});
     }
   };
 
