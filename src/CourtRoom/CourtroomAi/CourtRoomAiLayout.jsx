@@ -1,6 +1,4 @@
-// src/components/CourtRoomAiLayout.js
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import AiSidebar from "./AiSidebar";
 import { Outlet } from "react-router-dom";
 import Styles from "./CourtroomAiLayout.module.css";
@@ -10,119 +8,130 @@ import LogoSplash from "../../assets/images/logoSplash.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducreSlice";
+import { CircularProgress } from "@mui/material";
+import toast from "react-hot-toast";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+import axios from "axios";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
-  console.log(currentUser);
+  const { status } = useSelector((state) => state.user);
   const caseOverView = useSelector((state) => state.user.caseOverview);
-  // console.log(caseOverView);
+  console.log(status);
+
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(retrieveCourtroomAuth());
-  // }, []);
+  const BATCH_INTERVAL = 60 * 1000;
 
-  // console.log(currentUser);
-
-  // useEffect(() => {
-  //   if (currentUser === "") {
-  //     navigate("/");
-  //   }
-  // }, [currentUser]);
+  const currentUserRef = useRef(currentUser);
 
   useEffect(() => {
-    if (caseOverView !== "NA" && caseOverView !== "") {
-      navigate("/courtroom-ai/arguments");
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
+
+  // console.log(currentUser?.token);
+  // console.log(currentUserRef.current);
+
+  const updateEngagementTime = useCallback(async (engagementData) => {
+    console.log(currentUser?.token);
+    try {
+      await axios.post(
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/storeTime`,
+        engagementData,
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser?.token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating engagement time:", error);
     }
-  }, [caseOverView]);
+  }, []);
 
-  const [showSplash, setShowSplash] = useState(true);
-
-  const [videoStarted, setVideoStarted] = useState(false);
-
-  // useEffect(() => {
-  //   if (!showSplash) {
-  //     localStorage.setItem("hasSeenSplash", "true");
-  //   }
-  // }, [showSplash]);
-
-  const handleVideoEnded = () => {
-    setShowSplash(false);
-  };
-
-  const handleEnterCourtroom = () => {
-    setVideoStarted(true);
-    const videoElement = document.getElementById("splashVideo");
-    if (videoElement) {
-      videoElement.play().catch((error) => {
-        console.error("Error playing the video:", error);
+  const flushQueue = useCallback(() => {
+    const user = currentUserRef.current;
+    if (user) {
+      updateEngagementTime({
+        phoneNumber: user.phoneNumber,
+        engagementTime: 60,
+        timestamp: Date.now(),
       });
     }
-  };
+  }, [updateEngagementTime]);
 
-  const handleExitCourtroom = () => {
-    setShowSplash(true);
-    setVideoStarted(false);
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      flushQueue();
+    }, BATCH_INTERVAL);
 
-  if (currentUser === "") {
-    navigate("/");
-  }
+    return () => {
+      clearInterval(interval);
+      flushQueue();
+    };
+  }, [flushQueue]);
+
+  useEffect(() => {
+    let timer;
+    if (!currentUser || status === "loading") {
+      setLoading(true); // set loading while waiting for user data
+      timer = setTimeout(() => {
+        toast.error("Please Login First");
+        navigate("/login");
+      }, 2000);
+    } else {
+      setLoading(false);
+    }
+
+    if (currentUser && !currentUser?.plan) {
+      toast.error("You don't have any active plans");
+      navigate("/pricing-plans");
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentUser, status]);
+
+  useEffect(() => {
+    console.log(currentUser);
+    if (currentUser?.plan) {
+      console.log("inside ai");
+      console.log(caseOverView);
+
+      if (caseOverView !== "NA" && caseOverView !== "") {
+        console.log("inside condition");
+        console.log(caseOverView);
+        const sidebarconatiner = document.getElementById("conatiner-sidebar")
+        sidebarconatiner.click()
+        navigate("/courtroom-ai/arguments");
+      } else {
+        navigate("/courtroom-ai");
+      }
+    }
+  }, [caseOverView, currentUser]);
 
   return (
-    <div className="">
-      {/* {showSplash ? (
-        <div className="flex flex-col justify-center  items-center h-screen w-full relative">
-          {!videoStarted && (
-            <img
-              className={Styles.image}
-              src={splashImage}
-              alt="Background"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                zIndex: 1,
-              }}
-            />
-          )}
-
-          {!videoStarted && (
-            <div className="z-2 flex flex-col gap-10 mt-5 w-full h-screen justify-center items-center">
-              <img className="h-max w-max" src={LogoSplash} alt="" />
-              <button
-                className="hover:scale-110 delay-500 animate shadow-lg shadow-neutral-800 p-2 bg-gradient-to-r from-teal-800 to-teal-400 border-white rounded-md"
-                onClick={handleEnterCourtroom}
-              >
-                Enter Courtroom
-              </button>
-            </div>
-          )}
-          {videoStarted && (
-            <video
-              id="splashVideo"
-              src={splashVideo}
-              autoPlay
-              muted
-              onEnded={handleVideoEnded}
-            />
-          )}
+    <>
+      {loading ? (
+        <div className="h-screen w-full flex flex-col gap-1 justify-center items-center">
+          <CircularProgress sx={{ color: "#008080" }} size={50} />
+          <p className="text-white m-0 ">Auth Loading ...</p>
         </div>
-      ) : ( */}
-      <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
-        {/* <div > */}
-        <AiSidebar className="h-screen m-0 overflow-hidden" />
-        {/* </div> */}
-        <div>
-          <div className="h-screen m-0 overflow-hidden">
-            <Outlet />
+      ) : (
+        <div className="">
+          <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
+            <AiSidebar className="h-screen m-0 overflow-hidden" />
+            <div>
+              <div className="h-screen m-0 overflow-hidden">
+                <Outlet />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      {/* )} */}
-    </div>
+      )}
+    </>
   );
 };
 

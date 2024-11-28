@@ -7,7 +7,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
@@ -19,14 +19,11 @@ import {
   signInWithPhoneNumber,
 } from "../../utils/firebase";
 import Header from "../../components/Header/Header";
+import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
-const BookNow = () => {
+const LoginPageNew = () => {
   const dispatch = useDispatch();
-  const [receipt, setReceipt] = useState(`receipt_${Date.now()}`);
   const [loading, setLoading] = useState(false);
-  const [scheduledSlots, setScheduledSlots] = useState([]);
-  const [errorData, setErrorData] = useState("");
-  const [errorState, setErrorState] = useState(false);
   const [userName, setUserName] = useState("");
   const [contact, setContact] = useState("");
   const [record, setRecord] = useState(false);
@@ -45,13 +42,9 @@ const BookNow = () => {
 
   const navigate = useNavigate();
 
-  console.log(scheduledSlots);
+  const bookingDataSlice = useSelector((state) => state?.booking?.planData);
 
   const handleSubmit = async (e) => {
-    if (scheduledSlots.length === 0) {
-      toast.error("Please select a slot");
-      return;
-    }
     e.preventDefault();
     if (!otpVerifySuccess) {
       toast.error("Please verify phone number to proceed!");
@@ -60,97 +53,106 @@ const BookNow = () => {
     } else {
       setLoading(true);
 
-      const formattedBookings = scheduledSlots.map((booking) => {
-        // Create a new Date object to avoid mutating the original date
-        let date = new Date(booking.date);
-
-        // Add one day
-        date.setDate(date.getDate() + 1);
-
-        // Format the date
-        const formattedDate = date.toISOString().split("T")[0];
-
-        // Extract the hour from the time string
-        const hour = parseInt(booking.time[0].split(":")[0], 10);
-
-        // Return the formatted booking
-        return { date: formattedDate, hour };
-      });
-
       const bookingData = {
         phoneNumber: contact,
         name: userName,
         email: email,
-        recording: record,
         password,
-        slots: formattedBookings, // Add scheduledSlots to bookingData
       };
-      const respos = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom-validation`,
-        {
-          ...bookingData,
+      try {
+        const response = await axios.post(
+          `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom`,
+          {
+            ...bookingData,
+          }
+        );
+        console.log(response);
+        dispatch(setUser(response.data.respo));
+        localStorage.setItem(
+          "userToken",
+          JSON.stringify({
+            token: response.data.respo.token,
+            expiresAt: response.data.respo.expiresAt,
+          })
+        );
+        // dispatch(setBookingData(bookingData));
+        setLoading(false);
+        // navigate(-1);  // make it conditional and also make a cart slice where users selected plan will store
+        if (bookingDataSlice !== "") {
+          navigate("/buy-plan");
+        } else {
+          navigate("/pricing-plans");
         }
-      );
-      if (respos.data.data.data === "Slot can be book") {
-        dispatch(setBookingData(bookingData));
+      } catch (error) {
+        console.log(error);
+        toast.error("Sign in failed!");
         setLoading(false);
-        navigate("/confirm-booking");
-        // loadRazorpay(bookingData);
-      } else {
-        setErrorState(true);
-        setLoading(false);
-        setErrorData("same number or email not allowed at same time slot");
-        toast.error("same number or email not allowed at same time slot");
       }
     }
   };
 
-  const handleSendOTP = (e) => {
+  const handleSendOTP = async (e) => {
     e.preventDefault();
     // handleDisableButton();
     setOtpLoading(true);
     console.log("sendOTP");
-    if (isFirst) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: (response) => {
-            // reCAPTCHA solved, allow signInWithPhoneNumber.
+    const response = await axios.post(
+      `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom-validation`,
+      {
+        phoneNumber: contact,
+        email: email,
+      }
+    );
+    const checkValid = response.data.data.data;
+    // const checkValid = true;
+    if (checkValid) {
+      toast.success("Phone number is valid!");
+      if (isFirst) {
+        console.log("recaptchaVerifier");
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
+            },
           },
-        },
-        auth
-      );
-      setIsfirst(false);
-    } else if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: (response) => {
-            // reCAPTCHA solved, allow signInWithPhoneNumber.
+          auth
+        );
+        setIsfirst(false);
+      } else if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
+            },
           },
-        },
-        auth
-      );
-    }
+          auth
+        );
+      }
 
-    signInWithPhoneNumber(auth, "+91" + contact, window.recaptchaVerifier)
-      .then((confirmationResult) => {
-        setVerificationId(confirmationResult.verificationId);
-        toast.success("OTP sent successfully!");
-        setOtpSuccess(true);
-        setOtpLoading(false);
-        setIsDisabled(true);
-      })
-      .catch((error) => {
-        console.error("Error during OTP request:", error);
-        toast.error("Error in sending OTP");
-        setOtpLoading(false);
-      });
+      signInWithPhoneNumber(auth, "+91" + contact, window.recaptchaVerifier)
+        .then((confirmationResult) => {
+          setVerificationId(confirmationResult.verificationId);
+          toast.success("OTP sent successfully!");
+          setOtpSuccess(true);
+          setOtpLoading(false);
+          setIsDisabled(true);
+        })
+        .catch((error) => {
+          console.error("Error during OTP request:", error);
+          toast.error("Error in sending OTP");
+          setOtpLoading(false);
+        });
+    } else {
+      toast.error("This contact already exists!! Please try another number");
+      setOtpLoading(false);
+      setContact("");
+    }
   };
 
   useEffect(() => {
@@ -231,33 +233,13 @@ const BookNow = () => {
 
   return (
     <div className={styles.topContainer}>
-      {/* <Header/> */}
-      <div className="p-5">
-        <h1
-          style={{
-            fontWeight: 800,
-            margin: "0",
-          }}
-        >
-          Book your Court Room
-        </h1>
-      </div>
-      <div className=" w-full h-full mt-14 md:mt-0">
-        <CalendarComponent
-          scheduledSlots={scheduledSlots}
-          setScheduledSlots={setScheduledSlots}
-        />
-      </div>
-
-      <div
-        // className={styles.formContainer}
-        className="w-full grid md:grid-cols-[30%_70%]"
-      >
-        <div className="">
+      <div className="h-10"></div>
+      <div className="w-[80%] grid md:grid-cols-[30%_70%] border-2 rounded-lg p-2">
+        <div>
           <img src={image} alt="" />
         </div>
-        <div className="flex flex-col gap-5 justify-center  items-center">
-          <h2 className="text-5xl font-bold ">Enter your Details</h2>
+        <div className="flex flex-col gap-3 justify-center  items-center">
+          <h2 className="text-5xl font-bold">Sign In</h2>
           <form
             // className={`${styles.forms} gap-4 lg:gap-5`}
             className="w-full px-5 flex flex-col justify-center gap-4"
@@ -286,7 +268,7 @@ const BookNow = () => {
             <div className="flex flex-col gap-3">
               <div className="flex gap-2">
                 <input
-                  type="text"
+                  type="number"
                   id="contact"
                   name="contact"
                   placeholder="Enter your contact number"
@@ -302,13 +284,13 @@ const BookNow = () => {
                         "linear-gradient(100deg, #008080 0%, #15B3B3 100%)",
                     }}
                     className="rounded px-3 w-28"
-                    disabled={otpLoading}
+                    disabled={otpLoading || contact === "" || email === ""}
                     onClick={handleSendOTP}
                   >
                     {otpLoading ? (
                       <CircularProgress size={15} color="inherit" />
                     ) : (
-                      "Verify"
+                      "Send OTP"
                     )}
                   </button>
                 ) : (
@@ -431,56 +413,24 @@ const BookNow = () => {
               {loading ? (
                 <CircularProgress color="inherit" size={20} />
               ) : (
-                "Confirm Booking"
+                "Register"
               )}
             </motion.button>
           </form>
+          <p className="">
+            Have an account already ? {"  "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-[#00ffa3] font-semibold cursor-pointer"
+            >
+              Login Here
+            </span>
+          </p>
         </div>
-        {errorState ? (
-          <div
-            className="absolute w-full h-full flex items-center justify-center"
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-              backdropFilter: "blur(5px)",
-            }}
-          >
-            <div className="border-2 border-red-500 rounded-lg bg-white flex flex-col ">
-              <div className="flex justify-end p-2">
-                <svg
-                  onClick={() => {
-                    setErrorState(false);
-                    setErrorData("");
-                  }}
-                  style={{ cursor: "pointer" }}
-                  width="24"
-                  height="24"
-                  stroke="red"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-              </div>
-
-              <p className="text-black text-lg font-semibold p-5">
-                Same number or email not allowed at same time slot
-              </p>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
       </div>
       <div id="recaptcha-container"></div>
     </div>
   );
 };
 
-export default BookNow;
+export default LoginPageNew;

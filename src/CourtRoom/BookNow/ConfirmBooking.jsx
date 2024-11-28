@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { setClearBooking } from "../../features/bookCourtRoom/bookingSlice";
+import Header from "../../components/Header/Header";
 
 const couponArr = [{ name: "exam50", discount: 50 }];
 
@@ -55,7 +56,7 @@ const ConfirmBooking = () => {
     setPaymentGatewayLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/book-courtroom  `,
+        `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom  `,
         {
           method: "POST",
           headers: {
@@ -308,7 +309,7 @@ const ConfirmBooking = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/verify-coupon`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/verify-coupon`,
         {
           method: "POST",
           headers: {

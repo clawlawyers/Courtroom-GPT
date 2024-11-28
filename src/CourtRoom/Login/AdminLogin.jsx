@@ -20,7 +20,7 @@ import {
   signInWithPhoneNumber,
 } from "../../utils/firebase";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
-
+import Header from "../../components/Header/Header";
 const TimerComponent = React.memo(() => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -107,7 +107,7 @@ function AdminLogin() {
     console.log(currentHour);
 
     const slotBooked = await fetch(
-      `${NODE_API_ENDPOINT}/courtroom/admin-login-validation`,
+      `${NODE_API_ENDPOINT}/courtroomPricing/admin-login-validation`,
       {
         method: "POST",
         headers: {
@@ -176,13 +176,16 @@ function AdminLogin() {
   const handleCheckPassword = async (e) => {
     e.preventDefault();
     setTokenCheckLoading(true);
-    const slotBooked = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phoneNumber: token, password: token }),
-    });
+    const slotBooked = await fetch(
+      `${NODE_API_ENDPOINT}/courtroomPricing/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phoneNumber: token, password: token }),
+      }
+    );
 
     if (!slotBooked.ok) {
       toast.error("Invalid token. Please try again.");
@@ -203,13 +206,14 @@ function AdminLogin() {
 
   return (
     <div
-      className="flex flex-col justify-center items-center pt-14"
+      className="flex flex-col justify-center items-center pt-5"
       style={{
         background: `radial-gradient(circle at 50% 0%, #018585, transparent 40%),
       radial-gradient(circle at 100% 50%, #351f58d0, transparent 50%),
       radial-gradient(circle at 0% 90%, #018585, transparent 60%)`,
       }}
     >
+      <Header />
       {/* top cont */}
       <div className="grid md:grid-cols-2 items-center">
         <div className="w-full flex items-center justify-center">

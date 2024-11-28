@@ -87,7 +87,7 @@ const CaseLaws = () => {
     const fieldId = findFileId.id.toString();
     try {
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/view_document`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/view_document`,
         {
           method: "POST",
           headers: {

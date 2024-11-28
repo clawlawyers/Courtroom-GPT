@@ -74,7 +74,7 @@ const RelevantCaseLaws = () => {
     setLoading(true);
     try {
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/print_case_details`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/print_case_details`,
         {
           method: "POST",
           headers: {

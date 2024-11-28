@@ -32,7 +32,7 @@ export function CaseCard({ name, date, court, citations, caseId, query }) {
   const [summery, setsummery] = useState("");
   const [openCase, setOpenCase] = useState(false);
   const [content, setContent] = useState("");
-  const jwt = useSelector((state) => state.auth.user.jwt);
+  const jwt = useSelector((state) => state.auth.user.token);
   const [loading, setLoading] = useState(false);
   const { token } = useSelector((state) => state.gpt);
   const dispatch = useDispatch();

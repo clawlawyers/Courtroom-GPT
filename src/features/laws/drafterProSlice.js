@@ -6,7 +6,7 @@ export const retrieveDrafterProQuestions = createAsyncThunk(
   async ({ query, token }) => {
     try {
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/pro_application`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/pro_application`,
         {
           method: "POST",
           headers: {

@@ -80,13 +80,16 @@ function LoginToCourtRoom() {
     e.preventDefault();
     setOtpLoading(true);
 
-    const loginInfo = await fetch(`${NODE_API_ENDPOINT}/courtroom/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phoneNumber: phone }),
-    });
+    const loginInfo = await fetch(
+      `${NODE_API_ENDPOINT}/courtroomPricing/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phoneNumber: phone }),
+      }
+    );
 
     if (!loginInfo.ok) {
       toast.error("Your phone number is not valid for current slot");
@@ -240,7 +243,7 @@ function LoginToCourtRoom() {
           setOtp("");
 
           const loginInfo = await fetch(
-            `${NODE_API_ENDPOINT}/courtroom/login`,
+            `${NODE_API_ENDPOINT}/courtroomPricing/login`,
             {
               method: "POST",
               headers: {

@@ -35,64 +35,83 @@ import Login from "./CourtRoom/Login/Login.jsx";
 import RelevantCaseLaws from "./CourtRoom/CourtroomAi/RelevantCaseLaws.jsx";
 import AiDrafterPro from "./CourtRoom/CourtroomAi/AiDrafterPro.jsx";
 import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx";
+import PricingPlans from "./components/Pricing/PricingPlans.jsx";
+import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
+import Header from "./components/Header/Header.jsx";
+import UserForm from "./components/Pricing/UserForm.jsx";
+import BuyPlan from "./components/Pricing/BuyPlan.jsx";
 
 function App() {
-  const BATCH_INTERVAL = 60 * 1000;
-  const currentUser = useSelector((state) => state.auth.user);
+  // const BATCH_INTERVAL = 60 * 1000;
+  const currentUser = useSelector((state) => state.user.user);
+  const handleSignForm = useSelector((state) => state.user.signUpModal);
 
-  const currentUserRef = useRef(currentUser);
+  // const currentUserRef = useRef(currentUser);
 
-  useEffect(() => {
-    currentUserRef.current = currentUser;
-  }, [currentUser]);
+  // useEffect(() => {
+  //   currentUserRef.current = currentUser;
+  // }, [currentUser]);
 
-  const updateEngagementTime = useCallback(async (engagementData) => {
-    try {
-      await axios.post(
-        `${NODE_API_ENDPOINT}/cron/engagement/time`,
-        engagementData
-      );
-    } catch (error) {
-      console.error("Error updating engagement time:", error);
-    }
-  }, []);
+  // console.log(currentUser?.token);
+  // console.log(currentUserRef.current);
 
-  const flushQueue = useCallback(() => {
-    const user = currentUserRef.current;
-    if (user) {
-      updateEngagementTime([
-        {
-          phoneNumber: user.phoneNumber,
-          engagementTime: 60,
-          timestamp: Date.now(),
-        },
-      ]);
-    }
-  }, [updateEngagementTime]);
+  // const updateEngagementTime = useCallback(async (engagementData) => {
+  //   // console.log(currentUser?.token);
+  //   try {
+  //     await axios.post(
+  //       `${NODE_API_ENDPOINT}/courtroomPricing/api/storeTime`,
+  //       engagementData,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${currentUser?.token}`,
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating engagement time:", error);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      flushQueue();
-    }, BATCH_INTERVAL);
+  // const flushQueue = useCallback(() => {
+  //   const user = currentUserRef.current;
+  //   if (user) {
+  //     updateEngagementTime([
+  //       {
+  //         phoneNumber: user.phoneNumber,
+  //         engagementTime: 60,
+  //         timestamp: Date.now(),
+  //       },
+  //     ]);
+  //   }
+  // }, [updateEngagementTime]);
 
-    return () => {
-      clearInterval(interval);
-      flushQueue();
-    };
-  }, [flushQueue]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     flushQueue();
+  //   }, BATCH_INTERVAL);
+
+  //   return () => {
+  //     clearInterval(interval);
+  //     flushQueue();
+  //   };
+  // }, [flushQueue]);
 
   // this should be run only once per application lifetime
   useEffect(() => {
     // store.dispatch(retrieveAuth());
+    // if (localStorage.getItem()) {
     store.dispatch(retrieveCourtroomAuth());
+    // }
   }, []);
 
   const CourtRoomLayout = () => {
     return (
       <div className="">
-        <div className="h-full ">
+        <Header />
+        <div className="h-full">
           <Outlet />
         </div>
+        {/* {handleSignForm && <UserForm />} */}
         <FooterBanner />
       </div>
     );
@@ -148,6 +167,18 @@ function App() {
         {
           path: "/contact",
           element: <Contact />,
+        },
+        {
+          path: "/pricing-plans",
+          element: <PricingPlans />,
+        },
+        {
+          path: "/buy-plan",
+          element: <BuyPlan />,
+        },
+        {
+          path: "/login-new",
+          element: <LoginPageNew />,
         },
       ],
     },

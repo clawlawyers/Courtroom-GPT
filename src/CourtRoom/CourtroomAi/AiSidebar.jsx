@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, CircularProgress, Menu } from "@mui/material";
+import { Button, CircularProgress, Menu, Tooltip } from "@mui/material";
 import { ArrowRight, Close, Download, Send } from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
@@ -66,95 +66,70 @@ const drafterQuestions = [
   { name: "Criminal Petition", value: "criminal_petition" },
 ];
 
-const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
-  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
-  const currentUser = useSelector((state) => state.user.user);
+const TimerComponent = React.memo(({ ExitToCourtroom }) => {
+  const totalHours = useSelector(
+    (state) => state.user.user.plan.plan.totalTime
+  );
+  const totalHoursUsed = useSelector((state) => state.user.user.plan.usedHours);
 
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
-  const [countdownOver, setCountDownOver] = useState(false);
-  const [feedbackForm, setFeedbackForm] = useState(false);
-  const [rateValue, setRateValue] = React.useState(0);
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
+  // Format totalHours and totalHoursUsed for display
+  const formatHours = (hours) => {
+    if (isNaN(hours) || typeof hours !== "number") {
+      hours = 0;
+    }
+    const hrs = Math.floor(hours);
+    const mins = Math.round((hours - hrs) * 60);
+    return `${hrs} hr ${mins} min`;
+  };
 
-  const dispatch = useDispatch();
+  // Calculate initial time in seconds for timer
+  const initialTime = totalHoursUsed * 3600;
+
+  const [time, setTime] = useState(initialTime);
+  const [timeOver, setTimeOver] = useState(false);
+
   useEffect(() => {
-    console.log("hi");
-  }, [dispatch]);
+    const intervalId = setInterval(() => {
+      setTime((prevTime) => prevTime + 1);
+    }, 1000);
 
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date();
-      const minutesLeft = 60 - now.getMinutes() - 1;
-      const secondsLeft = 60 - now.getSeconds();
-      setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
-    };
-
-    calculateTimeLeft();
-
-    const timer = setInterval(calculateTimeLeft, 1000);
-
-    return () => clearInterval(timer);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
-    if (slotTimeInterval < new Date().getHours()) {
-      setCountDownOver(true);
+    if (totalHours * 3600 <= parseInt(time)) {
+      setTimeOver(true);
     }
-  });
+  }, [totalHours, time]);
 
-  const handleFeedbackSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/feedback`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-          body: JSON.stringify({
-            rating: rateValue.toString(),
-            feedback: feedbackMessage,
-            userId: "65589uh3nwsnm,os",
-          }),
-        }
-      );
-      const data = await response.json();
-      console.log(data);
-      toast.success("Thankyou for the feedback!");
-      EndSessionToCourtroom();
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to submit feedback!");
-      setLoading(false);
+  const formatTime = (seconds) => {
+    if (isNaN(seconds) || typeof seconds !== "number") {
+      seconds = 0;
     }
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(secs).padStart(2, "0")}`;
   };
-
   return (
     <>
-      <div
-        className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
-      >
-        <h1 id="time-left" className="text-xs m-0 font-bold text-teal-800">
-          Time Remaining:
-        </h1>
-        <h1
-          className="text-xs m-0 font-semibold"
-          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
-        >
-          {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
-          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
-        </h1>
+      <div className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+        <div className="w-full flex justify-between items-center">
+          <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
+          <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
+        </div>
+        <div className="w-full flex justify-between items-center">
+          <h1 className="text-xs m-0 font-bold text-teal-800">Time Used Up:</h1>
+          <h1 className="text-xs m-0 font-semibold">{formatTime(time)}</h1>
+        </div>
       </div>
-      {countdownOver ? (
+      {/* <div className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+      </div> */}
+      {timeOver ? (
         <div
-          className="z-50"
           style={{
             width: "100%",
             height: "100vh",
@@ -167,95 +142,33 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: "20",
           }}
         >
-          {!feedbackForm ? (
-            <div
-              className="flex flex-col justify-center gap-20 p-5"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-                height: "450px",
-                width: "900px",
-                border: "4px solid red",
-                borderRadius: "10px",
-              }}
-            >
-              <div className="flex flex-col justify-center items-center gap-10">
-                <img className="w-28 h-28" alt="clock" src={countDown} />
-                <h1 className="text-3xl">Your Courtroom Time is Over</h1>
-              </div>
-              <div className="flex justify-center gap-5">
-                <motion.button
-                  whileHover={{ scale: "1.01" }}
-                  onClick={() => EndSessionToCourtroom()}
-                  whileTap={{ scale: "0.95" }}
-                  className="border border-white rounded-lg py-2 px-8"
-                >
-                  Skip & Exit To Homepage
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: "1.01" }}
-                  onClick={() => setFeedbackForm(true)}
-                  whileTap={{ scale: "0.95" }}
-                  className="border border-white rounded-lg py-2 px-8 text-white"
-                >
-                  Provide Feedback
-                </motion.button>
-              </div>
+          <div
+            className="flex flex-col justify-center gap-20 p-5"
+            style={{
+              background: "linear-gradient(to right,#0e1118,#008080)",
+              height: "450px",
+              width: "900px",
+              border: "4px solid red",
+              borderRadius: "10px",
+            }}
+          >
+            <div className="flex flex-col justify-center items-center gap-10">
+              <img className="w-28 h-28" alt="clock" src={countDown} />
+              <h1 className="text-3xl">Your Courtroom Time is Over</h1>
             </div>
-          ) : (
-            <div
-              className="flex flex-col justify-center gap-20 p-5"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-                border: "4px solid white",
-                borderRadius: "10px",
-              }}
-            >
-              <div className="flex flex-col gap-5">
-                <h1 className="text-3xl">Provide your valuable feedback</h1>
-                <form
-                  onSubmit={handleFeedbackSubmit}
-                  className="flex flex-col gap-2"
-                >
-                  <div className="flex">
-                    <p>Rate your Experience :</p>
-                    <Rating
-                      required
-                      sx={{ color: "white" }}
-                      name="simple-controlled"
-                      value={rateValue}
-                      onChange={(event, newValue) => {
-                        setRateValue(newValue);
-                      }}
-                    />
-                  </div>
-                  <textarea
-                    required
-                    className="p-2 rounded text-black min-h-20 max-h-40"
-                    placeholder="Provide a detailed description...."
-                    value={feedbackMessage}
-                    onChange={(e) => setFeedbackMessage(e.target.value)}
-                  />
-                  <div className="flex justify-end gap-3">
-                    <button
-                      onClick={() => EndSessionToCourtroom()}
-                      className="border rounded px-4 py-2"
-                    >
-                      Skip & Exit
-                    </button>
-                    <button type="submit" className="border rounded px-4 py-2">
-                      {loading ? (
-                        <CircularProgress color="inherit" size={15} />
-                      ) : (
-                        "Submit Feedback"
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
+            <div className="flex justify-center">
+              <motion.button
+                onClick={() => ExitToCourtroom()}
+                whileTap={{ scale: "0.95" }}
+                className="border border-white rounded-lg py-2 px-8"
+              >
+                Go Back To Homepage
+              </motion.button>
             </div>
-          )}
+          </div>
         </div>
       ) : (
         ""
@@ -302,7 +215,18 @@ const AiSidebar = () => {
     (state) => state.user.firstDraftLoading
   );
   const currentUser = useSelector((state) => state.user.user);
-  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
+
+  const {
+    AiAssistant,
+    AiDrafterNormal,
+    AiDrafterPro,
+    FirstDraft,
+    RelevantCaseLaws,
+    Evidences,
+    LegalGPT,
+    caseSearch,
+    testimonyAssessment,
+  } = useSelector((state) => state.user.user.plan.plan.features);
 
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
@@ -352,7 +276,6 @@ const AiSidebar = () => {
   };
 
   const ExitToCourtroom = async () => {
-    localStorage.removeItem("hasSeenSplash");
     localStorage.setItem("FileUploaded", false);
 
     // await saveHistory();
@@ -369,7 +292,7 @@ const AiSidebar = () => {
     // await saveHistory();
     if (overViewDetails !== "") {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/end`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/end`,
         {
           userId: currentUser.userId,
         },
@@ -392,7 +315,7 @@ const AiSidebar = () => {
     try {
       if (overViewDetails !== "NA") {
         await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/api/history`,
+          `${NODE_API_ENDPOINT}/courtroomPricing/api/history`,
           {
             // user_id: currentUser.userId,
           },
@@ -412,7 +335,7 @@ const AiSidebar = () => {
   const handleSave = async () => {
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/edit_case`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/edit_case`,
         {
           // user_id: currentUser.userId,
           case_overview: text,
@@ -426,7 +349,7 @@ const AiSidebar = () => {
       dispatch(setOverview(text));
       setEditDialog(false);
       await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/case_summary`,
         {
           // user_id: currentUser.userId,
         },
@@ -475,7 +398,7 @@ const AiSidebar = () => {
     // dispatch(setFirstDraftLoading());
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/draft`,
         {
           // user_id: currentUser.userId,
         },
@@ -509,7 +432,6 @@ const AiSidebar = () => {
 
   useEffect(() => {
     if (overViewDetails !== "" || overViewDetails !== "NA") {
-      // console.log(overViewDetails);
       firstDraftApi();
     }
   }, [overViewDetails]);
@@ -522,7 +444,7 @@ const AiSidebar = () => {
     setAiAssistantLoading(true);
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/hallucination_questions`,
         {
           // user_id: currentUser.userId,
         },
@@ -564,7 +486,7 @@ const AiSidebar = () => {
 
     try {
       const fetchedData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/relevant_case_law_updated`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_case_law_updated`,
         {
           method: "POST",
           headers: {
@@ -597,7 +519,7 @@ const AiSidebar = () => {
     const getOverview = async () => {
       try {
         const overView = await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
+          `${NODE_API_ENDPOINT}/courtroomPricing/getCaseOverview`,
           {
             // user_id: currentUser.userId,
           },
@@ -622,8 +544,6 @@ const AiSidebar = () => {
     };
     if (currentUser.userId) {
       getOverview();
-
-      // console.log(currentUser.userId);
     }
   }, [currentUser.userId]);
 
@@ -632,7 +552,7 @@ const AiSidebar = () => {
     try {
       await saveHistory();
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadCaseHistory`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/downloadCaseHistory`,
         {
           // user_id: currentUser.userId,
         },
@@ -665,7 +585,7 @@ const AiSidebar = () => {
       await saveHistory();
 
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/downloadSessionCaseHistory`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/downloadSessionCaseHistory`,
         {
           // user_id: currentUser.userId,
         },
@@ -706,7 +626,7 @@ const AiSidebar = () => {
   const dowloadFirstDraft = async () => {
     try {
       const response = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroom/api/download`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/downloadFirtDraft`,
         {
           // user_id: currentUser.userId,
           // data: firstDraft,
@@ -737,7 +657,7 @@ const AiSidebar = () => {
     try {
       setSearchQuery(true);
       const getResponse = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/consultant`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/consultant`,
         {
           method: "POST",
           headers: {
@@ -798,7 +718,7 @@ const AiSidebar = () => {
     setCaseSearchLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/sidebar-casesearch`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/sidebar-casesearch`,
         {
           method: "POST",
           headers: {
@@ -826,7 +746,7 @@ const AiSidebar = () => {
     setNextAppealLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/draft_next_appeal`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/draft_next_appeal`,
         {
           method: "POST",
           headers: {
@@ -850,7 +770,7 @@ const AiSidebar = () => {
     setReserachArgumentsLoading(true);
     try {
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/generate_hypo_draft`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/generate_hypo_draft`,
         {
           method: "POST",
           headers: {
@@ -873,7 +793,10 @@ const AiSidebar = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-3 h-screen py-3 pl-3">
+      <div
+        id="conatiner-sidebar"
+        className="flex flex-col gap-3 h-screen py-3 pl-3"
+      >
         {/* top container */}
         <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
           <motion.div
@@ -951,15 +874,31 @@ const AiSidebar = () => {
                   >
                     Add New File
                   </MenuItem>
-                  <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
-                    Add Evidences
-                  </MenuItem>
-                  <MenuItem
-                    id="evidence-testimony"
-                    onClick={handleTestimonyClick}
+                  <Tooltip
+                    title="Upgrade plan to use this feature"
+                    disableHoverListener={Evidences}
                   >
-                    Add Testimony
-                  </MenuItem>
+                    <MenuItem
+                      id="evidence-button"
+                      onClick={Evidences ? handleEvidenceClick : null}
+                    >
+                      Add Evidences
+                    </MenuItem>
+                  </Tooltip>
+
+                  <Tooltip
+                    title="Upgrade plan to use this feature"
+                    disableHoverListener={testimonyAssessment}
+                  >
+                    <MenuItem
+                      id="evidence-testimony"
+                      onClick={
+                        testimonyAssessment ? handleTestimonyClick : null
+                      }
+                    >
+                      Add Testimony
+                    </MenuItem>
+                  </Tooltip>
                 </Menu>
 
                 <Popover
@@ -1022,44 +961,51 @@ const AiSidebar = () => {
           className="flex-1 overflow-auto border-2 border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between"
         >
           <div className="flex flex-col gap-1">
-            <motion.div
-              onClick={handleFirstDraft}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed"
-                  : "cursor-pointer"
-              }`}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0px 10px",
-                background: "#C5C5C5",
-                color: "#008080",
-                border: "2px solid white",
-                borderRadius: "5px",
-              }}
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={FirstDraft}
             >
-              <div id="first-draft">
-                <p className="text-xs m-0 font-bold text-teal-800">
-                  View First Draft
-                </p>
-              </div>
-              <div style={{ width: "15px", margin: "0" }}>
-                <svg
-                  width="24"
-                  height="24"
-                  style={{ fill: "#008080", cursor: "pointer" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                >
-                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                </svg>
-              </div>
-            </motion.div>
+              <motion.div
+                onClick={FirstDraft ? handleFirstDraft : null}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  overViewDetails === "NA" ||
+                  overViewDetails === "" ||
+                  !FirstDraft
+                    ? "opacity-75  cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "0px 10px",
+                  background: "#C5C5C5",
+                  color: "#008080",
+                  border: "2px solid white",
+                  borderRadius: "5px",
+                }}
+              >
+                <div id="first-draft">
+                  <p className="text-xs m-0 font-bold text-teal-800">
+                    View First Draft
+                  </p>
+                </div>
+                <div style={{ width: "15px", margin: "0" }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    style={{ fill: "#008080", cursor: "pointer" }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                  </svg>
+                </div>
+              </motion.div>
+            </Tooltip>
             <motion.div
               onClick={() => setShowDrafterQuestions(true)}
               whileTap={{ scale: "0.95" }}
@@ -1094,104 +1040,139 @@ const AiSidebar = () => {
                 </svg>
               </div>
             </motion.div>
-            <motion.div
-              onClick={() => setShowAskLegalGPT(true)}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0px 10px",
-                background: "#C5C5C5",
-                color: "#008080",
-                border: "2px solid white",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={LegalGPT}
             >
-              <div id="legalGpt">
-                <p className="text-xs m-0 font-bold text-teal-800">
-                  Ask LegalGPT
-                </p>
-              </div>
-              <div style={{ width: "15px", margin: "0" }}>
-                <svg
-                  width="24"
-                  height="24"
-                  style={{ fill: "#008080", cursor: "pointer" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                >
-                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                </svg>
-              </div>
-            </motion.div>
-            <motion.div
-              onClick={() => setCaseSearchDialog(true)}
-              whileTap={{ scale: "0.95" }}
-              whileHover={{ scale: "1.01" }}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "0px 10px",
-                background: "#C5C5C5",
-                color: "#008080",
-                border: "2px solid white",
-                borderRadius: "5px",
-                marginBottom: "5px",
-                cursor: "pointer",
-              }}
+              <motion.div
+                onClick={() => {
+                  if (LegalGPT) {
+                    setShowAskLegalGPT(true);
+                  }
+                }}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  !LegalGPT
+                    ? "opacity-75  cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "0px 10px",
+                  background: "#C5C5C5",
+                  color: "#008080",
+                  border: "2px solid white",
+                  borderRadius: "5px",
+                }}
+              >
+                <div id="legalGpt">
+                  <p className="text-xs m-0 font-bold text-teal-800">
+                    Ask LegalGPT
+                  </p>
+                </div>
+                <div style={{ width: "15px", margin: "0" }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    style={{ fill: "#008080", cursor: "pointer" }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                  </svg>
+                </div>
+              </motion.div>
+            </Tooltip>
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={caseSearch}
             >
-              <div id="case-search">
-                <p className="text-xs m-0 font-bold text-teal-800">
-                  Case Search
-                </p>
-              </div>
-              <div style={{ width: "15px", margin: "0" }}>
-                <svg
-                  width="24"
-                  height="24"
-                  style={{ fill: "#008080", cursor: "pointer" }}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                >
-                  <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                </svg>
-              </div>
-            </motion.div>
+              <motion.div
+                onClick={() => {
+                  if (caseSearch) {
+                    setCaseSearchDialog(true);
+                  }
+                }}
+                whileTap={{ scale: "0.95" }}
+                whileHover={{ scale: "1.01" }}
+                className={`${
+                  !caseSearch
+                    ? "opacity-75  cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "0px 10px",
+                  background: "#C5C5C5",
+                  color: "#008080",
+                  border: "2px solid white",
+                  borderRadius: "5px",
+                  marginBottom: "5px",
+                }}
+              >
+                <div id="case-search">
+                  <p className="text-xs m-0 font-bold text-teal-800">
+                    Case Search
+                  </p>
+                </div>
+                <div style={{ width: "15px", margin: "0" }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    style={{ fill: "#008080", cursor: "pointer" }}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  >
+                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                  </svg>
+                </div>
+              </motion.div>
+            </Tooltip>
           </div>
           <div
             id="claw-ai-ass"
             className="flex justify-end cursor-pointer relative"
           >
-            <motion.img
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
-                  : "h-9 w-9"
-              }`}
-              // className="h-9 w-9"
-              whileTap={{ scale: "0.95" }}
-              alt="assistant"
-              src={showAssistant ? assistantIcon2 : aiAssistant}
-              onHoverStart={() => setAiIconHover(true)}
-              onHoverEnd={() => setAiIconHover(false)}
-              onClick={() => {
-                setShowAssistant(true);
-                getAiQuestions();
-              }}
-            />
-            {aiIconHover ? (
-              <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
-                CLAW AI Assistant
-              </h1>
-            ) : (
-              ""
-            )}
+            <Tooltip
+              title="Upgrade plan to use this feature"
+              disableHoverListener={AiAssistant}
+            >
+              <motion.img
+                className={`${
+                  overViewDetails === "NA" ||
+                  overViewDetails === "" ||
+                  !AiAssistant
+                    ? "opacity-75 cursor-not-allowed h-9 w-9"
+                    : "h-9 w-9"
+                }`}
+                // className="h-9 w-9"
+                whileTap={{ scale: "0.95" }}
+                alt="assistant"
+                src={showAssistant ? assistantIcon2 : aiAssistant}
+                onHoverStart={() => setAiIconHover(true)}
+                onHoverEnd={() => setAiIconHover(false)}
+                onClick={() => {
+                  if (AiAssistant) {
+                    setShowAssistant(true);
+                    getAiQuestions();
+                  }
+                }}
+              />
+              {aiIconHover ? (
+                <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+                  CLAW AI Assistant
+                </h1>
+              ) : (
+                ""
+              )}
+            </Tooltip>
           </div>
           <div className="flex flex-col w-full h-full justify-start items-center gap-2">
             <div
@@ -1291,6 +1272,7 @@ const AiSidebar = () => {
                 </motion.div>
               </Link>
               <motion.div
+                onClick={() => navigate("/")}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1392,7 +1374,8 @@ const AiSidebar = () => {
                         </div>
                       </div>
                       <textarea
-                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none"
+                        readOnly
+                        className="w-full h-full p-2.5 mb-4 text-black resize-none outline-none cursor-default"
                         value={firstDraft}
                         onChange={(e) => setFirstDraft(e.target.value)}
                       />
@@ -1488,15 +1471,21 @@ const AiSidebar = () => {
                         Go Back
                       </motion.button>
                     ) : (
-                      <motion.button
-                        onClick={() => {
-                          setShowRelevantLaws(true);
-                          getReventCaseLaw();
-                        }}
-                        className="border border-white rounded-md py-1"
+                      <Tooltip
+                        title="Upgrade plan to use this feature"
+                        disableHoverListener={RelevantCaseLaws}
                       >
-                        Relevant Case Laws
-                      </motion.button>
+                        <motion.button
+                          disabled={!RelevantCaseLaws}
+                          onClick={() => {
+                            setShowRelevantLaws(true);
+                            getReventCaseLaw();
+                          }}
+                          className="border border-white rounded-md py-1"
+                        >
+                          Relevant Case Laws
+                        </motion.button>
+                      </Tooltip>
                     )}
                     <button
                       onClick={() => dowloadFirstDraft()}
@@ -2014,20 +2003,32 @@ const AiSidebar = () => {
                       {x.name}
                     </p>
                     <Link to={"/courtroom-ai/aiDraft"}>
-                      <button
-                        onClick={() => handleDrafterQuestions(x.value)}
-                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      <Tooltip
+                        title="Upgrade plan to use this feature"
+                        disableHoverListener={AiDrafterNormal}
                       >
-                        Normal
-                      </button>
+                        <button
+                          disabled={!AiDrafterNormal}
+                          onClick={() => handleDrafterQuestions(x.value)}
+                          className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                        >
+                          Normal
+                        </button>
+                      </Tooltip>
                     </Link>
                     <Link to={"/courtroom-ai/aiDraftPro"}>
-                      <button
-                        onClick={() => handleDrafterProQuestions(x.value)}
-                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      <Tooltip
+                        title="Upgrade plan to use this feature"
+                        disableHoverListener={AiDrafterPro}
                       >
-                        Pro
-                      </button>
+                        <button
+                          disabled={!AiDrafterPro}
+                          onClick={() => handleDrafterProQuestions(x.value)}
+                          className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                        >
+                          Pro
+                        </button>
+                      </Tooltip>
                     </Link>
                   </div>
                 ))}

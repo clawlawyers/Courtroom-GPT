@@ -65,11 +65,17 @@ const UploadDoc = () => {
           
           driverObj.drive();
         }
+        else{
+          driverObj.destroy();
+          console.log("hi")
+          const sidebarconatiner = document.getElementById("conatiner-sidebar")
+          sidebarconatiner.click()
+        }
         dispatch(setdevices())
         // dispatch(setTutorial(true));
       }
     }
-  }, [ tutorial, dispatch]);
+  }, [caseOverView,tutorial, dispatch]);
 
   const handleSubmit = () => {
     if (!chooseDevice && !inputText) {

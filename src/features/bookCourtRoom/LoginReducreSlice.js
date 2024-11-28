@@ -4,13 +4,14 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 export const retrieveCourtroomAuth = createAsyncThunk(
   "auth/retrieveAuth",
   async () => {
-    const storedAuth = localStorage.getItem("courtroom-auth");
-    console.log(storedAuth);
+    const storedAuth = localStorage.getItem("userToken");
+    // console.log(storedAuth);
     if (storedAuth) {
       const parsedUser = JSON.parse(storedAuth);
+      console.log(parsedUser);
       if (parsedUser.expiresAt < new Date().valueOf()) return null;
       const props = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/getCourtroomUser`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/getCourtroomUser`,
         {
           method: "POST",
           headers: {
@@ -19,11 +20,17 @@ export const retrieveCourtroomAuth = createAsyncThunk(
         }
       );
       const parsedProps = await props.json();
+      console.log(parsedProps);
       // console.log(parsedProps.data);
-      return {
-        user: parsedUser,
-      };
-    } else return null;
+      if (parsedProps.success) {
+        return {
+          user: { ...parsedProps.data, ...parsedUser },
+        };
+      } else {
+        return { user: null };
+      }
+    }
+    // else return null;
   }
 );
 
@@ -31,11 +38,13 @@ export const retrieveCourtroomAuth = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: "",
+    user: null,
     caseOverview: "NA",
     firstDraft: "",
     firstDraftLoading: false,
     fightingSideModal: false,
+    signUpModal: false,
+    status: "idle",
   },
   reducers: {
     login(state, action) {
@@ -44,8 +53,9 @@ const userSlice = createSlice({
       localStorage.setItem("courtroom-auth", JSON.stringify(user));
     },
     logout(state) {
-      state.user = "";
-      localStorage.removeItem("courtroom-auth");
+      state.user = null;
+      // localStorage.removeItem("courtroom-auth");
+      localStorage.removeItem("userToken");
     },
     setOverview(state, action) {
       state.caseOverview = action.payload;
@@ -62,12 +72,22 @@ const userSlice = createSlice({
     setFirstDraftAction(state, action) {
       state.firstDraft = action.payload.draft;
     },
+    setSignInFormModal(state, action) {
+      state.signUpModal = !state.signUpModal;
+    },
   },
   extraReducers: (builder) => {
+    builder.addCase(retrieveCourtroomAuth.pending, (state) => {
+      state.status = "loading";
+    });
     builder.addCase(retrieveCourtroomAuth.fulfilled, (state, action) => {
       if (action.payload && action.payload.user) {
         state.user = action.payload.user;
       }
+      state.status = "succeeded";
+    });
+    builder.addCase(retrieveCourtroomAuth.rejected, (state) => {
+      state.status = "failed";
     });
   },
 });
@@ -81,6 +101,7 @@ export const {
   setFightingSideModal,
   setFirstDraftAction,
   setFirstDraftLoading,
+  setSignInFormModal,
 } = userSlice.actions;
 
 // Export the reducer to be used in the store

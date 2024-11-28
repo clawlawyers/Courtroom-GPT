@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Close } from "@mui/icons-material";
 import logo from "../../assets/icons/clawlogo.png";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 import clawLogo from "../../assets/icons/clawlogo1.png";
+import TipsComponent from "../UploadDoc/TipsComponent";
 
 const Dialog = ({
   open,
@@ -25,7 +26,7 @@ const Dialog = ({
   currentUser,
   NODE_API_ENDPOINT,
 }) => {
-  console.log(image);
+  // console.log(image);
   const [currentPage, setCurrentPage] = useState(0);
   const [pages, setPages] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -98,7 +99,7 @@ const Dialog = ({
   const handleSave = async () => {
     try {
       setUploading(true);
-      await axios.post(`${NODE_API_ENDPOINT}/courtroom/edit_case`, {
+      await axios.post(`${NODE_API_ENDPOINT}/courtroomPricing/edit_case`, {
         user_id: currentUser.userId,
         case_overview: inputText,
       });
@@ -132,32 +133,7 @@ const Dialog = ({
 
   return (
     <div className="h-screen fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div
-        // ref={dialogRef}
-        className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative"
-      >
-        {/* Close Button */}
-        {/* <div className="absolute top-2 right-2">
-          <svg
-            onClick={onClose}
-            className="cursor-pointer"
-            width="30"
-            height="30"
-            fill="white"
-            stroke="white"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-        </div> */}
-
+      <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative">
         {/* Dialog Content */}
         <div className="w-full  flex flex-col">
           <div className="w-full flex justify-between items-center gap-10 px-2">
@@ -167,16 +143,6 @@ const Dialog = ({
           {text && (
             <div className=" flex justify-between items-center h-[80vh] w-full gap-5">
               <div className="flex flex-row justify-center w-full h-full items-center">
-                {/* <button
-                    onClick={handlePrevious}
-                    className="p-2 mx-2 bg-white text-black rounded-full"
-                    style={{
-                      visibility: currentPage === 0 ? "hidden" : "visible",
-                    }}
-                    disabled={currentPage === 0}
-                  >
-                    <ArrowLeft />
-                  </button> */}
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
@@ -203,21 +169,7 @@ const Dialog = ({
                     onChange={handleTextChange}
                     readOnly={!isEditing}
                   />
-                  {/* <div className="text-right p-1 mx-2 font-semibold">
-                      Page {currentPage + 1}
-                    </div> */}
                 </div>
-                {/* <button
-                    onClick={handleNext}
-                    className={`p-2 mx-2 bg-white text-black rounded-full`}
-                    style={{
-                      visibility:
-                        currentPage === pages.length - 1 ? "hidden" : "visible",
-                    }}
-                    disabled={currentPage === pages.length - 1}
-                  >
-                    <ArrowRight />
-                  </button> */}
               </div>
               <div className="h-full w-1 bg-neutral-200/40" />
               <div className="flex flex-col w-full">
@@ -255,8 +207,14 @@ const Dialog = ({
           {image && (
             <>
               {image === "/static/media/analyzing.e4732f49b92ee72868c4.gif" ? (
-                <div className="flex flex-row w-full justify-center items-center align-middle">
-                  <img className="h-72 w-auto" src={image} alt="" />
+                <div className="flex flex-col justify-center items-center align-middle">
+                  {/* <img className="h-72 w-auto" src={image} alt="" /> */}
+                  <div className="flex justify-center items-center h-72 w-auto">
+                    <CircularProgress size={100} sx={{ color: "white" }} />
+                  </div>
+                  <div className="w-[30rem] h-16">
+                    <TipsComponent />
+                  </div>
                 </div>
               ) : (
                 <div className="flex flex-row w-full justify-center items-center align-middle">

@@ -21,7 +21,7 @@ const TestimonyDialog = ({ handleTestimonyClose }) => {
     console.log("Testimony:", testimony);
     try {
       const fetchData = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/api/testimony_questions`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/testimony_questions`,
         {
           method: "POST",
           headers: {
