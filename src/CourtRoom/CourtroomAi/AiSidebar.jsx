@@ -792,7 +792,7 @@ const AiSidebar = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-3 h-screen py-3 pl-3">
+      <div id="conatiner-sidebar" className="flex flex-col gap-3 h-screen py-3 pl-3">
         {/* top container */}
         <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
           <motion.div

@@ -103,6 +103,8 @@ const CourtRoomAiLayout = () => {
       if (caseOverView !== "NA" && caseOverView !== "") {
         console.log("inside condition");
         console.log(caseOverView);
+        const sidebarconatiner = document.getElementById("conatiner-sidebar")
+        sidebarconatiner.click()
         navigate("/courtroom-ai/arguments");
       } else {
         navigate("/courtroom-ai");
