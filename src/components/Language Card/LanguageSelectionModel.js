@@ -105,6 +105,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
                   <ListItemText
                     className="list-text text-black"
                     primary={name}
+                    sx={{ color: "black" }} // Ensures black text in all environments
                   />
                 </MenuItem>
               ))}
