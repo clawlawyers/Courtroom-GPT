@@ -104,7 +104,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
                   <Checkbox checked={languageName.includes(name)} />
                   <ListItemText
                     className="list-text text-black"
-                    primary={name}
+                    primary={<span className="text-black">{name}</span>}
                     sx={{ color: "black" }}
                     style={{
                       "color":"black"
