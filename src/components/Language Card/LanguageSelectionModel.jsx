@@ -65,7 +65,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
   };
 
   return (
-    <Dialog open onClose={onClose}>
+    <Dialog sx={{color:"black"}} open onClose={onClose}>
       <div style={{ backgroundColor: "#E0F7F7", padding: "10px" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <DialogTitle
@@ -105,7 +105,10 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
                   <ListItemText
                     className="list-text text-black"
                     primary={name}
-                    sx={{ color: "black" }} // Ensures black text in all environments
+                    sx={{ color: "black" }}
+                    style={{
+                      "color":"black"
+                    }} // Ensures black text in all environments
                   />
                 </MenuItem>
               ))}
