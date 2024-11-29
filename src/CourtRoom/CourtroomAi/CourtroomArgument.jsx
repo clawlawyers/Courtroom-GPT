@@ -1741,22 +1741,25 @@ const CourtroomArgument = () => {
       ) : (
         ""
       )}
-      {judgeViewExpand ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            left: "0",
-            right: "0",
-            top: "0",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(3px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "20",
-          }}
+  
+        <Modal 
+          className="text-white flex justify-center items-center"
+          open={judgeViewExpand}
+          onClose={() => setJudgeViewExpand(false)}
+          // style={{
+          //   width: "100%",
+          //   height: "100%",
+          //   position: "absolute",
+          //   left: "0",
+          //   right: "0",
+          //   top: "0",
+          //   backgroundColor: "rgba(0, 0, 0, 0.1)",
+          //   backdropFilter: "blur(3px)",
+          //   display: "flex",
+          //   justifyContent: "center",
+          //   alignItems: "center",
+          //   zIndex: "20",
+          // }}
         >
           <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
             <div className="flex justify-between">
@@ -1840,26 +1843,28 @@ const CourtroomArgument = () => {
               <h1 className="text-xs m-[5px]">Collapse</h1>
             </div>
           </div>
-        </div>
-      ) : (
-        ""
-      )}
-      {lawyerViewExpand ? (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            left: "0",
-            right: "0",
-            top: "0",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            backdropFilter: "blur(3px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "20",
-          }}
+        </Modal>
+    
+    
+        <Modal 
+          className="text-white flex justify-center items-center"
+          open={lawyerViewExpand}
+          onClose={() => setLawyerViewExpand(false)}
+        // onClick={()=>{setLawyerViewExpand(false)}}
+        //   style={{
+        //     width: "100%",
+        //     height: "100%",
+        //     position: "absolute",
+        //     left: "0",
+        //     right: "0",
+        //     top: "0",
+        //     backgroundColor: "rgba(0, 0, 0, 0.1)",
+        //     backdropFilter: "blur(3px)",
+        //     display: "flex",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //     zIndex: "20",
+          // }}
         >
           <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
             <div className="flex justify-between">
@@ -1943,10 +1948,8 @@ const CourtroomArgument = () => {
               </motion.div>
             </div>
           </div>
-        </div>
-      ) : (
-        ""
-      )}
+        </Modal>
+     
       {fightingModal && (
         <div
           style={{
