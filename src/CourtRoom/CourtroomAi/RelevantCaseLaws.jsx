@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const courtIdMapping = [
   { name: "Supreme Court of India", id: "1bgi-zbCWObiTNjkegNXryni4ZJzZyCFV" },
@@ -84,6 +85,14 @@ const RelevantCaseLaws = () => {
           body: JSON.stringify({ filename: caseName }),
         }
       );
+      if (!props.ok) {
+        const error = await props.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const parsedProps = await props.json();
       console.log(parsedProps);
       const reqContent = parsedProps.data.FetchedprintCaseDetails.data
@@ -99,8 +108,12 @@ const RelevantCaseLaws = () => {
       setDocumentData(reqContent);
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
+      console.log(error);
     }
   };
 

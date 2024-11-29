@@ -35,6 +35,7 @@ import "./Devices.css";
 import { setinputCaseTutorial } from "../../features/sidebar/sidebarSlice";
 import { CircularProgress, Typography } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Devices = ({
   uploadedFile,
@@ -101,10 +102,13 @@ const Devices = ({
   const [open, setOpen] = useState(false);
   const [content, setconetnt] = useState("");
   const [toBeUploadedFiles, setToBeUploadedFiles] = useState([]);
+  // console.log(toBeUploadedFiles);
   const [fileNames, setFileNames] = useState({});
 
   const [uploadProgress, setUploadProgress] = useState({});
+  // console.log(uploadProgress);
   const [uploadedSuccessFully, setUploadedSuccessFully] = useState([]);
+  // console.log(uploadedSuccessFully);
   const [fileUploading, setFileUploading] = useState(false);
   // const [uploadUrl, setUploadUrl] = useState('');
 
@@ -160,6 +164,11 @@ const Devices = ({
       setUploadComplete(false);
       setPreviewContent("");
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Failed to save case overview");
     }
   };
@@ -195,12 +204,19 @@ const Devices = ({
       // if (files.length > 0) {
       const maxFileSize = 15 * 1024 * 1024;
 
-      if (file.size < maxFileSize) {
-        setToBeUploadedFiles((prev) => [...prev, file]);
+      if (
+        toBeUploadedFiles.length > 0 &&
+        toBeUploadedFiles.some((x) => x.name === file.name)
+      ) {
+        toast.error("You have already selected this file!");
       } else {
-        toast.error(
-          `File uploaded exceeds the 15 MB limit.Please try another file`
-        );
+        if (file.size < maxFileSize) {
+          setToBeUploadedFiles((prev) => [...prev, file]);
+        } else {
+          toast.error(
+            `File uploaded exceeds the 15 MB limit.Please try another file`
+          );
+        }
       }
     });
     fileInput.click();
@@ -242,6 +258,11 @@ const Devices = ({
       } catch (error) {
         console.error(`Error uploading ${file.name}:`, error);
         setFileUploading(false);
+        if (error.response.data.error === "Please refresh the page") {
+          console.log("working");
+          toast.error(error.response.data.error);
+          return;
+        }
       }
       // }
     };
@@ -312,6 +333,7 @@ const Devices = ({
   const checkUploadSuccessfull = () => {
     console.log(toBeUploadedFiles);
     console.log(uploadedSuccessFully);
+
     if (
       uploadedSuccessFully.length > 0 &&
       toBeUploadedFiles.length === uploadedSuccessFully.length
@@ -319,12 +341,19 @@ const Devices = ({
       callOverView();
       setHandleLocalUploadDialog(false);
     } else {
-      toast.error("Error in file upload!");
-      setHandleLocalUploadDialog(false);
-      setToBeUploadedFiles([]);
-      setUploadProgress({});
-      setUploadedSuccessFully([]);
-      setFileNames({});
+      toast("First Add Files..!", {
+        icon: "⚠️",
+        style: {
+          // border: "1px solid #ffa726", // Warning color (orange)
+          padding: "16px",
+          // color: "#ff9800", // Text color (orange)
+        },
+      });
+      // setHandleLocalUploadDialog(false);
+      // setToBeUploadedFiles([]);
+      // setUploadProgress({});
+      // setUploadedSuccessFully([]);
+      // setFileNames({});
     }
   };
 
@@ -350,7 +379,8 @@ const Devices = ({
       // console.log(response.data);
       // setPreviewContent(response.data.data.case_overview);
       const totalLength = response.data.data.case_overview.split(" ").length;
-      totalTimeLength(totalLength);
+      const temp = totalTimeLength(totalLength);
+      console.log(temp);
       const summaryResponse = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomPricing/api/case_summary`,
         {
@@ -369,6 +399,11 @@ const Devices = ({
       setUploadComplete(true);
     } catch (error) {
       setAnalyzing(false);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Failed to load case overview");
     } finally {
       setUploadedSuccessFully([]);
@@ -377,6 +412,38 @@ const Devices = ({
       setUploadProgress({});
       setFileNames({});
     }
+  };
+
+  const handleDeleteFileFromUploaded = (fileId) => {
+    const findFileId = Object.keys(fileNames).find(
+      (key) => fileNames[key] === fileId
+    );
+    if (findFileId) {
+      const findFileIndex = toBeUploadedFiles.findIndex(
+        (x) => x.name === fileId
+      );
+      if (findFileIndex !== -1) {
+        toBeUploadedFiles.splice(findFileIndex, 1);
+      }
+      const successfulUploadedIndex = uploadedSuccessFully.indexOf(findFileId);
+      if (successfulUploadedIndex !== -1) {
+        uploadedSuccessFully.splice(successfulUploadedIndex, 1);
+      }
+      setUploadProgress((prevProgress) => {
+        const updatedProgress = { ...prevProgress };
+        delete updatedProgress[fileId];
+        return updatedProgress;
+      });
+      setFileNames((prevProgress) => {
+        const updatedProgress = { ...prevProgress };
+        delete fileNames[findFileId];
+        return updatedProgress;
+      });
+    }
+    // console.log(fileNames);
+    // console.log(toBeUploadedFiles);
+    // console.log(uploadedSuccessFully);
+    // console.log(uploadProgress);
   };
 
   function totalTimeLength(totalLength) {
@@ -502,7 +569,14 @@ const Devices = ({
     );
 
     if (!response.ok) {
-      throw new Error("Failed to upload file to backend");
+      const error = await response.json();
+      console.log(error.error);
+      if (error.error === "Please refresh the page") {
+        // throw new Error("Please refresh the page");
+        toast.error(error.error);
+        return;
+      }
+      throw new Error("API request failed");
     }
 
     console.log("File successfully sent to backend");
@@ -592,6 +666,11 @@ const Devices = ({
       }, 3000);
     } catch (error) {
       console.log(error);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Error uploading file");
     }
   };
@@ -770,7 +849,14 @@ const Devices = ({
                         <p className="m-0 text-sm text-[#008080]">{fileId}</p>
                       </div>
                       <div className=" flex gap-2 items-center">
-                        <CircularProgressWithLabel value={progress} />
+                        {progress === 100 ? (
+                          <DeleteIcon
+                            onClick={() => handleDeleteFileFromUploaded(fileId)}
+                            className="cursor-pointer"
+                          />
+                        ) : (
+                          <CircularProgressWithLabel value={progress} />
+                        )}
                       </div>
                     </div>
                   )
@@ -806,8 +892,17 @@ const Devices = ({
                   Add Files
                 </button>
                 <button
+                  disabled={
+                    toBeUploadedFiles.length !== uploadedSuccessFully.length ||
+                    uploadedSuccessFully.length === 0
+                  }
                   onClick={checkUploadSuccessfull}
-                  className="border-2 px-4 py-1 rounded-lg"
+                  className={`border-2 px-4 py-1 rounded-lg ${
+                    toBeUploadedFiles.length !== uploadedSuccessFully.length ||
+                    uploadedSuccessFully.length === 0
+                      ? "opacity-25 cursor-not-allowed"
+                      : "opacity-100"
+                  }`}
                   style={{
                     background: "linear-gradient(90deg,#018585,#003838)",
                   }}

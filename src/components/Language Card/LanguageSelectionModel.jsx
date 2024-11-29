@@ -15,6 +15,7 @@ import {
   ListItemText,
   OutlinedInput,
 } from "@mui/material";
+import "./LanguageCard.css";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -64,7 +65,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
   };
 
   return (
-    <Dialog open onClose={onClose}>
+    <Dialog sx={{color:"black"}} open onClose={onClose}>
       <div style={{ backgroundColor: "#E0F7F7", padding: "10px" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <DialogTitle
@@ -98,10 +99,17 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               renderValue={(selected) => selected.join(", ")}
               MenuProps={MenuProps}
             >
-              {languagesArr.map((name) => (
+              {languagesArr.sort().map((name) => (
                 <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
-                  <ListItemText primary={name} />
+                  <ListItemText
+                    className="list-text text-black"
+                    primary={<span className="text-black">{name}</span>}
+                    sx={{ color: "black" }}
+                    style={{
+                      "color":"black"
+                    }} // Ensures black text in all environments
+                  />
                 </MenuItem>
               ))}
             </Select>
@@ -118,7 +126,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               variant="contained"
               style={{
                 backgroundColor: "#008080",
-                color: "#FFFFFF",
+                color: "white",
                 fontWeight: "bold",
                 width: "150px",
               }}

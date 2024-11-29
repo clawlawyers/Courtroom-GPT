@@ -48,6 +48,11 @@ const DocumentViewer = ({ text }) => {
       link.click();
       link.remove();
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.log(error);
       // if (error.response.data.error.explanation === "Please refresh the page") {
       //   toast.error("Please refresh the page");
@@ -65,7 +70,7 @@ const DocumentViewer = ({ text }) => {
 
     try {
       const res = await axios.post(
-        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_cases_judge_lawyer`,
+        `${NODE_API_ENDPOINT}/courtroomPricing/api/relevant_cases_judge_lawyer_updated`,
         {
           text_input: text,
         },
@@ -84,7 +89,15 @@ const DocumentViewer = ({ text }) => {
       data = data.replace(/\\/g, " ");
       setRelevantCases(data);
       setLoadingRelevantCases(false);
-    } catch (error) {}
+    } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
+      console.log(error);
+      toast.error("Error in relevant case laws");
+    }
   };
 
   return (

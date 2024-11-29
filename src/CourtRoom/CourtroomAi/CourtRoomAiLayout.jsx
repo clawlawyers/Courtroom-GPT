@@ -15,7 +15,9 @@ import axios from "axios";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
-  // console.log(currentUser);
+  const { status } = useSelector((state) => state.user);
+  const caseOverView = useSelector((state) => state.user.caseOverview);
+  console.log(status);
 
   const [loading, setLoading] = useState(true);
 
@@ -53,13 +55,11 @@ const CourtRoomAiLayout = () => {
   const flushQueue = useCallback(() => {
     const user = currentUserRef.current;
     if (user) {
-      updateEngagementTime([
-        {
-          phoneNumber: user.phoneNumber,
-          engagementTime: 60,
-          timestamp: Date.now(),
-        },
-      ]);
+      updateEngagementTime({
+        phoneNumber: user.phoneNumber,
+        engagementTime: 60,
+        timestamp: Date.now(),
+      });
     }
   }, [updateEngagementTime]);
 
@@ -75,17 +75,42 @@ const CourtRoomAiLayout = () => {
   }, [flushQueue]);
 
   useEffect(() => {
-    if (!currentUser) {
+    let timer;
+    if (!currentUser || status === "loading") {
       setLoading(true); // set loading while waiting for user data
+      timer = setTimeout(() => {
+        toast.error("Please Login First");
+        navigate("/login");
+      }, 2000);
     } else {
       setLoading(false);
     }
 
-    if (currentUser && !currentUser?.plan?.isActive) {
-      // toast.error("Please login to continue");
-      navigate("/login");
+    if (currentUser && !currentUser?.plan) {
+      toast.error("You don't have any active plans");
+      navigate("/pricing-plans");
     }
-  }, [currentUser]);
+
+    return () => clearTimeout(timer);
+  }, [currentUser, status]);
+
+  useEffect(() => {
+    console.log(currentUser);
+    if (currentUser?.plan) {
+      console.log("inside ai");
+      console.log(caseOverView);
+
+      if (caseOverView !== "NA" && caseOverView !== "") {
+        console.log("inside condition");
+        console.log(caseOverView);
+        const sidebarconatiner = document.getElementById("conatiner-sidebar")
+        sidebarconatiner.click()
+        navigate("/courtroom-ai/arguments");
+      } else {
+        navigate("/courtroom-ai");
+      }
+    }
+  }, [caseOverView, currentUser]);
 
   return (
     <>

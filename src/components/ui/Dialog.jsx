@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Close } from "@mui/icons-material";
 import logo from "../../assets/icons/clawlogo.png";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +55,19 @@ const Dialog = ({
     const newPages = getPages(inputText);
     setPages(newPages);
     // setCurrentText(newPages[currentPage] || "");
-    setCurrentText(inputText);
+    setCurrentText(
+      inputText
+        .replaceAll("\\\\n\\\\n", " \n")
+        .replaceAll("\\\\n", " \n")
+        .replaceAll("\\n\\n", " \n")
+        .replaceAll("\\n", " \n")
+        .replaceAll("\n", " \n")
+        .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+        .replaceAll("\\", "")
+        .replaceAll('"', "")
+        .replaceAll(":", " :")
+        .replaceAll("#", "")
+    );
   }, [inputText]);
 
   // Update inputText when pages change
@@ -110,8 +122,13 @@ const Dialog = ({
       setPreviewContent("");
       navigate("/courtroom-ai/");
     } catch (error) {
-      toast.error("Failed to save case overview");
       setUploading(false);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
+      toast.error("Failed to save case overview");
     }
   };
 
@@ -136,9 +153,12 @@ const Dialog = ({
       <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative">
         {/* Dialog Content */}
         <div className="w-full  flex flex-col">
-          <div className="w-full flex justify-between items-center gap-10 px-2">
+          <div className="w-full flex justify-center items-center gap-10 px-2 relative">
             <h1 className="text-2xl text-white font-bold">{title}</h1>
-            <Close className="cursor-pointer" onClick={onClose} />
+            <Close
+              className="absolute right-0 cursor-pointer"
+              onClick={onClose}
+            />
           </div>
           {text && (
             <div className=" flex justify-between items-center h-[80vh] w-full gap-5">
@@ -208,8 +228,11 @@ const Dialog = ({
             <>
               {image === "/static/media/analyzing.e4732f49b92ee72868c4.gif" ? (
                 <div className="flex flex-col justify-center items-center align-middle">
-                  <img className="h-72 w-auto" src={image} alt="" />
-                  <div className="w-[30rem] h-16">
+                  {/* <img className="h-72 w-auto" src={image} alt="" /> */}
+                  <div className="flex justify-center items-center h-72 w-auto">
+                    <CircularProgress size={100} sx={{ color: "white" }} />
+                  </div>
+                  <div className="w-[30rem] h-16 text-center">
                     <TipsComponent />
                   </div>
                 </div>

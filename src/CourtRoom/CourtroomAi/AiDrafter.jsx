@@ -7,6 +7,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { editDrafter, removeDrafter } from "../../features/laws/drafterSlice";
 import Markdown from "react-markdown";
 import { CircularProgress } from "@mui/material";
+import toast from "react-hot-toast";
 
 const AiDrafter = () => {
   const drafterDoc = useSelector((state) => state.drafter.drafterDoc);
@@ -39,6 +40,15 @@ const AiDrafter = () => {
           body: JSON.stringify({ query: promptText }),
         }
       );
+
+      if (!props.ok) {
+        const error = await props.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const parsedProps = await props.json();
       dispatch(
         editDrafter({
@@ -51,6 +61,10 @@ const AiDrafter = () => {
     } catch (error) {
       console.log(error);
       setEditLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
     }
   };
 

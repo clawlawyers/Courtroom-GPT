@@ -91,16 +91,17 @@ function Login() {
           localStorage.setItem(
             "userToken",
             JSON.stringify({
-              token: response.data.jwt,
+              token: response.data.token,
               expiresAt: response.data.expiresAt,
             })
           );
           if (response.data.plan === null) {
             navigate("/pricing-plans");
+            toast.error("You don't seem to have any active plans right now!");
           } else {
             navigate("/courtroom-ai");
+            toast.success("You have successfully logged in");
           }
-          toast.success("You have successfully logged in");
         }
       })
       .catch((error) => {

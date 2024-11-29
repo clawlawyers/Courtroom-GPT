@@ -7,7 +7,7 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setBookingData } from "../../features/bookCourtRoom/bookingSlice";
 import { motion } from "framer-motion";
 import { CircularProgress } from "@mui/material";
@@ -42,6 +42,8 @@ const LoginPageNew = () => {
 
   const navigate = useNavigate();
 
+  const bookingDataSlice = useSelector((state) => state?.booking?.planData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!otpVerifySuccess) {
@@ -69,14 +71,18 @@ const LoginPageNew = () => {
         localStorage.setItem(
           "userToken",
           JSON.stringify({
-            token: response.data.respo.jwt,
+            token: response.data.respo.token,
             expiresAt: response.data.respo.expiresAt,
           })
         );
         // dispatch(setBookingData(bookingData));
         setLoading(false);
         // navigate(-1);  // make it conditional and also make a cart slice where users selected plan will store
-        navigate("/pricing-plans");
+        if (bookingDataSlice !== "") {
+          navigate("/buy-plan");
+        } else {
+          navigate("/pricing-plans");
+        }
       } catch (error) {
         console.log(error);
         toast.error("Sign in failed!");
@@ -411,6 +417,15 @@ const LoginPageNew = () => {
               )}
             </motion.button>
           </form>
+          <p className="">
+            Have an account already ? {"  "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-[#00ffa3] font-semibold cursor-pointer"
+            >
+              Login Here
+            </span>
+          </p>
         </div>
       </div>
       <div id="recaptcha-container"></div>

@@ -10,6 +10,7 @@ import {
   editDrafterPro,
   removeDrafterPro,
 } from "../../features/laws/drafterProSlice";
+import toast from "react-hot-toast";
 
 const AiDrafterPro = () => {
   const drafterDoc = useSelector((state) => state.drafterPro.drafterDoc);
@@ -42,6 +43,15 @@ const AiDrafterPro = () => {
           body: JSON.stringify({ query: promptText }),
         }
       );
+
+      if (!props.ok) {
+        const error = await props.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const parsedProps = await props.json();
       dispatch(
         editDrafterPro({
@@ -54,6 +64,10 @@ const AiDrafterPro = () => {
     } catch (error) {
       console.log(error);
       setEditLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
     }
   };
 

@@ -44,6 +44,7 @@ const userSlice = createSlice({
     firstDraftLoading: false,
     fightingSideModal: false,
     signUpModal: false,
+    status: "idle",
   },
   reducers: {
     login(state, action) {
@@ -76,10 +77,17 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(retrieveCourtroomAuth.pending, (state) => {
+      state.status = "loading";
+    });
     builder.addCase(retrieveCourtroomAuth.fulfilled, (state, action) => {
       if (action.payload && action.payload.user) {
         state.user = action.payload.user;
       }
+      state.status = "succeeded";
+    });
+    builder.addCase(retrieveCourtroomAuth.rejected, (state) => {
+      state.status = "failed";
     });
   },
 });
