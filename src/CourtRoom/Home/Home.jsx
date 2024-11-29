@@ -502,32 +502,50 @@ function Home() {
       </motion.div>
 
      
-      <motion.div className="flex flex-col md:flex-row items-center mt-[150px] mx-10 gap-10">
+      {/* <motion.div
+  className="flex flex-col md:flex-row items-center mt-[150px] mx-10 gap-10"
+> */}
   {/* Left Section: Laptop with Video */}
-  <motion.div
+  {/* <motion.div
     initial={{ x: "-50%" }}
     whileInView={{ x: "0%" }}
     transition={{ type: "spring", stiffness: 120, damping: 10 }}
   >
-    <div className="relative flex justify-center items-center md:h-[400px] md:w-max">
+    <div
+      className="relative flex justify-center items-center md:h-[400px] md:w-max"
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+      }}
+    >
       <img
-        alt="courtRoom Preview"
+        alt="Laptop Preview"
         src={laptop}
-        style={{ borderRadius: 0, width: "100%", height: "100%" }}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
       />
       <video
-        className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
-        src={""}
+        className="absolute top-0 left-0 w-full h-full"
+        style={{
+          objectFit: "contain",
+          zIndex: 2,
+          borderRadius: "0", // Optional if you don't want rounded edges
+        }}
+        src="https://res.cloudinary.com/dyuov6i8c/video/upload/v1732869509/LegalGPT/s7rzogng513qwxyop46d.mp4"
         autoPlay
         loop
         muted
         playsInline
       />
     </div>
-  </motion.div>
+  </motion.div> */}
 
   {/* Right Section: Text Content */}
-  <div className="flex flex-col gap-6">
+  {/* <div className="flex flex-col gap-6">
     <motion.h1
       initial={{ y: -60 }}
       whileInView={{ y: 0 }}
@@ -565,10 +583,41 @@ function Home() {
       evidence, and case law analysis.
     </motion.h5>
   </div>
-</motion.div>
+</motion.div> */}
 
+<motion.div className="flex flex-col gap-3 md:flex-row mt-[150px] mx-10 items-center">
+        <motion.div
+          initial={{ x: "-50%" }}
+          whileInView={{ x: "0%" }}
+          transition={{ type: "spring", stiffness: 120, damping: 10 }}
+        >
+          <div className="flex justify-center items-center">
+  <div className="relative md:h-[400px] md:w-max">
+    <img
+      alt="courtRoom Preview"
+      src={laptop}
+      style={{ borderRadius: 0, width: "100%", height: "100%" }}
+    />
+    <video
+      className=""
+      style={{
+        position:"absolute",
+        height:"90%",
+        width:"76%",
+        left:"80px",
+        top:"0px",
+        
+      }}
+      src="https://res.cloudinary.com/dyuov6i8c/video/upload/v1732869509/LegalGPT/s7rzogng513qwxyop46d.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+    />
+  </div>
+</div>
 
-<motion.div className="flex flex-col-reverse gap-3 md:flex-row mt-[150px] mx-10 items-center">
+        </motion.div>
         <div
           style={{
             display: "flex",
@@ -583,7 +632,7 @@ function Home() {
               y: { type: "tween", duration: 0.8 },
             }}
           >
-           UNBEATABLE LEGAL ASSISTANCE
+           EXPERIENCE THE MAJESTIC WAR ROOM
           </motion.h1>
           <motion.h5
       style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
@@ -593,43 +642,95 @@ function Home() {
         x: { type: "slide", duration: 1 },
       }}
     >
-      <span>Case Search:</span>
-        Instantly find and access case laws and precedents tailored to your case as well as legal queries in seconds. <br />
-      <span>LegalGPT:</span>
-      Dive Deep in research with our AI-powered tool,
-      offering quick,accurate summaries and insights. <br />
-      <span>AI Assistant:</span>
-      Highlights grey areas,provides strategic insights,
-      and strea,lines your preparation. <br />
+      <span>AI Judge:</span>
+      Delivers unbiased, multi-perspective evaluations, generates judgments,
+      and predicts case precedents efficiently. <br />
+      <span>AI Lawyer:</span>
+      Crafts compelling counterarguments using case facts, legal precedents,
+      and relevant case laws. <br />
+      <span>Objection:</span>
+      Understand what Objections can be raised for a specific argument in
+      real-time, enhancing your preparation. <br />
+      <span>Verdict:</span>
+      Generates accurate, well-structured verdicts based on arguments,
+      evidence, and case law analysis.
     </motion.h5>
         </div>
-        <motion.div
-          initial={{ x: "50%" }}
-          whileInView={{ x: "0%" }}
-          transition={{ type: "spring", stiffness: 120, damping: 10 }}
-        >
-          <div className="flex justify-center items-center">
-            <div className="relative md:h-[400px] md:w-max">
-              <img
-                alt="courtRoom Preiview"
-                src={laptop}
-                style={{ borderRadius: 0, width: "100%", height: "100%" }}
-              />
-              <video
-                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
-                src={""}
-                autoPlay
-                loop
-                muted
-                playsInline
-              />
-            </div>
-          </div>
-        </motion.div>
       </motion.div>
 
+
+
+
+<motion.div className="flex flex-col-reverse gap-3 md:flex-row mt-[150px] mx-10 items-center">
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
+    }}
+  >
+    <motion.h1
+      initial={{ y: -60 }}
+      whileInView={{ y: 0 }}
+      transition={{
+        y: { type: "tween", duration: 0.8 },
+      }}
+    >
+      UNBEATABLE LEGAL ASSISTANCE
+    </motion.h1>
+    <motion.h5
+      style={{ color: "#B7B2B2", lineHeight: "1.8", textAlign: "left" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{
+        x: { type: "slide", duration: 1 },
+      }}
+    >
+      <span>Case Search:</span>
+      Instantly find and access case laws and precedents tailored to your case as well as legal queries in seconds. <br />
+      <span>LegalGPT:</span>
+      Dive Deep in research with our AI-powered tool,
+      offering quick, accurate summaries and insights. <br />
+      <span>AI Assistant:</span>
+      Highlights grey areas, provides strategic insights,
+      and streamlines your preparation. <br />
+    </motion.h5>
+  </div>
+
+  <motion.div
+    initial={{ x: "50%" }}
+    whileInView={{ x: "0%" }}
+    transition={{ type: "spring", stiffness: 120, damping: 10 }}
+  >
+    <div className="flex justify-center items-center">
+      <div className="relative md:h-[400px] md:w-[600px]">
+       
+        <img
+          alt="courtRoom Preview"
+          src={laptop}  
+          className="w-full h-full object-cover rounded-xl"
+          style={{ display: "block" }} 
+        />
+
+       
+        <video
+          className="absolute -top-[0.85rem] md:-top-5 w-[100%] h-full p-[1rem] md:p-8 rounded-xl"
+          src={"https://res.cloudinary.com/dyuov6i8c/video/upload/v1732869509/LegalGPT/plxfee8ewzem3optaayl.mp4"}   //1
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ zIndex: 10 }} 
+        />
+      </div>
+    </div>
+  </motion.div>
+</motion.div>
+
+
+
       <motion.div className="flex flex-col md:flex-row items-center mt-[150px] mx-10 gap-10">
-  {/* Left Section: Laptop with Video */}
+ 
   <motion.div
     initial={{ x: "-50%" }}
     whileInView={{ x: "0%" }}
@@ -642,8 +743,8 @@ function Home() {
         style={{ borderRadius: 0, width: "100%", height: "100%" }}
       />
       <video
-        className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
-        src={""}
+        className="absolute -top-[0.85rem] md:-top-5 w-[90%] h-full p-[1rem] md:p-8 rounded-xl"
+        src={"https://res.cloudinary.com/dyuov6i8c/video/upload/v1732869509/LegalGPT/eb8tnrjytxoubmz1lsnn.mp4"}  //2
         autoPlay
         loop
         muted
@@ -740,8 +841,8 @@ function Home() {
                 style={{ borderRadius: 0, width: "100%", height: "100%" }}
               />
               <video
-                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-9 rounded-xl"
-                src={""}
+                className="absolute -top-[0.85rem] md:-top-5 w-full h-full flex justify-center items-center p-[1.5rem] md:p-12 rounded-xl"
+                src={"https://res.cloudinary.com/dyuov6i8c/video/upload/v1732869509/LegalGPT/h17qygdkjysfjablnsmn.mp4"} //3
                 autoPlay
                 loop
                 muted
