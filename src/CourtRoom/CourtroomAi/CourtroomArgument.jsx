@@ -1398,7 +1398,13 @@ const CourtroomArgument = () => {
                         handleArgumentSelect(index, x);
                       }
                       else{
-                        toast('let the arguments load first');
+                        toast('Let the arguments load first!', {
+                          icon: '⚠️', // Add an icon
+                          style: {
+                            background: '#f4e04d', // Warning background color
+                            color: '#000',         // Text color
+                          },
+                        });
                       }
                     }}
                     key={index}

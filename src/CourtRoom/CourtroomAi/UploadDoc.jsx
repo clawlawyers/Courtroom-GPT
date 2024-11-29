@@ -65,11 +65,14 @@ const UploadDoc = () => {
           
           driverObj.drive();
         }
+        else{
+          driverObj.destroy()
+        }
         dispatch(setdevices())
         // dispatch(setTutorial(true));
       }
     }
-  }, [ tutorial, dispatch]);
+  }, [caseOverView, tutorial, dispatch]);
 
   const handleSubmit = () => {
     if (!chooseDevice && !inputText) {

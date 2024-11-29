@@ -405,6 +405,7 @@ const Devices = ({
     } catch (error) {
       setAnalyzing(false);
       toast.error("Failed to load case overview");
+      
     } finally {
       setToBeUploadedFiles([]);
       setUploadProgress({});
