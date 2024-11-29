@@ -470,6 +470,11 @@ const CourtroomArgument = () => {
       setSelectedUserArgument(null);
       setSelectedUserArgumentContent(null);
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.error(error);
       toast.error("Error in saving the argument");
     }
@@ -521,6 +526,11 @@ const CourtroomArgument = () => {
 
       setAiJudgeLoading(false);
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.log(error);
       toast.error("Error in retrieving the argument");
     }
@@ -604,6 +614,11 @@ const CourtroomArgument = () => {
       );
       setAddArgumentLoader(false);
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.error(error);
       toast.error("Error in generating details");
     }
@@ -708,6 +723,11 @@ const CourtroomArgument = () => {
 
       //clear input text
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.error(error);
       toast.error("Error in adding argument");
     }
@@ -771,6 +791,11 @@ const CourtroomArgument = () => {
           history.data.data.caseHistory.judgement[judgeArrLen - 1]
         );
       } catch (error) {
+        if (error.response.data.error === "Please refresh the page") {
+          console.log("working");
+          toast.error(error.response.data.error);
+          return;
+        }
         console.error(error);
         toast.error("Error in fetching case history");
       }
@@ -838,7 +863,15 @@ const CourtroomArgument = () => {
       // data = data.replace(/\\/g, " ");
       setRelevantCases(data);
       setLoadingRelevantCases(false);
-    } catch (error) {}
+    } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
+      console.log(error);
+      toast.error("Error in generating");
+    }
   };
 
   const tapAnimations = {
@@ -868,6 +901,14 @@ const CourtroomArgument = () => {
           body: JSON.stringify({ favor: type }),
         }
       );
+      if (!response.ok) {
+        const error = await response.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const data = await response.json();
       console.log(data);
       firstDraftApi();
@@ -1119,8 +1160,12 @@ const CourtroomArgument = () => {
         dispatch(setmaintut());
       }
     } catch (error) {
-      console.log(error);
       dispatch(setFightingSideModal(false));
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
+      console.log(error);
     }
   };
 
@@ -1148,6 +1193,11 @@ const CourtroomArgument = () => {
       );
       // dispatch(setFirstDraftLoading());
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Error in getting first draft");
       // dispatch(setFirstDraftLoading());
     } finally {

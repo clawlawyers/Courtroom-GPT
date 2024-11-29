@@ -327,6 +327,11 @@ const AiSidebar = () => {
         );
       }
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Error in saving history");
       console.error("Error in saving history", error);
     }
@@ -361,6 +366,11 @@ const AiSidebar = () => {
       );
       dispatch(setFirstDraftAction({ draft: "" }));
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Error in saving case");
       console.error("Error in saving case", error);
     } finally {
@@ -425,6 +435,11 @@ const AiSidebar = () => {
       // console.log(response.data.data.draft);
     } catch (error) {
       console.log(error);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       // toast.error("Error in getting first draft");
       // dispatch(setFirstDraftLoading());
     }
@@ -462,8 +477,14 @@ const AiSidebar = () => {
       );
       setAiAssistantLoading(false);
     } catch (error) {
-      console.error("Error fetching AI questions:", error);
       setAiAssistantLoading(false);
+      console.log(error.response.data.error);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
+      console.error("Error fetching AI questions:", error);
     }
   };
 
@@ -497,8 +518,12 @@ const AiSidebar = () => {
       );
 
       if (!fetchedData.ok) {
-        toast.error("Failed to fetch relevant case laws");
-        return;
+        const error = await fetchedData.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
       }
 
       const data = await fetchedData.json();
@@ -510,6 +535,10 @@ const AiSidebar = () => {
       setRelevantCaseLoading(false);
       setRelevantLawsArr(formattedData);
     } catch (error) {
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
       toast.error("Failed to fetch relevant case laws");
       console.error(error);
     }
@@ -538,6 +567,11 @@ const AiSidebar = () => {
           dispatch(setOverview(overView.data.data.case_overview));
         }
       } catch (error) {
+        if (error.response.data.error === "Please refresh the page") {
+          console.log("working");
+          toast.error(error.response.data.error);
+          return;
+        }
         toast.error("Error in fetching case overview");
         console.error("Error fetching case overview", error);
       }
@@ -572,6 +606,11 @@ const AiSidebar = () => {
       link.click();
       link.remove();
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.error("Error downloading case history:", error);
       toast.error("Error downloading case history");
     } finally {
@@ -605,6 +644,11 @@ const AiSidebar = () => {
       link.click();
       link.remove();
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.error("Error downloading case history:", error);
       toast.error("Error downloading case history");
     } finally {
@@ -648,6 +692,11 @@ const AiSidebar = () => {
       link.click();
       link.remove();
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.error("Error downloading First Draft:", error);
       toast.error("Error downloading First Draft");
     }
@@ -672,7 +721,12 @@ const AiSidebar = () => {
       );
 
       if (!getResponse.ok) {
-        throw new Error(`Error: ${getResponse.statusText}`);
+        const error = await getResponse.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
       }
 
       const responseData = await getResponse.json();
@@ -688,12 +742,16 @@ const AiSidebar = () => {
         },
       ]);
     } catch (error) {
-      console.error("Error in getting response:", error);
-      toast.error("Error in getting response");
       setSearchQuery(false);
       let newArr = promptArr;
       newArr.pop();
       setPromptArr(newArr);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
+      console.error("Error in getting response:", error);
+      toast.error("Error in getting response");
     }
     // setAskLegalGptPrompt(null);
   };
@@ -728,6 +786,14 @@ const AiSidebar = () => {
           body: JSON.stringify({ context: caseSearchPrompt }),
         }
       );
+      if (!response.ok) {
+        const error = await response.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const data = await response.json();
       console.log(data);
       dispatch(removeCaseLaws());
@@ -737,8 +803,12 @@ const AiSidebar = () => {
       setCaseSearchPrompt("");
       navigate("/courtroom-ai/caseLaws");
     } catch (error) {
-      console.log(error);
       setCaseSearchLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
+      console.log(error);
     }
   };
 
@@ -755,6 +825,15 @@ const AiSidebar = () => {
           },
         }
       );
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const data = await response.json();
       console.log(data);
       setNextAppealLoading(false);
@@ -762,8 +841,12 @@ const AiSidebar = () => {
       setAppealDialog(true);
       setAppealData(data.data.fetchedDraftNextAppeal.detailed_draft);
     } catch (error) {
-      console.log(error);
       setNextAppealLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
+      console.log(error);
     }
   };
   const handleResearchArguments = async () => {
@@ -779,6 +862,14 @@ const AiSidebar = () => {
           },
         }
       );
+      if (!response.ok) {
+        const error = await response.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
+        throw new Error("API request failed");
+      }
       const data = await response.json();
       console.log(data);
       setReserachArgumentsLoading(false);
@@ -786,8 +877,12 @@ const AiSidebar = () => {
       setReaseachDialog(true);
       setAppealData(data.data.fetchedHypoDraft.detailed_draft);
     } catch (error) {
-      console.log(error);
       setReserachArgumentsLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
+      console.log(error);
     }
   };
 

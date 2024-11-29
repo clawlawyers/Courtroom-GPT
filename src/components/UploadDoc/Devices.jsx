@@ -160,6 +160,11 @@ const Devices = ({
       setUploadComplete(false);
       setPreviewContent("");
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Failed to save case overview");
     }
   };
@@ -242,6 +247,11 @@ const Devices = ({
       } catch (error) {
         console.error(`Error uploading ${file.name}:`, error);
         setFileUploading(false);
+        if (error.response.data.error === "Please refresh the page") {
+          console.log("working");
+          toast.error(error.response.data.error);
+          return;
+        }
       }
       // }
     };
@@ -378,6 +388,11 @@ const Devices = ({
       setUploadComplete(true);
     } catch (error) {
       setAnalyzing(false);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Failed to load case overview");
     } finally {
       setUploadedSuccessFully([]);
@@ -511,7 +526,14 @@ const Devices = ({
     );
 
     if (!response.ok) {
-      throw new Error("Failed to upload file to backend");
+      const error = await response.json();
+      console.log(error.error);
+      if (error.error === "Please refresh the page") {
+        // throw new Error("Please refresh the page");
+        toast.error(error.error);
+        return;
+      }
+      throw new Error("API request failed");
     }
 
     console.log("File successfully sent to backend");
@@ -601,6 +623,11 @@ const Devices = ({
       }, 3000);
     } catch (error) {
       console.log(error);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       toast.error("Error uploading file");
     }
   };

@@ -48,6 +48,11 @@ const DocumentViewer = ({ text }) => {
       link.click();
       link.remove();
     } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
       console.log(error);
       // if (error.response.data.error.explanation === "Please refresh the page") {
       //   toast.error("Please refresh the page");
@@ -84,7 +89,15 @@ const DocumentViewer = ({ text }) => {
       data = data.replace(/\\/g, " ");
       setRelevantCases(data);
       setLoadingRelevantCases(false);
-    } catch (error) {}
+    } catch (error) {
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+        return;
+      }
+      console.log(error);
+      toast.error("Error in relevant case laws");
+    }
   };
 
   return (
