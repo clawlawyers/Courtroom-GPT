@@ -65,7 +65,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
   };
 
   return (
-    <Dialog open onClose={onClose}>
+    <Dialog sx={{color:"black"}} open onClose={onClose}>
       <div style={{ backgroundColor: "#E0F7F7", padding: "10px" }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <DialogTitle
@@ -102,7 +102,14 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               {languagesArr.sort().map((name) => (
                 <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
-                  <ListItemText className="list-text" primary={name} />
+                  <ListItemText
+                    className="list-text text-black"
+                    primary={<span className="text-black">{name}</span>}
+                    sx={{ color: "black" }}
+                    style={{
+                      "color":"black"
+                    }} // Ensures black text in all environments
+                  />
                 </MenuItem>
               ))}
             </Select>

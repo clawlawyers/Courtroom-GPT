@@ -73,6 +73,10 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
       setLoading(false);
       console.error("Error in submitting evidence", error);
       setUploadedFiles([]);
+      if (error.response.data.error === "Please refresh the page") {
+        console.log("working");
+        toast.error(error.response.data.error);
+      }
     }
   };
 
@@ -95,6 +99,11 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
       );
 
       if (!fetchData.ok) {
+        const error = await fetchData.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
         throw new Error("API request failed");
       }
 
@@ -130,8 +139,13 @@ const EvidenceDialog = ({ handleEvidenceClose }) => {
 
       // Example: updateEvidenceList(data.evidence)
     } catch (error) {
+      console.log(error.message);
       setLoading(false);
       console.error("Error in submitting evidence", error);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
       toast.error("Error in submitting evidence", error);
     }
   };

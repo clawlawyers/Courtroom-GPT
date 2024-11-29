@@ -32,6 +32,11 @@ const TestimonyDialog = ({ handleTestimonyClose }) => {
         }
       );
       if (!fetchData.ok) {
+        const error = await fetchData.json();
+        console.log(error.error);
+        if (error.error === "Please refresh the page") {
+          throw new Error("Please refresh the page");
+        }
         throw new Error("API request failed");
       }
       const data = await fetchData.json();
@@ -45,6 +50,10 @@ const TestimonyDialog = ({ handleTestimonyClose }) => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      if (error.message === "Please refresh the page") {
+        toast.error("Please refresh the page");
+        return;
+      }
       console.error("Error in submitting Testimony", error);
       toast.error("Error in submitting Testimony", error);
     }
