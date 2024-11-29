@@ -268,7 +268,19 @@ const AiSidebar = () => {
   }, [promptArr]);
 
   useEffect(() => {
-    setText(overViewDetails);
+    setText(
+      overViewDetails
+        .replaceAll("\\\\n\\\\n", " \n")
+        .replaceAll("\\\\n", " \n")
+        .replaceAll("\\n\\n", " \n")
+        .replaceAll("\\n", " \n")
+        .replaceAll("\n", " \n")
+        .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+        .replaceAll("\\", "")
+        .replaceAll('"', "")
+        .replaceAll(":", " :")
+        .replaceAll("#", "")
+    );
   }, [overViewDetails]);
 
   const handleExit = () => {

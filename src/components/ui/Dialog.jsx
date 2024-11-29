@@ -55,7 +55,19 @@ const Dialog = ({
     const newPages = getPages(inputText);
     setPages(newPages);
     // setCurrentText(newPages[currentPage] || "");
-    setCurrentText(inputText);
+    setCurrentText(
+      inputText
+        .replaceAll("\\\\n\\\\n", " \n")
+        .replaceAll("\\\\n", " \n")
+        .replaceAll("\\n\\n", " \n")
+        .replaceAll("\\n", " \n")
+        .replaceAll("\n", " \n")
+        .replaceAll(/\*([^*]+)\*/g, "<strong>$1</strong>")
+        .replaceAll("\\", "")
+        .replaceAll('"', "")
+        .replaceAll(":", " :")
+        .replaceAll("#", "")
+    );
   }, [inputText]);
 
   // Update inputText when pages change
@@ -136,9 +148,12 @@ const Dialog = ({
       <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative">
         {/* Dialog Content */}
         <div className="w-full  flex flex-col">
-          <div className="w-full flex justify-between items-center gap-10 px-2">
+          <div className="w-full flex justify-center items-center gap-10 px-2 relative">
             <h1 className="text-2xl text-white font-bold">{title}</h1>
-            <Close className="cursor-pointer" onClick={onClose} />
+            <Close
+              className="absolute right-0 cursor-pointer"
+              onClick={onClose}
+            />
           </div>
           {text && (
             <div className=" flex justify-between items-center h-[80vh] w-full gap-5">
@@ -212,7 +227,7 @@ const Dialog = ({
                   <div className="flex justify-center items-center h-72 w-auto">
                     <CircularProgress size={100} sx={{ color: "white" }} />
                   </div>
-                  <div className="w-[30rem] h-16">
+                  <div className="w-[30rem] h-16 text-center">
                     <TipsComponent />
                   </div>
                 </div>

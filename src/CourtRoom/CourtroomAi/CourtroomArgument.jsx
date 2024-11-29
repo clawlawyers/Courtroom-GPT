@@ -1180,9 +1180,9 @@ const CourtroomArgument = () => {
             className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg"
           >
             <div className="flex justify-between">
-              <div className="h-[5vh] p-[10px] flex gap-[10px]">
+              <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
                 <img
-                  style={{ width: "25px", height: "25px" }}
+                  style={{ width: "20px", height: "20px" }}
                   src={aiJudge}
                   alt="judge-icon"
                 />
@@ -1290,9 +1290,9 @@ const CourtroomArgument = () => {
             className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black"
           >
             <div className="flex justify-between">
-              <div className="h-[5vh] p-[10px] flex gap-[10px]">
+              <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
                 <img
-                  style={{ width: "25px", height: "25px" }}
+                  style={{ width: "20px", height: "20px" }}
                   src={aiLawyer}
                   alt="judge-icon"
                 />
@@ -1380,9 +1380,9 @@ const CourtroomArgument = () => {
         }}
       >
         <div className="flex flex-col ">
-          <div className="p-3 flex gap-2">
+          <div className="p-3 flex gap-2 items-center">
             <img
-              style={{ width: "25px", height: "25px" }}
+              style={{ width: "20px", height: "20px" }}
               src={userIcon}
               alt="user-icon"
             />
@@ -1748,9 +1748,9 @@ const CourtroomArgument = () => {
       >
         <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
           <div className="flex justify-between">
-            <div className="h-[5vh] p-[10px] flex gap-[10px]">
+            <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
               <img
-                style={{ width: "25px", height: "25px" }}
+                style={{ width: "20px", height: "20px" }}
                 src={aiJudge}
                 alt="judge-icon"
               />
@@ -1762,6 +1762,7 @@ const CourtroomArgument = () => {
                 disableHoverListener={RelevantCaseLaws}
               >
                 <IconButton
+                  disabled={userArgument.length === 0}
                   sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
@@ -1840,9 +1841,9 @@ const CourtroomArgument = () => {
       >
         <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
           <div className="flex justify-between">
-            <div className="h-[5vh] p-[10px] flex gap-[10px]">
+            <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
               <img
-                style={{ width: "25px", height: "25px" }}
+                style={{ width: "20px", height: "20px" }}
                 src={aiLawyer}
                 alt="judge-icon"
               />
@@ -1855,6 +1856,7 @@ const CourtroomArgument = () => {
                 disableHoverListener={RelevantCaseLaws}
               >
                 <IconButton
+                  disabled={userArgument.length === 0}
                   sx={{ color: "white" }}
                   aria-label="more"
                   aria-controls="long-menu"
@@ -1922,7 +1924,7 @@ const CourtroomArgument = () => {
               onClick={() => setLawyerViewExpand(false)}
               className="flex gap-1 items-center"
             >
-              <img className="h-4 w-4" alt="expand" src={expand} />
+              <img className="h-4 w-4" alt="expand" src={collapse} />
               <h1 className="text-xs m-[5px]">Collapse</h1>
             </div>
             <motion.div

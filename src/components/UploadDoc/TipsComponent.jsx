@@ -30,7 +30,11 @@ const TipsComponent = () => {
     return () => clearInterval(intervalId);
   }, [items.length]);
   return (
-    <div className={`fade-item ${fade ? "fade-out" : "fade-in"} text-xs`}>
+    <div
+      className={`fade-item ${
+        fade ? "fade-out" : "fade-in"
+      } text-xs text-center`}
+    >
       {items[currentIndex]}
     </div>
   );
