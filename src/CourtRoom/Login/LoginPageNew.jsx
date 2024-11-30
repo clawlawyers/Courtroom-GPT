@@ -13,39 +13,32 @@ import { NODE_API_ENDPOINT } from "../../utils/utils";
 import { CircularProgress } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login, setOverview } from "../../features/bookCourtRoom/LoginReducreSlice";
+import {
+  login,
+  setOverview,
+} from "../../features/bookCourtRoom/LoginReducreSlice";
 import { ConstructionOutlined } from "@mui/icons-material";
 
 const LoginPageNew = () => {
   const navigate = useNavigate();
-  const dispatch =useDispatch()
-  const [params,setparams] = useSearchParams()
+  const dispatch = useDispatch();
+  const [params, setparams] = useSearchParams();
 
-  let user= params.get("user")
-  if(!user){
-   console.log(user)
+  let user = params.get("user");
+  if (!user) {
+    console.log(user);
+  } else {
+    user = atob(user);
   }
-  else{
-    user=atob(user)
-   
-   
-}
-const [userParam , setuserParam]=useState(user)
+  const [userParam, setuserParam] = useState(user);
 
-  
-  
-  useEffect(()=>{
-
-    if(userParam=="null" || userParam==null){
+  useEffect(() => {
+    if (userParam == "null" || userParam == null) {
       params.delete("user");
-      setparams(params)
-    }
-    else{
-   
-
-      const handleRequest = async (userParam) =>{
-      
-        const response=   await fetch(
+      setparams(params);
+    } else {
+      const handleRequest = async (userParam) => {
+        const response = await fetch(
           `${NODE_API_ENDPOINT}/courtroomFree/login`,
           {
             method: "POST",
@@ -59,31 +52,28 @@ const [userParam , setuserParam]=useState(user)
           }
         );
         var data = await response.json();
-        console.log(data)
-        if(data?.message =="inavlid session"){
+        console.log(data);
+        if (data?.message == "inavlid session") {
           toast.error("DAILY LIMIT EXCEDED");
         }
         if (data.token) {
           localStorage.setItem("userToken", data.token);
-          console.log(data.caseOverview)
+          console.log(data.caseOverview);
           dispatch(login({ user: data }));
-          dispatch(setOverview(data.caseOverview))
-        
+          dispatch(setOverview(data.caseOverview));
+
           // setIsVerified(true);
-          navigate("/courtroom-ai")
+          navigate("/courtroom-ai");
         } else {
           toast.error("Something went wrong.Please try again!");
           // setIsOTPMode(false);
         }
 
-        return data
-      } 
-      handleRequest(JSON.parse(userParam))
+        return data;
+      };
+      handleRequest(JSON.parse(userParam));
     }
-    },[])
-    
-  
-
+  }, []);
 
   const [isOTPMode, setIsOTPMode] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
@@ -95,8 +85,7 @@ const [userParam , setuserParam]=useState(user)
 
   const [verificationId, setVerificationId] = useState("");
   const [isFirst, setIsfirst] = useState(true);
-  const [isverified, setVerified]= useState(false)
-  
+  const [isverified, setVerified] = useState(false);
 
   const handleVerify = () => {
     if (isOTPMode) {
@@ -109,42 +98,42 @@ const [userParam , setuserParam]=useState(user)
   const handleVerifyNumber = async (e) => {
     e.preventDefault();
     setIsOTPMode(true);
-    // setOtpLoading(true);
-    // console.log(window.recaptchaVerifier);
-    // if (isFirst) {
-    //   console.log("recaptchaVerifier");
-    //   window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-    //     size: "invisible",
-    //     callback: (response) => {
-    //       // reCAPTCHA solved, allow signInWithPhoneNumber.
-    //       console.log(response);
-    //     },
-    //     auth,
-    //   });
-    //   setIsfirst(false);
-    // } else if (!window.recaptchaVerifier) {
-    //   console.log("recaptchaVerifier");
-    //   window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-    //     size: "invisible",
-    //     callback: (response) => {
-    //       console.log(response);
-    //     },
-    //     auth,
-    //   });
-    // }
-    // signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
-    //   .then((confirmationResult) => {
-    //     setVerificationId(confirmationResult?.verificationId);
-    //     toast.success("OTP sent successfully !");
-    //     setIsOTPMode(true);
-    //     setOtpLoading(false);
-    //     // setIsDisabled(true);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     toast.error("Error during OTP request");
-    //     setOtpLoading(false);
-    //   });
+    setOtpLoading(true);
+    console.log(window.recaptchaVerifier);
+    if (isFirst) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          console.log(response);
+        },
+        auth,
+      });
+      setIsfirst(false);
+    } else if (!window.recaptchaVerifier) {
+      console.log("recaptchaVerifier");
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+        size: "invisible",
+        callback: (response) => {
+          console.log(response);
+        },
+        auth,
+      });
+    }
+    signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        setVerificationId(confirmationResult?.verificationId);
+        toast.success("OTP sent successfully !");
+        setIsOTPMode(true);
+        setOtpLoading(false);
+        // setIsDisabled(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error during OTP request");
+        setOtpLoading(false);
+      });
   };
 
   const handleVerifyOtp = async (e) => {
@@ -174,15 +163,13 @@ const [userParam , setuserParam]=useState(user)
           }
         );
         var data = await response.json();
-        if(data.message == "inavlid session"){
+        if (data.message == "inavlid session") {
           toast.error("DAILY LIMIT EXCEDED");
           setIsOTPMode(false);
-        }
-       
-        else if (data.token) {
+        } else if (data.token) {
           localStorage.setItem("userToken", data.token);
           dispatch(login({ user: data }));
-          dispatch(setOverview(data.caseOverview))
+          dispatch(setOverview(data.caseOverview));
           setIsVerified(true);
         } else {
           toast.error("Something went wrong.Please try again!");
