@@ -689,7 +689,7 @@ const AiSidebar = () => {
     const getOverview = async () => {
       try {
         const overView = await axios.post(
-          `${NODE_API_ENDPOINT}/courtroom/getCaseOverview`,
+          `${NODE_API_ENDPOINT}/courtroomFree/getCaseOverview`,
           {
             // user_id: currentUser.userId,
           },
@@ -712,12 +712,12 @@ const AiSidebar = () => {
         console.error("Error fetching case overview", error);
       }
     };
-    if (currentUser.userId) {
+    if (currentUser.token) {
       getOverview();
 
       // console.log(currentUser.userId);
     }
-  }, [currentUser.userId]);
+  }, [currentUser.token]);
 
   const downloadCaseHistory = async () => {
     setDownloadCaseLoading(true);
