@@ -1,0 +1,162 @@
+import React, { useEffect, useState } from "react";
+
+const videoArrDetails = [
+  {
+    type: "Experience the majestic warroom",
+    typeArr: [
+      {
+        name: "Ai Judge",
+        details:
+          "Delivers unbiased, multi-perspective evaluations, generates judgments, and predicts case precedents efficiently.",
+        videoSrc: "yo",
+      },
+      {
+        name: "Ai Lawyer",
+        details:
+          "Crafts compelling counterarguments using case facts, legal precedents and relevant case laws.",
+        videoSrc: "",
+      },
+      {
+        name: "Objection",
+        details:
+          "Understand what Objections can be raised for a specific argument in real-time, enhancing your preparation.",
+        videoSrc: "",
+      },
+      {
+        name: "Verdict",
+        details:
+          "Generates accurate, well-structured verdicts based on arguments, evidence, and case law analysis.",
+        videoSrc: "",
+      },
+    ],
+  },
+  {
+    type: "Unbeatable legal assistance",
+    typeArr: [
+      {
+        name: "Case Search",
+        details:
+          "Instantly find and access case laws and precedents tailored to your case as well as legal queries in seconds.",
+        videoSrc: "yo",
+      },
+      {
+        name: "LegalGPT",
+        details:
+          "Dive deep in research with our AI-powered tool, offering quick, accurate summaries and insights",
+        videoSrc: "",
+      },
+      {
+        name: "Ai Assistant",
+        details:
+          "Highlights grey areas, provides strategic insights, and streamlines your legal preparation",
+        videoSrc: "",
+      },
+    ],
+  },
+  {
+    type: "Best-in-class verification & validation",
+    typeArr: [
+      {
+        name: "Evidence",
+        details:
+          "Evaluate and assess evidence validity to get insights on how it will play in the court.",
+        videoSrc: "yo",
+      },
+      {
+        name: "Testimony",
+        details:
+          "Get 3 sets of cross examination questions from the perspective of a petitioner, respondent and the judge",
+        videoSrc: "",
+      },
+    ],
+  },
+  {
+    type: "Highest efficiency features",
+    typeArr: [
+      {
+        name: "First Draft",
+        details:
+          "Generate precise initial drafts of legal arguments with relevant case laws working as a foundation for your preparation, saving time and effort.",
+        videoSrc: "yo",
+      },
+      {
+        name: "Relevant Case Laws",
+        details:
+          "Quickly access case laws directly relevant to that specific argument with citations and the ability to read the full case document.",
+        videoSrc: "",
+      },
+      {
+        name: "Ai Drafter",
+        details:
+          "Draft, edit, and customize legal documents needed for your case with AI precision and seamless efficiency with a single click",
+        videoSrc: "",
+      },
+      {
+        name: "Multilingual Support",
+        details:
+          "Work effortlessly in multiple languages like English, Hindi, Gujarati, Marathi and many more, breaking barriers and expanding accessibility",
+        videoSrc: "",
+      },
+    ],
+  },
+];
+
+const VideoBanner = () => {
+  const [activeButtonIndex, setActiveButtonIndex] = useState(0);
+  const [activeVideoIndex, setActiveVideoIndex] = useState([
+    videoArrDetails[activeButtonIndex].typeArr[0],
+  ]);
+
+  useEffect(() => {
+    setActiveVideoIndex([videoArrDetails[activeButtonIndex].typeArr[0]]);
+  }, [activeButtonIndex]);
+
+  return (
+    <div className="pt-20 w-[80%] m-auto flex flex-col gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
+        {videoArrDetails.map((x, index) => (
+          <button
+            onClick={() => setActiveButtonIndex(index)}
+            className={`border-2 rounded-lg px-4 py-2 hover:bg-white hover:bg-opacity-25 ${
+              activeButtonIndex === index ? "bg-[#018585] border-[#0bc6c6]" : ""
+            }`}
+            key={index}
+          >
+            {x.type.toUpperCase()}
+          </button>
+        ))}
+      </div>
+      <div className="border-2 rounded-lg p-2 flex flex-col gap-3">
+        <div className="flex justify-between gap-2">
+          {videoArrDetails[activeButtonIndex].typeArr.map((x, index) => (
+            <div
+              onClick={() => setActiveVideoIndex([x])}
+              key={index}
+              className={`w-full flex justify-center items-center border rounded-lg cursor-pointer hover:bg-white hover:bg-opacity-25 ${
+                activeVideoIndex[0].name === x.name
+                  ? "bg-white bg-opacity-25"
+                  : ""
+              }`}
+            >
+              <p className="m-0 py-2">{x.name}</p>
+            </div>
+          ))}
+        </div>
+        <div className="bg-black bg-opacity-25 rounded-lg p-3">
+          {activeVideoIndex.map((x, index) => (
+            <div key={index} className="grid grid-cols-2">
+              <div className="">
+                <p>{x.details}</p>
+              </div>
+              <div className="bg-black rounded-lg h-72">
+                {/* <p>{x.videoSrc}</p> */}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default VideoBanner;

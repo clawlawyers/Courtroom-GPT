@@ -102,9 +102,9 @@ const CourtRoomAiLayout = () => {
 
       if (caseOverView !== "NA" && caseOverView !== "") {
         console.log("inside condition");
-        console.log(caseOverView);
-        const sidebarconatiner = document.getElementById("conatiner-sidebar")
-        sidebarconatiner.click()
+        // console.log(caseOverView);
+        // const sidebarconatiner = document.getElementById("conatiner-sidebar");
+        // sidebarconatiner.click();
         navigate("/courtroom-ai/arguments");
       } else {
         navigate("/courtroom-ai");
@@ -131,6 +131,25 @@ const CourtRoomAiLayout = () => {
           </div>
         </div>
       )}
+      <div
+        className="md:hidden absolute top-0 left-0 w-full h-screen flex justify-center items-center "
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          backdropFilter: "blur(3px)",
+        }}
+      >
+        <div className="w-full px-1 flex flex-col items-center justify-center">
+          <h1 className="text-xl text-center">
+            Content available in Desktop Screen only !
+          </h1>
+          <button
+            onClick={() => navigate("/")}
+            className="border rounded-lg px-4 py-1 hover:bg-white hover:bg-opacity-15"
+          >
+            Home
+          </button>
+        </div>
+      </div>
     </>
   );
 };
