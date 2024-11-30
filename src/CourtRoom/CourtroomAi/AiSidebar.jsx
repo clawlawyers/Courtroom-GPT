@@ -7,7 +7,13 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, CircularProgress, Menu } from "@mui/material";
-import { ArrowRight, Close, Download, Send, ShareLocationOutlined } from "@mui/icons-material";
+import {
+  ArrowRight,
+  Close,
+  Download,
+  Send,
+  ShareLocationOutlined,
+} from "@mui/icons-material";
 import { ArrowLeft } from "@mui/icons-material";
 import { MenuItem, IconButton } from "@mui/material";
 import { IoReload } from "react-icons/io5";
@@ -87,46 +93,61 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   useEffect(() => {
     const calculateTimeLeft = () => {
       const slot = new Date(slotTimeInterval);
-     
-      const currenttime = new Date()
-      const utcTime = currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
+
+      const currenttime = new Date();
+      const utcTime =
+        currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
       const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
       const istOffset = 5.5 * 60 * 60000;
-      const currentItcTime = new Date(utcTime+istOffset)
-      const slotcurrentItcTime = new Date(slotutcTime)
-      const realcurrentItcTime = new Date(currentItcTime.getFullYear(), currentItcTime.getMonth(), currentItcTime.getDate(), currentItcTime.getHours(), currentItcTime.getMinutes(), currentItcTime.getSeconds())
-      const slotrealcurrentItcTime = new Date(slotcurrentItcTime.getFullYear(), slotcurrentItcTime.getMonth(), slotcurrentItcTime.getDate(), slotcurrentItcTime.getHours(), slotcurrentItcTime.getMinutes(), slotcurrentItcTime.getSeconds())
+      const currentItcTime = new Date(utcTime + istOffset);
+      const slotcurrentItcTime = new Date(slotutcTime);
+      const realcurrentItcTime = new Date(
+        currentItcTime.getFullYear(),
+        currentItcTime.getMonth(),
+        currentItcTime.getDate(),
+        currentItcTime.getHours(),
+        currentItcTime.getMinutes(),
+        currentItcTime.getSeconds()
+      );
+      const slotrealcurrentItcTime = new Date(
+        slotcurrentItcTime.getFullYear(),
+        slotcurrentItcTime.getMonth(),
+        slotcurrentItcTime.getDate(),
+        slotcurrentItcTime.getHours(),
+        slotcurrentItcTime.getMinutes(),
+        slotcurrentItcTime.getSeconds()
+      );
 
-// console.log(slotrealcurrentItcTime)
-// console.log(realcurrentItcTime)
-      
-      const main = realcurrentItcTime.getTime()-slotrealcurrentItcTime.getTime()
+      // console.log(slotrealcurrentItcTime)
+      // console.log(realcurrentItcTime)
 
-const totalSeconds = Math.floor(main / 1000)
+      const main =
+        realcurrentItcTime.getTime() - slotrealcurrentItcTime.getTime();
+
+      const totalSeconds = Math.floor(main / 1000);
       const minutes = Math.floor(totalSeconds / 60);
-const seconds = totalSeconds  % 60;
+      const seconds = totalSeconds % 60;
       // console.log(main)
-      let minutesLeft
+      let minutesLeft;
       // if(now.getMinutes()>30){
 
       //    minutesLeft = now.getMinutes()  - slot.getMinutes() - 1;
       // }
       // else{
 
-         minutesLeft =30- minutes-1;
+      minutesLeft = 30 - minutes - 1;
 
       // }
       // console.log(now.getMinutes())
       // console.log(slot.getMinutes())
-      const secondsLeft =60- seconds
+      const secondsLeft = 60 - seconds;
 
       // console.log("minutesLeft")
       // console.log(minutesLeft)
       // console.log("seconds")
       // console.log(secondsLeft)
-      if(minutesLeft ==-1 && secondsLeft==60 ){
-        setCountDownOver(true)
-        
+      if (minutesLeft == -1 && secondsLeft == 60) {
+        setCountDownOver(true);
       }
       setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
     };
@@ -139,23 +160,39 @@ const seconds = totalSeconds  % 60;
   }, [slotTimeInterval]);
 
   useEffect(() => {
-    let todaysSlot =new Date(slotTimeInterval)
-    const todaysSlotTime = todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
-    const Offset = 0.5 * 60 * 60000 +5.5 * 60 * 60000
-    var slot = new Date(todaysSlotTime+Offset)
-  //  slot =new Date(slot.getFullYear(), slot.getMonth(), slot.getDate(), slot.getHours(), slot.getMinutes(), slot.getSeconds())
-    const currenttime = new Date()
-      const utcTime = currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
-      const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
-      const istOffset = 5.5 * 60 * 60000;
-      const currentItcTime = new Date(utcTime+istOffset)
-      const slotcurrentItcTime = new Date(slotutcTime)
-      const realcurrentItcTime = new Date(currentItcTime.getFullYear(), currentItcTime.getMonth(), currentItcTime.getDate(), currentItcTime.getHours(), currentItcTime.getMinutes(), currentItcTime.getSeconds())
-      const slotrealcurrentItcTime = new Date(slotcurrentItcTime.getFullYear(), slotcurrentItcTime.getMonth(), slotcurrentItcTime.getDate(), slotcurrentItcTime.getHours(), slotcurrentItcTime.getMinutes(), slotcurrentItcTime.getSeconds())
-    console.log(realcurrentItcTime)
-    console.log(slotrealcurrentItcTime)
-  
-    if (slotrealcurrentItcTime <realcurrentItcTime) {
+    let todaysSlot = new Date(slotTimeInterval);
+    const todaysSlotTime =
+      todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
+    const Offset = 0.5 * 60 * 60000 + 5.5 * 60 * 60000;
+    var slot = new Date(todaysSlotTime + Offset);
+    //  slot =new Date(slot.getFullYear(), slot.getMonth(), slot.getDate(), slot.getHours(), slot.getMinutes(), slot.getSeconds())
+    const currenttime = new Date();
+    const utcTime =
+      currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
+    const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
+    const istOffset = 5.5 * 60 * 60000;
+    const currentItcTime = new Date(utcTime + istOffset);
+    const slotcurrentItcTime = new Date(slotutcTime);
+    const realcurrentItcTime = new Date(
+      currentItcTime.getFullYear(),
+      currentItcTime.getMonth(),
+      currentItcTime.getDate(),
+      currentItcTime.getHours(),
+      currentItcTime.getMinutes(),
+      currentItcTime.getSeconds()
+    );
+    const slotrealcurrentItcTime = new Date(
+      slotcurrentItcTime.getFullYear(),
+      slotcurrentItcTime.getMonth(),
+      slotcurrentItcTime.getDate(),
+      slotcurrentItcTime.getHours(),
+      slotcurrentItcTime.getMinutes(),
+      slotcurrentItcTime.getSeconds()
+    );
+    // console.log(realcurrentItcTime)
+    // console.log(slotrealcurrentItcTime)
+
+    if (slotrealcurrentItcTime < realcurrentItcTime) {
       setCountDownOver(true);
     }
   });
@@ -972,8 +1009,7 @@ const AiSidebar = () => {
                   aria-controls="long-menu"
                   aria-haspopup="true"
                   // onClick={handleMenuOpen}
-              onClick={()=>toast.error("ONLY FOR PAID USERS")}
-
+                  onClick={() => toast.error("ONLY FOR PAID USERS")}
                 >
                   <MoreVert />
                 </IconButton>
@@ -1080,10 +1116,9 @@ const AiSidebar = () => {
         >
           <div className="flex flex-col gap-1">
             <motion.div
-             disabled={true}
+              disabled={true}
               // onClick={handleFirstDraft}
-              onClick={()=>toast.error("ONLY FOR PAID USERS")}
-
+              onClick={() => toast.error("ONLY FOR PAID USERS")}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               className={`${
@@ -1123,8 +1158,7 @@ const AiSidebar = () => {
             <motion.div
               // onClick={() => setShowDrafterQuestions(true)}
               disabled={true}
-              onClick={()=>toast.error("ONLY FOR PAID USERS")}
-
+              onClick={() => toast.error("ONLY FOR PAID USERS")}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -1158,9 +1192,8 @@ const AiSidebar = () => {
               </div>
             </motion.div>
             <motion.div
-             disabled={true}
-             onClick={()=>toast.error("ONLY FOR PAID USERS")}
-
+              disabled={true}
+              onClick={() => toast.error("ONLY FOR PAID USERS")}
               // onClick={() => setShowAskLegalGPT(true)}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
@@ -1196,7 +1229,7 @@ const AiSidebar = () => {
             </motion.div>
             <motion.div
               // onClick={() => setCaseSearchDialog(true)}y
-              onClick={()=>toast.error("ONLY FOR PAID USERS")}
+              onClick={() => toast.error("ONLY FOR PAID USERS")}
               whileTap={{ scale: "0.95" }}
               whileHover={{ scale: "1.01" }}
               style={{
@@ -1251,8 +1284,7 @@ const AiSidebar = () => {
               //   setShowAssistant(true);
               //   getAiQuestions();
               // }}
-              onClick={()=>toast.error("ONLY FOR PAID USERS")}
-
+              onClick={() => toast.error("ONLY FOR PAID USERS")}
             />
             {aiIconHover ? (
               <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
@@ -1282,7 +1314,6 @@ const AiSidebar = () => {
                     : "cursor-pointer"
                 }`}
                 onClick={() => downloadSessionCaseHistory()}
-     
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1303,7 +1334,7 @@ const AiSidebar = () => {
                 </p>
               </motion.div>
               <motion.div
-               disabled={true}
+                disabled={true}
                 id="download-case"
                 className={`${
                   overViewDetails === "NA" || overViewDetails === ""
@@ -1404,7 +1435,6 @@ const AiSidebar = () => {
                 <p
                   className="m-0 text-xs"
                   onClick={() => dispatch(setTutorial())}
-
                 >
                   Restart Tutorial
                 </p>
