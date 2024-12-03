@@ -261,9 +261,13 @@ const PricingPlans = () => {
   return (
     <>
       <div
-        className={`p-5 sm:p-8 max-w-6xl mx-auto transition-all duration-300
-        }`}
-      >
+        className={`p-5  sm:p-8 max-w-full  justify-center transition-all duration-300 }`}
+        style={{
+          background: `
+            linear-gradient(to bottom, #0e1118, transparent 10%),
+            linear-gradient(to top right, #018585, transparent 100%)
+          `,
+        }}>
         <div className="h-16"></div>
         <h3 className="text-2xl sm:text-3xl font-medium leading-snug text-center text-white mb-2">
           Get Started With
@@ -279,30 +283,27 @@ const PricingPlans = () => {
             fontWeight: 800,
             letterSpacing: "-0.01em",
             lineHeight: "1.2",
-          }}
-        >
+          }}>
           AI COURTROOM
         </div>
 
         <div className="flex justify-center gap-4 sm:gap-6 mb-8">
           <button
-            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base ${
+            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base transition duration-300 ease-in-out transform ${
               billingCycle === "daily"
-                ? "bg-[#9AFFDB] text-[#018585]"
-                : "bg-white text-[#018585]"
-            }`}
-            onClick={() => setBillingCycle("daily")}
-          >
+                ? "bg-[#018585] text-[white] hover:bg-[#85FFD1]"
+                : "bg-white text-[#226e6e] hover:bg-gray-200"
+            } hover:scale-105`}
+            onClick={() => setBillingCycle("daily")}>
             Daily
           </button>
           <button
-            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base ${
+            className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base transition duration-300 ease-in-out transform ${
               billingCycle === "monthly"
-                ? "bg-[#9AFFDB] text-[#018585]"
-                : "bg-white text-[#018585]"
-            }`}
-            onClick={() => setBillingCycle("monthly")}
-          >
+                ? "bg-[#018585] text-[white] hover:bg-[#2c6750] hover:text-[white]"
+                : "bg-white text-[#018585] hover:bg-[#E0FFFA] hover:text-[#026B5C]"
+            } hover:scale-105`}
+            onClick={() => setBillingCycle("monthly")}>
             Monthly
           </button>
         </div>
@@ -314,8 +315,7 @@ const PricingPlans = () => {
               className={`relative rounded-lg shadow-lg overflow-hidden flex flex-col bg-[rgba(217,217,217,0.37)] border-4 border-white p-6 ${
                 plan.popular ? "popular-plan" : ""
               }`}
-              style={{ height: "100%" }}
-            >
+              style={{ height: "100%" }}>
               <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
                 {plan.title}
               </h2>
@@ -338,8 +338,7 @@ const PricingPlans = () => {
                       style={{
                         background:
                           "linear-gradient(180deg, #006E6E 0%, #003131 100%)",
-                      }}
-                    >
+                      }}>
                       CONTACT US
                     </button>
                   </div>
@@ -357,8 +356,7 @@ const PricingPlans = () => {
                       background:
                         "linear-gradient(180deg, #006E6E 0%, #003131 100%)",
                     }}
-                    onClick={() => handleBuyPlan(plan)}
-                  >
+                    onClick={() => handleBuyPlan(plan)}>
                     Get It Now
                   </button>
                 </div>
