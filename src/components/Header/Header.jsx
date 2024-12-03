@@ -35,61 +35,53 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="w-full bg-[#3E3E3E] bg-opacity-40 flex items-center justify-between px-3 py-1 rounded-full shadow-lg mt-3 absolute">
-      <div className="flex flex-col items-center justify-center h-full">
+    <div className="w-5/6 m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-12 right-0 mx-auto mt-3">
+      <div className="flex flex-col cursor-pointer items-center justify-center h-full">
         <img src={clawlogo} alt="CLAW Logo" className="w-[120px] h-auto" />
       </div>
 
       {/* Hamburger Icon */}
       <button
         onClick={toggleMenu}
-        className="md:hidden flex flex-col items-center"
-      >
+        className="md:hidden flex flex-col items-center">
         <span className="block w-8 h-1 bg-white mb-1"></span>
         <span className="block w-8 h-1 bg-white mb-1"></span>
         <span className="block w-8 h-1 bg-white"></span>
       </button>
 
       <div
-        className={`hidden md:flex items-center justify-end gap-x-16 flex-grow`}
-      >
+        className={`hidden md:flex items-center justify-end gap-x-16 flex-grow`}>
         <Link
           to="/"
-          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline"
-        >
+          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline">
           CLAW Home
         </Link>
         <Link
           to="/pricing-plans"
-          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline"
-        >
+          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline">
           Pricing
         </Link>
-        <Link
-          to=""
-          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline"
-        >
-          Our Reach
-        </Link>
-        <Link
-          to=""
-          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline"
-        >
+        <a
+          href="#videoBanner"
+          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline">
+          Features
+        </a>
+        <a
+          href="#Testimonilcard"
+          className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline">
           Testimonials
-        </Link>
+        </a>
         {currentUser ? (
           <p
             onClick={() => dispatch(logout())}
-            className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline"
-          >
+            className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline">
             Logout
           </p>
         ) : (
           <Link
             // onClick={() => dispatch(setSignInFormModal())}
             to={"/login"}
-            className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline"
-          >
+            className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline">
             Login
           </Link>
         )}
@@ -99,21 +91,18 @@ const Header = () => {
       {isOpen && (
         <div
           ref={menuRef}
-          className="absolute z-10 top-[60px] left-0 right-0 bg-[#0E1118] bg-opacity-100 rounded-lg p-4 md:hidden"
-        >
+          className="absolute z-10 top-[60px] left-0 right-0 bg-[#0E1118] bg-opacity-100 rounded-lg p-4 md:hidden">
           {/* Close Icon */}
           <button
             onClick={() => setIsOpen(false)}
-            className="text-white mb-2 flex justify-end w-full"
-          >
+            className="text-white mb-2 flex justify-end w-full">
             {/* SVG for close icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -124,32 +113,27 @@ const Header = () => {
           </button>
           <Link
             to="/"
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
             CLAW Home
           </Link>
           <Link
             to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
             Pricing
           </Link>
           <Link
             to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
             Our Reach
           </Link>
           <Link
             to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
             Testimonials
           </Link>
           <Link
             to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
             Login
           </Link>
         </div>

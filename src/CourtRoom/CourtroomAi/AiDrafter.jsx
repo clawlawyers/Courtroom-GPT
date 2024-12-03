@@ -8,6 +8,7 @@ import { editDrafter, removeDrafter } from "../../features/laws/drafterSlice";
 import Markdown from "react-markdown";
 import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
+import TipsComponent from "../../components/UploadDoc/TipsComponent";
 
 const AiDrafter = () => {
   const drafterDoc = useSelector((state) => state.drafter.drafterDoc);
@@ -134,11 +135,13 @@ const AiDrafter = () => {
               {drafterText ? (
                 <p
                   className="m-0 p-2 text-sm text-black h-full overflow-auto +"
-                  dangerouslySetInnerHTML={{ __html: drafterText }}
-                ></p>
+                  dangerouslySetInnerHTML={{ __html: drafterText }}></p>
               ) : (
-                <div className="h-full flex justify-center items-center">
-                  <img className="h-28 w-28" src={loader} />
+                <div className="h-full flex flex-col justify-center items-center gap-4">
+                  <img className="h-28 w-28" src={loader} alt="Loading..." />
+                  <div className="w-[30rem] h-16 text-center">
+                    <TipsComponent />
+                  </div>
                 </div>
               )}
             </div>
@@ -161,8 +164,7 @@ const AiDrafter = () => {
                   {/* </p> */}
                   <button
                     onClick={handleEditDoc}
-                    className="bg-[#002828] rounded text-white py-2"
-                  >
+                    className="bg-[#002828] rounded text-white py-2">
                     {editLoading ? (
                       <CircularProgress color="inherit" size={15} />
                     ) : (
@@ -174,8 +176,7 @@ const AiDrafter = () => {
                       setPromptTextbox(false);
                       setPromptText("");
                     }}
-                    className="bg-[#002828] rounded text-white py-2"
-                  >
+                    className="bg-[#002828] rounded text-white py-2">
                     Re-Enter Prompt
                   </button>
                 </div>
@@ -190,8 +191,7 @@ const AiDrafter = () => {
                 <button
                   disabled={promptText === ""}
                   onClick={() => setPromptTextbox(true)}
-                  className="py-1 px-4 bg-[#008080] rounded-md text-sm text-white"
-                >
+                  className="py-1 px-4 bg-[#008080] rounded-md text-sm text-white">
                   Send
                 </button>
               </div>
@@ -200,8 +200,7 @@ const AiDrafter = () => {
           <div className="flex justify-end px-2">
             <button
               onClick={handleDownload}
-              className="border-2 border-teal-700 rounded-md px-3 py-2 text-black"
-            >
+              className="border-2 border-teal-700 rounded-md px-3 py-2 text-black">
               Download Document
             </button>
           </div>
