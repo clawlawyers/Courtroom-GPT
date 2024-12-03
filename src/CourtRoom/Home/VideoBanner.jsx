@@ -5,16 +5,18 @@ const videoArrDetails = [
     type: "Experience the majestic warroom",
     typeArr: [
       {
-        name: "Ai Judge",
+        name: "AI Judge",
         details:
           "Delivers unbiased, multi-perspective evaluations, generates judgments, and predicts case precedents efficiently.",
-        videoSrc: "yo",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225853/LegalGPT/MAJESTIC%20WAR%20ROOM/wckffpa22khgslvgtbnf.mp4",
       },
       {
-        name: "Ai Lawyer",
+        name: "AI Lawyer",
         details:
           "Crafts compelling counterarguments using case facts, legal precedents and relevant case laws.",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225853/LegalGPT/MAJESTIC%20WAR%20ROOM/dwo3kjxa6xadbftqkuip.mp4",
       },
       {
         name: "Objection",
@@ -26,7 +28,8 @@ const videoArrDetails = [
         name: "Verdict",
         details:
           "Generates accurate, well-structured verdicts based on arguments, evidence, and case law analysis.",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225853/LegalGPT/MAJESTIC%20WAR%20ROOM/npjae4tsf0xixb10bgug.mp4",
       },
     ],
   },
@@ -37,19 +40,22 @@ const videoArrDetails = [
         name: "Case Search",
         details:
           "Instantly find and access case laws and precedents tailored to your case as well as legal queries in seconds.",
-        videoSrc: "yo",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225710/LegalGPT/UNBEATABLE%20LEGAL%20ASSISTANCE/o3yqn44wthf3divq7sfh.mp4",
       },
       {
         name: "LegalGPT",
         details:
           "Dive deep in research with our AI-powered tool, offering quick, accurate summaries and insights",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225710/LegalGPT/UNBEATABLE%20LEGAL%20ASSISTANCE/ftklh3imyzksowuz34x8.mp4",
       },
       {
-        name: "Ai Assistant",
+        name: "AI Assistant",
         details:
           "Highlights grey areas, provides strategic insights, and streamlines your legal preparation",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225710/LegalGPT/UNBEATABLE%20LEGAL%20ASSISTANCE/dqz3buafkigzm9zfxof3.mp4",
       },
     ],
   },
@@ -60,13 +66,15 @@ const videoArrDetails = [
         name: "Evidence",
         details:
           "Evaluate and assess evidence validity to get insights on how it will play in the court.",
-        videoSrc: "yo",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225758/LegalGPT/VERIFICATION%20and%20VALIDATION/ybbhtqqdggcahobjioxb.mp4",
       },
       {
         name: "Testimony",
         details:
           "Get 3 sets of cross examination questions from the perspective of a petitioner, respondent and the judge",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225758/LegalGPT/VERIFICATION%20and%20VALIDATION/kuw4tlredthoudrtypg3.mp4",
       },
     ],
   },
@@ -77,19 +85,22 @@ const videoArrDetails = [
         name: "First Draft",
         details:
           "Generate precise initial drafts of legal arguments with relevant case laws working as a foundation for your preparation, saving time and effort.",
-        videoSrc: "yo",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225962/LegalGPT/EFFICIENCY%20FEATURES/ryg2zqvpk5nzvvycwu8r.mp4",
       },
       {
         name: "Relevant Case Laws",
         details:
           "Quickly access case laws directly relevant to that specific argument with citations and the ability to read the full case document.",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225962/LegalGPT/EFFICIENCY%20FEATURES/dqpp10iwjrqwmlbryuun.mp4",
       },
       {
-        name: "Ai Drafter",
+        name: "AI Drafter",
         details:
           "Draft, edit, and customize legal documents needed for your case with AI precision and seamless efficiency with a single click",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733225962/LegalGPT/EFFICIENCY%20FEATURES/ntgolpbyuv4qkydh1n70.mp4",
       },
       {
         name: "Multilingual Support",
@@ -117,7 +128,7 @@ const VideoBanner = () => {
         {videoArrDetails.map((x, index) => (
           <button
             onClick={() => setActiveButtonIndex(index)}
-            className={`border-2 rounded-lg px-4 py-2 hover:bg-white hover:bg-opacity-25 ${
+            className={`w-[26rem] border-2 rounded-lg px-4 py-2 hover:bg-white hover:bg-opacity-25 ${
               activeButtonIndex === index ? "bg-[#018585] border-[#0bc6c6]" : ""
             }`}
             key={index}
@@ -148,8 +159,17 @@ const VideoBanner = () => {
               <div className="">
                 <p>{x.details}</p>
               </div>
-              <div className="bg-black rounded-lg h-72">
+              <div className="bg-black rounded-lg h-80">
                 {/* <p>{x.videoSrc}</p> */}
+                <video
+                  className="rounded-lg h-80"
+                  src={x.videoSrc}
+                  autoPlay
+                  loop
+                  muted
+                  controls
+                  playsInline
+                />
               </div>
             </div>
           ))}
