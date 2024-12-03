@@ -106,17 +106,13 @@ function App() {
       path: "/",
       element: <CourtRoomLayout />,
       children: [
-        // {
-        //   path: "",
-        //   element: <CourtRoom />,
-        // },
         {
           path: "/",
           element: <LoginPageNew />,
         },
         {
-          path: "/test" /* this route is only for testing not a real route */,
-          element: <TimeUp />,
+          path: "/contact",
+          element: <Contact />,
         },
       ],
     },

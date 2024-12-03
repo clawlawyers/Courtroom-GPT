@@ -63,6 +63,7 @@ import {
   removeDrafterPro,
   retrieveDrafterProQuestions,
 } from "../../features/laws/drafterProSlice";
+import TimeUp from "../../components/TimeUpComponent/TimeUp";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -86,9 +87,10 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    console.log("hi");
-  }, [dispatch]);
+
+  // useEffect(() => {
+  //   console.log("hi");
+  // }, [dispatch]);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -212,7 +214,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           body: JSON.stringify({
             rating: rateValue.toString(),
             feedback: feedbackMessage,
-            userId: "65589uh3nwsnm,os",
+            userId: currentUser.userId,
           }),
         }
       );
@@ -263,39 +265,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           }}
         >
           {!feedbackForm ? (
-            <div
-              className="flex flex-col justify-center gap-20 p-5"
-              style={{
-                background: "linear-gradient(to right,#0e1118,#008080)",
-                height: "450px",
-                width: "900px",
-                border: "4px solid red",
-                borderRadius: "10px",
-              }}
-            >
-              <div className="flex flex-col justify-center items-center gap-10">
-                <img className="w-28 h-28" alt="clock" src={countDown} />
-                <h1 className="text-3xl">Your Courtroom Time is Over</h1>
-              </div>
-              <div className="flex justify-center gap-5">
-                <motion.button
-                  whileHover={{ scale: "1.01" }}
-                  onClick={() => EndSessionToCourtroom()}
-                  whileTap={{ scale: "0.95" }}
-                  className="border border-white rounded-lg py-2 px-8"
-                >
-                  Skip & Exit To Homepage
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: "1.01" }}
-                  onClick={() => setFeedbackForm(true)}
-                  whileTap={{ scale: "0.95" }}
-                  className="border border-white rounded-lg py-2 px-8 text-white"
-                >
-                  Provide Feedback
-                </motion.button>
-              </div>
-            </div>
+            <TimeUp setFeedbackForm={setFeedbackForm} />
           ) : (
             <div
               className="flex flex-col justify-center gap-20 p-5"
@@ -456,24 +426,6 @@ const AiSidebar = () => {
   };
 
   const EndSessionToCourtroom = async () => {
-    localStorage.removeItem("hasSeenSplash");
-    localStorage.setItem("FileUploaded", false);
-
-    // await saveHistory();
-    // if (overViewDetails !== "") {
-    //   await axios.post(
-    //     `${NODE_API_ENDPOINT}/courtroomFree/api/end`,
-    //     {
-    //       userId: currentUser.userId,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${currentUser.token}`,
-    //       },
-    //     }
-    //   );
-    // }
-
     dispatch(logout());
 
     navigate("/");
@@ -599,16 +551,15 @@ const AiSidebar = () => {
     }
   };
 
-  useEffect(() => {
-    if (overViewDetails !== "" || overViewDetails !== "NA") {
-      // console.log(overViewDetails);
-      firstDraftApi();
-    }
-  }, [overViewDetails]);
+  // useEffect(() => {
+  //   if (overViewDetails !== "" || overViewDetails !== "NA") {
+  //     firstDraftApi();
+  //   }
+  // }, [overViewDetails]);
 
-  useEffect(() => {
-    setFirstDraft(firstDraftDetails);
-  }, [firstDraftDetails]);
+  // useEffect(() => {
+  //   setFirstDraft(firstDraftDetails);
+  // }, [firstDraftDetails]);
 
   const getAiQuestions = async () => {
     setAiAssistantLoading(true);
@@ -1393,6 +1344,7 @@ const AiSidebar = () => {
                 </motion.div>
               </Link>
               <motion.div
+                onClick={() => navigate("/")}
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1403,9 +1355,9 @@ const AiSidebar = () => {
                 }}
               >
                 <img className="h-4 w-4" src={homeLogo} alt="" />
-                <p className="m-0 text-xs">Claw Home</p>
+                <p className="m-0 text-xs">Exit Courtroom</p>
               </motion.div>
-              <motion.div
+              {/* <motion.div
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}
                 style={{
@@ -1420,7 +1372,7 @@ const AiSidebar = () => {
                 <p className="m-0 text-xs" onClick={() => ExitToCourtroom()}>
                   Exit Courtroom
                 </p>
-              </motion.div>
+              </motion.div> */}
               <motion.div
                 whileTap={{ scale: "0.95" }}
                 whileHover={{ scale: "1.01" }}

@@ -5,6 +5,7 @@ import toast, { LoaderIcon } from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import successIcon from "../../assets/images/Successfully Done.gif";
 import Header from "../../components/Header/Header";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
   const [firstName, setFirstName] = useState("");
@@ -16,6 +17,8 @@ const Contact = () => {
   const [contactMode, setContactMode] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSave = async (e) => {
     setLoading(true);
@@ -36,7 +39,7 @@ const Contact = () => {
     try {
       // Make the API request
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/courtroom/add/ContactUsQuery`,
+        `${NODE_API_ENDPOINT}/courtroomFree/add/ContactUsQuery`,
         {
           method: "POST",
           headers: {
@@ -82,7 +85,7 @@ const Contact = () => {
     radial-gradient(circle at 0% 100%, #018585, transparent 50%)`,
       }}
     >
-       <Header/>  {/* header component*/}
+      {/* <Header /> */}
       <div className="flex flex-col justify-center items-center text-center">
         <h1 className="text-white text-6xl font-bold">Get In Touch</h1>
         <p className="m-0  mt-5 text-white text-lg font-bold">
@@ -182,12 +185,12 @@ const Contact = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full">
+                  <div className="w-full px-3 ">
                     <motion.button
                       whileTap={{ scale: "0.95" }}
                       type="submit"
                       style={{ border: "2px solid white" }}
-                      className="w-full px-24 py-2 rounded-md bg-transparent text-white text-xl font-bold flex justify-center"
+                      className="w-full px-24 py-2 rounded-md text-white text-xl font-bold flex justify-center hover:bg-white hover:bg-opacity-25"
                     >
                       {loading ? <LoaderIcon /> : "Send"}
                     </motion.button>
@@ -214,6 +217,14 @@ const Contact = () => {
                     <p className="text-white text-sm">
                       Our Team Will Reach You Shortly
                     </p>
+                    <div>
+                      <button
+                        onClick={() => navigate("/")}
+                        className="border-2 rounded-lg px-5 py-2 text-white hover:bg-white hover:bg-opacity-25"
+                      >
+                        Go to Homepage
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

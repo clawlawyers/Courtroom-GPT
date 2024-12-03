@@ -97,7 +97,7 @@ const LoginPageNew = () => {
 
   const handleVerifyNumber = async (e) => {
     e.preventDefault();
-    setIsOTPMode(true);
+    // setIsOTPMode(true);
     setOtpLoading(true);
     console.log(window.recaptchaVerifier);
     if (isFirst) {
