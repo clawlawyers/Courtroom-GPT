@@ -20,6 +20,7 @@ import {
 } from "../../utils/firebase";
 import Header from "../../components/Header/Header";
 import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
+import { Helmet } from "react-helmet";
 
 const LoginPageNew = () => {
   const dispatch = useDispatch();
@@ -233,6 +234,17 @@ const LoginPageNew = () => {
 
   return (
     <div className={styles.topContainer}>
+      <Helmet>
+        <title>Seamless Access to Courtroom AI</title>
+        <meta
+          name="description"
+          content="Log in to Courtroom AI and start streamlining your legal processes today. Enjoy secure, uninterrupted access to powerful tools."
+        />
+        <meta
+          name="keywords"
+          content="legal pricing plans, Courtroom AI costs, affordable legaltech, flexible plans, lawyer tools, Courtroom subscriptions, budget-friendly legal solutions, AI-powered pricing, legal services cost, law tech savings"
+        />
+      </Helmet>
       <div className="h-10"></div>
       <div className="w-[80%] grid md:grid-cols-[30%_70%] border-2 rounded-lg p-2">
         <div>

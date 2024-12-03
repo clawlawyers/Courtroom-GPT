@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 // import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 
 const TimerComponent = React.memo(() => {
@@ -120,6 +121,17 @@ function Login() {
       radial-gradient(circle at 0% 90%, #018585, transparent 60%)`,
       }}
     >
+      <Helmet>
+        <title>Seamless Access to Courtroom AI</title>
+        <meta
+          name="description"
+          content="Log in to Courtroom AI and start streamlining your legal processes today. Enjoy secure, uninterrupted access to powerful tools."
+        />
+        <meta
+          name="keywords"
+          content="legal pricing plans, Courtroom AI costs, affordable legaltech, flexible plans, lawyer tools, Courtroom subscriptions, budget-friendly legal solutions, AI-powered pricing, legal services cost, law tech savings"
+        />
+      </Helmet>
       <div className="h-10"></div>
       {/* top cont */}
       <div className="grid md:grid-cols-2 items-center">

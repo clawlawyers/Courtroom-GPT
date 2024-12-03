@@ -38,6 +38,7 @@ import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
 import Header from "./components/Header/Header.jsx";
 import UserForm from "./components/Pricing/UserForm.jsx";
 import BuyPlan from "./components/Pricing/BuyPlan.jsx";
+import { Helmet } from "react-helmet";
 
 function App() {
   const currentUser = useSelector((state) => state.user.user);
@@ -50,6 +51,17 @@ function App() {
   const CourtRoomLayout = () => {
     return (
       <div className="">
+        <Helmet>
+          <title>Redefine Legal Strategy with Courtroom AI </title>
+          <meta
+            name="description"
+            content="Discover Courtroom AI, a revolutionary platform transforming legal analysis and courtroom preparation for professionals."
+          />
+          <meta
+            name="keywords"
+            content="Courtroom AI, legal analysis, lawyer tools, AI for courtrooms, legal preparation, AI-powered legaltech, Courtroom solutions, legal strategy, Courtroom tools, legal industry innovation"
+          />
+        </Helmet>
         <Header />
         <div className="h-full">
           <Outlet />
