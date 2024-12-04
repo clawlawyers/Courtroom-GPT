@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const TimeUp = () => {
+const TimeUp = ({ setFeedbackForm }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div
@@ -17,16 +20,21 @@ const TimeUp = () => {
         </p>
         <p className="text-black font-semibold mt-[-0.7rem]">Buy a Plan</p>
         <div className="mt-6 flex flex-wrap justify-between items-center gap-4 md:gap-8">
-         
           <div className="flex gap-4 flex-wrap justify-center md:justify-start">
-            <button className="bg-white text-gray-800 font-semibold px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto">
+            <button
+              onClick={() => navigate("/contact")}
+              className="bg-white text-gray-800 font-semibold px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto"
+            >
               Contact Us
             </button>
-            <button className="bg-white text-gray-800 font-semibold px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto">
+            <button
+              onClick={() => setFeedbackForm(true)}
+              className="bg-white text-gray-800 font-semibold px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto"
+            >
               Feedback
             </button>
           </div>
-          
+
           <button className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow-md border-2 border-[#00FFA3] hover:bg-teal-700 transition duration-200 w-full md:w-auto font-semibold">
             Buy A Plan
           </button>

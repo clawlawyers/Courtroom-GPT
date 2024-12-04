@@ -3,128 +3,94 @@
 import React, { useState, useEffect } from "react";
 import AiSidebar from "./AiSidebar";
 import { Outlet } from "react-router-dom";
-import Styles from "./CourtroomAiLayout.module.css";
-import splashVideo from "../../assets/images/door open.mp4";
-import splashImage from "../../assets/images/splashImage.png";
-import LogoSplash from "../../assets/images/logoSplash.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { retrieveCourtroomAuth } from "../../features/bookCourtRoom/LoginReducreSlice";
+import toast from "react-hot-toast";
+import { CircularProgress } from "@mui/material";
 
 const CourtRoomAiLayout = () => {
+  const [loading, setLoading] = useState(true);
+
   const currentUser = useSelector((state) => state.user.user);
-  console.log(currentUser);
+  // console.log(currentUser);
   const caseOverView = useSelector((state) => state.user.caseOverview);
-  // console.log(caseOverView);
+  const { status } = useSelector((state) => state.user);
+  console.log(caseOverView);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(retrieveCourtroomAuth());
-  // }, []);
+  useEffect(() => {
+    let timer;
+    if (!currentUser || status === "loading") {
+      setLoading(true); // set loading while waiting for user data
+      timer = setTimeout(() => {
+        toast.error("Please Login First");
+        navigate("/");
+      }, 2000);
+    } else {
+      setLoading(false);
+    }
 
-  // console.log(currentUser);
+    // if (currentUser && !currentUser?.plan) {
+    //   toast.error("You don't have any active plans");
+    //   navigate("/pricing-plans");
+    // }
 
-  // useEffect(() => {
-  //   if (currentUser === "") {
-  //     navigate("/");
-  //   }
-  // }, [currentUser]);
+    return () => clearTimeout(timer);
+  }, [currentUser, status]);
 
   useEffect(() => {
-    if (caseOverView === "NA" && caseOverView === "") {
+    if (caseOverView !== "NA" && caseOverView !== "") {
+      console.log("inside condition");
+      // console.log(caseOverView);
+      // const sidebarconatiner = document.getElementById("conatiner-sidebar");
+      // sidebarconatiner.click();
       navigate("/courtroom-ai/arguments");
     } else {
       navigate("/courtroom-ai");
     }
-  }, [caseOverView]);
-
-  const [showSplash, setShowSplash] = useState(true);
-
-  const [videoStarted, setVideoStarted] = useState(false);
-
-  // useEffect(() => {
-  //   if (!showSplash) {
-  //     localStorage.setItem("hasSeenSplash", "true");
-  //   }
-  // }, [showSplash]);
-
-  const handleVideoEnded = () => {
-    setShowSplash(false);
-  };
-
-  const handleEnterCourtroom = () => {
-    setVideoStarted(true);
-    const videoElement = document.getElementById("splashVideo");
-    if (videoElement) {
-      videoElement.play().catch((error) => {
-        console.error("Error playing the video:", error);
-      });
-    }
-  };
-
-  const handleExitCourtroom = () => {
-    setShowSplash(true);
-    setVideoStarted(false);
-  };
-
-  if (currentUser === "") {
-    navigate("/");
-  }
+  }, [caseOverView, currentUser]);
 
   return (
-    <div className="">
-      {/* {showSplash ? (
-        <div className="flex flex-col justify-center  items-center h-screen w-full relative">
-          {!videoStarted && (
-            <img
-              className={Styles.image}
-              src={splashImage}
-              alt="Background"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                zIndex: 1,
-              }}
-            />
-          )}
-
-          {!videoStarted && (
-            <div className="z-2 flex flex-col gap-10 mt-5 w-full h-screen justify-center items-center">
-              <img className="h-max w-max" src={LogoSplash} alt="" />
-              <button
-                className="hover:scale-110 delay-500 animate shadow-lg shadow-neutral-800 p-2 bg-gradient-to-r from-teal-800 to-teal-400 border-white rounded-md"
-                onClick={handleEnterCourtroom}
-              >
-                Enter Courtroom
-              </button>
-            </div>
-          )}
-          {videoStarted && (
-            <video
-              id="splashVideo"
-              src={splashVideo}
-              autoPlay
-              muted
-              onEnded={handleVideoEnded}
-            />
-          )}
+    <>
+      {loading ? (
+        <div className="h-screen w-full flex flex-col gap-1 justify-center items-center">
+          <CircularProgress sx={{ color: "#008080" }} size={50} />
+          <p className="text-white m-0 ">Auth Loading ...</p>
         </div>
-      ) : ( */}
-      <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
-        {/* <div > */}
-        <AiSidebar className="h-screen m-0 overflow-hidden" />
-        {/* </div> */}
-        <div>
-          <div className="h-screen m-0 overflow-hidden">
-            <Outlet />
+      ) : (
+        <div className="">
+          <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
+            <AiSidebar className="h-screen m-0 overflow-hidden" />
+            <div>
+              <div className="h-screen m-0 overflow-hidden">
+                <Outlet />
+              </div>
+            </div>
           </div>
         </div>
+      )}
+      <div
+        className="md:hidden absolute top-0 left-0 w-full h-screen flex justify-center items-center "
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          backdropFilter: "blur(3px)",
+        }}
+      >
+        <div className="w-full px-1 flex flex-col items-center justify-center">
+          <h1 className="text-xl text-center">
+            Content available in Desktop Screen only !
+          </h1>
+          <button
+            onClick={() => navigate("/")}
+            className="border rounded-lg px-4 py-1 hover:bg-white hover:bg-opacity-15"
+          >
+            Home
+          </button>
+        </div>
       </div>
-      {/* )} */}
-    </div>
+    </>
   );
 };
 

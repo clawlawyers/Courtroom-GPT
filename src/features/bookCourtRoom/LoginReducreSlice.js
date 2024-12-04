@@ -21,7 +21,8 @@ export const retrieveCourtroomAuth = createAsyncThunk(
       const parsedProps = await props.json();
       // console.log(parsedProps.data);
       return {
-        user: parsedUser,
+        user: { ...parsedUser, userId: parsedProps.data.userId },
+        // user: parsedUser,
       };
     } else return null;
   }
@@ -31,12 +32,13 @@ export const retrieveCourtroomAuth = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: "",
+    user: null,
     caseOverview: "NA",
     firstDraft: "",
     firstDraftLoading: false,
     fightingSideModal: false,
-    newCaseInput:false
+    newCaseInput: false,
+    status: "idle",
   },
   reducers: {
     login(state, action) {
@@ -49,7 +51,7 @@ const userSlice = createSlice({
       localStorage.removeItem("courtroom-auth");
     },
     setOverview(state, action) {
-      console.log(action.payload)
+      console.log(action.payload);
       state.caseOverview = action.payload;
     },
     setUser(state, action) {
@@ -69,10 +71,17 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(retrieveCourtroomAuth.pending, (state) => {
+      state.status = "loading";
+    });
     builder.addCase(retrieveCourtroomAuth.fulfilled, (state, action) => {
       if (action.payload && action.payload.user) {
         state.user = action.payload.user;
       }
+      state.status = "succeeded";
+    });
+    builder.addCase(retrieveCourtroomAuth.rejected, (state) => {
+      state.status = "failed";
     });
   },
 });
@@ -86,7 +95,7 @@ export const {
   setFightingSideModal,
   setFirstDraftAction,
   setFirstDraftLoading,
-  setNewCaseInput
+  setNewCaseInput,
 } = userSlice.actions;
 
 // Export the reducer to be used in the store
