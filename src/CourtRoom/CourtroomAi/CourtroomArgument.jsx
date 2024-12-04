@@ -1162,15 +1162,13 @@ const CourtroomArgument = () => {
               justifyContent: "center",
               alignItems: "center",
               borderRadius: "10px",
-            }}
-          >
+            }}>
             <img alt="laoding" src={loader} className="w-28 h-28" />
           </div>
         ) : (
           <div
             id="aijudge"
-            className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg"
-          >
+            className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg">
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
@@ -1190,8 +1188,7 @@ const CourtroomArgument = () => {
                   id="judge"
                   onClick={handleMenuOpen}
                   // onClick={()=>toast.error("ONLY FOR PAID USERS")}
-                  ref={myDivRef}
-                >
+                  ref={myDivRef}>
                   <MoreVert />
                 </IconButton>
                 <Menu
@@ -1212,16 +1209,14 @@ const CourtroomArgument = () => {
                     style: {
                       marginRight: "16px", // Adjust this value for the desired gap
                     },
-                  }}
-                >
+                  }}>
                   <div
                     id="relevantcase-button"
                     className="text-xs px-2 hover:cursor-pointer "
                     onClick={() => {
                       handleshowcaseaijudge();
                       handleMenuClose();
-                    }}
-                  >
+                    }}>
                     View Relevant Case Laws
                   </div>
                   {/* <MenuItem>Save</MenuItem> */}
@@ -1234,24 +1229,21 @@ const CourtroomArgument = () => {
                 margin: "15px",
                 overflow: "hidden",
                 overflowY: "scroll",
-              }}
-            >
+              }}>
               <p
                 style={{
                   fontSize: "13px",
                   lineHeight: "20px",
                   wordSpacing: "4px",
                   padding: "0px 10px",
-                }}
-              >
+                }}>
                 <Markdown>{judgeArgument}</Markdown>
               </p>
             </div>
             <div
               id="expand"
               onClick={() => setJudgeViewExpand(true)}
-              className="h-[5vh] flex  items-center cursor-pointer px-2"
-            >
+              className="h-[5vh] flex  items-center cursor-pointer px-2">
               <img className="h-4 w-4" alt="expand" src={expand} />
               <h1 className="text-xs m-[5px]">Expand</h1>
             </div>
@@ -1267,15 +1259,13 @@ const CourtroomArgument = () => {
               justifyContent: "center",
               alignItems: "center",
               borderRadius: "10px",
-            }}
-          >
+            }}>
             <img alt="laoding" src={loader} className="w-28 h-28" />
           </div>
         ) : (
           <div
             id="ailawyer"
-            className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black"
-          >
+            className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black">
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
@@ -1307,24 +1297,21 @@ const CourtroomArgument = () => {
                 margin: "15px",
                 overflow: "hidden",
                 overflowY: "scroll",
-              }}
-            >
+              }}>
               <p
                 style={{
                   fontSize: "13px",
                   lineHeight: "20px",
                   wordSpacing: "4px",
                   padding: "0px 10px",
-                }}
-              >
+                }}>
                 <Markdown>{lawyerArgument}</Markdown>
               </p>
             </div>
             <div className="h-[5vh] flex justify-between items-center cursor-pointer px-2">
               <div
                 onClick={() => setLawyerViewExpand(true)}
-                className="flex gap-1 items-center"
-              >
+                className="flex gap-1 items-center">
                 <img className="h-4 w-4" alt="expand" src={expand} />
                 <h1 className="text-xs m-[5px]">Expand</h1>
               </div>
@@ -1335,8 +1322,7 @@ const CourtroomArgument = () => {
                 //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
                 // }
                 onClick={() => toast.error("ONLY FOR PAID USERS")}
-                className="flex gap-1 items-center"
-              >
+                className="flex gap-1 items-center">
                 <svg
                   width="20"
                   height="20"
@@ -1347,8 +1333,7 @@ const CourtroomArgument = () => {
                   stroke-linejoin="round"
                   stroke-miterlimit="2"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                  xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
                     fill-rule="nonzero"
@@ -1366,8 +1351,7 @@ const CourtroomArgument = () => {
         style={{
           background: "#033E40",
           borderRadius: "10px",
-        }}
-      >
+        }}>
         <div className="flex flex-col ">
           <div className="p-3 flex gap-2">
             <img
@@ -1386,8 +1370,7 @@ const CourtroomArgument = () => {
                   margin: "10px",
                   overflow: "hidden",
                   overflow: "auto",
-                }}
-              >
+                }}>
                 {userArgument.map((x, index) => (
                   <div
                     className="arguments"
@@ -1422,8 +1405,7 @@ const CourtroomArgument = () => {
                       padding: "5px",
                       margin: "5px",
                       cursor: "pointer",
-                    }}
-                  >
+                    }}>
                     <div className="flex items-center w-full pointer-events-auto">
                       {editIndex === index ? (
                         <textarea
@@ -1451,8 +1433,7 @@ const CourtroomArgument = () => {
                             lineHeight: "20px",
                             width: "100%",
                             wordSpacing: "4px",
-                          }}
-                        >
+                          }}>
                           {x}
                         </p>
                       )}
@@ -1464,8 +1445,7 @@ const CourtroomArgument = () => {
                             e.stopPropagation();
                             handleSave(index);
                           }}
-                          style={{ margin: "5px" }}
-                        >
+                          style={{ margin: "5px" }}>
                           Save
                         </motion.button>
                       ) : (
@@ -1473,8 +1453,7 @@ const CourtroomArgument = () => {
                           id="asdsads"
                           onClick={(e) =>
                             editIndex !== index && handleEdit(e, index)
-                          }
-                        >
+                          }>
                           <motion.svg
                             whileTap={{ scale: "0.95" }}
                             style={{
@@ -1488,8 +1467,7 @@ const CourtroomArgument = () => {
                             stroke-linejoin="round"
                             stroke-miterlimit="2"
                             viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
+                            xmlns="http://www.w3.org/2000/svg">
                             <path
                               d="m11.25 6c.398 0 .75.352.75.75 0 .414-.336.75-.75.75-1.505 0-7.75 0-7.75 0v12h17v-8.749c0-.414.336-.75.75-.75s.75.336.75.75v9.249c0 .621-.522 1-1 1h-18c-.48 0-1-.379-1-1v-13c0-.481.38-1 1-1zm1.521 9.689 9.012-9.012c.133-.133.217-.329.217-.532 0-.179-.065-.363-.218-.515l-2.423-2.415c-.143-.143-.333-.215-.522-.215s-.378.072-.523.215l-9.027 8.996c-.442 1.371-1.158 3.586-1.264 3.952-.126.433.198.834.572.834.41 0 .696-.099 4.176-1.308zm-2.258-2.392 1.17 1.171c-.704.232-1.274.418-1.729.566zm.968-1.154 7.356-7.331 1.347 1.342-7.346 7.347z"
                               fill-rule="nonzero"
@@ -1539,14 +1517,12 @@ const CourtroomArgument = () => {
                             anchorOrigin={{
                               vertical: "bottom",
                               horizontal: "right",
-                            }}
-                          >
+                            }}>
                             {aiLawyerLoading ? (
                               <Typography sx={{ p: 3 }}>Loading</Typography>
                             ) : (
                               <Typography
-                                sx={{ p: 3, width: "300px", height: "300px" }}
-                              >
+                                sx={{ p: 3, width: "300px", height: "300px" }}>
                                 {potentialObjections}
                               </Typography>
                             )}
@@ -1596,26 +1572,13 @@ const CourtroomArgument = () => {
             disabled={
               addArgumentInputText === null || aiJudgeLoading || aiLawyerLoading
             }
-            className="flex-1 my-2"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "5px",
-              border: "2px solid #00ffa3",
-              borderRadius: "20px",
-              background: "#008080",
-              padding: "10px",
-              cursor: "pointer",
-              color: "white",
-            }}
-          >
-            <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
+            className="flex-1 my-2 flex justify-center items-center gap-2 border-2 border-[#00ffa3] rounded-2xl px-4 py-2 text-white bg-[#008080] hover:bg-[#12bebe] transition duration-300">
+            <h2 className="text-sm m-0">Add Argument</h2>
           </motion.button>
+
           <motion.button
             id="rest-your-case"
             whileTap={{ scale: "0.95" }}
-            // onClick={handleVerdict}
             onClick={() => toast.error("ONLY FOR PAID USERS")}
             className="flex-1 my-2"
             style={{
@@ -1625,11 +1588,14 @@ const CourtroomArgument = () => {
               gap: "5px",
               border: "2px solid #00ffa3",
               borderRadius: "20px",
-              background: "#008080",
+              background: "#008080", // Default background color
               padding: "10px",
               cursor: "pointer",
               color: "white",
+              transition: "background 0.3s", // Smooth transition
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#12bebe")} // Hover color
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#008080")} // Default color on leave
           >
             <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
           </motion.button>
@@ -1650,8 +1616,7 @@ const CourtroomArgument = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "20",
-          }}
-        >
+          }}>
           <VoiceSearch
             setVoiceSearchInitiate={setVoiceSearchInitiate}
             setAddArgumentInputText={setAddArgumentInputText}
@@ -1675,8 +1640,7 @@ const CourtroomArgument = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "50",
-          }}
-        >
+          }}>
           <div className="w-2/5 h-[90%] bg-white rounded p-3 border border-black">
             <div className="flex  flex-row justify-between items-start w-full">
               <div className="flex  flex-col justify-center items-start">
@@ -1686,8 +1650,7 @@ const CourtroomArgument = () => {
               </div>
               <div
                 className="cursor-pointer text-black"
-                onClick={() => setRelevantCaseJudge(false)}
-              >
+                onClick={() => setRelevantCaseJudge(false)}>
                 <Close />
               </div>
             </div>
@@ -1695,8 +1658,7 @@ const CourtroomArgument = () => {
               {!loadingRelevantCases ? (
                 <p
                   className="text-black text-sm h-[90%]"
-                  dangerouslySetInnerHTML={{ __html: relevantCases }}
-                ></p>
+                  dangerouslySetInnerHTML={{ __html: relevantCases }}></p>
               ) : (
                 <div className="h-full flex justify-center items-center">
                   {" "}
@@ -1723,8 +1685,7 @@ const CourtroomArgument = () => {
                   //     })
                   //   );
                   // }}
-                  className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
-                >
+                  className="bg-[#003131] px-4 py-1 text-sm rounded text-white">
                   View Case Laws
                 </button>
                 {/* </Link> */}
@@ -1773,8 +1734,7 @@ const CourtroomArgument = () => {
                 aria-haspopup="true"
                 id="judge"
                 // onClick={handleMenuOpen}
-                onClick={() => toast.error("ONLY FOR PAID USERS")}
-              >
+                onClick={() => toast.error("ONLY FOR PAID USERS")}>
                 <MoreVert />
               </IconButton>
               <Menu
@@ -1795,15 +1755,13 @@ const CourtroomArgument = () => {
                   style: {
                     marginRight: "16px", // Adjust this value for the desired gap
                   },
-                }}
-              >
+                }}>
                 <div
                   className="text-xs px-2 hover:cursor-pointer "
                   onClick={() => {
                     handleshowcaseaijudge();
                     handleMenuClose();
-                  }}
-                >
+                  }}>
                   View Relevant Case Laws
                 </div>
                 {/* <MenuItem>Save</MenuItem> */}
@@ -1816,23 +1774,20 @@ const CourtroomArgument = () => {
               margin: "15px",
               overflow: "hidden",
               overflowY: "scroll",
-            }}
-          >
+            }}>
             <p
               style={{
                 fontSize: "13px",
                 lineHeight: "20px",
                 wordSpacing: "4px",
                 padding: "0px 10px",
-              }}
-            >
+              }}>
               <Markdown>{judgeArgument}</Markdown>
             </p>
           </div>
           <div
             onClick={() => setJudgeViewExpand(false)}
-            className="h-[5vh] flex  items-center cursor-pointer px-2"
-          >
+            className="h-[5vh] flex  items-center cursor-pointer px-2">
             <img className="h-4 w-4" alt="expand" src={collapse} />
             <h1 className="text-xs m-[5px]">Collapse</h1>
           </div>
@@ -1878,8 +1833,7 @@ const CourtroomArgument = () => {
                 aria-haspopup="true"
                 id="lawyer"
                 // onClick={handleMenuOpen}
-                onClick={() => toast.error("ONLY FOR PAID USERS")}
-              >
+                onClick={() => toast.error("ONLY FOR PAID USERS")}>
                 <MoreVert />
               </IconButton>
             </div>
@@ -1890,24 +1844,21 @@ const CourtroomArgument = () => {
               margin: "15px",
               overflow: "hidden",
               overflowY: "scroll",
-            }}
-          >
+            }}>
             <p
               style={{
                 fontSize: "13px",
                 lineHeight: "20px",
                 wordSpacing: "4px",
                 padding: "0px 10px",
-              }}
-            >
+              }}>
               <Markdown>{lawyerArgument}</Markdown>
             </p>
           </div>
           <div className="h-[5vh] flex justify-between items-center cursor-pointer px-2">
             <div
               onClick={() => setLawyerViewExpand(false)}
-              className="flex gap-1 items-center"
-            >
+              className="flex gap-1 items-center">
               <img className="h-4 w-4" alt="expand" src={collapse} />
               <h1 className="text-xs m-[5px]">Collapse</h1>
             </div>
@@ -1917,8 +1868,7 @@ const CourtroomArgument = () => {
               //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
               // }
               onClick={() => toast.error("ONLY FOR PAID USERS")}
-              className="flex gap-1 items-center"
-            >
+              className="flex gap-1 items-center">
               <svg
                 width="20"
                 height="20"
@@ -1929,8 +1879,7 @@ const CourtroomArgument = () => {
                 stroke-linejoin="round"
                 stroke-miterlimit="2"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
                   fill-rule="nonzero"
@@ -1957,12 +1906,10 @@ const CourtroomArgument = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "20",
-          }}
-        >
+          }}>
           <div
             className="w-2/4 border-2 border-white rounded p-4"
-            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}
-          >
+            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
             <div className="w-full flex justify-end">
               <Close
                 className="cursor-pointer"
@@ -2030,8 +1977,7 @@ const CourtroomArgument = () => {
                   // onClick={() => dispatch(setFightingSideModal(false))}
                   disabled={fightType === ""}
                   onClick={() => handleFightingSide()}
-                  className="bg-[#003131] p-2 rounded"
-                >
+                  className="bg-[#003131] p-2 rounded">
                   Confirm
                 </button>
                 <div>
