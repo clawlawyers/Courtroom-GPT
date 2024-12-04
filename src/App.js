@@ -38,6 +38,7 @@ import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx
 import PricingPlans from "./components/Pricing/PricingPlans.jsx";
 import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
 import TimeUp from "./components/TimeUpComponent/TimeUp.jsx";
+import { Helmet } from "react-helmet";
 
 function App() {
   const BATCH_INTERVAL = 60 * 1000;
@@ -93,6 +94,17 @@ function App() {
   const CourtRoomLayout = () => {
     return (
       <div className="">
+        <Helmet>
+          <title>Redefine Legal Strategy with Courtroom AI</title>
+          <meta
+            name="description"
+            content="Discover Courtroom AI, a revolutionary platform transforming legal analysis and courtroom preparation for professionals."
+          />
+          <meta
+            name="keywords"
+            content="Courtroom AI, legal analysis, lawyer tools, AI for courtrooms, legal preparation, AI-powered legaltech, Courtroom solutions, legal strategy, Courtroom tools, legal industry innovation"
+          />
+        </Helmet>
         <div className="h-full">
           <Outlet />
         </div>
