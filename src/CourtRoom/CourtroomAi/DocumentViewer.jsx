@@ -115,15 +115,13 @@ const DocumentViewer = ({ text }) => {
           <motion.button
             whileTap={{ scale: "0.95" }}
             className="border-2 border-white p-2 rounded-lg text-white"
-            onClick={() => handleshowcaseaijudge()}
-          >
+            onClick={() => handleshowcaseaijudge()}>
             Relevant Case Laws
           </motion.button>
           <motion.button
             whileTap={{ scale: "0.95" }}
             className="border-2 border-white p-2 rounded-lg"
-            onClick={downloadVerdict}
-          >
+            onClick={downloadVerdict}>
             Download
           </motion.button>
         </div>
@@ -143,8 +141,7 @@ const DocumentViewer = ({ text }) => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "50",
-          }}
-        >
+          }}>
           <div className="w-2/5 h-[90%] bg-white rounded p-3 border border-black">
             <div className="flex  flex-row justify-between items-start w-full">
               <div className="flex  flex-col justify-center items-start">
@@ -154,8 +151,7 @@ const DocumentViewer = ({ text }) => {
               </div>
               <div
                 className="cursor-pointer text-black"
-                onClick={() => setRelevantCaseJudge(false)}
-              >
+                onClick={() => setRelevantCaseJudge(false)}>
                 <Close />
               </div>
             </div>
@@ -163,8 +159,7 @@ const DocumentViewer = ({ text }) => {
               {!loadingRelevantCases ? (
                 <p
                   className="text-black text-sm h-[90%]"
-                  dangerouslySetInnerHTML={{ __html: relevantCases }}
-                ></p>
+                  dangerouslySetInnerHTML={{ __html: relevantCases }}></p>
               ) : (
                 <div className="h-full flex justify-center items-center">
                   {" "}
@@ -173,7 +168,7 @@ const DocumentViewer = ({ text }) => {
               )}
             </div>
             {!loadingRelevantCases && (
-              <div className="flex justify-end">
+              <div className="flex justify-end py-2 my-2">
                 <Link to={"/courtroom-ai/caseLaws"}>
                   <button
                     onClick={() => {
@@ -185,8 +180,7 @@ const DocumentViewer = ({ text }) => {
                         })
                       );
                     }}
-                    className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
-                  >
+                    className="bg-[#003131] px-4 my-2 py-1 text-sm rounded text-white">
                     View Case Laws
                   </button>
                 </Link>

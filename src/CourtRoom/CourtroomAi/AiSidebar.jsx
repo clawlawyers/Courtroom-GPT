@@ -1459,18 +1459,22 @@ const AiSidebar = () => {
                   <div className="w-full flex gap-2 text-sm justify-end">
                     <button
                       onClick={handleResearchArguments}
-                      className="px-4 py-2 rounded-md border flex items-center justify-center min-w-[150px]">
+                      className="px-4 py-2 rounded-md border hover:bg-teal-600 flex items-center justify-center min-w-[200px]">
                       {reserachArgumentsLoading ? (
-                        <CircularProgress size={18} color="inherit" />
+                        <div className="w-36 flex justify-center">
+                          <CircularProgress size={22} color="inherit" />
+                        </div>
                       ) : (
                         "Research Arguments"
                       )}
                     </button>
                     <button
                       onClick={handleNextAppeal}
-                      className="px-4 py-2 rounded-md border flex items-center justify-center min-w-[150px]">
+                      className="px-4 py-2 rounded-md border hover:bg-teal-500 flex items-center justify-center min-w-[200px]">
                       {nextAppealLoading ? (
-                        <CircularProgress size={18} color="inherit" />
+                        <div className="w-36 flex justify-center">
+                          <CircularProgress size={22} color="inherit" />
+                        </div>
                       ) : (
                         "Next Appeal"
                       )}
@@ -1522,7 +1526,7 @@ const AiSidebar = () => {
                             // handleRelevantCaseLaws();
                             setFirstDraftDialog(false);
                           }}
-                          className="bg-[#003131] px-4 py-1 text-sm rounded text-white">
+                          className="bg-[#003131] px-4 my-2  py-2 text-sm rounded text-white">
                           View Case Laws
                         </button>
                       </Link>
@@ -1546,14 +1550,14 @@ const AiSidebar = () => {
                             setShowRelevantLaws(true);
                             getReventCaseLaw();
                           }}
-                          className="border border-white rounded-md py-1">
+                          className="border hover:bg-teal-500 border-white rounded-md py-1">
                           Relevant Case Laws
                         </motion.button>
                       </Tooltip>
                     )}
                     <button
                       onClick={() => dowloadFirstDraft()}
-                      className="border border-white rounded-md py-1">
+                      className="border border-white hover:bg-teal-500 rounded-md py-1">
                       <Download /> Download
                     </button>
                   </div>
@@ -2128,7 +2132,7 @@ const AiSidebar = () => {
                   <section className="flex space-x-5 flex-row w-full items-center justify-end">
                     <button
                       onClick={() => handleCaseSearchPrompt()}
-                      className="bg-teal-800 cursor-pointer py-1 px-3 rounded">
+                      className="bg-teal-800 hover:bg-teal-500 cursor-pointer py-1 px-3 rounded">
                       Search
                     </button>
                   </section>

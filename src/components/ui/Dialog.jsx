@@ -166,8 +166,7 @@ const Dialog = ({
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}
-                >
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}>
                   <div className="w-full  px-2 my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
                       Document Preview
@@ -196,7 +195,7 @@ const Dialog = ({
                 <div className="flex flex-row justify-center items-center">
                   <img src={clawLogo} className="h-auto w-auto" alt="logo" />
                 </div>
-                <div className="flex flex-col w-full justify-center items-center gap-2">
+                <div className="">
                   <div className="w-full flex flex-row justify-between gap-2">
                     <Button
                       className="w-full  lowercase border-2 text-sm border-white text-white"
@@ -208,16 +207,14 @@ const Dialog = ({
                     <Button
                       className="text-white text-sm border-2 border-white w-full "
                       variant="outlined"
-                      onClick={handleEditToggle}
-                    >
+                      onClick={handleEditToggle}>
                       {isEditing ? "Save Changes" : "Edit current document"}
                     </Button>
                   </div>
                   <Button
                     className="text-white text-sm w-full border-2 border-white"
                     variant="outlined"
-                    onClick={onButtonClick}
-                  >
+                    onClick={onButtonClick}>
                     Save
                   </Button>
                 </div>
@@ -251,8 +248,7 @@ const Dialog = ({
             <motion.button
               whileTap={{ scale: "0.95" }}
               className="bg-white text-black rounded-md px-4 py-2 font-semibold"
-              onClick={onButtonClick}
-            >
+              onClick={onButtonClick}>
               {buttonText}
             </motion.button>
           </div>

@@ -139,7 +139,7 @@ const AiDrafter = () => {
               ) : (
                 <div className="h-full flex flex-col justify-center items-center gap-4">
                   <img className="h-28 w-28" src={loader} alt="Loading..." />
-                  <div className="w-[30rem] h-16 text-center">
+                  <div className="w-[30rem] h-16 text-teal-700 text-center">
                     <TipsComponent />
                   </div>
                 </div>
@@ -191,7 +191,7 @@ const AiDrafter = () => {
                 <button
                   disabled={promptText === ""}
                   onClick={() => setPromptTextbox(true)}
-                  className="py-1 px-4 bg-[#008080] rounded-md text-sm text-white">
+                  className="py-1 px-4 bg-[#008080] hover:bg-teal-600 rounded-md text-sm text-white">
                   Send
                 </button>
               </div>
@@ -200,7 +200,7 @@ const AiDrafter = () => {
           <div className="flex justify-end px-2">
             <button
               onClick={handleDownload}
-              className="border-2 border-teal-700 rounded-md px-3 py-2 text-black">
+              className="border-2 border-teal-700 hover:bg-teal-600 hover:text-white rounded-md px-3 py-2 text-black">
               Download Document
             </button>
           </div>

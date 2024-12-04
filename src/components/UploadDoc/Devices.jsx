@@ -446,6 +446,13 @@ const Devices = ({
     // console.log(uploadProgress);
   };
 
+  console.log(
+    toBeUploadedFiles.length !== uploadedSuccessFully.length ||
+      uploadedSuccessFully.length === 0
+  );
+  console.log(toBeUploadedFiles);
+  console.log(uploadedSuccessFully);
+
   function totalTimeLength(totalLength) {
     let split;
     if (totalLength > 1000000) {
@@ -693,13 +700,11 @@ const Devices = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           <Typography
             variant="caption"
             component="div"
-            sx={{ color: "text.secondary", fontSize: 12 }}
-          >
+            sx={{ color: "text.secondary", fontSize: 12 }}>
             {`${Math.round(props.value)}%`}
           </Typography>
         </Box>
@@ -717,8 +722,7 @@ const Devices = ({
           justifyContent: "center",
           width: "100%",
           margin: "10px",
-        }}
-      >
+        }}>
         <section
           style={{
             display: "flex",
@@ -728,13 +732,11 @@ const Devices = ({
             justifyContent: "space-evenly",
             alignItems: "center",
             padding: "30px",
-          }}
-        >
+          }}>
           <div
             id="uploaddrive"
             className={`${styles.images} gap-10 `}
-            onClick={() => handleClick("drive")}
-          >
+            onClick={() => handleClick("drive")}>
             <img className="p-5" src={Drive} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Upload from Drive
@@ -744,8 +746,7 @@ const Devices = ({
           <div
             id="uploadtext"
             className={`${styles.images} gap-10 `}
-            onClick={() => handleClick("dropbox")}
-          >
+            onClick={() => handleClick("dropbox")}>
             <img className="p-5 h-1 w-1 text-white" src={Document} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Write Your Own Text
@@ -755,8 +756,7 @@ const Devices = ({
           <div
             id="uploadpc"
             className={`${styles.images} gap-10 `}
-            onClick={() => handleClick("local")}
-          >
+            onClick={() => handleClick("local")}>
             <img className="p-5" src={pc} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Upload from your PC
@@ -779,8 +779,7 @@ const Devices = ({
           setInputText={setInputText}
           buttonText={`${uploadComplete ? "" : ""}`}
           onButtonClick={handleSave}
-          image={analyzing ? analyzingImage : ""}
-        ></Dialog>
+          image={analyzing ? analyzingImage : ""}></Dialog>
       </motion.div>
       <Modal
         open={open}
@@ -788,12 +787,10 @@ const Devices = ({
           setOpen(false);
         }}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box
           sx={style}
-          className="overflow-scroll  gap-6 flex flex-col rounded-lg"
-        >
+          className="overflow-scroll  gap-6 flex flex-col rounded-lg">
           <textarea
             id="content"
             className="p-2 border-2 border-black rounded-lg"
@@ -804,13 +801,11 @@ const Devices = ({
             placeholder="Write your own Content..."
             onChange={(e) => {
               setconetnt(e.target.value);
-            }}
-          ></textarea>
+            }}></textarea>
 
           <button
             onClick={handleTextInputUpload}
-            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[30%]"
-          >
+            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[30%]">
             Upload
           </button>
         </Box>
@@ -830,20 +825,17 @@ const Devices = ({
             alignItems: "center",
             zIndex: "3",
             overflow: "auto",
-          }}
-        >
+          }}>
           <div
             className="w-2/4 h-2/3 rounded-lg border-2 border-white p-2 flex flex-col gap-5"
-            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}
-          >
+            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
             <div className=" p-2 w-full h-[80%] rounded-lg border bg-gray-50 bg-opacity-15  overflow-auto flex flex-col gap-2">
               <>
                 {Object.entries(uploadProgress).map(
                   ([fileId, progress], index) => (
                     <div
                       className="bg-white text-black rounded-lg p-2 flex justify-between items-center"
-                      key={fileId}
-                    >
+                      key={fileId}>
                       <div className="flex gap-1 items-center">
                         <DescriptionIcon sx={{ color: "#008080" }} />
                         <p className="m-0 text-sm text-[#008080]">{fileId}</p>
@@ -879,16 +871,14 @@ const Devices = ({
                     setUploadProgress({});
                     setUploadedSuccessFully([]);
                   }}
-                  className="bg-slate-500 border-2 px-4 py-1 rounded-lg"
-                >
+                  className="bg-slate-500 border-2 px-4 py-1 rounded-lg hover:bg-slate-600 transition-colors duration-200">
                   Cancel
                 </button>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleUploadFromComputer}
-                  className="bg-transparent border-2 font-semibold text-[#003131] px-4 py-1 rounded-lg"
-                >
+                  className="border-2 font-semibold text-white px-4 py-1 rounded-lg hover:bg-[#2a8989] hover:text-black hover:border-white transition-colors duration-200">
                   Add Files
                 </button>
                 <button
@@ -901,12 +891,12 @@ const Devices = ({
                     toBeUploadedFiles.length !== uploadedSuccessFully.length ||
                     uploadedSuccessFully.length === 0
                       ? "opacity-25 cursor-not-allowed"
-                      : "opacity-100"
+                      : "opacity-100 hover:bg-[#dbe3e3] transition-colors duration-200"
                   }`}
                   style={{
                     background: "linear-gradient(90deg,#018585,#003838)",
-                  }}
-                >
+                    transition: "background 0.3s ease",
+                  }}>
                   Proceed
                 </button>
               </div>
