@@ -59,7 +59,10 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
   return (
     <Dialog sx={{ color: "black" }} open onClose={onClose}>
       <div style={{ backgroundColor: "#E0F7F7", padding: "10px" }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          className="w-[90%] m-auto"
+          style={{ display: "flex", alignItems: "center" }}
+        >
           <DialogTitle
             style={{
               flexGrow: 1,
@@ -82,7 +85,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
           >
             Select Language of the document that you wish to upload.
           </Typography>
-          <FormControl fullWidth sx={{ m: 1 }}>
+          <FormControl fullWidth sx={{}}>
             <Select
               id="demo-multiple-checkbox"
               multiple
@@ -94,7 +97,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               {languagesArr.sort().map((name) => (
                 <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
-                  <ListItemText className="list-text">{name}</ListItemText>
+                  <ListItemText>{name}</ListItemText>
                 </MenuItem>
               ))}
             </Select>

@@ -56,7 +56,13 @@ function App() {
 
   const CourtRoomLayout = () => {
     return (
-      <div className="">
+      <div
+        className=""
+        style={{
+          background:
+            "radial-gradient(circle at 50% 0%, #018585, transparent 20%),radial-gradient(circle at 100% 35%, #351f58d0, transparent 25%),radial-gradient(circle at 0% 50%, #351f58d0, transparent 15%),radial-gradient(circle at 0% 80%, #018585, transparent 30%),radial-gradient(circle at 100% 95%, #0e1118, transparent 10%)",
+        }}
+      >
         <Helmet>
           <title>Redefine Legal Strategy with Courtroom AI </title>
           <meta
@@ -104,10 +110,6 @@ function App() {
             },
           ],
         },
-        // {
-        //   path: "/login",
-        //   element: <LoginToCourtRoom />,
-        // },
         {
           path: "/login",
           element: <Login />,
