@@ -39,6 +39,12 @@ import Header from "./components/Header/Header.jsx";
 import UserForm from "./components/Pricing/UserForm.jsx";
 import BuyPlan from "./components/Pricing/BuyPlan.jsx";
 import { Helmet } from "react-helmet";
+import AboutUs from "./AboutUs/AboutUs.jsx";
+import ContactUs from "./Contact/Contact.jsx";
+import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy.jsx";
+import RefundPolicy from "./RefundPolicy/RefundPolicy.jsx";
+import ShippingPolicy from "./ShippingPolicy/ShippingPolicy.jsx";
+import TermsOfService from "./TermsOfService/TermsOfService.jsx";
 
 function App() {
   const currentUser = useSelector((state) => state.user.user);
@@ -133,6 +139,30 @@ function App() {
         {
           path: "/login-new",
           element: <LoginPageNew />,
+        },
+        {
+          path: "/about-us",
+          element: <AboutUs />,
+        },
+        {
+          path: "/contact-us",
+          element: <ContactUs />,
+        },
+        {
+          path: "/privacy-policy",
+          element: <PrivacyPolicy />,
+        },
+        {
+          path: "/refund-policy",
+          element: <RefundPolicy />,
+        },
+        {
+          path: "/shipping-and-delivery",
+          element: <ShippingPolicy />,
+        },
+        {
+          path: "/terms-and-conditions",
+          element: <TermsOfService />,
         },
       ],
     },
