@@ -102,8 +102,8 @@ const DocumentViewer = ({ text }) => {
 
   return (
     <div className="flex h-screen gap-5 px-40">
-      <div className="flex flex-col items-center bg-[#7ebab2] my-3 w-full">
-        <img src={verdictLogo} alt="verdict" className=" mt-4" />{" "}
+      <div className="flex flex-col items-center bg-[#7ebab2] my-2 w-full">
+        <img src={verdictLogo} alt="verdict" className=" mt-4 h-16" />{" "}
         {/* Added margin to top */}
         <img className="w-20 h-[5rem]" src={logo} alt="logo" />
         <div className="flex flex-col items-start justify-start px-5 h-full overflow-y-auto text-black pt-4">
@@ -114,13 +114,13 @@ const DocumentViewer = ({ text }) => {
         <div className="flex flex-row w-full justify-end items-center gap-2 py-2 px-3">
           <motion.button
             whileTap={{ scale: "0.95" }}
-            className="border-2 border-white p-2 rounded-lg text-white"
+            className="border-2 border-white p-2 hover:bg-teal-500 rounded-lg text-white"
             onClick={() => handleshowcaseaijudge()}>
             Relevant Case Laws
           </motion.button>
           <motion.button
             whileTap={{ scale: "0.95" }}
-            className="border-2 border-white p-2 rounded-lg"
+            className="border-2 border-white  hover:bg-teal-500 p-2 rounded-lg"
             onClick={downloadVerdict}>
             Download
           </motion.button>

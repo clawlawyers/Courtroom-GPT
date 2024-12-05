@@ -303,7 +303,7 @@ const PricingPlans = () => {
           <button
             className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base transition duration-300 ease-in-out transform ${
               billingCycle === "daily"
-                ? "bg-[#018585] text-[white] hover:bg-[#85FFD1]"
+                ? "bg-[#018585] text-[white] hover:bg-[#52a8a8]]"
                 : "bg-white text-[#226e6e] hover:bg-gray-200"
             } hover:scale-105`}
             onClick={() => setBillingCycle("daily")}>
@@ -312,8 +312,8 @@ const PricingPlans = () => {
           <button
             className={`h-[30px] w-[130px] border-2 border-white rounded-lg font-bold text-sm sm:text-base transition duration-300 ease-in-out transform ${
               billingCycle === "monthly"
-                ? "bg-[#018585] text-[white] hover:bg-[#2c6750] hover:text-[white]"
-                : "bg-white text-[#018585] hover:bg-[#E0FFFA] hover:text-[#026B5C]"
+                ? "bg-[#018585] text-[white] hover:bg-[#008080] hover:text-[white]"
+                : "bg-white text-[#018585] hover:bg-[#E0FFFA] hover:text-[#5a8781]"
             } hover:scale-105`}
             onClick={() => setBillingCycle("monthly")}>
             Monthly

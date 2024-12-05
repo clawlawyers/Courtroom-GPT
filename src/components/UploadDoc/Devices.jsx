@@ -887,16 +887,12 @@ const Devices = ({
                     uploadedSuccessFully.length === 0
                   }
                   onClick={checkUploadSuccessfull}
-                  className={`border-2 px-4 py-1 rounded-lg ${
+                  className={`border-2 px-4 py-1 rounded-lg transition-all duration-200 ${
                     toBeUploadedFiles.length !== uploadedSuccessFully.length ||
                     uploadedSuccessFully.length === 0
                       ? "opacity-25 cursor-not-allowed"
-                      : "opacity-100 hover:bg-[#dbe3e3] transition-colors duration-200"
-                  }`}
-                  style={{
-                    background: "linear-gradient(90deg,#018585,#003838)",
-                    transition: "background 0.3s ease",
-                  }}>
+                      : "opacity-100 cursor-pointer hover:bg-[#dbe3e3] hover:bg-gradient-to-r hover:from-[#01a5a5] hover:to-[#004d4d]"
+                  }`}>
                   Proceed
                 </button>
               </div>

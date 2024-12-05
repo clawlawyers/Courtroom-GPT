@@ -196,23 +196,23 @@ const Dialog = ({
                   <img src={clawLogo} className="h-auto w-auto" alt="logo" />
                 </div>
                 <div className="">
-                  <div className="w-full flex flex-row justify-between gap-2">
+                  <div className="w-full flex flex-row my-2 justify-between gap-2">
                     <Button
-                      className="w-full  lowercase border-2 text-sm border-white text-white"
+                      className="w-full  lowercase border-2 hover:bg-teal-500 text-sm border-white text-white"
                       variant="outlined"
                       onClick={onClose} // Modify if needed
                     >
                       Upload a Document
                     </Button>
                     <Button
-                      className="text-white text-sm border-2 border-white w-full "
+                      className="text-white text-sm hover:bg-teal-500 border-2 border-white w-full "
                       variant="outlined"
                       onClick={handleEditToggle}>
                       {isEditing ? "Save Changes" : "Edit current document"}
                     </Button>
                   </div>
                   <Button
-                    className="text-white text-sm w-full border-2 border-white"
+                    className="text-white text-sm w-full border-2 hover:bg-teal-500  border-white"
                     variant="outlined"
                     onClick={onButtonClick}>
                     Save

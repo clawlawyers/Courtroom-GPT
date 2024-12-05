@@ -35,15 +35,15 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="w-5/6 m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-12 right-0 mx-auto mt-3">
-      <div className="flex flex-col cursor-pointer items-center justify-center h-full">
+    <div className="w-5/6 m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-2 right-0  mt-3">
+      <div className="flex flex-col cursor-pointer items-center  justify-center h-full">
         <img src={clawlogo} alt="CLAW Logo" className="w-[120px] h-auto" />
       </div>
 
       {/* Hamburger Icon */}
       <button
         onClick={toggleMenu}
-        className="md:hidden flex flex-col items-center">
+        className="md:hidden flex flex-col ml-8 items-center">
         <span className="block w-8 h-1 bg-white mb-1"></span>
         <span className="block w-8 h-1 bg-white mb-1"></span>
         <span className="block w-8 h-1 bg-white"></span>
@@ -95,7 +95,7 @@ const Header = () => {
           {/* Close Icon */}
           <button
             onClick={() => setIsOpen(false)}
-            className="text-white mb-2 flex justify-end w-full">
+            className="text-white mb-2 flex justify-end w-full cursor-pointer">
             {/* SVG for close icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -111,31 +111,43 @@ const Header = () => {
               />
             </svg>
           </button>
+
           <Link
             to="/"
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             CLAW Home
           </Link>
           <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
+            to="/pricing-plans"
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Pricing
           </Link>
           <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
-            Our Reach
+            to="/#videoBanner"
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
+            Features
           </Link>
           <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
+            to="/#Testimonilcard"
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Testimonials
           </Link>
-          <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline">
-            Login
-          </Link>
+
+          {currentUser ? (
+            <p
+              onClick={() => {
+                dispatch(logout());
+              }}
+              className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline">
+              Logout
+            </p>
+          ) : (
+            <Link
+              to="/login"
+              className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
+              Login
+            </Link>
+          )}
         </div>
       )}
     </div>
