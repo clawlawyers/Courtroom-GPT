@@ -122,7 +122,7 @@ const UploadDoc = () => {
           }`}
         >
           <img src={uploadImage} alt="Upload Document" />
-          <p className="m-0 pt-3">Upload Document Here</p>
+          <p className="m-0 pt-3">Upload Your Documents Here</p>
         </div>
       )}
     </section>
