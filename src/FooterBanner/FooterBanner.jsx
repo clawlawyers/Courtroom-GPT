@@ -221,42 +221,35 @@ function FooterBanner() {
       >
         <div className={Styles.footerNav}>
           <Link
-            // to="/"
+            to="/about-us"
             className={Styles.muted}
             style={{ textDecoration: "none" }}
           >
             About us
           </Link>
           <Link
-            // to="/contact-us"
+            to="/contact-us"
             className={Styles.muted}
             style={{ textDecoration: "none" }}
           >
             Contact
           </Link>
           <Link
-            // to="/privacyPolicy"
+            to="/privacy-policy"
             className={Styles.muted}
             style={{ textDecoration: "none" }}
           >
             Privacy Policy
           </Link>
           <Link
-            // to="/case/search"
-            className={Styles.muted}
-            style={{ textDecoration: "none" }}
-          >
-            Case details
-          </Link>
-          <Link
-            // to="/refund-and-cancellation-policy"
+            to="/refund-policy"
             className={Styles.muted}
             style={{ textDecoration: "none" }}
           >
             Refund & Cancellation Policy
           </Link>
           <Link
-            // to="/terms-and-conditions"
+            to="/terms-and-conditions"
             className={Styles.muted}
             style={{ textDecoration: "none" }}
           >
@@ -264,7 +257,7 @@ function FooterBanner() {
           </Link>
 
           <Link
-            // to="/shipping-and-delivery"
+            to="/shipping-and-delivery"
             className={Styles.muted}
             style={{ textDecoration: "none" }}
           >

@@ -22,7 +22,8 @@ const videoArrDetails = [
         name: "Objection",
         details:
           "Understand what Objections can be raised for a specific argument in real-time, enhancing your preparation.",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733287179/LegalGPT/MAJESTIC%20WAR%20ROOM/naytx5dsjdxbbcln6but.mp4",
       },
       {
         name: "Verdict",
@@ -106,7 +107,8 @@ const videoArrDetails = [
         name: "Multilingual Support",
         details:
           "Work effortlessly in multiple languages like English, Hindi, Gujarati, Marathi and many more, breaking barriers and expanding accessibility",
-        videoSrc: "",
+        videoSrc:
+          "https://res.cloudinary.com/dyuov6i8c/video/upload/v1733287165/LegalGPT/EFFICIENCY%20FEATURES/bnrcjm6xwfh6xdbkhtvr.mp4",
       },
     ],
   },
@@ -131,7 +133,8 @@ const VideoBanner = () => {
             className={`w-[26rem] border-2 rounded-lg px-4 py-2 hover:bg-white hover:bg-opacity-25 ${
               activeButtonIndex === index ? "bg-[#018585] border-[#0bc6c6]" : ""
             }`}
-            key={index}>
+            key={index}
+          >
             {x.type.toUpperCase()}
           </button>
         ))}
@@ -146,7 +149,8 @@ const VideoBanner = () => {
                 activeVideoIndex[0].name === x.name
                   ? "bg-white bg-opacity-25"
                   : ""
-              }`}>
+              }`}
+            >
               <p className="m-0 py-2">{x.name}</p>
             </div>
           ))}

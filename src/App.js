@@ -39,6 +39,12 @@ import Header from "./components/Header/Header.jsx";
 import UserForm from "./components/Pricing/UserForm.jsx";
 import BuyPlan from "./components/Pricing/BuyPlan.jsx";
 import { Helmet } from "react-helmet";
+import AboutUs from "./AboutUs/AboutUs.jsx";
+import ContactUs from "./Contact/Contact.jsx";
+import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy.jsx";
+import RefundPolicy from "./RefundPolicy/RefundPolicy.jsx";
+import ShippingPolicy from "./ShippingPolicy/ShippingPolicy.jsx";
+import TermsOfService from "./TermsOfService/TermsOfService.jsx";
 
 function App() {
   const currentUser = useSelector((state) => state.user.user);
@@ -50,7 +56,13 @@ function App() {
 
   const CourtRoomLayout = () => {
     return (
-      <div className="">
+      <div
+        className=""
+        style={{
+          background:
+            "radial-gradient(circle at 50% 0%, #018585, transparent 20%),radial-gradient(circle at 100% 35%, #351f58d0, transparent 25%),radial-gradient(circle at 0% 50%, #351f58d0, transparent 15%),radial-gradient(circle at 0% 80%, #018585, transparent 30%),radial-gradient(circle at 100% 95%, #0e1118, transparent 10%)",
+        }}
+      >
         <Helmet>
           <title>Redefine Legal Strategy with Courtroom AI </title>
           <meta
@@ -98,10 +110,6 @@ function App() {
             },
           ],
         },
-        // {
-        //   path: "/login",
-        //   element: <LoginToCourtRoom />,
-        // },
         {
           path: "/login",
           element: <Login />,
@@ -133,6 +141,30 @@ function App() {
         {
           path: "/login-new",
           element: <LoginPageNew />,
+        },
+        {
+          path: "/about-us",
+          element: <AboutUs />,
+        },
+        {
+          path: "/contact-us",
+          element: <ContactUs />,
+        },
+        {
+          path: "/privacy-policy",
+          element: <PrivacyPolicy />,
+        },
+        {
+          path: "/refund-policy",
+          element: <RefundPolicy />,
+        },
+        {
+          path: "/shipping-and-delivery",
+          element: <ShippingPolicy />,
+        },
+        {
+          path: "/terms-and-conditions",
+          element: <TermsOfService />,
         },
       ],
     },

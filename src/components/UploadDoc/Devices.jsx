@@ -827,14 +827,17 @@ const Devices = ({
             overflow: "auto",
           }}>
           <div
-            className="w-2/4 h-2/3 rounded-lg border-2 border-white p-2 flex flex-col gap-5"
+            className="w-2/4 h-2/3 rounded-lg border-2 border-white p-2 flex flex-col gap-2"
             style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
-            <div className=" p-2 w-full h-[80%] rounded-lg border bg-gray-50 bg-opacity-15  overflow-auto flex flex-col gap-2">
+            <div className="flex items-center justify-center">
+              <p className="m-0">Uploaded Documents</p>
+            </div>
+            <div className="flex-1 p-2 w-full h-[80%] rounded-lg border bg-gray-50 bg-opacity-15  overflow-auto flex flex-col gap-2">
               <>
                 {Object.entries(uploadProgress).map(
                   ([fileId, progress], index) => (
                     <div
-                      className="bg-white text-black rounded-lg p-2 flex justify-between items-center"
+                      className="bg-white text-black rounded-lg px-2 py-3 flex justify-between items-center"
                       key={fileId}>
                       <div className="flex gap-1 items-center">
                         <DescriptionIcon sx={{ color: "#008080" }} />
@@ -887,7 +890,7 @@ const Devices = ({
                     uploadedSuccessFully.length === 0
                   }
                   onClick={checkUploadSuccessfull}
-                  className={`border-2 px-4 py-1 rounded-lg transition-all duration-200 ${
+                  className={`border-2 px-4 py-1 rounded-lg bg-[#003131] transition-all duration-200 ${
                     toBeUploadedFiles.length !== uploadedSuccessFully.length ||
                     uploadedSuccessFully.length === 0
                       ? "opacity-25 cursor-not-allowed"

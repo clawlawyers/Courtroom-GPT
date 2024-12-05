@@ -195,28 +195,28 @@ const Dialog = ({
                 <div className="flex flex-row justify-center items-center">
                   <img src={clawLogo} className="h-auto w-auto" alt="logo" />
                 </div>
-                <div className="">
+                <div className="flex flex-col gap-2">
                   <div className="w-full flex flex-row my-2 justify-between gap-2">
-                    <Button
-                      className="w-full  lowercase border-2 hover:bg-teal-500 text-sm border-white text-white"
+                    <button
+                      className="w-full uppercase rounded-lg border-2 hover:bg-teal-500 text-sm border-white text-white hover:bg-white hover:bg-opacity-25 py-2"
                       variant="outlined"
                       onClick={onClose} // Modify if needed
                     >
                       Upload a Document
-                    </Button>
-                    <Button
-                      className="text-white text-sm hover:bg-teal-500 border-2 border-white w-full "
+                    </button>
+                    <button
+                      className="text-white text-sm hover:bg-teal-500 border-2 border-white w-full uppercase rounded-lg hover:bg-white hover:bg-opacity-25 py-2"
                       variant="outlined"
                       onClick={handleEditToggle}>
                       {isEditing ? "Save Changes" : "Edit current document"}
-                    </Button>
+                    </button>
                   </div>
-                  <Button
-                    className="text-white text-sm w-full border-2 hover:bg-teal-500  border-white"
+                  <button
+                    className="text-white text-sm w-full border-2 hover:bg-teal-500  border-white uppercase rounded-lg hover:bg-white hover:bg-opacity-25 py-2"
                     variant="outlined"
                     onClick={onButtonClick}>
                     Save
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

@@ -1,10 +1,10 @@
 .mainContainer {
-  padding-top: 60px;
-  background: radial-gradient(circle at 50% 0%, #018585, transparent 20%),
+  /* padding-top: 60px; */
+  /* background: radial-gradient(circle at 50% 0%, #018585, transparent 20%),
     radial-gradient(circle at 100% 35%, #351f58d0, transparent 45%),
     radial-gradient(circle at 0% 50%, #351f58d0, transparent 20%),
     radial-gradient(circle at 0% 80%, #018585, transparent 30%),
-    radial-gradient(circle at 100% 95%, #0e1118, transparent 10%);
+    radial-gradient(circle at 100% 95%, #0e1118, transparent 10%); */
 }
 
 .topContainer {
@@ -63,5 +63,5 @@
 
 span {
   font-weight: bold;
-  color: #ffffff;
+  /* color: #ffffff; */
 }

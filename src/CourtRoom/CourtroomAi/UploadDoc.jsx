@@ -105,7 +105,8 @@ const UploadDoc = () => {
           animate="open"
           exit="closed"
           variants={variants}
-          transition={transition}>
+          transition={transition}
+        >
           <Devices
             uploadedFile={uploadedFile}
             setUploadedFile={setUploadedFile}
@@ -118,8 +119,10 @@ const UploadDoc = () => {
           onClick={handleClick}
           className={`${Styles.uploadButton} ${
             error ? Styles.errorBoundary : ""
-          }`}>
+          }`}
+        >
           <img src={uploadImage} alt="Upload Document" />
+          <p className="m-0 pt-3">Upload Your Documents Here</p>
         </div>
       )}
     </section>
