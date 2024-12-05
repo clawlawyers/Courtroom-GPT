@@ -97,7 +97,9 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               {languagesArr.sort().map((name) => (
                 <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
-                  <ListItemText>{name}</ListItemText>
+                  <ListItemText className="css-10hburv-MuiTypography-root">
+                    {name}
+                  </ListItemText>
                 </MenuItem>
               ))}
             </Select>
