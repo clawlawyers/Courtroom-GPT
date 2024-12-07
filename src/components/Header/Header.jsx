@@ -149,16 +149,16 @@ const Header = () => {
             className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Pricing
           </Link>
-          <Link
-            to="/#videoBanner"
+          <p
+            onClick={() => handleFeaturesClick("videoBanner")}
             className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Features
-          </Link>
-          <Link
-            to="/#Testimonilcard"
+          </p>
+          <p
+            onClick={() => handleFeaturesClick("Testimonilcard")}
             className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Testimonials
-          </Link>
+          </p>
 
           {currentUser ? (
             <p
