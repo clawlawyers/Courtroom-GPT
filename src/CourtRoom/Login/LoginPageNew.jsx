@@ -9,7 +9,7 @@ import {
   signInWithPhoneNumber,
 } from "../../utils/firebase";
 import toast from "react-hot-toast";
-import { NODE_API_ENDPOINT } from "../../utils/utils";
+import { NODE_API_ENDPOINT, OTP_ENDPOINT } from "../../utils/utils";
 import { CircularProgress } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -82,6 +82,8 @@ const LoginPageNew = () => {
   const [otp, setOtp] = useState("");
   const [otpLoading, setOtpLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [otpToken, setOtpToken] = useState("");
+  const [verifyToken, setVerifyToken] = useState("");
 
   const [verificationId, setVerificationId] = useState("");
   const [isFirst, setIsfirst] = useState(true);
@@ -95,45 +97,80 @@ const LoginPageNew = () => {
     }
   };
 
+  // const handleVerifyNumber = async (e) => {
+  //   e.preventDefault();
+  //   // setIsOTPMode(true);
+  //   setOtpLoading(true);
+  //   console.log(window.recaptchaVerifier);
+  //   if (isFirst) {
+  //     console.log("recaptchaVerifier");
+  //     window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+  //       size: "invisible",
+  //       callback: (response) => {
+  //         // reCAPTCHA solved, allow signInWithPhoneNumber.
+  //         console.log(response);
+  //       },
+  //       auth,
+  //     });
+  //     setIsfirst(false);
+  //   } else if (!window.recaptchaVerifier) {
+  //     console.log("recaptchaVerifier");
+  //     window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
+  //       size: "invisible",
+  //       callback: (response) => {
+  //         console.log(response);
+  //       },
+  //       auth,
+  //     });
+  //   }
+  //   signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
+  //     .then((confirmationResult) => {
+  //       setVerificationId(confirmationResult?.verificationId);
+  //       toast.success("OTP sent successfully !");
+  //       setIsOTPMode(true);
+  //       setOtpLoading(false);
+  //       // setIsDisabled(true);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       toast.error("Error during OTP request");
+  //       setOtpLoading(false);
+  //     });
+  // };
+
   const handleVerifyNumber = async (e) => {
     e.preventDefault();
     // setIsOTPMode(true);
     setOtpLoading(true);
-    console.log(window.recaptchaVerifier);
-    if (isFirst) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          console.log(response);
+
+    try {
+      const handleOTPsend = await fetch(`${OTP_ENDPOINT}/generateOTPmobile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        auth,
+        body: JSON.stringify({
+          phone: mobileNumber,
+          siteName: "www.warroom.clawlaw.in",
+        }),
       });
-      setIsfirst(false);
-    } else if (!window.recaptchaVerifier) {
-      console.log("recaptchaVerifier");
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {
-        size: "invisible",
-        callback: (response) => {
-          console.log(response);
-        },
-        auth,
-      });
+      if (!handleOTPsend.ok) {
+        console.error("Failed to send OTP");
+        toast.error("Failed to send OTP");
+        throw new Error("Failed to send OTP");
+      }
+      const data = await handleOTPsend.json();
+      if (data.authtoken) {
+        setOtpToken(data.authtoken);
+      }
+      toast.success("OTP sent successfully !");
+      setIsOTPMode(true);
+      setOtpLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error during OTP request");
+      setOtpLoading(false);
     }
-    signInWithPhoneNumber(auth, "+91" + mobileNumber, window.recaptchaVerifier)
-      .then((confirmationResult) => {
-        setVerificationId(confirmationResult?.verificationId);
-        toast.success("OTP sent successfully !");
-        setIsOTPMode(true);
-        setOtpLoading(false);
-        // setIsDisabled(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Error during OTP request");
-        setOtpLoading(false);
-      });
   };
 
   const handleVerifyOtp = async (e) => {
@@ -142,39 +179,36 @@ const LoginPageNew = () => {
 
     try {
       if (otp.length === 6) {
-        // if(!isverified){
+        setIsLoading(true);
 
-        //   const credential = PhoneAuthProvider.credential(verificationId, otp);
-        //   await signInWithCredential(auth, credential);
-        //   setVerified(true)
-        // }
-
-        const response = await fetch(
-          `${NODE_API_ENDPOINT}/courtroomFree/login`,
+        const verifyOTPResponse = await fetch(
+          `${OTP_ENDPOINT}/verifyotpmobile`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "auth-token": otpToken,
             },
             body: JSON.stringify({
-              phoneNumber: mobileNumber,
-              name: userName,
+              otp: otp,
             }),
           }
         );
-        var data = await response.json();
-        if (data.message == "inavlid session") {
-          toast.error("DAILY LIMIT EXCEDED");
-          setIsOTPMode(false);
-        } else if (data.token) {
-          localStorage.setItem("userToken", data.token);
-          dispatch(login({ user: data }));
-          dispatch(setOverview(data.caseOverview));
-          setIsVerified(true);
-        } else {
-          toast.error("Something went wrong.Please try again!");
-          // setIsOTPMode(false);
+
+        if (!verifyOTPResponse.ok) {
+          const err = verifyOTPResponse.json();
+          setIsLoading(false);
+          toast.error(err.error);
+          return;
         }
+
+        const OTPdata = await verifyOTPResponse.json();
+        console.log(OTPdata);
+        if (OTPdata.authtoken) {
+          console.log(verifyToken);
+          await loginToUser(OTPdata.authtoken);
+        }
+        console.log(verifyToken);
       } else throw new Error("Otp length should be of 6");
     } catch (error) {
       console.log(error);
@@ -182,6 +216,84 @@ const LoginPageNew = () => {
       setIsLoading(false);
     }
   };
+
+  const loginToUser = async (verifyTo) => {
+    try {
+      const response = await fetch(`${NODE_API_ENDPOINT}/courtroomFree/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": verifyTo,
+        },
+        body: JSON.stringify({
+          // phoneNumber: mobileNumber,
+          name: userName,
+        }),
+      });
+      var data = await response.json();
+      if (data.message == "inavlid session") {
+        toast.error("DAILY LIMIT EXCEDED");
+        setIsOTPMode(false);
+      } else if (data.token) {
+        localStorage.setItem("userToken", data.token);
+        dispatch(login({ user: data }));
+        dispatch(setOverview(data.caseOverview));
+        setIsVerified(true);
+      } else {
+        toast.error("Something went wrong.Please try again!");
+        // setIsOTPMode(false);
+      }
+    } catch (error) {
+      toast.error("Error during login");
+    }
+  };
+
+  // const handleVerifyOtp = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   try {
+  //     if (otp.length === 6) {
+  //       // if(!isverified){
+
+  //       //   const credential = PhoneAuthProvider.credential(verificationId, otp);
+  //       //   await signInWithCredential(auth, credential);
+  //       //   setVerified(true)
+  //       // }
+
+  //       const response = await fetch(
+  //         `${NODE_API_ENDPOINT}/courtroomFree/login`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //             phoneNumber: mobileNumber,
+  //             name: userName,
+  //           }),
+  //         }
+  //       );
+  //       var data = await response.json();
+  //       if (data.message == "inavlid session") {
+  //         toast.error("DAILY LIMIT EXCEDED");
+  //         setIsOTPMode(false);
+  //       } else if (data.token) {
+  //         localStorage.setItem("userToken", data.token);
+  //         dispatch(login({ user: data }));
+  //         dispatch(setOverview(data.caseOverview));
+  //         setIsVerified(true);
+  //       } else {
+  //         toast.error("Something went wrong.Please try again!");
+  //         // setIsOTPMode(false);
+  //       }
+  //     } else throw new Error("Otp length should be of 6");
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-teal-900 to-gray-900 text-white p-4">
