@@ -3,7 +3,7 @@ import CalendarComponent from "../../components/DateTime/Calendar";
 import styles from "../BookNow/BookNow.module.css";
 import image from "../../assets/images/courtroomPhoto.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { NODE_API_ENDPOINT } from "../../utils/utils";
+import { NODE_API_ENDPOINT, OTP_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -37,6 +37,8 @@ const LoginPageNew = () => {
   const [verificationId, setVerificationId] = useState("");
   const [countdown, setCountdown] = useState(30);
   const [otpVerifySuccess, setOtpVerifySuccess] = useState(false);
+  const [otpToken, setOtpToken] = useState("");
+  const [verifyToken, setVerifyToken] = useState("");
 
   const [showPass, setShowPass] = useState(true);
   const [password, setPassword] = useState(null);
@@ -55,7 +57,7 @@ const LoginPageNew = () => {
       setLoading(true);
 
       const bookingData = {
-        phoneNumber: contact,
+        // phoneNumber: contact,
         name: userName,
         email: email,
         password,
@@ -65,6 +67,12 @@ const LoginPageNew = () => {
           `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom`,
           {
             ...bookingData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": verifyToken,
+            },
           }
         );
         console.log(response);
@@ -92,6 +100,70 @@ const LoginPageNew = () => {
     }
   };
 
+  // const handleSendOTP = async (e) => {
+  //   e.preventDefault();
+  //   // handleDisableButton();
+  //   setOtpLoading(true);
+  //   console.log("sendOTP");
+  //   const response = await axios.post(
+  //     `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom-validation`,
+  //     {
+  //       phoneNumber: contact,
+  //       email: email,
+  //     }
+  //   );
+  //   const checkValid = response.data.data.data;
+  //   // const checkValid = true;
+  //   if (checkValid) {
+  //     toast.success("Phone number is valid!");
+  //     if (isFirst) {
+  //       console.log("recaptchaVerifier");
+  //       window.recaptchaVerifier = new RecaptchaVerifier(
+  //         auth,
+  //         "recaptcha-container",
+  //         {
+  //           size: "invisible",
+  //           callback: (response) => {
+  //             // reCAPTCHA solved, allow signInWithPhoneNumber.
+  //           },
+  //         },
+  //         auth
+  //       );
+  //       setIsfirst(false);
+  //     } else if (!window.recaptchaVerifier) {
+  //       window.recaptchaVerifier = new RecaptchaVerifier(
+  //         auth,
+  //         "recaptcha-container",
+  //         {
+  //           size: "invisible",
+  //           callback: (response) => {
+  //             // reCAPTCHA solved, allow signInWithPhoneNumber.
+  //           },
+  //         },
+  //         auth
+  //       );
+  //     }
+
+  //     signInWithPhoneNumber(auth, "+91" + contact, window.recaptchaVerifier)
+  //       .then((confirmationResult) => {
+  //         setVerificationId(confirmationResult.verificationId);
+  //         toast.success("OTP sent successfully!");
+  //         setOtpSuccess(true);
+  //         setOtpLoading(false);
+  //         setIsDisabled(true);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error during OTP request:", error);
+  //         toast.error("Error in sending OTP");
+  //         setOtpLoading(false);
+  //       });
+  //   } else {
+  //     toast.error("This contact already exists!! Please try another number");
+  //     setOtpLoading(false);
+  //     setContact("");
+  //   }
+  // };
+
   const handleSendOTP = async (e) => {
     e.preventDefault();
     // handleDisableButton();
@@ -108,47 +180,36 @@ const LoginPageNew = () => {
     // const checkValid = true;
     if (checkValid) {
       toast.success("Phone number is valid!");
-      if (isFirst) {
-        console.log("recaptchaVerifier");
-        window.recaptchaVerifier = new RecaptchaVerifier(
-          auth,
-          "recaptcha-container",
-          {
-            size: "invisible",
-            callback: (response) => {
-              // reCAPTCHA solved, allow signInWithPhoneNumber.
-            },
+      try {
+        const handleOTPsend = await fetch(`${OTP_ENDPOINT}/generateOTPmobile`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-          auth
-        );
-        setIsfirst(false);
-      } else if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(
-          auth,
-          "recaptcha-container",
-          {
-            size: "invisible",
-            callback: (response) => {
-              // reCAPTCHA solved, allow signInWithPhoneNumber.
-            },
-          },
-          auth
-        );
-      }
-
-      signInWithPhoneNumber(auth, "+91" + contact, window.recaptchaVerifier)
-        .then((confirmationResult) => {
-          setVerificationId(confirmationResult.verificationId);
-          toast.success("OTP sent successfully!");
-          setOtpSuccess(true);
-          setOtpLoading(false);
-          setIsDisabled(true);
-        })
-        .catch((error) => {
-          console.error("Error during OTP request:", error);
-          toast.error("Error in sending OTP");
-          setOtpLoading(false);
+          body: JSON.stringify({
+            phone: contact,
+            siteName: "www.courtroom.clawlaw.in",
+          }),
         });
+
+        if (!handleOTPsend.ok) {
+          console.error("Failed to send OTP");
+          toast.error("Failed to send OTP");
+          throw new Error("Failed to send OTP");
+        }
+        const data = await handleOTPsend.json();
+        if (data.authtoken) {
+          setOtpToken(data.authtoken);
+        }
+
+        toast.success("OTP sent successfully!");
+        setOtpSuccess(true);
+        setOtpLoading(false);
+        setIsDisabled(true);
+      } catch (error) {
+        toast.error("Failed to send OTP");
+        setOtpLoading(false);
+      }
     } else {
       toast.error("This contact already exists!! Please try another number");
       setOtpLoading(false);
@@ -209,27 +270,79 @@ const LoginPageNew = () => {
       });
   };
 
-  const handleVerifyOTP = (e) => {
-    e.preventDefault();
-    setOtpLoading(true);
-    const credential = PhoneAuthProvider.credential(verificationId, otp);
-    localStorage.setItem("loginOtp", otp);
+  // const handleVerifyOTP = (e) => {
+  //   e.preventDefault();
+  //   setOtpLoading(true);
+  //   const credential = PhoneAuthProvider.credential(verificationId, otp);
+  //   localStorage.setItem("loginOtp", otp);
 
-    signInWithCredential(auth, credential)
-      .then((userCredential) => {
-        const user = userCredential.user;
+  //   signInWithCredential(auth, credential)
+  //     .then((userCredential) => {
+  //       const user = userCredential.user;
+  //       toast.success("Phone number verified successfully!");
+  //       setOtpLoading(false);
+  //       setOtpVerifySuccess(true);
+  //       setOtp("");
+  //       setOtpSuccess(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error during OTP verification:", error);
+  //       toast.error("Error during OTP verification");
+  //       setOtp("");
+  //       setOtpLoading(false);
+  //     });
+  // };
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    // const credential = PhoneAuthProvider.credential(verificationId, otp);
+    // localStorage.setItem("loginOtp", otp);
+    try {
+      if (otp.length === 6) {
+        setOtpLoading(true);
+
+        const verifyOTPResponse = await fetch(
+          `${OTP_ENDPOINT}/verifyotpmobile`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": otpToken,
+            },
+            body: JSON.stringify({
+              otp: otp,
+            }),
+          }
+        );
+
+        if (!verifyOTPResponse.ok) {
+          const err = verifyOTPResponse.json();
+          setOtpLoading(false);
+          toast.error(err.error);
+          return;
+        }
+
+        const OTPdata = await verifyOTPResponse.json();
+        console.log(OTPdata);
+        if (OTPdata.authtoken) {
+          console.log(verifyToken);
+          // await loginToUser(OTPdata.authtoken);
+
+          setVerifyToken(OTPdata.authtoken);
+        }
+        console.log(verifyToken);
         toast.success("Phone number verified successfully!");
         setOtpLoading(false);
         setOtpVerifySuccess(true);
         setOtp("");
         setOtpSuccess(false);
-      })
-      .catch((error) => {
-        console.error("Error during OTP verification:", error);
-        toast.error("Error during OTP verification");
-        setOtp("");
-        setOtpLoading(false);
-      });
+      } else throw new Error("Otp length should be of 6");
+    } catch (error) {
+      console.error("Error during OTP verification:", error);
+      toast.error("Error during OTP verification");
+      setOtp("");
+      setOtpLoading(false);
+    }
   };
 
   return (
