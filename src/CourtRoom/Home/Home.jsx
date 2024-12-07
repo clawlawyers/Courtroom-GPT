@@ -96,7 +96,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="flex justify-center gap-5">
+          <div className="flex justify-center flex-col md:flex-row  gap-5">
             <Link to="/pricing-plans">
               <motion.button
                 style={{

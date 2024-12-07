@@ -2138,8 +2138,15 @@ const AiSidebar = () => {
                   </section>
                 </>
               ) : (
-                <section className="w-full flex items-center justify-center p-20">
-                  <img className="w-48 h-48" src={evidenceLoad} alt="loading" />
+                <section className="w-full flex flex-col items-center justify-center p-20">
+                  <img
+                    className="w-48 h-48 mb-4"
+                    src={evidenceLoad}
+                    alt="loading"
+                  />
+                  <div className="text-teal-800">
+                    <TipsComponent />
+                  </div>
                 </section>
               )}
             </>

@@ -140,7 +140,7 @@ const VideoBanner = () => {
         ))}
       </div>
       <div className="border-2 rounded-lg p-2 flex flex-col gap-3">
-        <div className="flex justify-between gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {videoArrDetails[activeButtonIndex].typeArr.map((x, index) => (
             <div
               onClick={() => setActiveVideoIndex([x])}
@@ -155,16 +155,19 @@ const VideoBanner = () => {
             </div>
           ))}
         </div>
-        <div className="bg-black bg-opacity-25 rounded-lg p-3">
+        <div className="bg-black bg-opacity-25 rounded-lg p-3 flex flex-col md:flex-row gap-4">
           {activeVideoIndex.map((x, index) => (
-            <div key={index} className="grid grid-cols-2">
-              <div className="">
+            <div
+              key={index}
+              className="flex flex-col md:grid md:grid-cols-2 md:gap-4">
+              <div className="mb-2 md:mb-0">
+                {/* Text Content */}
                 <p>{x.details}</p>
               </div>
               <div className="bg-black rounded-lg h-80">
-                {/* <p>{x.videoSrc}</p> */}
+                {/* Video Content */}
                 <video
-                  className="rounded-lg h-80"
+                  className="rounded-lg h-80 w-full"
                   src={x.videoSrc}
                   autoPlay
                   loop

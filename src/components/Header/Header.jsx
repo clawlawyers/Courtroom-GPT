@@ -58,8 +58,8 @@ const Header = () => {
   };
 
   return (
-    <div className=" w-5/6 m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-12 right-0 mx-auto mt-3">
-      <div className="flex-1 flex flex-col cursor-pointer items-start justify-center h-full">
+    <div className=" w-5/6 m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-2 right-0  mt-3">
+      <div className="flex-1 flex flex-col cursor-pointer items-start  justify-center h-full">
         <img src={clawlogo} alt="CLAW Logo" className=" w-[120px] h-auto" />
       </div>
 
@@ -67,55 +67,47 @@ const Header = () => {
       <div>
         <button
           onClick={toggleMenu}
-          className="lg:hidden flex flex-col items-center"
-        >
+          className="lg:hidden flex flex-col ml-8 items-center">
           <span className="block w-7 h-1 bg-white mb-1"></span>
           <span className="block w-7 h-1 bg-white mb-1"></span>
           <span className="block w-7 h-1 bg-white"></span>
         </button>
 
         <div
-          className={`hidden lg:flex items-center justify-end gap-x-16 flex-grow`}
-        >
+          className={`hidden lg:flex items-center justify-end gap-x-16 flex-grow`}>
           <Link
             to="/"
-            className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline"
-          >
+            className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline">
             CLAW Home
           </Link>
           <Link
             to="/pricing-plans"
-            className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline"
-          >
+            className="text-white text-base font-medium hover:text-[#9AFFDB] no-underline">
             Pricing
           </Link>
           <p
             onClick={() => handleFeaturesClick("videoBanner")}
             // href="#videoBanner"
-            className="m-0 text-white text-base font-medium hover:text-[#9AFFDB] no-underline cursor-pointer"
-          >
+            className="m-0 text-white text-base font-medium hover:text-[#9AFFDB] no-underline cursor-pointer">
             Features
           </p>
           <p
             onClick={() => handleFeaturesClick("Testimonilcard")}
             // href="#Testimonilcard"
-            className="m-0 text-white text-base font-medium hover:text-[#9AFFDB] no-underline cursor-pointer"
-          >
+            className="m-0 text-white text-base font-medium hover:text-[#9AFFDB] no-underline cursor-pointer">
             Testimonials
           </p>
           {currentUser ? (
             <p
               onClick={() => dispatch(logout())}
-              className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline"
-            >
+              className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline">
               Logout
             </p>
           ) : (
             <Link
               // onClick={() => dispatch(setSignInFormModal())}
               to={"/login"}
-              className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline"
-            >
+              className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline">
               Login
             </Link>
           )}
@@ -126,21 +118,18 @@ const Header = () => {
       {isOpen && (
         <div
           ref={menuRef}
-          className="absolute z-10 top-[60px] left-0 right-0 bg-[#0E1118] bg-opacity-100 rounded-lg p-4 lg:hidden"
-        >
+          className="absolute z-10 top-[60px] left-0 right-0 bg-[#0E1118] bg-opacity-100 rounded-lg p-4 lg:hidden">
           {/* Close Icon */}
           <button
             onClick={() => setIsOpen(false)}
-            className="text-white mb-2 flex justify-end w-full"
-          >
+            className="text-white mb-2 flex justify-end w-full cursor-pointer">
             {/* SVG for close icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+              stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -149,36 +138,43 @@ const Header = () => {
               />
             </svg>
           </button>
+
           <Link
             to="/"
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             CLAW Home
           </Link>
           <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            to="/pricing-plans"
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Pricing
           </Link>
           <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
-            Our Reach
+            to="/#videoBanner"
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
+            Features
           </Link>
           <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
+            to="/#Testimonilcard"
+            className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
             Testimonials
           </Link>
-          <Link
-            to=""
-            className="block text-white text-base font-medium hover:text-[#9AFFDB] mb-2 no-underline"
-          >
-            Login
-          </Link>
+
+          {currentUser ? (
+            <p
+              onClick={() => {
+                dispatch(logout());
+              }}
+              className="cursor-pointer m-0 bg-gradient-to-bl from-[#006E6E] to-[#003131] text-white font-bold py-2 px-4 rounded-full transition-opacity duration-300 hover:opacity-90 no-underline">
+              Logout
+            </p>
+          ) : (
+            <Link
+              to="/login"
+              className="block text-white text-base font-medium bg-transparent hover:bg-[#4473f6] hover:text-white rounded-md mb-2 cursor-pointer no-underline p-2">
+              Login
+            </Link>
+          )}
         </div>
       )}
     </div>
