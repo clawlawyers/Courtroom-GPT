@@ -12,6 +12,7 @@ import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
+import AiSidebarHome from "./AiSideBar/Home";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
@@ -122,7 +123,8 @@ const CourtRoomAiLayout = () => {
       ) : (
         <div className="">
           <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
-            <AiSidebar className="h-screen m-0 overflow-hidden" />
+            {/* <AiSidebar className="h-screen m-0 overflow-hidden" /> */}
+            <AiSidebarHome className="h-screen m-0 overflow-hidden" />
             <div>
               <div className="h-screen m-0 overflow-hidden">
                 <Outlet />
