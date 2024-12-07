@@ -1668,7 +1668,7 @@ const CourtroomArgument = () => {
                 color: "white",
               }}
               onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "#12bebe")
+                (e.currentTarget.style.background = "#0395a8")
               } // Hover color
               onMouseLeave={(e) =>
                 (e.currentTarget.style.background = "#008080")

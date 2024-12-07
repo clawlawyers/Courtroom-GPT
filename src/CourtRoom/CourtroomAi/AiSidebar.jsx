@@ -1459,7 +1459,7 @@ const AiSidebar = () => {
                   <div className="w-full flex gap-2 text-sm justify-end">
                     <button
                       onClick={handleResearchArguments}
-                      className="px-4 py-2 rounded-md border hover:bg-teal-600 flex items-center justify-center min-w-[200px]">
+                      className="px-4 py-2 rounded-md border hover:bg-[#008080] flex items-center justify-center min-w-[200px]">
                       {reserachArgumentsLoading ? (
                         <div className="w-36 flex justify-center">
                           <CircularProgress size={22} color="inherit" />
@@ -1470,7 +1470,7 @@ const AiSidebar = () => {
                     </button>
                     <button
                       onClick={handleNextAppeal}
-                      className="px-4 py-2 rounded-md border hover:bg-teal-500 flex items-center justify-center min-w-[200px]">
+                      className="px-4 py-2 rounded-md border hover:bg-[#008080]  flex items-center justify-center min-w-[200px]">
                       {nextAppealLoading ? (
                         <div className="w-36 flex justify-center">
                           <CircularProgress size={22} color="inherit" />
@@ -1550,14 +1550,14 @@ const AiSidebar = () => {
                             setShowRelevantLaws(true);
                             getReventCaseLaw();
                           }}
-                          className="border hover:bg-teal-500 border-white rounded-md py-1">
+                          className="border hover:white hover:opacity-70 border-white rounded-md py-1">
                           Relevant Case Laws
                         </motion.button>
                       </Tooltip>
                     )}
                     <button
                       onClick={() => dowloadFirstDraft()}
-                      className="border border-white hover:bg-teal-500 rounded-md py-1">
+                      className="border border-white hover:white hover:opacity-70 rounded-md py-1">
                       <Download /> Download
                     </button>
                   </div>

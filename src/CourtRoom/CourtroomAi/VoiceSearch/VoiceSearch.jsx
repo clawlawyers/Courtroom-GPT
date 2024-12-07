@@ -85,7 +85,7 @@ const VoiceSearch = ({ setVoiceSearchInitiate, setAddArgumentInputText }) => {
       {/* Buttons */}
       <div className="flex justify-end gap-4">
         <button
-          className="text-teal-900 border-2 hover:bg-teal-700 hover:text-white cursor-pointer rounded-md px-3 border-teal-900 py-2 transition duration-300"
+          className="text-teal-900 border-2 hover:bg-teal-700 hover:border-white hover:text-white cursor-pointer rounded-md px-3 border-teal-900 py-2 transition duration-300"
           onClick={resetTranscript}>
           Reset Voice Typing
         </button>
