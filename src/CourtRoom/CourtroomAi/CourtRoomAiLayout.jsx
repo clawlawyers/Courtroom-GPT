@@ -12,7 +12,6 @@ import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
 import axios from "axios";
-import AiSidebarHome from "./AiSideBar/Home";
 
 const CourtRoomAiLayout = () => {
   const currentUser = useSelector((state) => state.user.user);
@@ -123,8 +122,8 @@ const CourtRoomAiLayout = () => {
       ) : (
         <div className="">
           <div className="h-screen grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] bg-gradient-to-r from-[#008080] to-[#0e1118]">
-            {/* <AiSidebar className="h-screen m-0 overflow-hidden" /> */}
-            <AiSidebarHome className="h-screen m-0 overflow-hidden" />
+            <AiSidebar className="h-screen m-0 overflow-hidden" />
+            {/* <AiSidebarHome className="h-screen m-0 overflow-hidden" /> */}
             <div>
               <div className="h-screen m-0 overflow-hidden">
                 <Outlet />
@@ -138,16 +137,14 @@ const CourtRoomAiLayout = () => {
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.8)",
           backdropFilter: "blur(3px)",
-        }}
-      >
+        }}>
         <div className="w-full px-1 flex flex-col items-center justify-center">
           <h1 className="text-xl text-center">
             Content available in Desktop Screen only !
           </h1>
           <button
             onClick={() => navigate("/")}
-            className="border rounded-lg px-4 py-1 hover:bg-white hover:bg-opacity-15"
-          >
+            className="border rounded-lg px-4 py-1 hover:bg-white hover:bg-opacity-15">
             Home
           </button>
         </div>
