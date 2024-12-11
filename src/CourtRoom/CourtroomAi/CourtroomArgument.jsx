@@ -9,7 +9,7 @@ import Select, { components } from "react-select";
 import { motion } from "framer-motion";
 import { Close, Co2Sharp, ResetTvSharp, Send } from "@mui/icons-material";
 import { Button, Menu, Modal, StyledEngineProvider } from "@mui/material";
-import { MenuItem, IconButton } from "@mui/material";
+import { MenuItem, IconButton, Tooltip } from "@mui/material";
 import loader from "../../assets/images/argumentLoading.gif";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
@@ -41,6 +41,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { setTutorialFalse } from "../../features/popup/popupSlice";
 import { setmaintut, setTutorial } from "../../features/sidebar/sidebarSlice";
+import TipsComponent from "../../components/UploadDoc/TipsComponent";
 const CourtroomArgument = () => {
   //
   useEffect(() => {
@@ -1315,32 +1316,34 @@ const CourtroomArgument = () => {
                 <img className="h-4 w-4" alt="expand" src={expand} />
                 <h1 className="text-xs m-[5px]">Expand</h1>
               </div>
-              <motion.div
-                id="swaplawyer"
-                // onClick={userArgument.length > 0 ? handleSwap : null}
-                // whileTap={
-                //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
-                // }
-                onClick={() => toast.error("ONLY FOR PAID USERS")}
-                className="flex gap-1 items-center">
-                <svg
-                  width="20"
-                  height="20"
-                  stroke="white"
-                  fill="white"
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  stroke-linejoin="round"
-                  stroke-miterlimit="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
-                    fill-rule="nonzero"
-                  />
-                </svg>
-                <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
-              </motion.div>
+              <Tooltip title="Upgrade plan to use this feature">
+                <motion.div
+                  id="swaplawyer"
+                  // onClick={userArgument.length > 0 ? handleSwap : null}
+                  // whileTap={
+                  //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
+                  // }
+                  // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                  className="flex gap-1 items-center">
+                  <svg
+                    width="20"
+                    height="20"
+                    stroke="white"
+                    fill="white"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
+                      fill-rule="nonzero"
+                    />
+                  </svg>
+                  <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
+                </motion.div>
+              </Tooltip>
             </div>
           </div>
         )}
@@ -1575,30 +1578,35 @@ const CourtroomArgument = () => {
             className="flex-1 my-2 flex justify-center items-center gap-2 border-2 border-[#00ffa3] rounded-2xl px-4 py-2 text-white bg-[#008080] hover:bg-[#12bebe] transition duration-300">
             <h2 className="text-sm m-0">Add Argument</h2>
           </motion.button>
-
-          <motion.button
-            id="rest-your-case"
-            whileTap={{ scale: "0.95" }}
-            onClick={() => toast.error("ONLY FOR PAID USERS")}
-            className="flex-1 my-2"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "5px",
-              border: "2px solid #00ffa3",
-              borderRadius: "20px",
-              background: "#008080", // Default background color
-              padding: "10px",
-              cursor: "pointer",
-              color: "white",
-              transition: "background 0.3s", // Smooth transition
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#12bebe")} // Hover color
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#008080")} // Default color on leave
-          >
-            <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
-          </motion.button>
+          <Tooltip title="Upgrade plan to use this feature">
+            <motion.button
+              id="rest-your-case"
+              whileTap={{ scale: "0.95" }}
+              // onClick={() => toast.error("ONLY FOR PAID USERS")}
+              className="flex-1 my-2"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+                border: "2px solid #00ffa3",
+                borderRadius: "20px",
+                background: "#008080", // Default background color
+                padding: "10px",
+                cursor: "pointer",
+                color: "white",
+                transition: "background 0.3s", // Smooth transition
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "#12bebe")
+              } // Hover color
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "#008080")
+              } // Default color on leave
+            >
+              <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
+            </motion.button>
+          </Tooltip>
         </div>
       </div>
       {voiceSearchInitiate ? (
@@ -1654,41 +1662,45 @@ const CourtroomArgument = () => {
                 <Close />
               </div>
             </div>
-            <div className="h-[90%] flex overflow-auto items-center justify-center px-10 py-3 ">
+            <div className="h-[85%] flex overflow-auto items-center justify-center px-10 py-3 ">
               {!loadingRelevantCases ? (
                 <p
                   className="text-black text-sm h-[90%]"
                   dangerouslySetInnerHTML={{ __html: relevantCases }}></p>
               ) : (
-                <div className="h-full flex justify-center items-center">
-                  {" "}
+                <div className="h-full flex flex-col justify-center items-center">
                   <img alt="loading" src={loader} className="w-28 h-28" />
+                  <div className="text-black mt-4">
+                    <TipsComponent />
+                  </div>
                 </div>
               )}
             </div>
             {!loadingRelevantCases && (
               <div className="flex justify-end">
                 {/* {}  <Link to={"/courtroom-ai/relevantCaseLaws"}> */}
-                <button
-                  onClick={() => toast.error("ONLY FOR PAID USERS")}
-                  // onClick={() => {
-                  //   dispatch(removeRelevantCaseLaws());
-                  //   // dispatch(
-                  //   //   retrieveCaseLaws({
-                  //   //     query: relevantCasesData,
-                  //   //     token: currentUser.token,
-                  //   //   })
-                  //   // );
-                  //   dispatch(
-                  //     setRelevantCaseLaws({
-                  //       relevantLawData,
-                  //     })
-                  //   );
-                  // }}
-                  className="bg-[#003131] px-4 py-1 text-sm rounded text-white">
-                  View Case Laws
-                </button>
-                {/* </Link> */}
+                <Tooltip title="Upgrade plan to use this feature">
+                  <button
+                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    // onClick={() => {
+                    //   dispatch(removeRelevantCaseLaws());
+                    //   // dispatch(
+                    //   //   retrieveCaseLaws({
+                    //   //     query: relevantCasesData,
+                    //   //     token: currentUser.token,
+                    //   //   })
+                    //   // );
+                    //   dispatch(
+                    //     setRelevantCaseLaws({
+                    //       relevantLawData,
+                    //     })
+                    //   );
+                    // }}
+                    className="bg-[#003131] my-2 px-4 py-2 text-sm rounded text-white">
+                    View Case Laws
+                  </button>
+                  {/* </Link> */}
+                </Tooltip>
               </div>
             )}
           </div>
@@ -1862,31 +1874,33 @@ const CourtroomArgument = () => {
               <img className="h-4 w-4" alt="expand" src={collapse} />
               <h1 className="text-xs m-[5px]">Collapse</h1>
             </div>
-            <motion.div
-              // onClick={userArgument.length > 0 ? handleSwap : null}
-              // whileTap={
-              //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
-              // }
-              onClick={() => toast.error("ONLY FOR PAID USERS")}
-              className="flex gap-1 items-center">
-              <svg
-                width="20"
-                height="20"
-                stroke="white"
-                fill="white"
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                stroke-linejoin="round"
-                stroke-miterlimit="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
-                  fill-rule="nonzero"
-                />
-              </svg>
-              <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
-            </motion.div>
+            <Tooltip title="Upgrade plan to use this feature">
+              <motion.div
+                // onClick={userArgument.length > 0 ? handleSwap : null}
+                // whileTap={
+                //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
+                // }
+                // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                className="flex gap-1 items-center">
+                <svg
+                  width="20"
+                  height="20"
+                  stroke="white"
+                  fill="white"
+                  clip-rule="evenodd"
+                  fill-rule="evenodd"
+                  stroke-linejoin="round"
+                  stroke-miterlimit="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="m21.897 13.404.008-.057v.002c.024-.178.044-.357.058-.537.024-.302-.189-.811-.749-.811-.391 0-.715.3-.747.69-.018.221-.044.44-.078.656-.645 4.051-4.158 7.153-8.391 7.153-3.037 0-5.704-1.597-7.206-3.995l1.991-.005c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-4.033c-.414 0-.75.336-.75.75v4.049c0 .414.336.75.75.75s.75-.335.75-.75l.003-2.525c1.765 2.836 4.911 4.726 8.495 4.726 5.042 0 9.217-3.741 9.899-8.596zm-19.774-2.974-.009.056v-.002c-.035.233-.063.469-.082.708-.024.302.189.811.749.811.391 0 .715-.3.747-.69.022-.28.058-.556.107-.827.716-3.968 4.189-6.982 8.362-6.982 3.037 0 5.704 1.597 7.206 3.995l-1.991.005c-.414 0-.75.336-.75.75s.336.75.75.75h4.033c.414 0 .75-.336.75-.75v-4.049c0-.414-.336-.75-.75-.75s-.75.335-.75.75l-.003 2.525c-1.765-2.836-4.911-4.726-8.495-4.726-4.984 0-9.12 3.654-9.874 8.426z"
+                    fill-rule="nonzero"
+                  />
+                </svg>
+                <h1 className="text-xs m-[5px]">Swap with AI Lawyer</h1>
+              </motion.div>
+            </Tooltip>
           </div>
         </div>
       </Modal>
