@@ -6,7 +6,11 @@ import uploadImage from "../../assets/icons/upload.svg";
 import { useNavigate } from "react-router-dom";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-import { setTutorial , setdevices, setinputCaseTutorial } from "../../features/sidebar/sidebarSlice";
+import {
+  setTutorial,
+  setdevices,
+  setinputCaseTutorial,
+} from "../../features/sidebar/sidebarSlice";
 import { useSelector, useDispatch } from "react-redux";
 import LanguageSelectionModal from "../../components/Language Card/LanguageSelectionModel"; // Import the modal
 
@@ -15,9 +19,6 @@ const UploadDoc = () => {
   const tutorial = useSelector((state) => state.sidebar.tutorial);
   const driveUpload = useSelector((state) => state.sidebar.inputCaseTutorial);
   const caseOverView = useSelector((state) => state.user.caseOverview);
-
-  
-  
 
   const driverObj = driver({
     showProgress: true,
@@ -59,16 +60,13 @@ const UploadDoc = () => {
 
   useEffect(() => {
     if (!tutorial) {
-      if(!driveUpload){
+      if (!driveUpload) {
         if (caseOverView == "NA" || caseOverView == "") {
-
-          
           driverObj.drive();
+        } else {
+          driverObj.destroy();
         }
-        else{
-          driverObj.destroy()
-        }
-        dispatch(setdevices())
+        dispatch(setdevices());
         // dispatch(setTutorial(true));
       }
     }
@@ -104,8 +102,7 @@ const UploadDoc = () => {
           animate="open"
           exit="closed"
           variants={variants}
-          transition={transition}
-        >
+          transition={transition}>
           <Devices
             uploadedFile={uploadedFile}
             setUploadedFile={setUploadedFile}
@@ -118,9 +115,9 @@ const UploadDoc = () => {
           onClick={handleClick}
           className={`${Styles.uploadButton} ${
             error ? Styles.errorBoundary : ""
-          }`}
-        >
+          }`}>
           <img src={uploadImage} alt="Upload Document" />
+          <h1 className="text-white text-lg">Upload Your Documents Here</h1>
         </div>
       )}
     </section>

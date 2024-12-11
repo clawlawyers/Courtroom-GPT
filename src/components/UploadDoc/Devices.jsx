@@ -817,9 +817,10 @@ const Devices = ({
             overflow: "auto",
           }}>
           <div
-            className="w-2/4 h-2/3 rounded-lg border-2 border-white p-2 flex flex-col gap-5"
+            className="w-2/4 h-2/3 rounded-lg border-2 border-white p-2 flex flex-col  "
             style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
-            <div className=" p-2 w-full h-[80%] rounded-lg border bg-gray-50 bg-opacity-15  overflow-auto flex flex-col gap-2">
+            <h1 className="text-center text-lg">Uploaded Documents</h1>
+            <div className=" p-2 w-full h-[82%] rounded-lg border bg-gray-50 bg-opacity-15  mb-2 overflow-auto flex flex-col gap-2">
               <>
                 {Object.entries(uploadProgress).map(
                   ([fileId, progress], index) => (
