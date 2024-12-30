@@ -83,7 +83,7 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "AI Judgde",
+              title: "AI Judge",
               description:
                 "This will show AI Judge response to an argument from both sides  ",
               side: "left",
@@ -103,9 +103,9 @@ const CourtroomArgument = () => {
           {
             element: "#expand",
             popover: {
-              title: "Exapnd",
+              title: "Expand",
               description:
-                "Click this button to Exapnd response for better view   ",
+                "Click this button to Expand response for better view   ",
               side: "left",
 
               align: "start",
@@ -185,7 +185,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "Add details about the situation your testimony was in or how is he supposed to be related to your case and get relevant cross examination questions for your testimony  ",
+               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -880,9 +880,9 @@ const CourtroomArgument = () => {
           //   },
           // },
           {
-            element: "#aijudge",
+            element: "#aijudge",  
             popover: {
-              title: "AI Judgde",
+              title: "AI Judge",
               description:
                 "This will show AI Judge response to an argument from both sides  ",
               side: "left",
@@ -902,9 +902,9 @@ const CourtroomArgument = () => {
           {
             element: "#expand",
             popover: {
-              title: "Exapnd",
+              title: "Expand",
               description:
-                "Click this button to Exapnd response for better view   ",
+                "Click this button to Expand response for better view   ",
               side: "left",
 
               align: "start",
@@ -984,7 +984,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "Add details about the situation your testimony was in or how is he supposed to be related to your case and get relevant cross examination questions for your testimony  ",
+               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
