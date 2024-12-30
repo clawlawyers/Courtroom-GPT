@@ -90,7 +90,7 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "AI Judgde",
+              title: "AI Judge",
               description:
                 "This will show AI Judge response to an argument from both sides  ",
               side: "left",
@@ -110,9 +110,9 @@ const CourtroomArgument = () => {
           {
             element: "#expand",
             popover: {
-              title: "Exapnd",
+              title: "Expand",
               description:
-                "Click this button to Exapnd response for better view   ",
+                "Click this button to Expand response for better view   ",
               side: "left",
 
               align: "start",
@@ -129,6 +129,15 @@ const CourtroomArgument = () => {
               title: "Change Side",
               description:
                 "Click this button to change the side you are representing",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
+            element: "#time-left",
+            popover: {
+              title: "Time Remaning ",
+              description: "It shows amount of Time Remaining for the Session ",
               side: "left",
               align: "start",
             },
@@ -192,7 +201,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "Add details about the situation your testimony was in or how is he supposed to be related to your case and get relevant cross examination questions for your testimony  ",
+               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -201,15 +210,7 @@ const CourtroomArgument = () => {
               },
             },
           },
-          {
-            element: "#time-left",
-            popover: {
-              title: "Time Remaning ",
-              description: "It shows amount of Time Remaining for the Session ",
-              side: "left",
-              align: "start",
-            },
-          },
+          
           {
             element: "#first-draft",
             popover: {
@@ -934,7 +935,7 @@ const CourtroomArgument = () => {
           {
             element: "#aijudge",
             popover: {
-              title: "AI Judgde",
+              title: "AI Judge",
               description:
                 "This will show AI Judge response to an argument from both sides  ",
               side: "left",
@@ -954,9 +955,9 @@ const CourtroomArgument = () => {
           {
             element: "#expand",
             popover: {
-              title: "Exapnd",
+              title: "Expand",
               description:
-                "Click this button to Exapnd response for better view   ",
+                "Click this button to Expand response for better view   ",
               side: "left",
 
               align: "start",
@@ -1000,6 +1001,15 @@ const CourtroomArgument = () => {
             },
           },
           {
+            element: "#time-left",
+            popover: {
+              title: "Time Remaning ",
+              description: "It shows amount of Time Remaining for the Session ",
+              side: "left",
+              align: "start",
+            },
+          },
+          {
             element: "#evidence-menu",
             popover: {
               title: "Menu",
@@ -1036,24 +1046,17 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-                "Add details about the situation your testimony was in or how is he supposed to be related to your case and get relevant cross examination questions for your testimony  ",
+               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
                 document.getElementById("long-menu").click();
+
                 driverObj2.moveNext();
               },
             },
           },
-          {
-            element: "#time-left",
-            popover: {
-              title: "Time Remaning ",
-              description: "It shows amount of Time Remaining for the Session ",
-              side: "left",
-              align: "start",
-            },
-          },
+         
           {
             element: "#first-draft",
             popover: {
