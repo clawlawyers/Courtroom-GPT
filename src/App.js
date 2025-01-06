@@ -53,7 +53,7 @@ function App() {
   const updateEngagementTime = useCallback(async (engagementData) => {
     try {
       await axios.post(
-        `http://https://claw-app-dev.onrender.com/api/v1/cron/specificEengagement/time`,
+        `https://claw-app-dev.onrender.com/api/v1/cron/specificEengagement/time`,
         {
           platform: "warroom",
           engagementData:engagementData,
