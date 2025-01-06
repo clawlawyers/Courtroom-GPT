@@ -41,8 +41,8 @@ import TimeUp from "./components/TimeUpComponent/TimeUp.jsx";
 import { Helmet } from "react-helmet";
 
 function App() {
-  const BATCH_INTERVAL = 60 * 1000;
-  const currentUser = useSelector((state) => state.auth.user);
+  const BATCH_INTERVAL = 6 * 1000;
+  const currentUser = useSelector((state) => state.user.user.phoneNumber);
 
   const currentUserRef = useRef(currentUser);
 
@@ -53,20 +53,24 @@ function App() {
   const updateEngagementTime = useCallback(async (engagementData) => {
     try {
       await axios.post(
-        `${NODE_API_ENDPOINT}/cron/engagement/time`,
-        engagementData
+        `http://https://claw-app-dev.onrender.com/api/v1/cron/specificEengagement/time`,
+        {
+          platform: "warroom",
+          engagementData:engagementData,
+        }
       );
     } catch (error) {
       console.error("Error updating engagement time:", error);
     }
   }, []);
 
-  const flushQueue = useCallback(() => {
+  const flushQueue = useCallback((currentUser) => {
     const user = currentUserRef.current;
+    console.log(currentUser)
     if (user) {
       updateEngagementTime([
         {
-          phoneNumber: user.phoneNumber,
+          phoneNumber: user,
           engagementTime: 60,
           timestamp: Date.now(),
         },
@@ -76,13 +80,15 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      flushQueue();
+      flushQueue(currentUser);
+      console.log(currentUser)
     }, BATCH_INTERVAL);
-
+    
     return () => {
       clearInterval(interval);
       flushQueue();
     };
+    
   }, [flushQueue]);
 
   // this should be run only once per application lifetime

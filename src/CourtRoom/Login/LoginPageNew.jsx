@@ -236,6 +236,8 @@ const LoginPageNew = () => {
         setIsOTPMode(false);
       } else if (data.token) {
         localStorage.setItem("userToken", data.token);
+        console.log(data)
+        data["phoneNumber"]=mobileNumber
         dispatch(login({ user: data }));
         dispatch(setOverview(data.caseOverview));
         setIsVerified(true);
