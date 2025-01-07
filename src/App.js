@@ -41,8 +41,8 @@ import TimeUp from "./components/TimeUpComponent/TimeUp.jsx";
 import { Helmet } from "react-helmet";
 
 function App() {
-  const BATCH_INTERVAL = 6 * 1000;
-  const currentUser = useSelector((state) => state.user.user.phoneNumber);
+  const BATCH_INTERVAL = 60 * 1000;
+  const currentUser = useSelector((state) => state.user.user);
 
   const currentUserRef = useRef(currentUser);
 
@@ -67,10 +67,10 @@ function App() {
   const flushQueue = useCallback((currentUser) => {
     const user = currentUserRef.current;
     console.log(currentUser)
-    if (user) {
+    if (currentUser) {
       updateEngagementTime([
         {
-          phoneNumber: user,
+          phoneNumber: currentUser.phoneNumber,
           engagementTime: 60,
           timestamp: Date.now(),
         },

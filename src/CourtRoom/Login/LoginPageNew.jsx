@@ -59,6 +59,7 @@ const LoginPageNew = () => {
         if (data.token) {
           localStorage.setItem("userToken", data.token);
           console.log(data.caseOverview);
+          data["phoneNumber"]=userParam.phoneNumber
           dispatch(login({ user: data }));
           dispatch(setOverview(data.caseOverview));
 
