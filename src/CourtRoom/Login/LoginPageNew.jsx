@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { NODE_API_ENDPOINT, OTP_ENDPOINT } from "../../utils/utils";
 import { CircularProgress } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   login,
   setOverview,
@@ -23,6 +23,7 @@ const LoginPageNew = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [params, setparams] = useSearchParams();
+  const currentUser = useSelector((state) => state.user.user);
 
   let user = params.get("user");
   if (!user) {
@@ -59,7 +60,7 @@ const LoginPageNew = () => {
         if (data.token) {
           localStorage.setItem("userToken", data.token);
           console.log(data.caseOverview);
-          data["phoneNumber"]=userParam.phoneNumber
+          data["phoneNumber"] = userParam.phoneNumber;
           dispatch(login({ user: data }));
           dispatch(setOverview(data.caseOverview));
 
@@ -97,6 +98,8 @@ const LoginPageNew = () => {
       setIsOTPMode(true);
     }
   };
+
+  console.log("Verify ", isVerified);
 
   // const handleVerifyNumber = async (e) => {
   //   e.preventDefault();
@@ -237,10 +240,11 @@ const LoginPageNew = () => {
         setIsOTPMode(false);
       } else if (data.token) {
         localStorage.setItem("userToken", data.token);
-        console.log(data)
-        data["phoneNumber"]=mobileNumber
+        console.log(data);
+        data["phoneNumber"] = mobileNumber;
         dispatch(login({ user: data }));
         dispatch(setOverview(data.caseOverview));
+        console.log("setting verify");
         setIsVerified(true);
       } else {
         toast.error("Something went wrong.Please try again!");
@@ -351,7 +355,7 @@ const LoginPageNew = () => {
         </div>
 
         <div className="w-full md:w-1/2 mt-4 md:mt-0">
-          {!isVerified ? (
+          {!currentUser ? (
             <>
               <h3 className="text-left mb-6 text-white">
                 <span className="block text-3xl font-bold">
