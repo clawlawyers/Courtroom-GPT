@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 const TimeUp = ({ setFeedbackForm }) => {
   const navigate = useNavigate();
 
+  const navigateToPricingPage = () => {
+    window.open("https://courtroom.clawlaw.in/pricing-plans", "_blank");
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div
         className="bg-pink-50 border-4 border-red-500 rounded-2xl shadow-lg p-8 w-full max-w-xl text-center"
-        style={{ backgroundColor: "#FFE0E0" }}>
+        style={{ backgroundColor: "#FFE0E0" }}
+      >
         <h1 className="text-3xl font-bold text-red-600 mb-4">Time Is Up</h1>
         <p className="text-gray-700 mb-2">
           Your Free Time of 30 Mins for War Room is Over
@@ -22,17 +27,22 @@ const TimeUp = ({ setFeedbackForm }) => {
           <div className="flex gap-4 flex-wrap justify-center md:justify-start">
             <button
               onClick={() => navigate("/contact")}
-              className="bg-white text-gray-800 hover:bg-teal-500 font-semibold px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto">
+              className="bg-white text-gray-800 hover:bg-teal-500 font-semibold px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto"
+            >
               Contact Us
             </button>
             <button
               onClick={() => setFeedbackForm(true)}
-              className="bg-white text-gray-800 font-semibold hover:bg-teal-500 px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto">
+              className="bg-white text-gray-800 font-semibold hover:bg-teal-500 px-4 py-2 rounded-lg shadow-md border-2 border-[#018585] hover:bg-gray-100 transition duration-200 w-full md:w-auto"
+            >
               Feedback
             </button>
           </div>
 
-          <button className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow-md border-2 border-[#00FFA3] hover:bg-teal-700 transition duration-200 w-full md:w-auto font-semibold">
+          <button
+            onClick={navigateToPricingPage}
+            className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow-md border-2 border-[#00FFA3] hover:bg-teal-700 transition duration-200 w-full md:w-auto font-semibold"
+          >
             Buy A Plan
           </button>
         </div>
