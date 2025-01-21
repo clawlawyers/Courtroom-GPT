@@ -201,7 +201,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
+                "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -210,7 +210,7 @@ const CourtroomArgument = () => {
               },
             },
           },
-          
+
           {
             element: "#first-draft",
             popover: {
@@ -1046,7 +1046,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
+                "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -1056,7 +1056,7 @@ const CourtroomArgument = () => {
               },
             },
           },
-         
+
           {
             element: "#first-draft",
             popover: {
@@ -1435,7 +1435,7 @@ const CourtroomArgument = () => {
                   width: "100%",
                   margin: "10px",
                   overflow: "hidden",
-                  overflow: "auto",
+                  //overflow: "auto",
                 }}>
                 {userArgument.map((x, index) => (
                   <div

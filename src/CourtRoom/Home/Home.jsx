@@ -70,7 +70,7 @@ function Home() {
   return (
     <motion.div className="bg-transparent pt-[60px]">
       {/* top container */}
-      <div className="flex flex-col md:grid md:grid-cols-2 items-center px-2 md:px-28 pt-5 gap-5">
+      <div className="flex flex-col md:grid md:grid-cols-2 items-center my-5 px-2 md:px-28 pt-5 gap-5">
         <div className="w-full flex flex-col text-center md:text-start  md:pl-32  gap-14">
           <h1 className="m-0 text-5xl font-bold">What is Courtroom ?</h1>
           <div className="">
@@ -112,8 +112,7 @@ function Home() {
                   fontSize: "1rem",
                   fontWeight: "bold",
                 }}
-                whileHover="hover"
-              >
+                whileHover="hover">
                 <motion.div
                   variants={{
                     hover: { x: "100%" },
@@ -134,8 +133,7 @@ function Home() {
                   style={{
                     position: "relative",
                     zIndex: 2,
-                  }}
-                >
+                  }}>
                   Book A Courtroom
                 </span>
               </motion.button>
@@ -155,8 +153,7 @@ function Home() {
                   fontSize: "1rem",
                   fontWeight: "bold",
                 }}
-                whileHover="hover"
-              >
+                whileHover="hover">
                 <motion.div
                   variants={{
                     hover: { x: "100%" },
@@ -177,8 +174,7 @@ function Home() {
                   style={{
                     position: "relative",
                     zIndex: 2,
-                  }}
-                >
+                  }}>
                   Enter Your Courtroom
                 </span>
               </motion.button>
@@ -194,7 +190,7 @@ function Home() {
             whileInView={{ x: "0%" }}
             transition={{ type: "spring", stiffness: 120, damping: 10 }}
             alt="court-room"
-            className="h-full w-full"
+            className="h-full  w-full"
             style={{
               backgroundColor: "transparent",
               // height: "75%",
@@ -205,14 +201,13 @@ function Home() {
         </div>
       </div>
       {/* 2nd container */}
-      <div className="grid md:grid-cols-3 m-5 md:px-10 py-28">
+      <div className="grid md:grid-cols-3  md:px-10 py-5">
         <motion.div
           initial={{ x: ["100%"] }}
           whileInView={{ x: "0%" }}
           transition={{ type: "slide", duration: 0.1 }}
           whileHover={{ scale: "0.9" }}
-          className={Styles.courtRoomCard}
-        >
+          className={Styles.courtRoomCard}>
           <br />
           <img
             alt="Feature Heading"
@@ -223,8 +218,7 @@ function Home() {
           <h1 style={{ fontSize: "25px" }}>AI Junior</h1>
           <br />
           <h3
-            style={{ fontSize: "20px", color: "#B7B2B2", textAlign: "center" }}
-          >
+            style={{ fontSize: "20px", color: "#B7B2B2", textAlign: "center" }}>
             First draft of argument sets compiled for you by AI
           </h3>
         </motion.div>
@@ -234,8 +228,7 @@ function Home() {
           whileInView={{ x: "0%" }}
           transition={{ type: "slide", duration: 0.1 }}
           whileHover={{ scale: "0.9" }}
-          className={Styles.courtRoomCard}
-        >
+          className={Styles.courtRoomCard}>
           <br />
           <img
             alt="Feature Heading"
@@ -246,8 +239,7 @@ function Home() {
           <h1 style={{ fontSize: "25px" }}>AI Lawyer</h1>
           <br />
           <h3
-            style={{ fontSize: "20px", color: "#B7B2B2", textAlign: "center" }}
-          >
+            style={{ fontSize: "20px", color: "#B7B2B2", textAlign: "center" }}>
             Counter arguments backed by all Indian law
           </h3>
         </motion.div>
@@ -257,8 +249,7 @@ function Home() {
           whileInView={{ x: "0%" }}
           transition={{ type: "slide", duration: 0.1 }}
           whileHover={{ scale: "0.9" }}
-          className={Styles.courtRoomCard}
-        >
+          className={Styles.courtRoomCard}>
           <br />
           <img
             alt="Feature Heading"
@@ -269,8 +260,7 @@ function Home() {
           <h1 style={{ fontSize: "25px" }}>AI Judge</h1>
           <br />
           <h3
-            style={{ fontSize: "20px", color: "#B7B2B2", textAlign: "center" }}
-          >
+            style={{ fontSize: "20px", color: "#B7B2B2", textAlign: "center" }}>
             Validity, Importance and character based scoring and conclusion
           </h3>
         </motion.div>
@@ -328,8 +318,7 @@ function Home() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-            }}
-          >
+            }}>
             <h1
               style={{
                 fontWeight: "700",
@@ -337,13 +326,11 @@ function Home() {
                 letterSpacing: "0.016rem",
                 textAlign: "center",
                 minHeight: "120px", // Ensure fixed height for the first container
-              }}
-            >
+              }}>
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, scale: [0.5, 1.2, 1] }}
-                transition={{ duration: 2 }}
-              >
+                transition={{ duration: 2 }}>
                 <CountUp start={10000} end={25000} duration={3} separator="" />+
               </motion.span>
             </h1>
@@ -352,8 +339,7 @@ function Home() {
                 color: "#B7B2B2",
                 fontSize: "16px",
                 textAlign: "center",
-              }}
-            >
+              }}>
               Indian Legal Documents
             </h3>
           </div>
@@ -364,8 +350,7 @@ function Home() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-            }}
-          >
+            }}>
             <h1
               style={{
                 fontWeight: "700",
@@ -373,13 +358,11 @@ function Home() {
                 letterSpacing: "0.016rem",
                 textAlign: "center",
                 minHeight: "120px", // Ensure fixed height for the second container
-              }}
-            >
+              }}>
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, scale: [0.5, 1.2, 1] }}
-                transition={{ duration: 2 }}
-              >
+                transition={{ duration: 2 }}>
                 <CountUp start={0} end={50} duration={3} separator="," />+
               </motion.span>
             </h1>
@@ -389,8 +372,7 @@ function Home() {
                 fontSize: "16px",
                 textAlign: "center",
                 width: "300px",
-              }}
-            >
+              }}>
               Trusted by 50+ lawyers from Supreme Court and High Courts
             </h3>
           </div>
@@ -401,8 +383,7 @@ function Home() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-            }}
-          >
+            }}>
             <h1
               style={{
                 fontWeight: "700",
@@ -410,8 +391,7 @@ function Home() {
                 letterSpacing: "0.016rem",
                 textAlign: "center",
                 minHeight: "120px", // Ensure fixed height for the "1 Cr +" container
-              }}
-            >
+              }}>
               <span>1 Cr +</span>{" "}
               {/* Keep the "1 Cr +" fixed and without animation */}
             </h1>
@@ -420,8 +400,7 @@ function Home() {
                 color: "#B7B2B2",
                 fontSize: "16px",
                 textAlign: "center",
-              }}
-            >
+              }}>
               Indian Judgements
             </h3>
           </div>
@@ -434,8 +413,7 @@ function Home() {
           placeItems: "center",
           marginTop: "80px",
           paddingBottom: "80px",
-        }}
-      >
+        }}>
         <motion.div
           className={Styles.third}
           style={{
@@ -445,8 +423,7 @@ function Home() {
           }}
           whileHover="hover"
           onHoverStart={() => setIsHovered(true)}
-          onHoverEnd={() => setIsHovered(false)}
-        >
+          onHoverEnd={() => setIsHovered(false)}>
           <motion.div
             variants={{
               hover: { x: "100%" },
@@ -481,8 +458,7 @@ function Home() {
                   color: "#008080",
                   fontWeight: 800,
                   textWrap: "wrap",
-                }}
-              >
+                }}>
                 Experience the AI Courtroom
               </h1>
             </div>
@@ -496,8 +472,7 @@ function Home() {
                   borderRadius: 10,
                   border: "none",
                   fontSize: 27,
-                }}
-              >
+                }}>
                 Contact us
               </button>
             </Link>
@@ -508,8 +483,7 @@ function Home() {
       <div className="flex flex-col gap-3">
         <div
           id="Testimonilcard"
-          className="flex  flex-col justify-center items-center gap-1"
-        >
+          className="flex  flex-col justify-center items-center gap-1">
           <h1 className="font-bold text-5xl md:text-6xl">Testimonials</h1>
           <p className="text-lg md:text-xl">
             Get to know what the professionals got to say
