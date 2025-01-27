@@ -81,3 +81,41 @@
   filter: blur(5px);
   transition: filter 0.3s ease;
 }
+/* Mobile view styles */
+@media screen and (max-width: 768px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: bottom;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 2000px;
+  }
+  .uploadButton {
+    width: 95%;
+    height: 40%;
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  .uploadButton img {
+    width: 30%;
+    height: 50%;
+  }
+
+  .images {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .images img {
+    width: 80px;
+    height: 80px;
+    padding: 10px;
+    transform: scale(1.2);
+  }
+}

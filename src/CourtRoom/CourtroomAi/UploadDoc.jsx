@@ -89,6 +89,21 @@ const UploadDoc = () => {
 
   return (
     <section className={Styles.topContainer} style={{ padding: "20px" }}>
+      <div className="sm:hidden top-48 absolute ">
+        <div
+          className="text-[40px] sm:text-8xl font-bold"
+          style={{
+            background: "linear-gradient(to bottom, #003131 0%, #00FFA3 100%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+          }}>
+          War Room
+        </div>
+        <h2 className="text-[15px] text-center sm:text-lg font-semibold">
+          By <span className="text-white  py-8">AI Courtroom</span>
+        </h2>
+      </div>
       {showLanguageModal && (
         <LanguageSelectionModal
           onClose={handleModalClose}
@@ -117,7 +132,9 @@ const UploadDoc = () => {
             error ? Styles.errorBoundary : ""
           }`}>
           <img src={uploadImage} alt="Upload Document" />
-          <h1 className="text-white text-lg">Upload Your Documents Here</h1>
+          <h1 className="text-white text-[12px] sm:text-lg">
+            Upload Your Documents Here
+          </h1>
         </div>
       )}
     </section>

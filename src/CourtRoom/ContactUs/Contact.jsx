@@ -78,20 +78,23 @@ const Contact = () => {
 
   return (
     <div
-      className="pt-14"
+      className="pt-14 "
       style={{
         background: `radial-gradient(circle at 50% 0%, #018585, transparent 50%),
     radial-gradient(circle at 100% 60%, #351f58d0, transparent 40%),
     radial-gradient(circle at 0% 100%, #018585, transparent 50%)`,
-      }}
-    >
+      }}>
       {/* <Header /> */}
       <div className="flex flex-col justify-center items-center text-center">
-        <h1 className="text-white text-6xl font-bold">Get In Touch</h1>
-        <p className="m-0  mt-5 text-white text-lg font-bold">
+        <h1 className="text-white text-xl sm:text-6xl font-bold">
+          Get In Touch
+        </h1>
+        <p className="m-0  mt-5 text-white text-[10px] sm:text-lg sm:font-bold">
           Want to get along with the 1st Generative AI in Indian Legal Niche?
         </p>
-        <p className="text-white text-lg">We are waiting to hear from you</p>
+        <p className="text-white text-[10px] sm:text-lg">
+          We are waiting to hear from you
+        </p>
       </div>
       <div className="md:grid md:grid-cols-[40%_60%] items-center text-black">
         <div className="">
@@ -111,12 +114,10 @@ const Contact = () => {
                     background: "linear-gradient(135deg,#0e5156,#018585 90%)",
                     border: "2px solid white",
                     borderRadius: "10px",
-                  }}
-                >
+                  }}>
                   <div
                     className="grid grid-cols-2 gap-3"
-                    style={{ margin: "20px 10px" }}
-                  >
+                    style={{ margin: "20px 10px" }}>
                     <input
                       className="p-2 border border-black rounded-md"
                       type="text"
@@ -157,9 +158,8 @@ const Contact = () => {
                   </div>
                   <div
                     className="flex justify-center items-center mb-3 gap-3"
-                    style={{ wordSpacing: "2px" }}
-                  >
-                    <h2 className="text-lg m-0 text-white leading-none">
+                    style={{ wordSpacing: "2px" }}>
+                    <h2 className="sm:text-lg text-[12px] m-0 text-white leading-none">
                       Preferred Contact Mode :{" "}
                     </h2>
                     <div className="flex gap-3">
@@ -171,7 +171,9 @@ const Contact = () => {
                           onChange={(e) => setContactMode(e.target.value)}
                           className=""
                         />
-                        <h1 className="m-0 text-lg text-white">via E-Mail</h1>
+                        <h1 className="m-0 text-[12px] sm:text-lg text-white">
+                          via E-Mail
+                        </h1>
                       </div>
                       <div className="flex gap-1">
                         <input
@@ -181,7 +183,9 @@ const Contact = () => {
                           onChange={(e) => setContactMode(e.target.value)}
                           className=""
                         />
-                        <h1 className="m-0 text-lg text-white">via Call</h1>
+                        <h1 className="m-0 text-[12px] sm:text-lg text-white">
+                          via Call
+                        </h1>
                       </div>
                     </div>
                   </div>
@@ -190,8 +194,7 @@ const Contact = () => {
                       whileTap={{ scale: "0.95" }}
                       type="submit"
                       style={{ border: "2px solid white" }}
-                      className="w-full px-24 py-2 rounded-md text-white text-xl font-bold flex justify-center hover:bg-white hover:bg-opacity-25"
-                    >
+                      className="w-full px-24 py-2 rounded-md text-white text-xl font-bold flex justify-center hover:bg-white hover:bg-opacity-25">
                       {loading ? <LoaderIcon /> : "Send"}
                     </motion.button>
                   </div>
@@ -203,8 +206,7 @@ const Contact = () => {
                     background: "linear-gradient(135deg,#0e5156,#018585 90%)",
                     border: "2px solid white",
                     borderRadius: "10px",
-                  }}
-                >
+                  }}>
                   <div className="flex flex-col items-center justify-center">
                     <img
                       alt="success"
@@ -220,8 +222,7 @@ const Contact = () => {
                     <div>
                       <button
                         onClick={() => navigate("/")}
-                        className="border-2 rounded-lg px-5 py-2 text-white hover:bg-white hover:bg-opacity-25"
-                      >
+                        className="border-2 rounded-lg px-5 py-2 text-white hover:bg-white hover:bg-opacity-25">
                         Go to Homepage
                       </button>
                     </div>

@@ -149,8 +149,8 @@ const Dialog = ({
   if (!open) return null;
 
   return (
-    <div className="h-screen fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative">
+    <div className="sm:h-screen   fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] sm:w-auto w-[95%] border border-white rounded-md p-4 relative">
         {/* Dialog Content */}
         <div className="w-full  flex flex-col">
           <div className="w-full flex justify-center items-center gap-10 px-2 relative">
@@ -161,21 +161,21 @@ const Dialog = ({
             />
           </div>
           {text && (
-            <div className=" flex justify-between items-center h-[80vh] w-full gap-5">
+            <div className=" sm:flex sm:justify-between items-center sm:h-[80vh] h-[65vh] w-full gap-5">
               <div className="flex flex-row justify-center w-full h-full items-center">
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}>
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full  overflow-y-auto`}>
                   <div className="w-full  px-2 my-2 items-center flex flex-row ">
-                    <p className="uppercase font-bold my-2 w-full ">
+                    <p className="uppercase sm:text-[20px] text-[12px] font-bold my-2 w-full ">
                       Document Preview
                     </p>
                     <div className="flex flex-row w-full items-center">
                       <div className="h-1 bg-neutral-900 w-2/3" />
                       <div className="bg-neutral-900 rounded-md">
                         <img
-                          className="w-[44px] h-[29px]"
+                          className="sm:w-[44px] sm:h-[29px] w-[44px] h-[30px] "
                           src={logo}
                           alt="logo"
                         />
@@ -183,39 +183,45 @@ const Dialog = ({
                     </div>
                   </div>
                   <textarea
-                    className="w-full h-full p-2.5 text-black resize-none border-none"
+                    className="sm:w-full w-[50%] h-full p-2.5 text-black resize-none border-none"
                     value={currentText}
                     onChange={handleTextChange}
                     readOnly={!isEditing}
                   />
                 </div>
               </div>
-              <div className="h-full w-1 bg-neutral-200/40" />
+              <div className="hidden md:block md:h-full md:w-1 bg-neutral-200/40" />
               <div className="flex flex-col w-full">
-                <div className="flex flex-row justify-center items-center">
+                <div className="sm:flex hidden flex-row justify-center items-center">
                   <img src={clawLogo} className="h-auto w-auto" alt="logo" />
                 </div>
-                <div className="flex flex-col w-full justify-center items-center gap-2">
-                  <div className="w-full flex flex-row justify-between gap-2">
+                <div className="flex mt-6 flex-col  sm:w-full justify-center items-center gap-2">
+                  <div className="w-full  flex flex-row justify-between gap-2">
                     <Button
-                      className="w-full hover:bg-teal-400  lowercase border-2 text-sm border-white text-white"
+                      className="w-full hover:bg-teal-400  bg-teal-800 lowercase border-2 text-sm border-white text-white"
                       variant="outlined"
                       onClick={onClose} // Modify if needed
                     >
-                      Upload a Document
+                      <p className="sm:text-[13px] text-[9px]">
+                        {" "}
+                        Upload a Document
+                      </p>
                     </Button>
                     <Button
                       className="text-white text-sm border-2 border-white w-full "
                       variant="outlined"
                       onClick={handleEditToggle}>
-                      {isEditing ? "Save Changes" : "Edit current document"}
+                      <p className="sm:text-[13px] text-[9px]">
+                        {" "}
+                        {isEditing ? "Save Changes" : "Edit current document"}
+                      </p>
                     </Button>
                   </div>
                   <Button
                     className="text-white text-sm w-full hover:bg-teal-400 border-2 border-white"
                     variant="outlined"
                     onClick={onButtonClick}>
-                    Save
+                    <p className="sm:text-[13px] text-[10px]"> Save</p>
                   </Button>
                 </div>
               </div>

@@ -85,7 +85,7 @@ const VoiceSearch = ({ setVoiceSearchInitiate, setAddArgumentInputText }) => {
       {/* Buttons */}
       <div className="flex justify-end gap-4">
         <button
-          className="text-teal-900 border-2 hover:bg-teal-700 hover:border-white hover:text-white cursor-pointer rounded-md px-3 border-teal-900 py-2 transition duration-300"
+          className="text-teal-900 border-2 sm:text-[20px] text-[13px] hover:bg-teal-700 hover:border-white hover:text-white cursor-pointer rounded-md px-3 border-teal-900 py-2 transition duration-300"
           onClick={resetTranscript}>
           Reset Voice Typing
         </button>
@@ -94,7 +94,7 @@ const VoiceSearch = ({ setVoiceSearchInitiate, setAddArgumentInputText }) => {
             setAddArgumentInputText(transcript);
             setVoiceSearchInitiate(false);
           }}
-          className="bg-teal-900 hover:bg-teal-700 text-white cursor-pointer rounded-md px-4 py-2 transition duration-300">
+          className="bg-teal-900 sm:text-[20px] text-[13px] hover:bg-teal-700 text-white cursor-pointer rounded-md px-4 py-2 transition duration-300">
           Add To Argument
         </button>
       </div>

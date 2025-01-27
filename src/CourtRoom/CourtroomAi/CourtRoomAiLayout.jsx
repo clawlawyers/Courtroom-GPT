@@ -71,7 +71,7 @@ const CourtRoomAiLayout = () => {
           </div>
         </div>
       )}
-      <div
+      {/* <div
         className="md:hidden absolute top-0 left-0 w-full h-screen flex justify-center items-center "
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -89,7 +89,7 @@ const CourtRoomAiLayout = () => {
             Home
           </button>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

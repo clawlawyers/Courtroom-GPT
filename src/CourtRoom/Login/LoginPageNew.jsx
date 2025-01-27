@@ -307,22 +307,21 @@ const LoginPageNew = () => {
       {/* Header Section */}
       <div className="text-center space-y-2 mb-8">
         <div
-          className="text-8xl font-bold mt-6"
+          className="text-[55px] sm:text-8xl font-bold mt-6"
           style={{
             background: "linear-gradient(to bottom, #003131 0%, #00FFA3 100%)",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
 
             color: "transparent",
-          }}
-        >
+          }}>
           War Room
         </div>
 
-        <h2 className="text-lg font-semibold">
+        <h2 className="text-[20px] sm:text-lg font-semibold">
           By <span className="text-white py-8">AI Courtroom</span>
         </h2>
-        <div className="border-t border-white w-full mx-auto my-3">
+        <div className=" border-t border-white w-full mx-auto my-3 hidden md:block ">
           <p className="text-white-400 mt-4">
             Experience fighting your case in front of a senior advocate of
             supreme court
@@ -331,7 +330,7 @@ const LoginPageNew = () => {
             Try to defeat the factually heaviest lawyer,{" "}
             <span className="font-semibold">the Claw AI,</span>
           </p>
-          <p className="relative top-[-1rem]">
+          <p className="relative mt-4 top-[-1rem]">
             if you ever want the chance to defeat an actual lawyer in that case
           </p>
         </div>
@@ -343,25 +342,24 @@ const LoginPageNew = () => {
         style={{
           background:
             "linear-gradient(to right,#018585 0%,#016666 37%,#004040 82%,#003737 93%,#003131 100%)",
-        }}
-      >
+        }}>
         {/* Left Image Section */}
-        <div className="hidden md:flex md:w-1/2 justify-center relative">
+        <div className=" md:flex md:w-1/2 justify-center relative">
           <img
             src={loginnewImage}
             alt="loginimage"
-            className="w-auto h-auto relative"
+            className="sm:w-auto sm:h-auto h-40 w-48 relative"
           />
         </div>
 
         <div className="w-full md:w-1/2 mt-4 md:mt-0">
           {!currentUser ? (
             <>
-              <h3 className="text-left mb-6 text-white">
-                <span className="block text-3xl font-bold">
+              <h3 className="sm:text-left text-center mb-6 text-white">
+                <span className="sm:block  text-[20px] sm:text-3xl font-bold">
                   {isOTPMode ? "Welcome" : "Enter"}
                 </span>
-                <span className="block text-4xl font-bold text-teal-300">
+                <span className="sm:block sm:text-4xl text-[20px] font-bold text-teal-300">
                   {isOTPMode ? userName || "Guest" : "Your Details"}
                 </span>
               </h3>
@@ -371,8 +369,7 @@ const LoginPageNew = () => {
                     <div>
                       <label
                         className="block text-gray-300 text-sm font-semibold mb-1"
-                        htmlFor="fullName"
-                      >
+                        htmlFor="fullName">
                         Full Name
                       </label>
                       <input
@@ -389,8 +386,7 @@ const LoginPageNew = () => {
                     <div className="pt-2">
                       <label
                         className="block text-gray-300 text-sm font-semibold mb-1"
-                        htmlFor="mobileNumber"
-                      >
+                        htmlFor="mobileNumber">
                         Mobile Number
                       </label>
                       <input
@@ -408,8 +404,7 @@ const LoginPageNew = () => {
                       <button
                         type="submit"
                         // onClick={handleVerifyNumber}
-                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
-                      >
+                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300">
                         {otpLoading ? (
                           <CircularProgress size={15} sx={{ color: "white" }} />
                         ) : (
@@ -423,8 +418,7 @@ const LoginPageNew = () => {
                   <form onSubmit={handleVerifyOtp}>
                     <label
                       className="block text-gray-300 text-sm font-semibold mb-1"
-                      htmlFor="otp"
-                    >
+                      htmlFor="otp">
                       Enter OTP
                     </label>
                     <input
@@ -440,8 +434,7 @@ const LoginPageNew = () => {
                       <button
                         type="submit"
                         // onClick={handleVerifyOtp}
-                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
-                      >
+                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300">
                         {isLoading ? (
                           <CircularProgress size={15} sx={{ color: "white" }} />
                         ) : (
@@ -474,21 +467,22 @@ const LoginPageNew = () => {
             </>
           ) : (
             <>
-              <h3 className="mb-6 text-white">
-                <span className="block text-3xl font-bold">Welcome</span>
-                <span className="block text-4xl font-bold text-teal-300">
+              <h3 className="mb-6 text-center text-white">
+                <span className="sm:block sm:text-3xl text-[20px] font-bold">
+                  Welcome
+                </span>
+                <span className="sm:block sm:text-4xl text-[20px] font-bold text-teal-300">
                   {userName || "Guest"}
                 </span>
               </h3>
-              <p className="text-white-400 mb-4">
+              <p className="text-white-400 text-[12px] sm:text-[20px] mb-4">
                 Mobile Number Registered Successfully
               </p>
               <div className="flex justify-end">
                 <button
                   onClick={() => navigate("/courtroom-ai")}
                   type="button"
-                  className="w-full sm:w-2/5 sm:h-12 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
-                >
+                  className="w-full text-[15px] sm:text-[18px] sm:w-2/5 sm:h-12 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300">
                   Enter War Room
                 </button>
               </div>

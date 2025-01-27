@@ -1,6 +1,7 @@
 import "./App.css";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
+import "regenerator-runtime/runtime";
 import store from "./store";
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Toaster } from "react-hot-toast";
@@ -56,7 +57,7 @@ function App() {
         `https://claw-app-dev.onrender.com/api/v1/cron/specificEengagement/time`,
         {
           platform: "warroom",
-          engagementData:engagementData,
+          engagementData: engagementData,
         }
       );
     } catch (error) {
@@ -64,31 +65,33 @@ function App() {
     }
   }, []);
 
-  const flushQueue = useCallback((currentUser) => {
-    const user = currentUserRef.current;
-    console.log(currentUser)
-    if (currentUser) {
-      updateEngagementTime([
-        {
-          phoneNumber: currentUser.phoneNumber,
-          engagementTime: 60,
-          timestamp: Date.now(),
-        },
-      ]);
-    }
-  }, [updateEngagementTime]);
+  const flushQueue = useCallback(
+    (currentUser) => {
+      const user = currentUserRef.current;
+      console.log(currentUser);
+      if (currentUser) {
+        updateEngagementTime([
+          {
+            phoneNumber: currentUser.phoneNumber,
+            engagementTime: 60,
+            timestamp: Date.now(),
+          },
+        ]);
+      }
+    },
+    [updateEngagementTime]
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
       flushQueue(currentUser);
-      console.log(currentUser)
+      console.log(currentUser);
     }, BATCH_INTERVAL);
-    
+
     return () => {
       clearInterval(interval);
       flushQueue();
     };
-    
   }, [flushQueue]);
 
   // this should be run only once per application lifetime

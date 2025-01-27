@@ -119,13 +119,18 @@ const Devices = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    // width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,
     height: "90%",
     width: "50%",
+
+    "@media (max-width: 768px)": {
+      height: "95%",
+      width: "90%",
+    },
   };
 
   const handleChange = (e) => {
@@ -716,7 +721,7 @@ const Devices = ({
         <section
           style={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: window.innerWidth <= 768 ? "column" : "row",
             width: "100%",
             height: "100%",
             justifyContent: "space-evenly",
@@ -725,9 +730,9 @@ const Devices = ({
           }}>
           <div
             id="uploaddrive"
-            className={`${styles.images} gap-10 `}
+            className={`${styles.images} sm:gap-10 gap-4 `}
             onClick={() => handleClick("drive")}>
-            <img className="p-5" src={Drive} alt="" />
+            <img className="sm:p-5  " src={Drive} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Upload from Drive
             </h4>
@@ -735,19 +740,20 @@ const Devices = ({
           <div className={styles.verticalLine}></div>
           <div
             id="uploadtext"
-            className={`${styles.images} gap-10 `}
+            className={`${styles.images} sm:gap-10 gap-4 mt-5 `}
             onClick={() => handleClick("dropbox")}>
-            <img className="p-5 h-1 w-1 text-white" src={Document} alt="" />
+            <img className="p-5  h-1 w-1 text-white" src={Document} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Write Your Own Text
             </h4>
           </div>
+
           <div className={styles.verticalLine}></div>
           <div
             id="uploadpc"
-            className={`${styles.images} gap-10 `}
+            className={`${styles.images} sm:gap-10 gap-4 mt-5 `}
             onClick={() => handleClick("local")}>
-            <img className="p-5" src={pc} alt="" />
+            <img className="sm:p-5" src={pc} alt="" />
             <h4 className="font-semibold text-neutral-500">
               Upload from your PC
             </h4>
@@ -780,7 +786,7 @@ const Devices = ({
         aria-describedby="modal-modal-description">
         <Box
           sx={style}
-          className="overflow-scroll  gap-6 flex flex-col rounded-lg">
+          className="overflow-scroll gap-6 flex flex-col rounded-lg">
           <textarea
             id="content"
             className="p-2 border-2 border-black rounded-lg"
@@ -795,7 +801,7 @@ const Devices = ({
 
           <button
             onClick={handleTextInputUpload}
-            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[30%]">
+            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[100%] sm:w-[30%]">
             Upload
           </button>
         </Box>
@@ -817,7 +823,7 @@ const Devices = ({
             overflow: "auto",
           }}>
           <div
-            className="w-2/4 h-2/3 rounded-lg border-2 border-white p-2 flex flex-col  "
+            className="sm:w-2/4 h-2/3 w-5/6 rounded-lg border-2 border-white sm:p-2 p-1 flex flex-col  "
             style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
             <h1 className="text-center text-lg">Uploaded Documents</h1>
             <div className=" p-2 w-full h-[82%] rounded-lg border bg-gray-50 bg-opacity-15  mb-2 overflow-auto flex flex-col gap-2">
@@ -863,14 +869,14 @@ const Devices = ({
                     setUploadedSuccessFully([]);
                   }}
                   className="bg-slate-500 hover:bg-slate-400 border-2 px-4 py-1 rounded-lg">
-                  Cancel
+                  <p className="text-[12px] sm:text-[18px]"> Cancel</p>
                 </button>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleUploadFromComputer}
                   className="hover:bg-teal-500 border-2 font-semibold text-[white] px-4 py-1 rounded-lg">
-                  Add Files
+                  <p className=" text-[10px] sm:text-[18px]">Add Files</p>
                 </button>
                 <button
                   disabled={
@@ -887,7 +893,7 @@ const Devices = ({
                   style={{
                     background: "linear-gradient(90deg,#018585,#003838)",
                   }}>
-                  Proceed
+                  <p className="text-[10px] sm:text-[18px]">Proceed</p>
                 </button>
               </div>
             </div>

@@ -5,7 +5,7 @@ import userIcon from "../../assets/images/userArgument.png";
 import Styles from "./CourtroomArgument.module.css";
 import markdownit from "markdown-it";
 import Select, { components } from "react-select";
-
+import Img from "../../assets/Vector.png";
 import { motion } from "framer-motion";
 import { Close, Co2Sharp, ResetTvSharp, Send } from "@mui/icons-material";
 import { Button, Menu, Modal, StyledEngineProvider } from "@mui/material";
@@ -185,7 +185,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
+                "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -880,7 +880,7 @@ const CourtroomArgument = () => {
           //   },
           // },
           {
-            element: "#aijudge",  
+            element: "#aijudge",
             popover: {
               title: "AI Judge",
               description:
@@ -984,7 +984,7 @@ const CourtroomArgument = () => {
             popover: {
               title: "Add Testimony",
               description:
-               "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
+                "Add details about the situation your testimony was in or how it is supposed to be related to your case and get relevant cross examination questions for your testimony.",
               side: "left",
               align: "start",
               onNextClick: () => {
@@ -1150,9 +1150,28 @@ const CourtroomArgument = () => {
   };
 
   return (
-    <div className="flex flex-col p-3 h-screen gap-2">
+    <div className="flex flex-col p-2  h-screen gap-2">
       {/* top container */}
-      <div className="grid grid-cols-2 h-[35vh] gap-2">
+      <div className="grid sm:grid-cols-2 grid-cols-1 h-[35vh] gap-2">
+        <div className="flex md:hidden items-center space-x-4">
+          <img
+            src={Img}
+            alt="Image"
+            className="cursor-pointer mr-20"
+            // onClick={toggleSidebar}
+          />
+          <div
+            className="text-[28px] text-center sm:text-8xl font-bold"
+            style={{
+              background:
+                "linear-gradient(to bottom, #003131 0%, #00FFA3 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+            }}>
+            War Room
+          </div>
+        </div>
         {/* top left Cont */}
         {aiJudgeLoading ? (
           <div
@@ -1169,7 +1188,7 @@ const CourtroomArgument = () => {
         ) : (
           <div
             id="aijudge"
-            className="flex flex-col bg-[#033E40] overflow-auto border border-black rounded-lg">
+            className="sm:flex block  sm:flex-col bg-[#033E40] overflow-auto border border-black rounded-lg">
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
@@ -1266,7 +1285,7 @@ const CourtroomArgument = () => {
         ) : (
           <div
             id="ailawyer"
-            className="flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-black">
+            className="sm:flex sm:flex-col block bg-[#033E40] rounded-lg overflow-auto border border-black">
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px]">
                 <img
@@ -1350,7 +1369,7 @@ const CourtroomArgument = () => {
       </div>
       {/* mid container */}
       <div
-        className="flex-1  overflow-auto border border-black relative"
+        className="flex-1 sm:overflow-auto border border-black relative h-16 p-3 md:h-64"
         style={{
           background: "#033E40",
           borderRadius: "10px",
@@ -1372,7 +1391,7 @@ const CourtroomArgument = () => {
                   width: "100%",
                   margin: "10px",
                   overflow: "hidden",
-                  overflow: "auto",
+                  // overflow: "auto",
                 }}>
                 {userArgument.map((x, index) => (
                   <div
@@ -1431,7 +1450,9 @@ const CourtroomArgument = () => {
                         <p
                           style={{
                             margin: "0",
-                            fontSize: "13px",
+                            // fontSize: "13px",
+                            fontSize:
+                              window.innerWidth <= 768 ? "13px" : "13px",
                             padding: "15px",
                             lineHeight: "20px",
                             width: "100%",
@@ -1541,7 +1562,7 @@ const CourtroomArgument = () => {
         </div>
       </div>
       {/* bottom container */}
-      <div className="w-full grid grid-cols-[65%_35%] items-center">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-[65%_35%] items-center">
         <div className="pr-2 relative" id="userinput">
           <input
             value={addArgumentInputText !== null ? addArgumentInputText : ""}
@@ -1575,8 +1596,8 @@ const CourtroomArgument = () => {
             disabled={
               addArgumentInputText === null || aiJudgeLoading || aiLawyerLoading
             }
-            className="flex-1 my-2 flex justify-center items-center gap-2 border-2 border-[#00ffa3] rounded-2xl px-4 py-2 text-white bg-[#008080] hover:bg-[#12bebe] transition duration-300">
-            <h2 className="text-sm m-0">Add Argument</h2>
+            className="flex-1 my-2 flex justify-center items-center gap-2 border-2 border-[#00ffa3] rounded-3xl px-4  py-2 text-white bg-[#008080] hover:bg-[#12bebe] transition duration-300">
+            <h2 className="text-sm  m-0">Add Argument</h2>
           </motion.button>
           <Tooltip title="Upgrade plan to use this feature">
             <motion.button
@@ -1728,7 +1749,7 @@ const CourtroomArgument = () => {
         //   zIndex: "20",
         // }}
       >
-        <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
+        <div className="sm:w-2/4 w-3/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
           <div className="flex justify-between">
             <div className="h-[5vh] p-[10px] flex gap-[10px]">
               <img
@@ -1826,7 +1847,7 @@ const CourtroomArgument = () => {
         //     zIndex: "20",
         // }}
       >
-        <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
+        <div className="sm:w-2/4 w-3/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
           <div className="flex justify-between">
             <div className="h-[5vh] p-[10px] flex gap-[10px]">
               <img

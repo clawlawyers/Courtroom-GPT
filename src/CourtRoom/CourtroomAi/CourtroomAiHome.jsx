@@ -42,16 +42,14 @@ const CourtroomAiHome = () => {
       <div className="flex md:flex-row flex-col px-2">
         <motion.div
           whileHover={{ scale: isUploaded ? "1.01" : "1" }}
-          className="m-2.5 bg-[#033E40] rounded-lg"
-        >
+          className="m-2.5 bg-[#033E40] rounded-lg">
           <p
             whileHover={{ scale: "1.01" }}
             className="text-sm p-4"
             style={{
               lineHeight: "22px",
               wordSpacing: "2px",
-            }}
-          >
+            }}>
             in publishing and graphic design, Lorem ipsum is a placeholder text
             commonly used to demonstrate the visual form of a document or a
             typeface without relying on meaningful content. Lorem ipsum may be
@@ -60,15 +58,13 @@ const CourtroomAiHome = () => {
         </motion.div>
         <motion.div
           whileHover={{ scale: isUploaded ? "0.98" : "1" }}
-          className="m-2.5 bg-[#033E40] rounded-lg"
-        >
+          className="m-2.5 bg-[#033E40] rounded-lg">
           <p
             className="text-sm m-0 p-4"
             style={{
               lineHeight: "22px",
               wordSpacing: "2px",
-            }}
-          >
+            }}>
             in publishing and graphic design, Lorem ipsum is a placeholder text
             commonly used to demonstrate the visual form of a document or a
             typeface without relying on meaningful content. Lorem ipsum may be
@@ -77,15 +73,13 @@ const CourtroomAiHome = () => {
         </motion.div>
         <motion.div
           whileHover={{ scale: isUploaded ? "1.01" : "1" }}
-          className="m-2.5 bg-[#033E40] rounded-lg"
-        >
+          className="m-2.5 bg-[#033E40] rounded-lg">
           <p
             className="text-sm p-4"
             style={{
               lineHeight: "22px",
               wordSpacing: "2px",
-            }}
-          >
+            }}>
             in publishing and graphic design, Lorem ipsum is a placeholder text
             commonly used to demonstrate the visual form of a document or a
             typeface without relying on meaningful content. Lorem ipsum may be
@@ -112,8 +106,7 @@ const CourtroomAiHome = () => {
         <div className="flex">
           <Link
             to={overviewText !== null ? "/courtroom-ai/arguments" : "#"}
-            className="flex-1 flex justify-center items-center gap-1 my-2 p-[10px]"
-          >
+            className="flex-1 flex justify-center items-center gap-1 my-2 p-[10px]">
             <motion.button
               whileTap={{ scale: "0.95" }}
               className="flex-1 my-2"
@@ -128,8 +121,7 @@ const CourtroomAiHome = () => {
                 padding: "10px",
                 cursor: overviewText !== null ? "pointer" : "not-allowed",
                 color: "white",
-              }}
-            >
+              }}>
               <img
                 style={{ width: "20px", height: "20px" }}
                 src={fight}
@@ -140,8 +132,7 @@ const CourtroomAiHome = () => {
                   fontSize: "15px",
                   margin: "0",
                   color: overviewText === null ? "gray" : "white",
-                }}
-              >
+                }}>
                 {overviewText === null ? "Fight Yourself" : "Add Argument"}
               </h2>
             </motion.button>
@@ -149,8 +140,7 @@ const CourtroomAiHome = () => {
           <Link
             className="flex-1 flex justify-center items-center gap-1 my-2 p-[10px]"
             // to={"/courtroom-ai/arguments"}
-            to={overviewText !== null ? "/courtroom-ai/arguments" : "#"}
-          >
+            to={overviewText !== null ? "/courtroom-ai/arguments" : "#"}>
             <motion.button
               whileTap={{ scale: "0.95" }}
               className="flex-1 my-2"
@@ -165,8 +155,7 @@ const CourtroomAiHome = () => {
                 padding: "10px",
                 cursor: overviewText !== null ? "pointer" : "not-allowed",
                 color: "white",
-              }}
-            >
+              }}>
               <img
                 style={{ width: "20px", height: "20px" }}
                 src={draft}
@@ -177,8 +166,7 @@ const CourtroomAiHome = () => {
                   fontSize: "15px",
                   margin: "0",
                   color: overviewText === null ? "gray" : "white",
-                }}
-              >
+                }}>
                 Get First Draft
               </h2>
             </motion.button>
