@@ -89,7 +89,7 @@ const UploadDoc = () => {
 
   return (
     <section className={Styles.topContainer} style={{ padding: "20px" }}>
-      <div className="sm:hidden top-48 absolute ">
+      <div className="sm:hidden top-20 absolute ">
         <div
           className="text-[40px] sm:text-8xl font-bold"
           style={{
