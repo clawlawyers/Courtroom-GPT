@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import clawImage from "../../../assets/images/gptclaw.PNG";
+import clawImage from "../../../assets/images/gptclaw.png";
 
 const styles = StyleSheet.create({
   page: {
