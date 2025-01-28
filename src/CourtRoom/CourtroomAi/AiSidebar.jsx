@@ -249,7 +249,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      {/* {countdownOver ? (
+      {countdownOver ? (
         <div
           className="z-50"
           style={{
@@ -264,7 +264,8 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}>
+          }}
+        >
           {!feedbackForm ? (
             <TimeUp setFeedbackForm={setFeedbackForm} />
           ) : (
@@ -274,14 +275,16 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
                 background: "linear-gradient(to right,#0e1118,#008080)",
                 border: "4px solid white",
                 borderRadius: "10px",
-              }}>
+              }}
+            >
               <div className="flex flex-col gap-5">
                 <h1 className="text-[20px] sm:text-3xl">
                   Provide your valuable feedback
                 </h1>
                 <form
                   onSubmit={handleFeedbackSubmit}
-                  className="flex flex-col gap-2">
+                  className="flex flex-col gap-2"
+                >
                   <div className="flex">
                     <p>Rate your Experience :</p>
                     <Rating
@@ -304,7 +307,8 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
                   <div className="flex justify-end gap-3">
                     <button
                       onClick={() => EndSessionToCourtroom()}
-                      className="border rounded px-4 py-2">
+                      className="border rounded px-4 py-2"
+                    >
                       Skip & Exit
                     </button>
                     <button type="submit" className="border rounded px-4 py-2">
@@ -322,7 +326,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
         </div>
       ) : (
         ""
-      )} */}
+      )}
     </>
   );
 });
@@ -921,7 +925,7 @@ const AiSidebar = () => {
   return (
     <>
       <>
-        <div className="absolute top-4 h-[5%] flex justify-end p-2">
+        <div className="absolute top-4 h-[5%] flex justify-end py-1 px-3">
           <MenuOutlinedIcon
             className="cursor-pointer"
             onClick={() => dispatch(setToggleMenu())}
