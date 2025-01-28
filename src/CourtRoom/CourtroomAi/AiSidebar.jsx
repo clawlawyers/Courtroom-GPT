@@ -249,7 +249,6 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      {/* {countdownOver ? ( */}
       <Modal open={countdownOver}>
         <div
           className="z-50"
@@ -326,9 +325,6 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           )}
         </div>
       </Modal>
-      {/* ) : (
-        ""
-      )} */}
     </>
   );
 });
