@@ -36,6 +36,7 @@ import { setinputCaseTutorial } from "../../features/sidebar/sidebarSlice";
 import { CircularProgress, Typography } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
 
 const Devices = ({
   uploadedFile,
@@ -695,11 +696,13 @@ const Devices = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-          }}>
+          }}
+        >
           <Typography
             variant="caption"
             component="div"
-            sx={{ color: "text.secondary", fontSize: 12 }}>
+            sx={{ color: "text.secondary", fontSize: 12 }}
+          >
             {`${Math.round(props.value)}%`}
           </Typography>
         </Box>
@@ -709,51 +712,63 @@ const Devices = ({
 
   return (
     <>
-      <motion.div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          margin: "10px",
-        }}>
-        <section
-          style={{
-            display: "flex",
-            flexDirection: window.innerWidth <= 768 ? "column" : "row",
-            width: "100%",
-            height: "100%",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            padding: "30px",
-          }}>
+      <div className="flex flex-col items-center justify-center w-full">
+        <section className="grid md:grid-cols-3 gap-5  w-full h-full justify-evenly items-center">
           <div
             id="uploaddrive"
-            className={`${styles.images} sm:gap-10 gap-4 `}
-            onClick={() => handleClick("drive")}>
-            <img className="sm:p-5  " src={Drive} alt="" />
+            className={`w-full flex flex-col gap-2 justify-center items-center md:border-r-2   cursor-pointer`}
+            onClick={() => handleClick("drive")}
+          >
+            {/* <img className="h-auto w-auto sm:p-5  " src={Drive} alt="" /> */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              className="h-28 md:h-40 w-28 md:w-40 hover:scale-90 transition-transform duration-300"
+              viewBox="0 0 50 50"
+              fill="white"
+            >
+              <path d="M45.58 31H32.61L19.73 6h10.754c.726 0 1.394.393 1.747 1.027L45.58 31zM23.37 17.43L9.94 43.2 3.482 33.04c-.395-.622-.417-1.411-.055-2.053L17.48 6 23.37 17.43zM45.54 33l-6.401 10.073C38.772 43.65 38.136 44 37.451 44H11.78l5.73-11H45.54z"></path>
+            </svg>
             <h4 className="font-semibold text-neutral-500">
               Upload from Drive
             </h4>
           </div>
-          <div className={styles.verticalLine}></div>
+          {/* <div className={styles.verticalLine}></div> */}
           <div
             id="uploadtext"
-            className={`${styles.images} sm:gap-10 gap-4 mt-5 `}
-            onClick={() => handleClick("dropbox")}>
-            <img className="p-5  h-1 w-1 text-white" src={Document} alt="" />
+            className={`w-full flex flex-col gap-2 justify-center items-center md:border-r-2   cursor-pointer`}
+            onClick={() => handleClick("dropbox")}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              className="h-28 md:h-40 w-28 md:w-40 hover:scale-90 transition-transform duration-300"
+              viewBox="0 0 50 50"
+              fill="white"
+            >
+              <path d="M 30.398438 2 L 7 2 L 7 48 L 43 48 L 43 14.601563 Z M 15 28 L 31 28 L 31 30 L 15 30 Z M 35 36 L 15 36 L 15 34 L 35 34 Z M 35 24 L 15 24 L 15 22 L 35 22 Z M 30 15 L 30 4.398438 L 40.601563 15 Z"></path>
+            </svg>
             <h4 className="font-semibold text-neutral-500">
               Write Your Own Text
             </h4>
           </div>
 
-          <div className={styles.verticalLine}></div>
+          {/* <div className={styles.verticalLine}></div> */}
           <div
             id="uploadpc"
-            className={`${styles.images} sm:gap-10 gap-4 mt-5 `}
-            onClick={() => handleClick("local")}>
-            <img className="sm:p-5" src={pc} alt="" />
+            className={`w-full flex flex-col gap-2 justify-center items-center  cursor-pointer`}
+            onClick={() => handleClick("local")}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="h-28 md:h-40 w-28 md:w-40 hover:scale-90 transition-transform duration-300"
+              fill="white"
+            >
+              <path d="M0 1v17h24v-17h-24zm22 15h-20v-13h20v13zm-6.599 4l2.599 3h-12l2.599-3h6.802z" />
+            </svg>
             <h4 className="font-semibold text-neutral-500">
               Upload from your PC
             </h4>
@@ -761,6 +776,8 @@ const Devices = ({
         </section>
         <Dialog
           setOnChange={handleChange}
+          // open={uploading || analyzing || uploadComplete}
+
           open={analyzing || uploadComplete}
           onClose={handleDialogClose}
           title={
@@ -775,18 +792,31 @@ const Devices = ({
           setInputText={setInputText}
           buttonText={`${uploadComplete ? "" : ""}`}
           onButtonClick={handleSave}
-          image={analyzing ? analyzingImage : ""}></Dialog>
-      </motion.div>
+          image={analyzing ? analyzingImage : ""}
+        >
+          {/* {uploading && <img src={uploadImage} alt="uploading" />}
+          {analyzing && <img src={analyzingImage} alt="uploading" />}
+          {uploadComplete && (
+            <textarea
+              className="w-full h-64  p-2.5 mb-4 text-black rounded-md "
+              value={caseOverview}
+              onChange={handleChange}
+            />
+          )} */}
+        </Dialog>
+      </div>
       <Modal
         open={open}
         onClose={() => {
           setOpen(false);
         }}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box
           sx={style}
-          className="overflow-scroll gap-6 flex flex-col rounded-lg">
+          className="overflow-scroll gap-6 flex flex-col rounded-lg"
+        >
           <textarea
             id="content"
             className="p-2 border-2 border-black rounded-lg"
@@ -797,11 +827,13 @@ const Devices = ({
             placeholder="Write your own Content..."
             onChange={(e) => {
               setconetnt(e.target.value);
-            }}></textarea>
+            }}
+          ></textarea>
 
           <button
             onClick={handleTextInputUpload}
-            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[100%] sm:w-[30%]">
+            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[100%] sm:w-[30%]"
+          >
             Upload
           </button>
         </Box>
@@ -821,10 +853,12 @@ const Devices = ({
             alignItems: "center",
             zIndex: "3",
             overflow: "auto",
-          }}>
+          }}
+        >
           <div
             className="sm:w-2/4 h-2/3 w-5/6 rounded-lg border-2 border-white sm:p-2 p-1 flex flex-col  "
-            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
+            style={{ background: "linear-gradient(90deg,#003838,#018585)" }}
+          >
             <h1 className="text-center text-lg">Uploaded Documents</h1>
             <div className=" p-2 w-full h-[82%] rounded-lg border bg-gray-50 bg-opacity-15  mb-2 overflow-auto flex flex-col gap-2">
               <>
@@ -832,7 +866,8 @@ const Devices = ({
                   ([fileId, progress], index) => (
                     <div
                       className="bg-white text-black rounded-lg p-2 flex justify-between items-center"
-                      key={fileId}>
+                      key={fileId}
+                    >
                       <div className="flex gap-1 items-center">
                         <DescriptionIcon sx={{ color: "#008080" }} />
                         <p className="m-0 text-sm text-[#008080]">{fileId}</p>
@@ -868,14 +903,16 @@ const Devices = ({
                     setUploadProgress({});
                     setUploadedSuccessFully([]);
                   }}
-                  className="bg-slate-500 hover:bg-slate-400 border-2 px-4 py-1 rounded-lg">
+                  className="bg-slate-500 hover:bg-slate-400 border-2 px-4 py-1 rounded-lg"
+                >
                   <p className="text-[12px] sm:text-[18px]"> Cancel</p>
                 </button>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleUploadFromComputer}
-                  className="hover:bg-teal-500 border-2 font-semibold text-[white] px-4 py-1 rounded-lg">
+                  className="hover:bg-teal-500 border-2 font-semibold text-[white] px-4 py-1 rounded-lg"
+                >
                   <p className=" text-[10px] sm:text-[18px]">Add Files</p>
                 </button>
                 <button
@@ -892,7 +929,8 @@ const Devices = ({
                   }`}
                   style={{
                     background: "linear-gradient(90deg,#018585,#003838)",
-                  }}>
+                  }}
+                >
                   <p className="text-[10px] sm:text-[18px]">Proceed</p>
                 </button>
               </div>

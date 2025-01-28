@@ -26,7 +26,7 @@ const Dialog = ({
   currentUser,
   NODE_API_ENDPOINT,
 }) => {
-  // console.log(image);
+  console.log(image);
   const [currentPage, setCurrentPage] = useState(0);
   const [pages, setPages] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -166,7 +166,8 @@ const Dialog = ({
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full  overflow-y-auto`}>
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full  overflow-y-auto`}
+                >
                   <div className="w-full  px-2 my-2 items-center flex flex-row ">
                     <p className="uppercase sm:text-[20px] text-[12px] font-bold my-2 w-full ">
                       Document Preview
@@ -183,7 +184,7 @@ const Dialog = ({
                     </div>
                   </div>
                   <textarea
-                    className="sm:w-full w-[50%] h-full p-2.5 text-black resize-none border-none"
+                    className="sm:w-full  h-full p-2.5 text-black resize-none border-none"
                     value={currentText}
                     onChange={handleTextChange}
                     readOnly={!isEditing}
@@ -197,45 +198,41 @@ const Dialog = ({
                 </div>
                 <div className="flex mt-6 flex-col  sm:w-full justify-center items-center gap-2">
                   <div className="w-full  flex flex-row justify-between gap-2">
-                    <Button
-                      className="w-full hover:bg-teal-400  bg-teal-800 lowercase border-2 text-sm border-white text-white"
-                      variant="outlined"
+                    <button
+                      className="w-full hover:bg-white hover:bg-opacity-25 lowercase border-2 text-sm border-white text-white py-1 rounded-lg"
                       onClick={onClose} // Modify if needed
                     >
-                      <p className="sm:text-[13px] text-[9px]">
-                        {" "}
-                        Upload a Document
-                      </p>
-                    </Button>
-                    <Button
-                      className="text-white text-sm border-2 border-white w-full "
-                      variant="outlined"
-                      onClick={handleEditToggle}>
-                      <p className="sm:text-[13px] text-[9px]">
+                      <p className="text-sm uppercase"> Upload a Document</p>
+                    </button>
+                    <button
+                      className="text-white text-sm border-2 border-white hover:bg-white hover:bg-opacity-25 w-full rounded-lg py-1"
+                      onClick={handleEditToggle}
+                    >
+                      <p className="text-sm uppercase">
                         {" "}
                         {isEditing ? "Save Changes" : "Edit current document"}
                       </p>
-                    </Button>
+                    </button>
                   </div>
-                  <Button
-                    className="text-white text-sm w-full hover:bg-teal-400 border-2 border-white"
-                    variant="outlined"
-                    onClick={onButtonClick}>
-                    <p className="sm:text-[13px] text-[10px]"> Save</p>
-                  </Button>
+                  <button
+                    className="text-white text-sm w-full hover:bg-white hover:bg-opacity-25 border-2 border-white py-1 rounded-lg"
+                    onClick={onButtonClick}
+                  >
+                    <p className="text-lg"> Save</p>
+                  </button>
                 </div>
               </div>
             </div>
           )}
           {image && (
             <>
-              {image === "/static/media/analyzing.e4732f49b92ee72868c4.gif" ? (
+              {image === "/src/assets/images/analyzing.gif" ? (
                 <div className="flex flex-col justify-center items-center align-middle">
                   {/* <img className="h-72 w-auto" src={image} alt="" /> */}
                   <div className="flex justify-center items-center h-72 w-auto">
                     <CircularProgress size={100} sx={{ color: "white" }} />
                   </div>
-                  <div className="w-[30rem] h-16 text-center">
+                  <div className="w-[20rem] md:w-[30rem] h-16 text-center">
                     <TipsComponent />
                   </div>
                 </div>
@@ -254,7 +251,8 @@ const Dialog = ({
             <motion.button
               whileTap={{ scale: "0.95" }}
               className="bg-white text-black rounded-md px-4 py-2 font-semibold"
-              onClick={onButtonClick}>
+              onClick={onButtonClick}
+            >
               {buttonText}
             </motion.button>
           </div>

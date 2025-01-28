@@ -314,7 +314,8 @@ const LoginPageNew = () => {
             backgroundClip: "text",
 
             color: "transparent",
-          }}>
+          }}
+        >
           War Room
         </div>
 
@@ -342,7 +343,8 @@ const LoginPageNew = () => {
         style={{
           background:
             "linear-gradient(to right,#018585 0%,#016666 37%,#004040 82%,#003737 93%,#003131 100%)",
-        }}>
+        }}
+      >
         {/* Left Image Section */}
         <div className=" md:flex md:w-1/2 justify-center relative">
           <img
@@ -355,7 +357,7 @@ const LoginPageNew = () => {
         <div className="w-full md:w-1/2 mt-4 md:mt-0">
           {!currentUser ? (
             <>
-              <h3 className="sm:text-left text-center mb-6 text-white">
+              <h3 className="sm:text-left text-center mb-6 text-white flex md:flex-col gap-1">
                 <span className="sm:block  text-[20px] sm:text-3xl font-bold">
                   {isOTPMode ? "Welcome" : "Enter"}
                 </span>
@@ -369,7 +371,8 @@ const LoginPageNew = () => {
                     <div>
                       <label
                         className="block text-gray-300 text-sm font-semibold mb-1"
-                        htmlFor="fullName">
+                        htmlFor="fullName"
+                      >
                         Full Name
                       </label>
                       <input
@@ -386,7 +389,8 @@ const LoginPageNew = () => {
                     <div className="pt-2">
                       <label
                         className="block text-gray-300 text-sm font-semibold mb-1"
-                        htmlFor="mobileNumber">
+                        htmlFor="mobileNumber"
+                      >
                         Mobile Number
                       </label>
                       <input
@@ -404,7 +408,8 @@ const LoginPageNew = () => {
                       <button
                         type="submit"
                         // onClick={handleVerifyNumber}
-                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300">
+                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
+                      >
                         {otpLoading ? (
                           <CircularProgress size={15} sx={{ color: "white" }} />
                         ) : (
@@ -418,7 +423,8 @@ const LoginPageNew = () => {
                   <form onSubmit={handleVerifyOtp}>
                     <label
                       className="block text-gray-300 text-sm font-semibold mb-1"
-                      htmlFor="otp">
+                      htmlFor="otp"
+                    >
                       Enter OTP
                     </label>
                     <input
@@ -434,7 +440,8 @@ const LoginPageNew = () => {
                       <button
                         type="submit"
                         // onClick={handleVerifyOtp}
-                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300">
+                        className="w-full sm:w-2/5 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
+                      >
                         {isLoading ? (
                           <CircularProgress size={15} sx={{ color: "white" }} />
                         ) : (
@@ -467,7 +474,7 @@ const LoginPageNew = () => {
             </>
           ) : (
             <>
-              <h3 className="mb-6 text-center text-white">
+              <h3 className="mb-6 text-center text-white flex md:flex-col gap-1">
                 <span className="sm:block sm:text-3xl text-[20px] font-bold">
                   Welcome
                 </span>
@@ -482,7 +489,8 @@ const LoginPageNew = () => {
                 <button
                   onClick={() => navigate("/courtroom-ai")}
                   type="button"
-                  className="w-full text-[15px] sm:text-[18px] sm:w-2/5 sm:h-12 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300">
+                  className="w-full text-[15px] sm:text-[18px] sm:w-2/5 sm:h-12 p-2 text-white font-semibold rounded-lg shadow-md border-2 hover:bg-teal-700 transition duration-300"
+                >
                   Enter War Room
                 </button>
               </div>

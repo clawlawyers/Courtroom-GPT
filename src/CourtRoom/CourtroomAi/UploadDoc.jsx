@@ -88,8 +88,8 @@ const UploadDoc = () => {
   };
 
   return (
-    <section className={Styles.topContainer} style={{ padding: "20px" }}>
-      <div className="sm:hidden top-20 absolute ">
+    <section className={`${Styles.topContainer} p-3`}>
+      <div className="w-full sm:hidden top-0 left-0 absolute flex flex-col justify-center items-center pt-5">
         <div
           className="text-[40px] sm:text-8xl font-bold"
           style={{
@@ -97,7 +97,8 @@ const UploadDoc = () => {
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",
-          }}>
+          }}
+        >
           War Room
         </div>
         <h2 className="text-[15px] text-center sm:text-lg font-semibold">
@@ -111,26 +112,28 @@ const UploadDoc = () => {
         />
       )}
       {chooseDevice ? (
-        <motion.div
-          className={Styles.device}
-          initial="closed"
-          animate="open"
-          exit="closed"
-          variants={variants}
-          transition={transition}>
+        <div
+          className="bg-[#0000008E] h-full w-full flex flex-col md:flex-row items-center justify-center rounded-lg"
+          // initial="closed"
+          // animate="open"
+          // exit="closed"
+          // variants={variants}
+          // transition={transition}
+        >
           <Devices
             uploadedFile={uploadedFile}
             setUploadedFile={setUploadedFile}
             languageArr={selectedLanguage}
           />
-        </motion.div>
+        </div>
       ) : (
         <div
           id="docupload"
           onClick={handleClick}
           className={`${Styles.uploadButton} ${
             error ? Styles.errorBoundary : ""
-          }`}>
+          }`}
+        >
           <img src={uploadImage} alt="Upload Document" />
           <h1 className="text-white text-[12px] sm:text-lg">
             Upload Your Documents Here

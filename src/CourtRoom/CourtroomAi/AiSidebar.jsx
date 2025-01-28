@@ -64,6 +64,8 @@ import {
   retrieveDrafterProQuestions,
 } from "../../features/laws/drafterProSlice";
 import TimeUp from "../../components/TimeUpComponent/TimeUp";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { setToggleMenu } from "../../features/toggle/toggleSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -234,18 +236,20 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     <>
       <div
         className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}>
+        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
+      >
         <h1 id="time-left" className="text-xs m-0 font-bold text-teal-800">
           Time Remaining:
         </h1>
         <h1
           className="text-xs m-0 font-semibold"
-          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}>
+          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
+        >
           {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      {countdownOver ? (
+      {/* {countdownOver ? (
         <div
           className="z-50"
           style={{
@@ -318,7 +322,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
     </>
   );
 });
@@ -362,6 +366,8 @@ const AiSidebar = () => {
   );
   const currentUser = useSelector((state) => state.user.user);
   const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
+  const toggleMenu = useSelector((state) => state.toggle.toggle);
+  console.log(toggleMenu);
 
   const [editDialog, setEditDialog] = useState(false);
   const [firstDraftDialog, setFirstDraftDialog] = useState(false);
@@ -914,477 +920,536 @@ const AiSidebar = () => {
 
   return (
     <>
-      <div className="hidden md:flex flex-col gap-3 h-screen py-3 pl-3">
-        {/* top container */}
-        <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
-          <motion.div
-            className="max-w-fit rounded-lg flex gap-1 items-center pt-2 cursor-pointer"
-            whileTap={{ scale: "0.95" }}
-            onClick={handleGoBack}>
-            <svg
-              className="h-5 w-5"
-              fill="#C5C5C5"
-              clip-rule="evenodd"
-              fill-rule="evenodd"
-              stroke-linejoin="round"
-              stroke-miterlimit="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="m10.978 14.999v3.251c0 .412-.335.75-.752.75-.188 0-.375-.071-.518-.206-1.775-1.685-4.945-4.692-6.396-6.069-.2-.189-.312-.452-.312-.725 0-.274.112-.536.312-.725 1.451-1.377 4.621-4.385 6.396-6.068.143-.136.33-.207.518-.207.417 0 .752.337.752.75v3.251h9.02c.531 0 1.002.47 1.002 1v3.998c0 .53-.471 1-1.002 1z"
-                fill-rule="nonzero"
-              />
-            </svg>
-            <p className="m-0 text-xs">Go Back</p>
-          </motion.div>
-          <div className="flex-1  overflow-auto">
-            <div className="flex flex-col">
-              <div className="flex flex-row justify-between items-center ">
-                <p className="text-[#00FFA3] text-sm m-0">Case Details : </p>
-
-                {/* <motion.button
-                  whileTap={{ scale: "0.95" }}
-                  onClick={() => setEditDialog(true)}
-                  className="border-2 border-[#00FFA3] rounded-lg p-1 px-2"
-                >
-                  Edit
-                </motion.button> */}
-                <Tooltip title="Upgrade plan to use this feature">
-                  <IconButton
-                    id="evidence-menu"
-                    sx={{ color: "white" }}
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    // onClick={handleMenuOpen}
-                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
-                  >
-                    <MoreVert />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  id="long-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}>
-                  <MenuItem
-                    id="edit_doc"
-                    disabled={
-                      overViewDetails === "NA" || overViewDetails === ""
-                    }
-                    onClick={() => {
-                      handleMenuClose();
-                      setEditDialog(true);
-                    }}>
-                    Edit
-                  </MenuItem>
-                  <MenuItem
-                    id="new-file"
-                    disabled={
-                      overViewDetails === "NA" || overViewDetails === ""
-                    }
-                    onClick={() => {
-                      handleMenuClose();
-                      navigate("/courtroom-ai/addFile");
-                    }}>
-                    Add New File
-                  </MenuItem>
-                  <MenuItem id="evidence-button" onClick={handleEvidenceClick}>
-                    Add Evidences
-                  </MenuItem>
-                  <MenuItem
-                    id="evidence-testimony"
-                    onClick={handleTestimonyClick}>
-                    Add Testimony
-                  </MenuItem>
-                </Menu>
-
-                <Popover
-                  open={Boolean(evidenceAnchorEl)}
-                  anchorEl={evidenceAnchorEl}
-                  onClose={handleEvidenceClose}
-                  anchorOrigin={{
-                    vertical: "center",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "center",
-                    horizontal: "left",
-                  }}
-                  sx={{
-                    "& .MuiPaper-root": {
-                      width: "600px", // Adjust the width as needed
-                      padding: "16px", // Adjust the padding as needed
-                    },
-                  }}>
-                  <EvidenceDialog handleEvidenceClose={handleEvidenceClose} />
-                </Popover>
-                <Popover
-                  open={Boolean(testimonyAnchorEl)}
-                  anchorEl={testimonyAnchorEl}
-                  onClose={handleTestimonyClose}
-                  anchorOrigin={{
-                    vertical: "center",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "center",
-                    horizontal: "left",
-                  }}
-                  sx={{
-                    "& .MuiPaper-root": {
-                      width: "600px", // Adjust the width as needed
-                      padding: "16px", // Adjust the padding as needed
-                    },
-                  }}>
-                  <TestimonyDialog
-                    handleTestimonyClose={handleTestimonyClose}
-                  />
-                </Popover>
-              </div>
-              <div className="h-[50px] overflow-auto">
-                <h1 className="text-xs m-0 py-2">
-                  <Markdown>{overViewDetails}</Markdown>
-                </h1>
-              </div>
-            </div>
-          </div>
-          <TimerComponent EndSessionToCourtroom={EndSessionToCourtroom} />
+      <>
+        <div className="absolute top-4 h-[5%] flex justify-end p-2">
+          <MenuOutlinedIcon
+            className="cursor-pointer"
+            onClick={() => dispatch(setToggleMenu())}
+          />
         </div>
-        {/* bottom container */}
-        <div
-          id="normal-div"
-          className="flex-1 overflow-auto border-2  border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between">
-          <div className="flex flex-col gap-1">
-            <Tooltip title="Upgrade plan to use this feature">
-              <motion.div
-                disabled={true}
-                // onClick={handleFirstDraft}
-                // onClick={() => toast.error("ONLY FOR PAID USERS")}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                className={`${
-                  overViewDetails === "NA" || overViewDetails === ""
-                    ? "opacity-75 pointer-events-none cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "0px 10px",
-                  background: "#C5C5C5",
-                  color: "#008080",
-                  border: "2px solid white",
-                  borderRadius: "5px",
-                }}>
-                <div id="first-draft">
-                  <p className="text-xs m-0 font-bold text-teal-800">
-                    View First Draft
-                  </p>
-                </div>
-                <div style={{ width: "15px", margin: "0" }}>
-                  <svg
-                    width="24"
-                    height="24"
-                    style={{ fill: "#008080", cursor: "pointer" }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd">
-                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                  </svg>
-                </div>
-              </motion.div>
-            </Tooltip>
-            <Tooltip
-              title="Upgrade plan to use this feature"
-              // disableHoverListener={Evidences}>
-              // <MenuItem
-              //   id="evidence-button"
-              //   onClick={Evidences ? handleEvidenceClick : null}>
-              //   Add Evidences
-              // </MenuItem
-            >
-              <motion.div
-                // onClick={() => setShowDrafterQuestions(true)}
-                disabled={true}
-                // onClick={() => toast.error("ONLY FOR PAID USERS")}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "0px 10px",
-                  background: "#C5C5C5",
-                  color: "#008080",
-                  border: "2px solid white",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}>
-                <div id="Ai-Drafter">
-                  <p className="text-xs m-0 font-bold text-teal-800">
-                    Ai Drafter
-                  </p>
-                </div>
-                <div style={{ width: "15px", margin: "0" }}>
-                  <svg
-                    width="24"
-                    height="24"
-                    style={{ fill: "#008080", cursor: "pointer" }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd">
-                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                  </svg>
-                </div>
-              </motion.div>
-            </Tooltip>
-            <Tooltip title="Upgrade plan to use this feature">
-              <motion.div
-                disabled={true}
-                // onClick={() => toast.error("ONLY FOR PAID USERS")}
-                // onClick={() => setShowAskLegalGPT(true)}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "0px 10px",
-                  background: "#C5C5C5",
-                  color: "#008080",
-                  border: "2px solid white",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}>
-                <div id="legalGpt">
-                  <p className="text-xs m-0 font-bold text-teal-800">
-                    Ask LegalGPT
-                  </p>
-                </div>
-                <div style={{ width: "15px", margin: "0" }}>
-                  <svg
-                    width="24"
-                    height="24"
-                    style={{ fill: "#008080", cursor: "pointer" }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd">
-                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                  </svg>
-                </div>
-              </motion.div>
-            </Tooltip>
-            <Tooltip title="Upgrade plan to use this feature">
-              <motion.div
-                // onClick={() => setCaseSearchDialog(true)}y
-                // onClick={() => toast.error("ONLY FOR PAID USERS")}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "0px 10px",
-                  background: "#C5C5C5",
-                  color: "#008080",
-                  border: "2px solid white",
-                  borderRadius: "5px",
-                  marginBottom: "5px",
-                  cursor: "pointer",
-                }}>
-                <div id="case-search">
-                  <p className="text-xs m-0 font-bold text-teal-800">
-                    Case Search
-                  </p>
-                </div>
-                <div style={{ width: "15px", margin: "0" }}>
-                  <svg
-                    width="24"
-                    height="24"
-                    style={{ fill: "#008080", cursor: "pointer" }}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd">
-                    <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
-                  </svg>
-                </div>
-              </motion.div>
-            </Tooltip>
-          </div>
-          <div
-            id="claw-ai-ass"
-            className="flex justify-end cursor-pointer relative">
-            <motion.img
-              className={`${
-                overViewDetails === "NA" || overViewDetails === ""
-                  ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
-                  : "h-9 w-9"
-              }`}
-              // className="h-9 w-9"
-              whileTap={{ scale: "0.95" }}
-              alt="assistant"
-              src={showAssistant ? assistantIcon2 : aiAssistant}
-              onHoverStart={() => setAiIconHover(true)}
-              onHoverEnd={() => setAiIconHover(false)}
-              // onClick={() => {
-              //   setShowAssistant(true);
-              //   getAiQuestions();
-              // }}
-              // onClick={() => toast.error("ONLY FOR PAID USERS")}
-            />
-
-            {aiIconHover ? (
-              <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
-                CLAW AI Assistant
-              </h1>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="flex flex-col w-full h-full justify-start items-center gap-2">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                // margin: "40px 0px",
-              }}>
-              <img className="w-24" src={logo} alt="logo" />
-            </div>
-            <div className="h-full flex flex-col justify-evenly">
-              <motion.div
-                id="download-session"
-                className={`${
-                  overViewDetails === "NA" || overViewDetails === ""
-                    ? "opacity-75 pointer-events-none cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-                onClick={() => downloadSessionCaseHistory()}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  position: "relative",
-                  cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
-                }}>
-                <img
-                  className="w-5 h-5"
-                  src={firstDraftLogo}
-                  alt="firstdraft"
-                />
-                <p className="m-0 text-xs text-white">
-                  Download Session History
-                </p>
-              </motion.div>
-              <motion.div
-                disabled={true}
-                id="download-case"
-                className={`${
-                  overViewDetails === "NA" || overViewDetails === ""
-                    ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
-                    : " flex items-center gap-[12px] cursor-pointer relative"
-                }`}
-                onClick={() => downloadCaseHistory()}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}>
-                <img className="w-4" src={aiDrafter} alt="aiDrafter" />
-                <p className="m-0 text-xs text-white">Download Case History</p>
-              </motion.div>
-              {/* <motion.div
-                className={`${
-                  overViewDetails === "NA" || overViewDetails === ""
-                    ? "opacity-75 pointer-events-none cursor-not-allowed"
-                    : ""
-                }`}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  cursor: "pointer",
-                }}
-              >
-                <img src={oldCaseLogo} />
-                <p className="m-0 text-xs text-white">Old Case Search</p>
-              </motion.div> */}
-              <Link to={"/courtroom-ai"} className="no-underline">
+      </>
+      <div
+        className={`z-50 absolute md:relative ${
+          toggleMenu ? "w-3/5 md:w-3/12" : "w-auto"
+        } transition-width duration-500 ease-in-out delay-500 bg-[#008080] md:bg-transparent h-screen flex flex-col`}
+      >
+        {toggleMenu ? (
+          <div className="flex flex-col gap-3 h-screen py-2 md:py-3 px-2 md:px-0 md:pl-3">
+            {/* top container */}
+            <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
+              <div className="w-full flex justify-between items-center">
                 <motion.div
+                  className="max-w-fit rounded-lg flex gap-1 items-center pt-2 cursor-pointer"
                   whileTap={{ scale: "0.95" }}
-                  whileHover={{ scale: "1.01" }}
+                  onClick={handleGoBack}
+                >
+                  <svg
+                    className="h-5 w-5"
+                    fill="#C5C5C5"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    stroke-linejoin="round"
+                    stroke-miterlimit="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m10.978 14.999v3.251c0 .412-.335.75-.752.75-.188 0-.375-.071-.518-.206-1.775-1.685-4.945-4.692-6.396-6.069-.2-.189-.312-.452-.312-.725 0-.274.112-.536.312-.725 1.451-1.377 4.621-4.385 6.396-6.068.143-.136.33-.207.518-.207.417 0 .752.337.752.75v3.251h9.02c.531 0 1.002.47 1.002 1v3.998c0 .53-.471 1-1.002 1z"
+                      fill-rule="nonzero"
+                    />
+                  </svg>
+                  <p className="m-0 text-xs">Go Back</p>
+                </motion.div>
+                <div className="">
+                  <MenuOutlinedIcon
+                    className="cursor-pointer"
+                    onClick={() => dispatch(setToggleMenu())}
+                  />
+                </div>
+              </div>
+              <div className="flex-1  overflow-auto">
+                <div className="flex flex-col">
+                  <div className="flex flex-row justify-between items-center ">
+                    <p className="text-[#00FFA3] text-sm m-0">
+                      Case Details :{" "}
+                    </p>
+
+                    {/* <motion.button
+                      whileTap={{ scale: "0.95" }}
+                      onClick={() => setEditDialog(true)}
+                      className="border-2 border-[#00FFA3] rounded-lg p-1 px-2"
+                    >
+                      Edit
+                    </motion.button> */}
+                    <Tooltip title="Upgrade plan to use this feature">
+                      <IconButton
+                        id="evidence-menu"
+                        sx={{ color: "white" }}
+                        aria-label="more"
+                        aria-controls="long-menu"
+                        aria-haspopup="true"
+                        // onClick={handleMenuOpen}
+                        // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                    </Tooltip>
+                    <Menu
+                      id="long-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleMenuClose}
+                    >
+                      <MenuItem
+                        id="edit_doc"
+                        disabled={
+                          overViewDetails === "NA" || overViewDetails === ""
+                        }
+                        onClick={() => {
+                          handleMenuClose();
+                          setEditDialog(true);
+                        }}
+                      >
+                        Edit
+                      </MenuItem>
+                      <MenuItem
+                        id="new-file"
+                        disabled={
+                          overViewDetails === "NA" || overViewDetails === ""
+                        }
+                        onClick={() => {
+                          handleMenuClose();
+                          navigate("/courtroom-ai/addFile");
+                        }}
+                      >
+                        Add New File
+                      </MenuItem>
+                      <MenuItem
+                        id="evidence-button"
+                        onClick={handleEvidenceClick}
+                      >
+                        Add Evidences
+                      </MenuItem>
+                      <MenuItem
+                        id="evidence-testimony"
+                        onClick={handleTestimonyClick}
+                      >
+                        Add Testimony
+                      </MenuItem>
+                    </Menu>
+
+                    <Popover
+                      open={Boolean(evidenceAnchorEl)}
+                      anchorEl={evidenceAnchorEl}
+                      onClose={handleEvidenceClose}
+                      anchorOrigin={{
+                        vertical: "center",
+                        horizontal: "right",
+                      }}
+                      transformOrigin={{
+                        vertical: "center",
+                        horizontal: "left",
+                      }}
+                      sx={{
+                        "& .MuiPaper-root": {
+                          width: "600px", // Adjust the width as needed
+                          padding: "16px", // Adjust the padding as needed
+                        },
+                      }}
+                    >
+                      <EvidenceDialog
+                        handleEvidenceClose={handleEvidenceClose}
+                      />
+                    </Popover>
+                    <Popover
+                      open={Boolean(testimonyAnchorEl)}
+                      anchorEl={testimonyAnchorEl}
+                      onClose={handleTestimonyClose}
+                      anchorOrigin={{
+                        vertical: "center",
+                        horizontal: "right",
+                      }}
+                      transformOrigin={{
+                        vertical: "center",
+                        horizontal: "left",
+                      }}
+                      sx={{
+                        "& .MuiPaper-root": {
+                          width: "600px", // Adjust the width as needed
+                          padding: "16px", // Adjust the padding as needed
+                        },
+                      }}
+                    >
+                      <TestimonyDialog
+                        handleTestimonyClose={handleTestimonyClose}
+                      />
+                    </Popover>
+                  </div>
+                  <div className="h-[50px] overflow-auto">
+                    <h1 className="text-xs m-0 py-2">
+                      <Markdown>{overViewDetails}</Markdown>
+                    </h1>
+                  </div>
+                </div>
+              </div>
+              <TimerComponent EndSessionToCourtroom={EndSessionToCourtroom} />
+            </div>
+            {/* bottom container */}
+            <div
+              id="normal-div"
+              className="flex-1 overflow-auto border-2  border-black rounded flex flex-col relative px-4 py-4 gap-2 justify-between"
+            >
+              <div className="flex flex-col gap-1">
+                <Tooltip title="Upgrade plan to use this feature">
+                  <motion.div
+                    disabled={true}
+                    // onClick={handleFirstDraft}
+                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    className={`${
+                      overViewDetails === "NA" || overViewDetails === ""
+                        ? "opacity-75 pointer-events-none cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "0px 10px",
+                      background: "#C5C5C5",
+                      color: "#008080",
+                      border: "2px solid white",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <div id="first-draft">
+                      <p className="text-xs m-0 font-bold text-teal-800">
+                        View First Draft
+                      </p>
+                    </div>
+                    <div style={{ width: "15px", margin: "0" }}>
+                      <svg
+                        width="24"
+                        height="24"
+                        style={{ fill: "#008080", cursor: "pointer" }}
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      >
+                        <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                      </svg>
+                    </div>
+                  </motion.div>
+                </Tooltip>
+                <Tooltip
+                  title="Upgrade plan to use this feature"
+                  // disableHoverListener={Evidences}>
+                  // <MenuItem
+                  //   id="evidence-button"
+                  //   onClick={Evidences ? handleEvidenceClick : null}>
+                  //   Add Evidences
+                  // </MenuItem
+                >
+                  <motion.div
+                    // onClick={() => setShowDrafterQuestions(true)}
+                    disabled={true}
+                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "0px 10px",
+                      background: "#C5C5C5",
+                      color: "#008080",
+                      border: "2px solid white",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div id="Ai-Drafter">
+                      <p className="text-xs m-0 font-bold text-teal-800">
+                        Ai Drafter
+                      </p>
+                    </div>
+                    <div style={{ width: "15px", margin: "0" }}>
+                      <svg
+                        width="24"
+                        height="24"
+                        style={{ fill: "#008080", cursor: "pointer" }}
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      >
+                        <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                      </svg>
+                    </div>
+                  </motion.div>
+                </Tooltip>
+                <Tooltip title="Upgrade plan to use this feature">
+                  <motion.div
+                    disabled={true}
+                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    // onClick={() => setShowAskLegalGPT(true)}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "0px 10px",
+                      background: "#C5C5C5",
+                      color: "#008080",
+                      border: "2px solid white",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div id="legalGpt">
+                      <p className="text-xs m-0 font-bold text-teal-800">
+                        Ask LegalGPT
+                      </p>
+                    </div>
+                    <div style={{ width: "15px", margin: "0" }}>
+                      <svg
+                        width="24"
+                        height="24"
+                        style={{ fill: "#008080", cursor: "pointer" }}
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      >
+                        <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                      </svg>
+                    </div>
+                  </motion.div>
+                </Tooltip>
+                <Tooltip title="Upgrade plan to use this feature">
+                  <motion.div
+                    // onClick={() => setCaseSearchDialog(true)}y
+                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "0px 10px",
+                      background: "#C5C5C5",
+                      color: "#008080",
+                      border: "2px solid white",
+                      borderRadius: "5px",
+                      marginBottom: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div id="case-search">
+                      <p className="text-xs m-0 font-bold text-teal-800">
+                        Case Search
+                      </p>
+                    </div>
+                    <div style={{ width: "15px", margin: "0" }}>
+                      <svg
+                        width="24"
+                        height="24"
+                        style={{ fill: "#008080", cursor: "pointer" }}
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      >
+                        <path d="M14 4h-13v18h20v-11h1v12h-22v-20h14v1zm10 5h-1v-6.293l-11.646 11.647-.708-.708 11.647-11.646h-6.293v-1h8v8z" />
+                      </svg>
+                    </div>
+                  </motion.div>
+                </Tooltip>
+              </div>
+              <div
+                id="claw-ai-ass"
+                className="flex justify-end cursor-pointer relative"
+              >
+                <motion.img
+                  className={`${
+                    overViewDetails === "NA" || overViewDetails === ""
+                      ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
+                      : "h-9 w-9"
+                  }`}
+                  // className="h-9 w-9"
+                  whileTap={{ scale: "0.95" }}
+                  alt="assistant"
+                  src={showAssistant ? assistantIcon2 : aiAssistant}
+                  onHoverStart={() => setAiIconHover(true)}
+                  onHoverEnd={() => setAiIconHover(false)}
+                  // onClick={() => {
+                  //   setShowAssistant(true);
+                  //   getAiQuestions();
+                  // }}
+                  // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                />
+
+                {aiIconHover ? (
+                  <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+                    CLAW AI Assistant
+                  </h1>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="flex flex-col w-full h-full justify-start items-center gap-2">
+                <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
                     alignItems: "center",
-                    gap: "14px",
-                    cursor: "pointer",
-                  }}>
-                  <img src={newCaseLogo} />
-                  <p
-                    id="NewCaseInput"
-                    className="m-0 text-xs text-white"
-                    onClick={() => {
-                      saveHistory();
+                    // margin: "40px 0px",
+                  }}
+                >
+                  <img className="w-24" src={logo} alt="logo" />
+                </div>
+                <div className="h-full flex flex-col justify-evenly">
+                  <motion.div
+                    id="download-session"
+                    className={`${
+                      overViewDetails === "NA" || overViewDetails === ""
+                        ? "opacity-75 pointer-events-none cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                    onClick={() => downloadSessionCaseHistory()}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      position: "relative",
+                      cursor: `${downloadSessionLoading ? "wait" : "pointer"}`,
+                    }}
+                  >
+                    <img
+                      className="w-5 h-5"
+                      src={firstDraftLogo}
+                      alt="firstdraft"
+                    />
+                    <p className="m-0 text-xs text-white">
+                      Download Session History
+                    </p>
+                  </motion.div>
+                  <motion.div
+                    disabled={true}
+                    id="download-case"
+                    className={`${
+                      overViewDetails === "NA" || overViewDetails === ""
+                        ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
+                        : " flex items-center gap-[12px] cursor-pointer relative"
+                    }`}
+                    onClick={() => downloadCaseHistory()}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                  >
+                    <img className="w-4" src={aiDrafter} alt="aiDrafter" />
+                    <p className="m-0 text-xs text-white">
+                      Download Case History
+                    </p>
+                  </motion.div>
+                  {/* <motion.div
+                    className={`${
+                      overViewDetails === "NA" || overViewDetails === ""
+                        ? "opacity-75 pointer-events-none cursor-not-allowed"
+                        : ""
+                    }`}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img src={oldCaseLogo} />
+                    <p className="m-0 text-xs text-white">Old Case Search</p>
+                  </motion.div> */}
+                  <Link to={"/courtroom-ai"} className="no-underline">
+                    <motion.div
+                      whileTap={{ scale: "0.95" }}
+                      whileHover={{ scale: "1.01" }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "14px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <img src={newCaseLogo} />
+                      <p
+                        id="NewCaseInput"
+                        className="m-0 text-xs text-white"
+                        onClick={() => {
+                          saveHistory();
 
-                      dispatch(setOverview(""));
-                      dispatch(setFirstDraftAction({ draft: "" }));
-                    }}>
-                    New Case Input
-                  </p>
-                </motion.div>
-              </Link>
-              <motion.div
-                onClick={() => navigate("/")}
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  cursor: "pointer",
-                }}>
-                <img className="h-4 w-4" src={homeLogo} alt="" />
-                <p className="m-0 text-xs">Exit Courtroom</p>
-              </motion.div>
-              {/* <motion.div
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  cursor: "pointer",
-                }}
-              >
-                <img className="h-4 w-4" src={exitLogo} />
+                          dispatch(setOverview(""));
+                          dispatch(setFirstDraftAction({ draft: "" }));
+                        }}
+                      >
+                        New Case Input
+                      </p>
+                    </motion.div>
+                  </Link>
+                  <motion.div
+                    onClick={() => navigate("/")}
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img className="h-4 w-4" src={homeLogo} alt="" />
+                    <p className="m-0 text-xs">Exit Courtroom</p>
+                  </motion.div>
+                  {/* <motion.div
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img className="h-4 w-4" src={exitLogo} />
 
-                <p className="m-0 text-xs" onClick={() => ExitToCourtroom()}>
-                  Exit Courtroom
-                </p>
-              </motion.div> */}
-              <motion.div
-                whileTap={{ scale: "0.95" }}
-                whileHover={{ scale: "1.01" }}
-                className={`${
-                  overViewDetails === "NA" || overViewDetails === ""
-                    ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
-                    : " flex items-center gap-[12px] cursor-pointer relative"
-                }`}>
-                {/* <img className="h-4 w-4" src={exitLogo} /> */}
-                <IoReload />
-                <p
-                  className="m-0 text-xs"
-                  onClick={() => dispatch(setTutorial())}>
-                  Restart Tutorial
-                </p>
-              </motion.div>
+                    <p className="m-0 text-xs" onClick={() => ExitToCourtroom()}>
+                      Exit Courtroom
+                    </p>
+                  </motion.div> */}
+                  <motion.div
+                    whileTap={{ scale: "0.95" }}
+                    whileHover={{ scale: "1.01" }}
+                    className={`${
+                      overViewDetails === "NA" || overViewDetails === ""
+                        ? "opacity-75 pointer-events-none cursor-not-allowed flex items-center gap-[12px] relative"
+                        : " flex items-center gap-[12px] cursor-pointer relative"
+                    }`}
+                  >
+                    {/* <img className="h-4 w-4" src={exitLogo} /> */}
+                    <IoReload />
+                    <p
+                      className="m-0 text-xs"
+                      onClick={() => dispatch(setTutorial())}
+                    >
+                      Restart Tutorial
+                    </p>
+                  </motion.div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
       </div>
 
       {firstDraftDialog ? (
@@ -1400,12 +1465,14 @@ const AiSidebar = () => {
             alignItems: "center",
             zIndex: "3",
             overflow: "auto",
-          }}>
+          }}
+        >
           <div
             className="h-[95%] w-2/3 flex flex-col rounded-md border-2 border-white"
             style={{
               background: "linear-gradient(to right,#0e1118,#008080)",
-            }}>
+            }}
+          >
             <div className="flex justify-end p-2">
               <Close
                 className="cursor-pointer"
@@ -1452,7 +1519,8 @@ const AiSidebar = () => {
                   <div className="w-full gap-2 text-sm flex justify-end">
                     <button
                       // onClick={handleResearchArguments}
-                      className="px-4 py-1 rounded border">
+                      className="px-4 py-1 rounded border"
+                    >
                       {reserachArgumentsLoading ? (
                         <CircularProgress size={15} color="inherit" />
                       ) : (
@@ -1461,7 +1529,8 @@ const AiSidebar = () => {
                     </button>
                     <button
                       onClick={handleNextAppeal}
-                      className="px-4 py-1 rounded border">
+                      className="px-4 py-1 rounded border"
+                    >
                       {nextAppealLoading ? (
                         <CircularProgress size={15} color="inherit" />
                       ) : (
@@ -1512,7 +1581,8 @@ const AiSidebar = () => {
                             // handleRelevantCaseLaws();
                             setFirstDraftDialog(false);
                           }}
-                          className="bg-[#003131] px-4 py-1 text-sm rounded text-white">
+                          className="bg-[#003131] px-4 py-1 text-sm rounded text-white"
+                        >
                           View Case Laws
                         </button>
                       </Link>
@@ -1523,7 +1593,8 @@ const AiSidebar = () => {
                       <motion.button
                         disabled={!relevantLawsArr}
                         className="border border-white rounded-md py-1"
-                        onClick={() => setShowRelevantLaws(false)}>
+                        onClick={() => setShowRelevantLaws(false)}
+                      >
                         Go Back
                       </motion.button>
                     ) : (
@@ -1532,13 +1603,15 @@ const AiSidebar = () => {
                           setShowRelevantLaws(true);
                           getReventCaseLaw();
                         }}
-                        className="border border-white rounded-md py-1">
+                        className="border border-white rounded-md py-1"
+                      >
                         Relevant Case Laws
                       </motion.button>
                     )}
                     <button
                       onClick={() => dowloadFirstDraft()}
-                      className="border border-white rounded-md py-1">
+                      className="border border-white rounded-md py-1"
+                    >
                       <Download /> Download
                     </button>
                   </div>
@@ -1562,12 +1635,14 @@ const AiSidebar = () => {
             alignItems: "center",
             zIndex: "3",
             overflow: "auto",
-          }}>
+          }}
+        >
           <div
             className="h-[90%] w-2/3 rounded-md border-2 border-white relative"
             style={{
               background: "linear-gradient(to right,#0e1118,#008080)",
-            }}>
+            }}
+          >
             <div className="flex justify-end absolute right-0">
               <svg
                 onClick={() => setEditDialog(false)}
@@ -1581,7 +1656,8 @@ const AiSidebar = () => {
                 stroke-linejoin="round"
                 stroke-miterlimit="2"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
                   fill-rule="nonzero"
@@ -1594,7 +1670,8 @@ const AiSidebar = () => {
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}>
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}
+                >
                   <div className="w-full px-2 h-fit my-2 items-center flex flex-row ">
                     <p className="uppercase font-bold my-2 w-full ">
                       Edit Your Document
@@ -1642,7 +1719,8 @@ const AiSidebar = () => {
                         <Button
                           className="text-white text-sm border-2 border-white"
                           variant="outlined"
-                          onClick={handleEditToggle}>
+                          onClick={handleEditToggle}
+                        >
                           Edit current document
                         </Button>
                       )}
@@ -1661,7 +1739,8 @@ const AiSidebar = () => {
           // bg-[#eeeeee]
 
           className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
-              ">
+              "
+        >
           <div className="bg-[#eeeeee] border-8 border-white rounded-xl shadow-inner">
             <div className="flex justify-between gap-14 items-center shadow-md">
               <div className="flex items-center">
@@ -1682,7 +1761,8 @@ const AiSidebar = () => {
                   stroke-linejoin="round"
                   stroke-miterlimit="2"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 8.933-2.721-2.722c-.146-.146-.339-.219-.531-.219-.404 0-.75.324-.75.749 0 .193.073.384.219.531l2.722 2.722-2.728 2.728c-.147.147-.22.34-.22.531 0 .427.35.75.751.75.192 0 .384-.073.53-.219l2.728-2.728 2.729 2.728c.146.146.338.219.53.219.401 0 .75-.323.75-.75 0-.191-.073-.384-.22-.531l-2.727-2.728 2.717-2.717c.146-.147.219-.338.219-.531 0-.425-.346-.75-.75-.75-.192 0-.385.073-.531.22z"
                     fill-rule="nonzero"
@@ -1725,7 +1805,8 @@ const AiSidebar = () => {
             alignItems: "center",
             zIndex: "3",
             overflow: "auto",
-          }}>
+          }}
+        >
           {promptArr.length === 0 ? (
             <div className="h-screen flex flex-col justify-between border-2 border-white rounded w-2/4 bg-[#222222]">
               <div
@@ -1733,7 +1814,8 @@ const AiSidebar = () => {
                 onClick={() => {
                   setShowAskLegalGPT(false);
                   setPromptArr([]);
-                }}>
+                }}
+              >
                 <svg
                   className="w-7 h-7"
                   fill="white"
@@ -1742,7 +1824,8 @@ const AiSidebar = () => {
                   stroke-linejoin="round"
                   stroke-miterlimit="2"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
                     fill-rule="nonzero"
@@ -1758,7 +1841,8 @@ const AiSidebar = () => {
                       padding: 3,
                       borderLeft: `4px solid #00FFA3`,
                       background: `linear-gradient(to right, rgba(0,128,128,0.75), rgba(0,128,128,0) 100%)`,
-                    }}>
+                    }}
+                  >
                     LegalGPT
                   </span>
                 </h1>
@@ -1781,7 +1865,8 @@ const AiSidebar = () => {
                   ]);
                   setAskLegalGptPrompt("");
                 }}
-                className="flex gap-2 p-3">
+                className="flex gap-2 p-3"
+              >
                 <input
                   className="flex-1 p-2 rounded text-black"
                   placeholder="Enter Your Query Here..."
@@ -1791,14 +1876,16 @@ const AiSidebar = () => {
                 <motion.button
                   type="submit"
                   disabled={askLegalGptPrompt === ""}
-                  whileTap={{ scale: "0.95" }}>
+                  whileTap={{ scale: "0.95" }}
+                >
                   {/* <img className="w-9 h-9" src={sendIcon} /> */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="40"
                     height="30"
                     viewBox="0 0 24 24"
-                    fill="white">
+                    fill="white"
+                  >
                     <path d="M22 12l-20 12 5-12-5-12z" />
                   </svg>
                 </motion.button>
@@ -1817,7 +1904,8 @@ const AiSidebar = () => {
                   onClick={() => {
                     setShowAskLegalGPT(false);
                     setPromptArr([]);
-                  }}>
+                  }}
+                >
                   <svg
                     className="w-7 h-7"
                     fill="white"
@@ -1826,7 +1914,8 @@ const AiSidebar = () => {
                     stroke-linejoin="round"
                     stroke-miterlimit="2"
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
                       fill-rule="nonzero"
@@ -1836,7 +1925,8 @@ const AiSidebar = () => {
               </div>
               <div
                 ref={scrollRef}
-                className="flex-1 px-4 h-full flex flex-col overflow-auto">
+                className="flex-1 px-4 h-full flex flex-col overflow-auto"
+              >
                 <div className="">
                   {promptArr.length > 0 &&
                     promptArr.map((x, index) => (
@@ -1845,7 +1935,8 @@ const AiSidebar = () => {
                         style={{
                           alignSelf: x.prompt ? "flex-start" : "flex-end",
                         }}
-                        key={index}>
+                        key={index}
+                      >
                         <div className="flex gap-3">
                           {/* <svg
                               fill="white"
@@ -1898,7 +1989,8 @@ const AiSidebar = () => {
                   ]);
                   setAskLegalGptPrompt("");
                 }}
-                className="px-4 flex gap-2 py-3 items-center">
+                className="px-4 flex gap-2 py-3 items-center"
+              >
                 <input
                   required
                   className="flex-1 p-2 rounded text-black"
@@ -1909,14 +2001,16 @@ const AiSidebar = () => {
                 <motion.button
                   type="submit"
                   disabled={askLegalGptPrompt === ""}
-                  whileTap={{ scale: "0.95" }}>
+                  whileTap={{ scale: "0.95" }}
+                >
                   {/* <img className="w-9 h-9" src={sendIcon} /> */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="35"
                     height="30"
                     viewBox="0 0 24 24"
-                    fill="white">
+                    fill="white"
+                  >
                     <path d="M22 12l-20 12 5-12-5-12z" />
                   </svg>
                 </motion.button>
@@ -1939,7 +2033,8 @@ const AiSidebar = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "20",
-          }}>
+          }}
+        >
           <div
             className="flex flex-col justify-center gap-20 p-5"
             style={{
@@ -1948,7 +2043,8 @@ const AiSidebar = () => {
               width: "900px",
               border: "2px solid white",
               borderRadius: "10px",
-            }}>
+            }}
+          >
             <div className="flex justify-end">
               <svg
                 onClick={() => setDownloadHistoryPrompt(false)}
@@ -1959,7 +2055,8 @@ const AiSidebar = () => {
                 stroke-linejoin="round"
                 stroke-miterlimit="2"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="m12.002 2.005c5.518 0 9.998 4.48 9.998 9.997 0 5.518-4.48 9.998-9.998 9.998-5.517 0-9.997-4.48-9.997-9.998 0-5.517 4.48-9.997 9.997-9.997zm0 1.5c-4.69 0-8.497 3.807-8.497 8.497s3.807 8.498 8.497 8.498 8.498-3.808 8.498-8.498-3.808-8.497-8.498-8.497zm0 7.425 2.717-2.718c.146-.146.339-.219.531-.219.404 0 .75.325.75.75 0 .193-.073.384-.219.531l-2.717 2.717 2.727 2.728c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.384-.073-.53-.219l-2.729-2.728-2.728 2.728c-.146.146-.338.219-.53.219-.401 0-.751-.323-.751-.75 0-.192.073-.384.22-.531l2.728-2.728-2.722-2.722c-.146-.147-.219-.338-.219-.531 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"
                   fill-rule="nonzero"
@@ -1972,7 +2069,8 @@ const AiSidebar = () => {
                 width="60"
                 height="60"
                 fill="white"
-                viewBox="0 0 24 24">
+                viewBox="0 0 24 24"
+              >
                 <path d="M14 10h5l-7 8-7-8h5v-10h4v10zm4.213-8.246l-1.213 1.599c2.984 1.732 5 4.955 5 8.647 0 5.514-4.486 10-10 10s-10-4.486-10-10c0-3.692 2.016-6.915 5-8.647l-1.213-1.599c-3.465 2.103-5.787 5.897-5.787 10.246 0 6.627 5.373 12 12 12s12-5.373 12-12c0-4.349-2.322-8.143-5.787-10.246z" />
               </svg>
               <h1 className="text-3xl">
@@ -2000,7 +2098,8 @@ const AiSidebar = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "50",
-          }}>
+          }}
+        >
           <div className="w-2/5 h-[90%] bg-[#D9D9D9] rounded p-3">
             <div className="flex  flex-row justify-between items-start w-full">
               <div className="flex  flex-col justify-center items-start">
@@ -2010,7 +2109,8 @@ const AiSidebar = () => {
               </div>
               <div
                 className="cursor-pointer text-black"
-                onClick={() => setShowDrafterQuestions(false)}>
+                onClick={() => setShowDrafterQuestions(false)}
+              >
                 <Close />
               </div>
             </div>
@@ -2019,21 +2119,24 @@ const AiSidebar = () => {
                 {drafterQuestions.map((x, index) => (
                   <div
                     key={index}
-                    className="flex justify-between gap-3 items-center m-1">
+                    className="flex justify-between gap-3 items-center m-1"
+                  >
                     <p className="flex-1 text-black text-sm m-0 bg-[#00808034] px-3 py-2 rounded-md">
                       {x.name}
                     </p>
                     <Link to={"/courtroom-ai/aiDraft"}>
                       <button
                         onClick={() => handleDrafterQuestions(x.value)}
-                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white">
+                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      >
                         Normal
                       </button>
                     </Link>
                     <Link to={"/courtroom-ai/aiDraftPro"}>
                       <button
                         onClick={() => handleDrafterProQuestions(x.value)}
-                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white">
+                        className="py-2 px-4 bg-[#008080] rounded-md text-sm text-white"
+                      >
                         Pro
                       </button>
                     </Link>
@@ -2059,7 +2162,8 @@ const AiSidebar = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "10",
-          }}>
+          }}
+        >
           <main className="w-2/4 p-3 flex flex-col justify-center items-center bg-white rounded">
             <>
               {/* //header */}
@@ -2098,7 +2202,8 @@ const AiSidebar = () => {
                   <section className="flex space-x-5 flex-row w-full items-center justify-end">
                     <button
                       onClick={() => handleCaseSearchPrompt()}
-                      className="bg-teal-800 cursor-pointer py-1 px-3 rounded">
+                      className="bg-teal-800 cursor-pointer py-1 px-3 rounded"
+                    >
                       Search
                     </button>
                   </section>
@@ -2127,7 +2232,8 @@ const AiSidebar = () => {
             justifyContent: "center",
             alignItems: "center",
             zIndex: "10",
-          }}>
+          }}
+        >
           <div className="w-1/2 h-[90%] overflow-auto bg-white text-black p-3 rounded">
             <div className="flex justify-between">
               <p className="text-xl font-semibold">

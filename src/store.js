@@ -13,6 +13,7 @@ import allowedBookingReducer from "./features/admin/allowedBookingSlice";
 import lawSlice from "./features/laws/lawSlice";
 import drafterSlice from "./features/laws/drafterSlice";
 import drafterProSlice from "./features/laws/drafterProSlice";
+import toggleSlice from "./features/toggle/toggleSlice";
 
 export default configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export default configureStore({
     laws: lawSlice,
     drafter: drafterSlice,
     drafterPro: drafterProSlice,
+    toggle: toggleSlice,
   },
 });
