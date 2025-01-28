@@ -1210,7 +1210,7 @@ const CourtroomArgument = () => {
                     aria-haspopup="true"
                     id="judge"
                     // onClick={handleMenuOpen}
-                    onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                     ref={myDivRef}
                   >
                     <MoreVert />
@@ -1312,7 +1312,7 @@ const CourtroomArgument = () => {
                     aria-haspopup="true"
                     id="lawyer"
                     // onClick={handleMenuOpen}
-                    onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                   >
                     <MoreVert />
                   </IconButton>
@@ -1596,10 +1596,11 @@ const CourtroomArgument = () => {
           />
           <motion.img
             whileTap={{ scale: "0.95" }}
-            onClick={() => {
-              setVoiceSearchInitiate(true);
-              setAddArgumentInputText(null);
-            }}
+            // onClick={() => {
+            //   setVoiceSearchInitiate(true);
+            //   setAddArgumentInputText(null);
+            // }}
+            onClick={() => toast.error("Only For Paid Users!")}
             className="absolute right-4 top-2 cursor-pointer"
             src={voiceIcon}
             alt="voice.png"
@@ -1789,7 +1790,7 @@ const CourtroomArgument = () => {
                 aria-haspopup="true"
                 id="judge"
                 // onClick={handleMenuOpen}
-                onClick={() => toast.error("ONLY FOR PAID USERS")}
+                onClick={() => toast.error("Only For Paid Users!")}
               >
                 <MoreVert />
               </IconButton>
@@ -1894,7 +1895,7 @@ const CourtroomArgument = () => {
                 aria-haspopup="true"
                 id="lawyer"
                 // onClick={handleMenuOpen}
-                onClick={() => toast.error("ONLY FOR PAID USERS")}
+                onClick={() => toast.error("Only For Paid Users!")}
               >
                 <MoreVert />
               </IconButton>
