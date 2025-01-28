@@ -929,7 +929,7 @@ const AiSidebar = () => {
         </div>
       </>
       <div
-        className={`z-50 absolute md:relative ${
+        className={`z-[100] absolute md:relative ${
           toggleMenu ? "w-3/5 md:w-3/12" : "w-auto"
         } transition-width duration-500 ease-in-out delay-500 bg-[#008080] md:bg-transparent h-screen flex flex-col`}
       >
