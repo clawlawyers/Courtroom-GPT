@@ -89,7 +89,7 @@ const UploadDoc = () => {
 
   return (
     <section className={`${Styles.topContainer} p-3`}>
-      <div className="w-full sm:hidden top-0 left-0 absolute flex flex-col justify-center items-center pt-5">
+      <div className="text-center w-fit sm:hidden top-0 left-0 flex flex-col justify-center items-center pb-3">
         <div
           className="text-[40px] sm:text-8xl font-bold"
           style={{

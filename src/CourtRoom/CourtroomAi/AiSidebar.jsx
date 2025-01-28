@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, CircularProgress, Menu, Tooltip } from "@mui/material";
+import { Button, CircularProgress, Menu, Modal, Tooltip } from "@mui/material";
 import {
   ArrowRight,
   Close,
@@ -249,7 +249,8 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
         </h1>
       </div>
-      {countdownOver ? (
+      {/* {countdownOver ? ( */}
+      <Modal open={countdownOver}>
         <div
           className="z-50"
           style={{
@@ -324,9 +325,10 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
             </div>
           )}
         </div>
-      ) : (
+      </Modal>
+      {/* ) : (
         ""
-      )}
+      )} */}
     </>
   );
 });
@@ -933,7 +935,7 @@ const AiSidebar = () => {
         </div>
       </>
       <div
-        className={`z-[100] absolute md:relative ${
+        className={`z-[1] absolute md:relative ${
           toggleMenu ? "w-3/5 md:w-3/12" : "w-auto"
         } transition-width duration-500 ease-in-out delay-500 bg-[#008080] md:bg-transparent h-screen flex flex-col`}
       >
