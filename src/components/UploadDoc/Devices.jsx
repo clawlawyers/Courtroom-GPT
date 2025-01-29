@@ -712,7 +712,7 @@ const Devices = ({
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full z-[2]">
+      <div className="flex flex-col items-center justify-center w-full">
         <section className="grid md:grid-cols-3 gap-5  w-full h-full justify-evenly items-center">
           <div
             id="uploaddrive"

@@ -79,6 +79,7 @@
     "react-stacked-center-carousel": "^1.0.14",
     "react-time-picker": "^7.0.0",
     "recharts": "^2.12.7",
+    "redux-persist": "^6.0.0",
     "regenerator-runtime": "^0.14.1",
     "sitemap": "^8.0.0",
     "slick-carousel": "^1.8.1",

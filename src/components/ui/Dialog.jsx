@@ -149,7 +149,7 @@ const Dialog = ({
   if (!open) return null;
 
   return (
-    <div className="sm:h-screen   fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="sm:h-screen   fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-[2]">
       <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] sm:w-auto w-[95%] border border-white rounded-md p-4 relative">
         {/* Dialog Content */}
         <div className="w-full  flex flex-col">
