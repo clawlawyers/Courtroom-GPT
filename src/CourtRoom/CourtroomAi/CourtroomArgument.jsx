@@ -42,6 +42,7 @@ import "driver.js/dist/driver.css";
 import { setTutorialFalse } from "../../features/popup/popupSlice";
 import { setmaintut, setTutorial } from "../../features/sidebar/sidebarSlice";
 import TipsComponent from "../../components/UploadDoc/TipsComponent";
+
 const CourtroomArgument = () => {
   //
   useEffect(() => {
@@ -403,13 +404,13 @@ const CourtroomArgument = () => {
     const inserUserArgument = await axios.post(
       `${NODE_API_ENDPOINT}/courtroomFree/user_arguemnt`,
       {
-        // user_id: currentUser.userId,
+        // user_id: currentUser?.userId,
         argument: editValue,
         argument_index: index,
       },
       {
         headers: {
-          Authorization: `Bearer ${currentUser.token}`,
+          Authorization: `Bearer ${currentUser?.token}`,
         },
       }
     );
@@ -424,11 +425,11 @@ const CourtroomArgument = () => {
       const swapedData = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/change_states`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -474,13 +475,13 @@ const CourtroomArgument = () => {
       const laywerArgument1 = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/lawyer`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           action: "Retrieve",
           argument_index: index,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -498,13 +499,13 @@ const CourtroomArgument = () => {
       let judgeArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/judge`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           action: "Retrieve",
           argument_index: index,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -547,13 +548,13 @@ const CourtroomArgument = () => {
       const laywerArgument1 = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/lawyer`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           action: "Generate",
           argument_index: index,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -571,13 +572,13 @@ const CourtroomArgument = () => {
       let judgeArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/judge`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           action: "Generate",
           argument_index: index,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -586,7 +587,7 @@ const CourtroomArgument = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -670,13 +671,13 @@ const CourtroomArgument = () => {
       const inserUserArgument = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/user_arguemnt`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           argument: addArgumentInputText,
           argument_index: "NA",
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -710,7 +711,7 @@ const CourtroomArgument = () => {
           `${NODE_API_ENDPOINT}/courtroomFree/getHistory`,
           {
             headers: {
-              Authorization: `Bearer ${currentUser.token}`,
+              Authorization: `Bearer ${currentUser?.token}`,
             },
           }
         );
@@ -766,14 +767,14 @@ const CourtroomArgument = () => {
       }
     };
 
-    if (currentUser.token) {
+    if (currentUser?.token) {
       if (!newCaseInput) {
         getHistory();
       }
       dispatch(setNewCaseInput(false));
     }
     console.log("asdhasjdkas");
-  }, [currentUser.token]);
+  }, [currentUser?.token]);
 
   useEffect(() => {
     if (lastItemRef.current) {
@@ -810,7 +811,7 @@ const CourtroomArgument = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -857,7 +858,7 @@ const CourtroomArgument = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           body: JSON.stringify({ favor: type }),
         }
@@ -1124,11 +1125,11 @@ const CourtroomArgument = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/draft`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -1730,7 +1731,7 @@ const CourtroomArgument = () => {
                     //   // dispatch(
                     //   //   retrieveCaseLaws({
                     //   //     query: relevantCasesData,
-                    //   //     token: currentUser.token,
+                    //   //     token: currentUser?.token,
                     //   //   })
                     //   // );
                     //   dispatch(

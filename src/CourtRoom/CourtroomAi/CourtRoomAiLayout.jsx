@@ -32,11 +32,6 @@ const CourtRoomAiLayout = () => {
       setLoading(false);
     }
 
-    // if (currentUser && !currentUser?.plan) {
-    //   toast.error("You don't have any active plans");
-    //   navigate("/pricing-plans");
-    // }
-
     return () => clearTimeout(timer);
   }, [currentUser, status]);
 
@@ -61,8 +56,8 @@ const CourtRoomAiLayout = () => {
         </div>
       ) : (
         <div className="flex h-screen bg-gradient-to-r from-[#008080] to-[#0e1118]">
-          <AiSidebar className="h-screen m-0 overflow-hidden" />
-          <div className="flex-1">
+          <AiSidebar className="min-h-screen m-0 overflow-hidden" />
+          <div className="flex-1 h-screen">
             <Outlet />
           </div>
         </div>

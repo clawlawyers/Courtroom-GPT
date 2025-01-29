@@ -76,7 +76,7 @@ const drafterQuestions = [
 ];
 
 const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
-  var slotTimeInterval = useSelector((state) => state.user.user.slot);
+  var slotTimeInterval = useSelector((state) => state?.user?.user?.slot);
 
   const currentUser = useSelector((state) => state.user.user);
 
@@ -211,12 +211,12 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           body: JSON.stringify({
             rating: rateValue.toString(),
             feedback: feedbackMessage,
-            userId: currentUser.userId,
+            userId: currentUser?.userId,
           }),
         }
       );
@@ -367,7 +367,7 @@ const AiSidebar = () => {
     (state) => state.user.firstDraftLoading
   );
   const currentUser = useSelector((state) => state.user.user);
-  const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
+  // const slotTimeInterval = useSelector((state) => state.user.user.slotTime);
   const toggleMenu = useSelector((state) => state.toggle.toggle);
   console.log(toggleMenu);
 
@@ -443,11 +443,11 @@ const AiSidebar = () => {
         await axios.post(
           `${NODE_API_ENDPOINT}/courtroomFree/api/history`,
           {
-            // user_id: currentUser.userId,
+            // user_id: currentUser?.userId,
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser.token}`,
+              Authorization: `Bearer ${currentUser?.token}`,
             },
           }
         );
@@ -463,12 +463,12 @@ const AiSidebar = () => {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/edit_case`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           case_overview: text,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -477,11 +477,11 @@ const AiSidebar = () => {
       await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/case_summary`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -525,11 +525,11 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtcourtroomFreeroom/api/draft`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -571,11 +571,11 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/hallucination_questions`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -616,7 +616,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -640,7 +640,7 @@ const AiSidebar = () => {
     }
   };
 
-  // console.log(currentUser);
+  // console.log(currentUser?);
 
   useEffect(() => {
     const getOverview = async () => {
@@ -648,11 +648,11 @@ const AiSidebar = () => {
         const overView = await axios.post(
           `${NODE_API_ENDPOINT}/courtroomFree/getCaseOverview`,
           {
-            // user_id: currentUser.userId,
+            // user_id: currentUser?.userId,
           },
           {
             headers: {
-              Authorization: `Bearer ${currentUser.token}`,
+              Authorization: `Bearer ${currentUser?.token}`,
             },
           }
         );
@@ -669,12 +669,12 @@ const AiSidebar = () => {
         console.error("Error fetching case overview", error);
       }
     };
-    if (currentUser.token) {
-      console.log(currentUser.token);
+    if (currentUser?.token) {
+      console.log(currentUser?.token);
       getOverview();
-      // console.log(currentUser.userId);
+      // console.log(currentUser?.userId);
     }
-  }, [currentUser.token, dispatch]);
+  }, [currentUser?.token, dispatch]);
 
   const downloadCaseHistory = async () => {
     setDownloadCaseLoading(true);
@@ -683,11 +683,11 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/downloadCaseHistory`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           responseType: "blob", // Important
         }
@@ -716,11 +716,11 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroomFree/api/downloadSessionCaseHistory`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           responseType: "blob", // Important
         }
@@ -757,13 +757,13 @@ const AiSidebar = () => {
       const response = await axios.post(
         `${NODE_API_ENDPOINT}/courtroom/api/downloadFirtDraft`,
         {
-          // user_id: currentUser.userId,
+          // user_id: currentUser?.userId,
           // data: firstDraft,
           // type: "First Draft",
         },
         {
           headers: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           responseType: "blob", // Important
         }
@@ -791,7 +791,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           body: JSON.stringify({
             // action: "Generate",
@@ -831,7 +831,7 @@ const AiSidebar = () => {
     dispatch(removeDrafter());
     setShowDrafterQuestions(false);
     dispatch(
-      retrieveDrafterQuestions({ query: action, token: currentUser.token })
+      retrieveDrafterQuestions({ query: action, token: currentUser?.token })
     );
   };
 
@@ -839,7 +839,7 @@ const AiSidebar = () => {
     dispatch(removeDrafterPro());
     setShowDrafterQuestions(false);
     dispatch(
-      retrieveDrafterProQuestions({ query: action, token: currentUser.token })
+      retrieveDrafterProQuestions({ query: action, token: currentUser?.token })
     );
   };
 
@@ -852,7 +852,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
           body: JSON.stringify({ context: caseSearchPrompt }),
         }
@@ -880,7 +880,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -904,7 +904,7 @@ const AiSidebar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${currentUser?.token}`,
           },
         }
       );
@@ -933,10 +933,10 @@ const AiSidebar = () => {
       <div
         className={`z-[1] absolute md:relative ${
           toggleMenu ? "w-3/5 md:w-3/12" : "w-auto"
-        } transition-width duration-500 ease-in-out delay-500 bg-[#008080] md:bg-transparent h-screen flex flex-col`}
+        } transition-width duration-500 ease-in-out delay-500 bg-[#008080] md:bg-transparent h-full md:h-screen flex flex-col`}
       >
         {toggleMenu ? (
-          <div className="flex flex-col gap-3 h-screen py-2 md:py-3 px-2 md:px-0 md:pl-3">
+          <div className="flex flex-col gap-3 h-full md:h-screen py-2 md:py-3 px-2 md:px-0 md:pl-3">
             {/* top container */}
             <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
               <div className="w-full flex justify-between items-center">

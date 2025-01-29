@@ -149,11 +149,15 @@ const Dialog = ({
   if (!open) return null;
 
   return (
-    <div className="sm:h-screen   fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-[2]">
-      <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] sm:w-auto w-[95%] border border-white rounded-md p-4 relative">
+    <div className="fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-[2]">
+      <div
+        className={`${
+          text ? "h-[95%]" : "h-auto"
+        } bg-gradient-to-r from-[#0e1118] to-[#008080] sm:w-auto w-[95%] border border-white rounded-md p-2 relative flex flex-col md:flex-row`}
+      >
         {/* Dialog Content */}
-        <div className="w-full  flex flex-col">
-          <div className="w-full flex justify-center items-center gap-10 px-2 relative">
+        <div className="w-full h-full  flex flex-col">
+          <div className="w-full flex justify-center items-center px-2 relative">
             <h1 className="text-2xl text-white font-bold">{title}</h1>
             <Close
               className="absolute right-0 cursor-pointer"
@@ -161,7 +165,7 @@ const Dialog = ({
             />
           </div>
           {text && (
-            <div className=" sm:flex sm:justify-between items-center sm:h-[80vh] h-[65vh] w-full gap-5">
+            <div className="py-2 flex-1 flex flex-col md:flex-row justify-between items-center w-full md:gap-2">
               <div className="flex flex-row justify-center w-full h-full items-center">
                 <div
                   className={`${
@@ -226,27 +230,20 @@ const Dialog = ({
           )}
           {image && (
             <>
-              {image === "/src/assets/images/analyzing.gif" ? (
-                <div className="flex flex-col justify-center items-center align-middle">
-                  {/* <img className="h-72 w-auto" src={image} alt="" /> */}
-                  <div className="flex justify-center items-center h-72 w-auto">
-                    <CircularProgress size={100} sx={{ color: "white" }} />
-                  </div>
-                  <div className="w-[20rem] md:w-[30rem] h-16 text-center">
-                    <TipsComponent />
-                  </div>
+              <div className="flex flex-col justify-center items-center align-middle">
+                <div className="flex justify-center items-center h-72 w-auto">
+                  <CircularProgress size={100} sx={{ color: "white" }} />
                 </div>
-              ) : (
-                <div className="flex flex-row w-full justify-center items-center align-middle">
-                  <img className="h-40" src={image} alt="" />
+                <div className="w-[20rem] md:w-[30rem] h-16 text-center">
+                  <TipsComponent />
                 </div>
-              )}
+              </div>
             </>
           )}
         </div>
 
         {/* Action Button */}
-        {buttonText && (
+        {/* {buttonText && (
           <div className="flex justify-center">
             <motion.button
               whileTap={{ scale: "0.95" }}
@@ -256,7 +253,7 @@ const Dialog = ({
               {buttonText}
             </motion.button>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
