@@ -61,17 +61,15 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
       <div style={{ backgroundColor: "#E0F7F7", padding: "10px" }}>
         <div
           className="w-[90%] m-auto"
-          style={{ display: "flex", alignItems: "center" }}
-        >
+          style={{ display: "flex", alignItems: "center" }}>
           <DialogTitle
             style={{
               flexGrow: 1,
               fontWeight: 600,
-              fontSize: "24px",
+              fontSize: window.innerWidth <= 768 ? "18px" : "24px",
               color: "#008080",
               padding: 0,
-            }}
-          >
+            }}>
             Select Document Language
           </DialogTitle>
           <IconButton onClick={onClose} style={{ color: "#008080" }}>
@@ -81,8 +79,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
         <DialogContent>
           <Typography
             variant="body2"
-            style={{ color: "#333333", marginBottom: "16px" }}
-          >
+            style={{ color: "#333333", marginBottom: "16px" }}>
             Select Language of the document that you wish to upload.
           </Typography>
           <FormControl fullWidth sx={{}}>
@@ -92,8 +89,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               value={languageName}
               onChange={handleChange}
               renderValue={(selected) => selected.join(", ")}
-              MenuProps={MenuProps}
-            >
+              MenuProps={MenuProps}>
               {languagesArr.sort().map((name) => (
                 <MenuItem key={name} value={name}>
                   <Checkbox checked={languageName.includes(name)} />
@@ -107,8 +103,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
               display: "flex",
               justifyContent: "flex-end",
               marginTop: "8px",
-            }}
-          >
+            }}>
             <Button
               onClick={handleConfirm}
               variant="contained"
@@ -118,8 +113,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
                 fontWeight: "bold",
                 width: "150px",
               }}
-              disabled={languageName.length === 0}
-            >
+              disabled={languageName.length === 0}>
               Confirm
             </Button>
           </div>
@@ -130,8 +124,7 @@ const LanguageSelectionModal = ({ onClose, onSelectLanguage }) => {
           backgroundColor: "#E0F7F7",
           paddingBottom: "8px",
           textAlign: "center",
-        }}
-      >
+        }}>
         <hr
           style={{
             border: "0.5px solid black",

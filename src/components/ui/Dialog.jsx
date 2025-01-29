@@ -150,26 +150,27 @@ const Dialog = ({
 
   return (
     <div className="h-screen fixed inset-0 w-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] w-auto border border-white rounded-md p-4 relative">
+      <div className="bg-gradient-to-r from-[#0e1118] to-[#008080] sm:w-auto w-[90vw] border border-white rounded-md p-4 relative">
         {/* Dialog Content */}
         <div className="w-full  flex flex-col">
           <div className="w-full flex justify-center items-center gap-10 px-2 relative">
-            <h1 className="text-2xl text-white font-bold">{title}</h1>
+            <h1 className="sm:text-2xl text-lg mb-1 text-white font-bold">
+              {title}
+            </h1>
             <Close
               className="absolute right-0 cursor-pointer"
               onClick={onClose}
             />
           </div>
           {text && (
-            <div className=" flex justify-between items-center h-[80vh] w-full gap-5">
+            <div className="flex flex-col sm:flex-row sm:justify-between items-center h-[80vh] w-full gap-5 px-4">
               <div className="flex flex-row justify-center w-full h-full items-center">
                 <div
                   className={`${
                     isEditing ? "border-4  border-teal-400" : "border-none"
-                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}
-                >
+                  } rounded-md delay-150 flex flex-col w-[30rem] bg-white text-black h-full overflow-y-auto`}>
                   <div className="w-full  px-2 my-2 items-center flex flex-row ">
-                    <p className="uppercase font-bold my-2 w-full ">
+                    <p className="uppercase sm:text-[15px] text-[11px] font-bold my-2 w-full ">
                       Document Preview
                     </p>
                     <div className="flex flex-row w-full items-center">
@@ -191,11 +192,13 @@ const Dialog = ({
                   />
                 </div>
               </div>
-              <div className="h-full w-1 bg-neutral-200/40" />
+              <div className="hidden sm:block h-full w-1 bg-neutral-200/40" />
+
               <div className="flex flex-col w-full">
-                <div className="flex flex-row justify-center items-center">
+                <div className="hidden sm:flex flex-row justify-center items-center">
                   <img src={clawLogo} className="h-auto w-auto" alt="logo" />
                 </div>
+
                 <div className="flex flex-col gap-2">
                   <div className="w-full flex flex-row my-2 justify-between gap-2">
                     <button
@@ -203,22 +206,26 @@ const Dialog = ({
                       variant="outlined"
                       onClick={onClose} // Modify if needed
                     >
-                      Upload a Document
+                      <p className="sm:text-[15px] text-[9px]">
+                        {" "}
+                        Upload a Document
+                      </p>
                     </button>
                     <button
                       className="text-white text-sm  border-2 border-white w-full uppercase rounded-lg hover:bg-white hover:bg-opacity-25 py-2"
                       variant="outlined"
-                      onClick={handleEditToggle}
-                    >
-                      {isEditing ? "Save Changes" : "Edit current document"}
+                      onClick={handleEditToggle}>
+                      <p className="sm:text-[15px]  text-[9px]">
+                        {" "}
+                        {isEditing ? "Save Changes" : "Edit current document"}
+                      </p>
                     </button>
                   </div>
                   <button
                     className="text-white text-sm w-full border-2   border-white uppercase rounded-lg hover:bg-white hover:bg-opacity-25 py-2"
                     variant="outlined"
-                    onClick={onButtonClick}
-                  >
-                    Save
+                    onClick={onButtonClick}>
+                    <p className="sm:text-[15px] text-[10px]"> Save</p>
                   </button>
                 </div>
               </div>
@@ -251,8 +258,7 @@ const Dialog = ({
             <motion.button
               whileTap={{ scale: "0.95" }}
               className="bg-white text-black rounded-md px-4 py-2 font-semibold"
-              onClick={onButtonClick}
-            >
+              onClick={onButtonClick}>
               {buttonText}
             </motion.button>
           </div>

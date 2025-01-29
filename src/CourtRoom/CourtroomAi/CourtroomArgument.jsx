@@ -1216,7 +1216,7 @@ const CourtroomArgument = () => {
   return (
     <div className="flex flex-col p-3 h-screen gap-2">
       {/* top container */}
-      <div className="grid grid-cols-2 h-[35vh] gap-2">
+      <div className="grid sm:grid-cols-2 grid-cols-1 h-[35vh] gap-2">
         {/* top left Cont */}
         {aiJudgeLoading ? (
           <div
@@ -1598,7 +1598,7 @@ const CourtroomArgument = () => {
         </div>
       </div>
       {/* bottom container */}
-      <div className="w-full grid grid-cols-[65%_35%] items-center">
+      <div className="w-full grid sm:grid-cols-[65%_35%] grid-cols-1 items-center">
         <div className="pr-2 relative" id="userinput">
           <input
             value={addArgumentInputText !== null ? addArgumentInputText : ""}
@@ -1647,7 +1647,13 @@ const CourtroomArgument = () => {
             onMouseEnter={(e) => (e.currentTarget.style.background = "#12bebe")} // Hover color
             onMouseLeave={(e) => (e.currentTarget.style.background = "#008080")} // Default color on leave
           >
-            <h2 style={{ fontSize: "15px", margin: "0" }}>Add Argument</h2>
+            <h2
+              style={{
+                fontSize: window.innerWidth <= 768 ? "12px" : "15px", // Smaller font size for mobile
+                margin: "0",
+              }}>
+              Add Argument
+            </h2>
           </motion.button>
 
           <Tooltip
@@ -1677,7 +1683,13 @@ const CourtroomArgument = () => {
                 (e.currentTarget.style.background = "#008080")
               } // Default color on leave
             >
-              <h2 style={{ fontSize: "15px", margin: "0" }}>Rest Your Case</h2>
+              <h2
+                style={{
+                  fontSize: window.innerWidth <= 768 ? "12px" : "15px", // Smaller font size on mobile
+                  margin: "0",
+                }}>
+                Rest Your Case
+              </h2>
             </motion.button>
           </Tooltip>
         </div>
@@ -1781,7 +1793,7 @@ const CourtroomArgument = () => {
         className="text-white flex justify-center items-center"
         open={judgeViewExpand}
         onClose={() => setJudgeViewExpand(false)}>
-        <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
+        <div className="sm:w-2/4 w-3/4 h-[75%] flex flex-col bg-[#033E40] overflow-auto border border-white rounded-lg">
           <div className="flex justify-between">
             <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
               <img
@@ -1866,7 +1878,7 @@ const CourtroomArgument = () => {
         className="text-white flex justify-center items-center"
         open={lawyerViewExpand}
         onClose={() => setLawyerViewExpand(false)}>
-        <div className="w-2/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
+        <div className="sm:w-2/4 w-3/4 h-[75%] flex flex-col bg-[#033E40] rounded-lg overflow-auto border border-white">
           <div className="flex justify-between">
             <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
               <img
@@ -1977,10 +1989,10 @@ const CourtroomArgument = () => {
       {fightingModal && (
         <div
           style={{
-            width: "100%",
+            width: window.innerWidth <= 768 ? "100%" : "100%",
             height: "100%",
             position: "absolute",
-            left: "0",
+            left: window.innerWidth <= 768 ? "0" : "0",
             right: "0",
             top: "0",
             backgroundColor: "rgba(0, 0, 0, 0.1)",
@@ -1991,7 +2003,7 @@ const CourtroomArgument = () => {
             zIndex: "20",
           }}>
           <div
-            className=" border-2 border-white rounded p-4 relative"
+            className="border-2 border-white rounded p-4 relative sm:m-0 m-[10px]"
             style={{ background: "linear-gradient(90deg,#003838,#018585)" }}>
             {/* <div className="absolute w-full flex justify-end"> */}
             <Close
@@ -2002,11 +2014,11 @@ const CourtroomArgument = () => {
             />
             {/* </div> */}
             <div id="side-selection" className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <p className="m-0 flex justify-center text-3xl font-bold text-[#00FFD1]">
+              <div className="flex  flex-col gap-2">
+                <p className="m-0 flex justify-center sm:text-3xl text-[15px] font-bold text-[#00FFD1]">
                   Select Fighting Side
                 </p>
-                <p className="m-0 flex justify-center">
+                <p className="m-0 sm:text-[18px] text-[10px] flex justify-center">
                   Please Specify from which side you're placing arguments
                 </p>
               </div>
@@ -2019,7 +2031,7 @@ const CourtroomArgument = () => {
                     onChange={(e) => setFightType(e.target.value)}
                     className="cursor-pointer"
                   />
-                  <p className="m-0 text-white font-semibold text-xl">
+                  <p className="m-0 text-white font-semibold sm:text-xl text-[12px]">
                     Respondent
                   </p>
                 </div>
@@ -2031,7 +2043,7 @@ const CourtroomArgument = () => {
                     onChange={(e) => setFightType(e.target.value)}
                     className="cursor-pointer"
                   />
-                  <p className="m-0 text-white font-semibold text-xl">
+                  <p className="m-0 text-white font-semibold sm:text-xl text-[12px]">
                     Petitioner
                   </p>
                 </div>
@@ -2043,7 +2055,9 @@ const CourtroomArgument = () => {
                     onChange={(e) => setFightType(e.target.value)}
                     className="cursor-pointer"
                   />
-                  <p className="m-0 text-white font-semibold text-xl">Others</p>
+                  <p className="m-0 text-white font-semibold sm:text-xl text-[12px]">
+                    Others
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col gap-2 m-auto">
@@ -2065,7 +2079,7 @@ const CourtroomArgument = () => {
                 </button>
                 <div>
                   <hr />
-                  <p className="m-0 text-xs flex justify-center">
+                  <p className="m-0 sm:text-xs text-[10px] flex justify-center">
                     You Can Swap Side While Using Courtroom Using The SWAP WITH
                     AI LAWYER Feature{" "}
                   </p>

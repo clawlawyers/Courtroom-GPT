@@ -17,7 +17,7 @@ export const Slide = React.memo(function (props) {
         />
       </div>
       <div
-        className="p-2 h-72 w-full flex flex-col rounded border-2 border-white"
+        className="p-5 h-72 w-full   flex flex-col rounded border-2 border-white"
         style={{
           background: "linear-gradient(90deg, #018585, #0e5156 40%)",
         }}>

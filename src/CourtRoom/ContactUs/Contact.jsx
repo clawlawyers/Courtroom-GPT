@@ -83,11 +83,15 @@ const Contact = () => {
       }}>
       <Header /> {/* header component*/}
       <div className="flex flex-col justify-center mt-10 items-center text-center">
-        <h1 className="text-white text-6xl font-bold">Get In Touch</h1>
-        <p className="m-0  mt-5 text-white text-lg font-bold">
+        <h1 className="text-white sm:text-6xl text-xl font-bold">
+          Get In Touch
+        </h1>
+        <p className="sm:m-0 mx-3  mt-5 text-white sm:text-lg text-[15px] sm:font-bold">
           Want to get along with the 1st Generative AI in Indian Legal Niche?
         </p>
-        <p className="text-white text-lg">We are waiting to hear from you</p>
+        <p className="text-white sm:text-lg text-[12px">
+          We are waiting to hear from you
+        </p>
       </div>
       <div className="md:grid md:grid-cols-[40%_60%] items-center text-black">
         <div className="">
@@ -102,7 +106,7 @@ const Contact = () => {
             <div style={{ position: "relative" }} className="mx-5">
               {!success ? (
                 <div
-                  className="p-3"
+                  className="p-3 "
                   style={{
                     background: "linear-gradient(135deg,#0e5156,#018585 90%)",
                     border: "2px solid white",
@@ -152,7 +156,7 @@ const Contact = () => {
                   <div
                     className="flex justify-center items-center mb-3 gap-3"
                     style={{ wordSpacing: "2px" }}>
-                    <h2 className="text-lg m-0 text-white leading-none">
+                    <h2 className="sm:text-lg text-[12px] m-0 text-white leading-none">
                       Preferred Contact Mode :{" "}
                     </h2>
                     <div className="flex gap-3">
@@ -164,7 +168,9 @@ const Contact = () => {
                           onChange={(e) => setContactMode(e.target.value)}
                           className=""
                         />
-                        <h1 className="m-0 text-lg text-white">via E-Mail</h1>
+                        <h1 className="m-0 sm:text-lg text-[12px] text-white">
+                          via E-Mail
+                        </h1>
                       </div>
                       <div className="flex gap-1">
                         <input
@@ -174,7 +180,9 @@ const Contact = () => {
                           onChange={(e) => setContactMode(e.target.value)}
                           className=""
                         />
-                        <h1 className="m-0 text-lg text-white">via Call</h1>
+                        <h1 className="m-0 sm:text-lg text-[12px] text-white">
+                          via Call
+                        </h1>
                       </div>
                     </div>
                   </div>
@@ -183,7 +191,7 @@ const Contact = () => {
                       whileTap={{ scale: "0.95" }}
                       type="submit"
                       style={{ border: "2px solid white" }}
-                      className="w-full px-24 py-2 rounded-md bg-transparent text-white text-xl font-bold flex justify-center">
+                      className="w-full px-24 py-2 rounded-md bg-transparent text-white sm:text-xl text-[12px] font-bold flex justify-center">
                       {loading ? <LoaderIcon /> : "Send"}
                     </motion.button>
                   </div>

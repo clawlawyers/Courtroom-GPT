@@ -119,13 +119,12 @@ const Devices = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    // width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
-    p: 4,
+    p: window.innerWidth <= 768 ? 2 : 4, // Smaller padding on mobile
     height: "90%",
-    width: "50%",
+    width: window.innerWidth <= 768 ? "80%" : "50%", // Larger width on mobile
   };
 
   const handleChange = (e) => {
@@ -726,7 +725,7 @@ const Devices = ({
         <section
           style={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: window.innerWidth <= 768 ? "column" : "row",
             width: "100%",
             height: "100%",
             justifyContent: "space-evenly",
@@ -735,7 +734,7 @@ const Devices = ({
           }}>
           <div
             id="uploaddrive"
-            className={`${styles.images} gap-10 `}
+            className={`${styles.images} sm:gap-10  `}
             onClick={() => handleClick("drive")}>
             <img className="p-5" src={Drive} alt="" />
             <h4 className="font-semibold text-neutral-500">
@@ -745,9 +744,13 @@ const Devices = ({
           <div className={styles.verticalLine}></div>
           <div
             id="uploadtext"
-            className={`${styles.images} gap-10 `}
+            className={`${styles.images} sm:gap-10 `}
             onClick={() => handleClick("dropbox")}>
-            <img className="p-5 h-1 w-1 text-white" src={Document} alt="" />
+            <img
+              className="p-5 sm:h-1 sm:w-1  text-white"
+              src={Document}
+              alt=""
+            />
             <h4 className="font-semibold text-neutral-500">
               Write Your Own Text
             </h4>
@@ -755,7 +758,7 @@ const Devices = ({
           <div className={styles.verticalLine}></div>
           <div
             id="uploadpc"
-            className={`${styles.images} gap-10 `}
+            className={`${styles.images} sm:gap-10 `}
             onClick={() => handleClick("local")}>
             <img className="p-5" src={pc} alt="" />
             <h4 className="font-semibold text-neutral-500">
@@ -790,10 +793,10 @@ const Devices = ({
         aria-describedby="modal-modal-description">
         <Box
           sx={style}
-          className="overflow-scroll  gap-6 flex flex-col rounded-lg">
+          className="sm:overflow-scroll   gap-6 flex flex-col rounded-lg">
           <textarea
             id="content"
-            className="p-2 border-2 border-black rounded-lg"
+            className="p-2 border-2  border-black rounded-lg"
             name="w3review"
             rows="20"
             cols="50"
@@ -805,7 +808,7 @@ const Devices = ({
 
           <button
             onClick={handleTextInputUpload}
-            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[30%]">
+            className="bg-[#008080] text-white rounded-md shadow-lg px-4 py-2 w-[70%] sm:w-[30%]">
             Upload
           </button>
         </Box>

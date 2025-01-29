@@ -117,7 +117,9 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
   };
   return (
     <>
-      <div id="time-left" className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+      <div
+        id="time-left"
+        className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
         <div className="w-full flex justify-between items-center">
           <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
           <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
@@ -900,7 +902,7 @@ const AiSidebar = () => {
     <>
       <div
         id="conatiner-sidebar"
-        className="flex flex-col gap-3 h-screen py-3 pl-3">
+        className="flex  flex-col gap-3 h-screen py-3 pl-3">
         {/* top container */}
         <div className="bg-[#008080] h-[25vh] pt-1 px-4 pb-3 border-2 border-black rounded gap-2 flex flex-col">
           <motion.div

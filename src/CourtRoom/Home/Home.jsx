@@ -133,6 +133,8 @@ function Home() {
                   style={{
                     position: "relative",
                     zIndex: 2,
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
                   }}>
                   Book A Courtroom
                 </span>
@@ -451,7 +453,7 @@ function Home() {
               zIndex: 0,
             }}
           />
-          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center">
+          <div className="relative  z-10 flex flex-col md:flex-row justify-between items-center">
             <div style={{ width: "50%" }}>
               <h1
                 style={{
@@ -459,7 +461,9 @@ function Home() {
                   fontWeight: 800,
                   textWrap: "wrap",
                 }}>
-                Experience the AI Courtroom
+                <p className=" text-[12px] sm:text-[18px]">
+                  Experience the AI Courtroom
+                </p>
               </h1>
             </div>
             <Link to={"/contact"}>
@@ -473,7 +477,7 @@ function Home() {
                   border: "none",
                   fontSize: 27,
                 }}>
-                Contact us
+                <p className=" text-[15px] sm:text-[25px]">Contact us</p>
               </button>
             </Link>
           </div>
@@ -485,7 +489,7 @@ function Home() {
           id="Testimonilcard"
           className="flex  flex-col justify-center items-center gap-1">
           <h1 className="font-bold text-5xl md:text-6xl">Testimonials</h1>
-          <p className="text-lg md:text-xl">
+          <p className="sm:text-lg text-[12px] text-center md:text-xl">
             Get to know what the professionals got to say
           </p>
         </div>

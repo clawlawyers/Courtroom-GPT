@@ -125,7 +125,7 @@ const VideoBanner = () => {
   }, [activeButtonIndex]);
 
   return (
-    <div id="videoBanner" className="pt-20 w-[80%] m-auto flex flex-col gap-3">
+    <div id="videoBanner" className="pt-20 w-[90%] m-auto flex flex-col gap-3">
       <div className="flex flex-wrap justify-center gap-3">
         {videoArrDetails.map((x, index) => (
           <button
@@ -133,8 +133,7 @@ const VideoBanner = () => {
             className={`w-[26rem] border-2 rounded-lg px-4 py-2 hover:bg-white hover:bg-opacity-25 ${
               activeButtonIndex === index ? "bg-[#018585] border-[#0bc6c6]" : ""
             }`}
-            key={index}
-          >
+            key={index}>
             {x.type.toUpperCase()}
           </button>
         ))}
@@ -149,8 +148,7 @@ const VideoBanner = () => {
                 activeVideoIndex[0].name === x.name
                   ? "bg-white bg-opacity-25"
                   : ""
-              }`}
-            >
+              }`}>
               <p className="m-0 py-2">{x.name}</p>
             </div>
           ))}

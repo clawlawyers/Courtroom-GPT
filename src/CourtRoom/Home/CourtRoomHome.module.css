@@ -65,3 +65,10 @@ span {
   font-weight: bold;
   /* color: #ffffff; */
 }
+
+@media (max-width: 768px) {
+  .courtRoomCard {
+    margin: 10px;
+    padding: 10px;
+  }
+}

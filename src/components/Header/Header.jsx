@@ -58,7 +58,7 @@ const Header = () => {
   };
 
   return (
-    <div className=" w-5/6 m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-2 right-0  mt-3">
+    <div className=" w-[95%] m-auto bg-[#3E3E3E] bg-opacity-40 flex items-center justify-center px-4 py-1 rounded-full shadow-lg absolute top-0 left-2 right-0  mt-3">
       <div className="flex-1 flex flex-col cursor-pointer items-start  justify-center h-full">
         <img src={clawlogo} alt="CLAW Logo" className=" w-[120px] h-auto" />
       </div>
