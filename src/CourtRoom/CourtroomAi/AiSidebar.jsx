@@ -198,6 +198,7 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
 
     if (slotrealcurrentItcTime < realcurrentItcTime) {
       setCountDownOver(true);
+      localStorage.removeItem("persist:root");
     }
   });
 
@@ -991,7 +992,7 @@ const AiSidebar = () => {
                         aria-controls="long-menu"
                         aria-haspopup="true"
                         // onClick={handleMenuOpen}
-                        // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                        onClick={() => toast.error("Only For Paid Users!")}
                       >
                         <MoreVert />
                       </IconButton>
@@ -1107,7 +1108,7 @@ const AiSidebar = () => {
                   <motion.div
                     disabled={true}
                     // onClick={handleFirstDraft}
-                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                     whileTap={{ scale: "0.95" }}
                     whileHover={{ scale: "1.01" }}
                     className={`${
@@ -1157,7 +1158,7 @@ const AiSidebar = () => {
                   <motion.div
                     // onClick={() => setShowDrafterQuestions(true)}
                     disabled={true}
-                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                     whileTap={{ scale: "0.95" }}
                     whileHover={{ scale: "1.01" }}
                     style={{
@@ -1194,7 +1195,7 @@ const AiSidebar = () => {
                 <Tooltip title="Upgrade plan to use this feature">
                   <motion.div
                     disabled={true}
-                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                     // onClick={() => setShowAskLegalGPT(true)}
                     whileTap={{ scale: "0.95" }}
                     whileHover={{ scale: "1.01" }}
@@ -1232,7 +1233,7 @@ const AiSidebar = () => {
                 <Tooltip title="Upgrade plan to use this feature">
                   <motion.div
                     // onClick={() => setCaseSearchDialog(true)}y
-                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                     whileTap={{ scale: "0.95" }}
                     whileHover={{ scale: "1.01" }}
                     style={{
@@ -1268,37 +1269,39 @@ const AiSidebar = () => {
                   </motion.div>
                 </Tooltip>
               </div>
-              <div
-                id="claw-ai-ass"
-                className="flex justify-end cursor-pointer relative"
-              >
-                <motion.img
-                  className={`${
-                    overViewDetails === "NA" || overViewDetails === ""
-                      ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
-                      : "h-9 w-9"
-                  }`}
-                  // className="h-9 w-9"
-                  whileTap={{ scale: "0.95" }}
-                  alt="assistant"
-                  src={showAssistant ? assistantIcon2 : aiAssistant}
-                  onHoverStart={() => setAiIconHover(true)}
-                  onHoverEnd={() => setAiIconHover(false)}
-                  // onClick={() => {
-                  //   setShowAssistant(true);
-                  //   getAiQuestions();
-                  // }}
-                  // onClick={() => toast.error("ONLY FOR PAID USERS")}
-                />
+              <Tooltip title="Upgrade plan to use this feature">
+                <div
+                  id="claw-ai-ass"
+                  className="flex justify-end cursor-pointer relative"
+                >
+                  <motion.img
+                    className={`${
+                      overViewDetails === "NA" || overViewDetails === ""
+                        ? "opacity-75 pointer-events-none cursor-not-allowed h-9 w-9"
+                        : "h-9 w-9"
+                    }`}
+                    // className="h-9 w-9"
+                    whileTap={{ scale: "0.95" }}
+                    alt="assistant"
+                    src={showAssistant ? assistantIcon2 : aiAssistant}
+                    onHoverStart={() => setAiIconHover(true)}
+                    onHoverEnd={() => setAiIconHover(false)}
+                    // onClick={() => {
+                    //   setShowAssistant(true);
+                    //   getAiQuestions();
+                    // }}
+                    onClick={() => toast.error("Only For Paid Users!")}
+                  />
 
-                {aiIconHover ? (
-                  <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
-                    CLAW AI Assistant
-                  </h1>
-                ) : (
-                  ""
-                )}
-              </div>
+                  {aiIconHover ? (
+                    <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+                      CLAW AI Assistant
+                    </h1>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </Tooltip>
               <div className="flex flex-col w-full h-full justify-start items-center gap-2">
                 <div
                   style={{
@@ -1393,6 +1396,7 @@ const AiSidebar = () => {
 
                           dispatch(setOverview(""));
                           dispatch(setFirstDraftAction({ draft: "" }));
+                          dispatch(setToggleMenu());
                         }}
                       >
                         New Case Input

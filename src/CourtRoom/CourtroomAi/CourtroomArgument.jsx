@@ -1347,7 +1347,7 @@ const CourtroomArgument = () => {
                     // whileTap={
                     //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
                     // }
-                    // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                    onClick={() => toast.error("Only For Paid Users!")}
                     className="flex gap-1 items-center"
                   >
                     <svg
@@ -1622,7 +1622,7 @@ const CourtroomArgument = () => {
             <motion.button
               id="rest-your-case"
               whileTap={{ scale: "0.95" }}
-              // onClick={() => toast.error("ONLY FOR PAID USERS")}
+              onClick={() => toast.error("Only For Paid Users!")}
               className="flex-1 my-2"
               style={{
                 display: "flex",
@@ -1935,7 +1935,7 @@ const CourtroomArgument = () => {
                 // whileTap={
                 //   tapAnimations[userArgument.length > 0 ? "true" : "false"]
                 // }
-                // onClick={() => toast.error("ONLY FOR PAID USERS")}
+                onClick={() => toast.error("Only For Paid Users!")}
                 className="flex gap-1 items-center"
               >
                 <svg

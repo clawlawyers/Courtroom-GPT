@@ -49,6 +49,7 @@ const userSlice = createSlice({
     logout(state) {
       state.user = "";
       localStorage.removeItem("courtroom-auth");
+      localStorage.removeItem("persist:root");
     },
     setOverview(state, action) {
       console.log(action.payload);
