@@ -39,6 +39,10 @@ import UploadAdditionalDoc from "./CourtRoom/CourtroomAi/UploadAdditionalDoc.jsx
 import PricingPlans from "./components/Pricing/PricingPlans.jsx";
 import LoginPageNew from "./CourtRoom/Login/LoginPageNew.jsx";
 import TimeUp from "./components/TimeUpComponent/TimeUp.jsx";
+import PrivacyPolicy from "./PrivacyPolicy/PrivacyPolicy.jsx";
+import RefundPolicy from "./RefundPolicy/RefundPolicy.jsx";
+import ShippingPolicy from "./ShippingPolicy/ShippingPolicy.jsx";
+import Terms from "./Terms & Conditions/TermsAndConditions.jsx";
 import { Helmet } from "react-helmet";
 
 function App() {
@@ -134,6 +138,26 @@ function App() {
         {
           path: "/contact",
           element: <Contact />,
+        },
+        {
+          path: "/about-us",
+          element: <About />,
+        },
+        {
+          path: "/privacyPolicy",
+          element: <PrivacyPolicy />,
+        },
+        {
+          path: "/refund-and-cancellation-policy",
+          element: <RefundPolicy />,
+        },
+        {
+          path: "/terms-and-conditions",
+          element: <Terms />,
+        },
+        {
+          path: "/shipping-and-delivery",
+          element: <ShippingPolicy />,
         },
       ],
     },

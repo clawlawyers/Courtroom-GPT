@@ -16,8 +16,8 @@ function AboutUs() {
         flexDirection: "column",
         alignItems: "start",
         color: "white",
-      }}
-    >
+        marginBottom: "20px",
+      }}>
       <Helmet>
         <title>About Us</title>
         <meta

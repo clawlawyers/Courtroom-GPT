@@ -197,7 +197,7 @@ function FooterBanner() {
         }}>
         <div className={Styles.footerNav}>
           <NavLink
-            // to="/about-us"
+            to="/about-us"
             className={({ isActive }) =>
               `${Styles.muted} ${
                 isActive ? Styles.active : ""
@@ -214,7 +214,7 @@ function FooterBanner() {
           </NavLink>
 
           <NavLink
-            // to="/contact"
+            to="/contact"
             className={({ isActive }) =>
               `${Styles.muted} ${
                 isActive ? Styles.active : ""
@@ -231,7 +231,7 @@ function FooterBanner() {
           </NavLink>
 
           <NavLink
-            // to="/privacyPolicy"
+            to="/privacyPolicy"
             className={({ isActive }) =>
               `${Styles.muted} ${
                 isActive ? Styles.active : ""
@@ -248,7 +248,7 @@ function FooterBanner() {
           </NavLink>
 
           <NavLink
-            // to="/refund-and-cancellation-policy"
+            to="/refund-and-cancellation-policy"
             className={({ isActive }) =>
               `${Styles.muted} ${
                 isActive ? Styles.active : ""
@@ -265,7 +265,7 @@ function FooterBanner() {
           </NavLink>
 
           <NavLink
-            // to="/terms-and-conditions"
+            to="/terms-and-conditions"
             className={({ isActive }) =>
               `${Styles.muted} ${
                 isActive ? Styles.active : ""
@@ -281,7 +281,7 @@ function FooterBanner() {
             Terms & Conditions
           </NavLink>
           <NavLink
-            // to="/shipping-and-delivery"
+            to="/shipping-and-delivery"
             className={({ isActive }) =>
               `${Styles.muted} ${
                 isActive ? Styles.active : ""
