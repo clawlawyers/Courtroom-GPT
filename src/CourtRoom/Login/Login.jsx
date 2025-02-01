@@ -273,7 +273,8 @@ function Login() {
                   </div>
                   {/* <Link to={"/courtroom-ai"}> */}
 
-                  {/* <motion.button
+                  <motion.button
+                    type="button"
                     whileTap={{ scale: "0.95" }}
                     className="px-2 py-2"
                     style={{
@@ -283,9 +284,8 @@ function Login() {
                     }}
                     onClick={() => setOpen(true)}>
                     Reset Your Password
-                  </motion.button> */}
-
-                  <div onClick={() => setOpen(true)}>Reset Your Password</div>
+                  </motion.button>
+                  {/* <div onClick={() => setOpen(true)}>Reset Your Password</div> */}
 
                   <motion.button
                     type="submit"
@@ -476,14 +476,18 @@ function Login() {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-6 bg-white rounded-2xl shadow-lg w-full max-w-md">
+          <div className="p-6 bg-white rounded-2xl shadow-lg w-full relative  max-w-md">
+            <button
+              onClick={() => setOpen(false)} // This will close the modal
+              className="absolute top-2 right-3 text-2xl text-gray-500 hover:text-gray-700">
+              &times; {/* This is the 'X' symbol */}
+            </button>
+
             <div className="mb-4 text-center">
               <h2 className="text-xl text-black font-bold">
                 Reset Your Password
               </h2>
             </div>
-            {console.log(open)}
-
             <form
               onSubmit={(e) => {
                 e.preventDefault(); // Prevent form from submitting and reloading
@@ -496,14 +500,14 @@ function Login() {
                     placeholder="Enter your email"
                     // value={email}
                     // onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-3 border rounded-lg"
+                    className="w-full text-black p-3 border rounded-lg"
                   />
                   {!showOtpInput && (
                     <button
                       type="button"
                       //onClick={() => setShowOtpInput(true)}
                       onClick={buttonHandler}
-                      className="w-full py-2 text-white bg-blue-500 rounded-2xl hover:bg-blue-600">
+                      className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                       Get OTP
                     </button>
                   )}
@@ -516,12 +520,12 @@ function Login() {
                     <input
                       type="text"
                       placeholder="Enter OTP"
-                      className="w-full p-3 border rounded-lg"
+                      className="w-full p-3 text-black border rounded-lg"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPasswordInputs(true)}
-                      className="w-full py-2 text-white bg-green-500 rounded-2xl hover:bg-green-600">
+                      className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                       Verify OTP
                     </button>
                   </>
@@ -535,18 +539,18 @@ function Login() {
                     // value={newPassword}
                     // onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="New Password"
-                    className="w-full p-3 border rounded-lg"
+                    className="w-full text-black p-3 border rounded-lg"
                   />
                   <input
                     type="password"
                     // value={confirmPassword}
                     // onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm New Password"
-                    className="w-full p-3 border rounded-lg"
+                    className="w-full p-3 text-black border rounded-lg"
                   />
                   <button
                     type="submit"
-                    className="w-full py-2 text-white bg-green-500 rounded-2xl hover:bg-green-600">
+                    className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                     Submit
                   </button>
                 </>
