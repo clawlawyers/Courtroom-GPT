@@ -3,6 +3,7 @@ import balances from "../../assets/images/BalanceScales.png";
 import clawLogo from "../../assets/images/claw-login.png";
 import Styles from "./LoginToCourtRoom.module.css";
 import { motion } from "framer-motion";
+
 // import { Link } from "react-router-dom";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
@@ -60,6 +61,10 @@ function Login() {
   const [errorData, setErrorData] = useState([]);
   const [phone, setPhone] = useState(null);
   const [password, setPassword] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [visibleotp, setVisibleotp] = useState(true);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [showPasswordInputs, setShowPasswordInputs] = useState(false);
   // const currentUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
@@ -110,6 +115,11 @@ function Login() {
         setErrorData([error.message, "Please try again"]);
         toast.error(error.message);
       });
+  };
+
+  const buttonHandler = () => {
+    setShowOtpInput(true);
+    setVisibleotp(false);
   };
 
   return (
@@ -246,15 +256,37 @@ function Login() {
                   )}
                 </div>
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                  <div style={{ display: "flex", fontSize: "5px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      fontSize: "5px",
+                      marginRight: "2px",
+                    }}>
                     <h1 style={{ fontSize: "20px" }}>Current Time:</h1>
                     {/* <h1 style={{ fontSize: "20px" }}>
                       {currentTime.getHours()}:{currentTime.getMinutes()}:
                       {currentTime.getSeconds()}
                     </h1> */}
-                    <TimerComponent />
+                    <div className="w-[90px]">
+                      <TimerComponent />
+                    </div>
                   </div>
                   {/* <Link to={"/courtroom-ai"}> */}
+
+                  {/* <motion.button
+                    whileTap={{ scale: "0.95" }}
+                    className="px-2 py-2"
+                    style={{
+                      background: "none",
+                      border: "2px solid white",
+                      borderRadius: "5px",
+                    }}
+                    onClick={() => setOpen(true)}>
+                    Reset Your Password
+                  </motion.button> */}
+
+                  <div onClick={() => setOpen(true)}>Reset Your Password</div>
+
                   <motion.button
                     type="submit"
                     whileTap={{ scale: "0.95" }}
@@ -441,6 +473,88 @@ function Login() {
           </div>
         </motion.div>
       </div>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="p-6 bg-white rounded-2xl shadow-lg w-full max-w-md">
+            <div className="mb-4 text-center">
+              <h2 className="text-xl text-black font-bold">
+                Reset Your Password
+              </h2>
+            </div>
+            {console.log(open)}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent form from submitting and reloading
+              }}
+              className="space-y-4">
+              {!showPasswordInputs && (
+                <>
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    // value={email}
+                    // onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-3 border rounded-lg"
+                  />
+                  {!showOtpInput && (
+                    <button
+                      type="button"
+                      //onClick={() => setShowOtpInput(true)}
+                      onClick={buttonHandler}
+                      className="w-full py-2 text-white bg-blue-500 rounded-2xl hover:bg-blue-600">
+                      Get OTP
+                    </button>
+                  )}
+                </>
+              )}
+              {/* Show OTP Input when showOtpInput is true */}
+              {showPasswordInputs ||
+                (showOtpInput && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Enter OTP"
+                      className="w-full p-3 border rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordInputs(true)}
+                      className="w-full py-2 text-white bg-green-500 rounded-2xl hover:bg-green-600">
+                      Verify OTP
+                    </button>
+                  </>
+                ))}
+
+              {/* Show Password Inputs when OTP is verified */}
+              {showPasswordInputs && (
+                <>
+                  <input
+                    type="password"
+                    // value={newPassword}
+                    // onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="New Password"
+                    className="w-full p-3 border rounded-lg"
+                  />
+                  <input
+                    type="password"
+                    // value={confirmPassword}
+                    // onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm New Password"
+                    className="w-full p-3 border rounded-lg"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full py-2 text-white bg-green-500 rounded-2xl hover:bg-green-600">
+                    Submit
+                  </button>
+                </>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -28,6 +28,7 @@
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-data-grid": "^6.20.0",
     "@mui/x-date-pickers": "^7.10.0",
+    "@radix-ui/react-dialog": "^1.1.5",
     "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.2.6",
     "@stripe/react-stripe-js": "^2.6.2",
