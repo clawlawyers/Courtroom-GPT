@@ -748,7 +748,7 @@ const CourtroomArgument = () => {
             `${bold}Case ${i + 1}${reset} \n ${elements.join("\n")}`
           );
         }
-        console.log(textArr.join(""));
+        // console.log(textArr.join(""));
 
         setUserArgument(history.data.data.caseHistory.argument);
         const lawyerArrLen =

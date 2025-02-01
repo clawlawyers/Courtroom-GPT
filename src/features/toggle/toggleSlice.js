@@ -4,6 +4,7 @@ export const toggleSlice = createSlice({
   name: "toggle",
   initialState: {
     toggle: true,
+    popup: false,
   },
 
   reducers: {
@@ -13,9 +14,13 @@ export const toggleSlice = createSlice({
     setToggleMenuManual(state, action) {
       state.toggle = action.payload;
     },
+    setPopupMenu(state, action) {
+      state.popup = !state.popup;
+    },
   },
 });
 
-export const { setToggleMenu, setToggleMenuManual } = toggleSlice.actions;
+export const { setToggleMenu, setToggleMenuManual, setPopupMenu } =
+  toggleSlice.actions;
 
 export default toggleSlice.reducer;

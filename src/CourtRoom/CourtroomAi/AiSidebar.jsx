@@ -65,7 +65,7 @@ import {
 } from "../../features/laws/drafterProSlice";
 import TimeUp from "../../components/TimeUpComponent/TimeUp";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { setToggleMenu } from "../../features/toggle/toggleSlice";
+import { setPopupMenu, setToggleMenu } from "../../features/toggle/toggleSlice";
 
 const drafterQuestions = [
   { name: "Bail Application", value: "bail_application" },
@@ -163,44 +163,45 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     return () => clearInterval(timer);
   }, [slotTimeInterval]);
 
-  useEffect(() => {
-    let todaysSlot = new Date(slotTimeInterval);
-    const todaysSlotTime =
-      todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
-    const Offset = 0.5 * 60 * 60000 + 5.5 * 60 * 60000;
-    var slot = new Date(todaysSlotTime + Offset);
-    //  slot =new Date(slot.getFullYear(), slot.getMonth(), slot.getDate(), slot.getHours(), slot.getMinutes(), slot.getSeconds())
-    const currenttime = new Date();
-    const utcTime =
-      currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
-    const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
-    const istOffset = 5.5 * 60 * 60000;
-    const currentItcTime = new Date(utcTime + istOffset);
-    const slotcurrentItcTime = new Date(slotutcTime);
-    const realcurrentItcTime = new Date(
-      currentItcTime.getFullYear(),
-      currentItcTime.getMonth(),
-      currentItcTime.getDate(),
-      currentItcTime.getHours(),
-      currentItcTime.getMinutes(),
-      currentItcTime.getSeconds()
-    );
-    const slotrealcurrentItcTime = new Date(
-      slotcurrentItcTime.getFullYear(),
-      slotcurrentItcTime.getMonth(),
-      slotcurrentItcTime.getDate(),
-      slotcurrentItcTime.getHours(),
-      slotcurrentItcTime.getMinutes(),
-      slotcurrentItcTime.getSeconds()
-    );
-    // console.log(realcurrentItcTime)
-    // console.log(slotrealcurrentItcTime)
+  // useEffect(() => {
+  //   let todaysSlot = new Date(slotTimeInterval);
+  //   const todaysSlotTime =
+  //     todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
+  //   const Offset = 0.5 * 60 * 60000 + 5.5 * 60 * 60000;
+  //   var slot = new Date(todaysSlotTime + Offset);
+  //   //  slot =new Date(slot.getFullYear(), slot.getMonth(), slot.getDate(), slot.getHours(), slot.getMinutes(), slot.getSeconds())
+  //   const currenttime = new Date();
+  //   const utcTime =
+  //     currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
+  //   const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
+  //   const istOffset = 5.5 * 60 * 60000;
+  //   const currentItcTime = new Date(utcTime + istOffset);
+  //   const slotcurrentItcTime = new Date(slotutcTime);
+  //   const realcurrentItcTime = new Date(
+  //     currentItcTime.getFullYear(),
+  //     currentItcTime.getMonth(),
+  //     currentItcTime.getDate(),
+  //     currentItcTime.getHours(),
+  //     currentItcTime.getMinutes(),
+  //     currentItcTime.getSeconds()
+  //   );
+  //   const slotrealcurrentItcTime = new Date(
+  //     slotcurrentItcTime.getFullYear(),
+  //     slotcurrentItcTime.getMonth(),
+  //     slotcurrentItcTime.getDate(),
+  //     slotcurrentItcTime.getHours(),
+  //     slotcurrentItcTime.getMinutes(),
+  //     slotcurrentItcTime.getSeconds()
+  //   );
+  //   // console.log(realcurrentItcTime)
+  //   // console.log(slotrealcurrentItcTime)
 
-    if (slotrealcurrentItcTime < realcurrentItcTime) {
-      setCountDownOver(true);
-      localStorage.removeItem("persist:root");
-    }
-  });
+  //   if (slotrealcurrentItcTime < realcurrentItcTime) {
+  //     // setCountDownOver(true);
+  //     dispatch(setPopupMenu());
+  //     localStorage.removeItem("persist:root");
+  //   }
+  // });
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
@@ -658,7 +659,7 @@ const AiSidebar = () => {
           }
         );
 
-        console.log(overView.data.data.case_overview);
+        // console.log(overView.data.data.case_overview);
         if (overView.data.data.case_overview === "NA") {
           dispatch(setOverview(""));
           dispatch(setFirstDraftAction({ draft: "" }));
@@ -1269,11 +1270,11 @@ const AiSidebar = () => {
                   </motion.div>
                 </Tooltip>
               </div>
-              <Tooltip title="Upgrade plan to use this feature">
-                <div
-                  id="claw-ai-ass"
-                  className="flex justify-end cursor-pointer relative"
-                >
+              <div
+                id="claw-ai-ass"
+                className="flex justify-end cursor-pointer relative"
+              >
+                <Tooltip title="Upgrade plan to use this feature">
                   <motion.img
                     className={`${
                       overViewDetails === "NA" || overViewDetails === ""
@@ -1292,16 +1293,16 @@ const AiSidebar = () => {
                     // }}
                     onClick={() => toast.error("Only For Paid Users!")}
                   />
+                </Tooltip>
 
-                  {aiIconHover ? (
-                    <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
-                      CLAW AI Assistant
-                    </h1>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </Tooltip>
+                {aiIconHover ? (
+                  <h1 className="absolute text-xs right-16 top-0 bg-[#033E40] p-2 rounded-lg border-2 border-[#00ffa3]">
+                    CLAW AI Assistant
+                  </h1>
+                ) : (
+                  ""
+                )}
+              </div>
               <div className="flex flex-col w-full h-full justify-start items-center gap-2">
                 <div
                   style={{
