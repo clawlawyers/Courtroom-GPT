@@ -135,9 +135,9 @@ const CourtRoomAiLayout = () => {
         slotcurrentItcTime.getMinutes(),
         slotcurrentItcTime.getSeconds()
       );
-      console.log(slotcurrentItcTime, realcurrentItcTime);
+      // console.log(slotcurrentItcTime, realcurrentItcTime);
       if (slotrealcurrentItcTime < realcurrentItcTime) {
-        console.log("time over");
+        // console.log("time over");
         // dispatch(setPopupMenu());
         setCountDownOver(true);
         clearInterval(intervalId); // Stop checking once time is over
