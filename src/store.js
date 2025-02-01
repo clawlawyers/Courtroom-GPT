@@ -18,55 +18,55 @@ import toggleSlice from "./features/toggle/toggleSlice";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const persistConfigure = {
-  key: "root",
-  version: 1,
-  blacklist: [""],
-  storage,
-};
+// const persistConfigure = {
+//   key: "root",
+//   version: 1,
+//   blacklist: [""],
+//   storage,
+// };
 
-const reducer = combineReducers({
-  auth: authReducer,
-  gpt: gptReducer,
-  cart: cartReducer,
-  sidebar: sidebarReducer,
-  popup: popupReducer,
-  bookings: bookingsSlice,
-  splash: splashReducer,
-  user: userSlice,
-  booking: bookingReducer,
-  courtroomAdminAddUser: courtroomAdminAddUserSlice,
-  allowedBooking: allowedBookingReducer, // Add to the store
-  laws: lawSlice,
-  drafter: drafterSlice,
-  drafterPro: drafterProSlice,
-  toggle: toggleSlice,
-});
-
-const persistedReducer = persistReducer(persistConfigure, reducer);
-
-const store = configureStore({
-  reducer: persistedReducer,
-});
-
-export default store;
-
-// export default configureStore({
-//   reducer: {
-//     auth: authReducer,
-//     gpt: gptReducer,
-//     cart: cartReducer,
-//     sidebar: sidebarReducer,
-//     popup: popupReducer,
-//     bookings: bookingsSlice,
-//     splash: splashReducer,
-//     user: userSlice,
-//     booking: bookingReducer,
-//     courtroomAdminAddUser: courtroomAdminAddUserSlice,
-//     allowedBooking: allowedBookingReducer, // Add to the store
-//     laws: lawSlice,
-//     drafter: drafterSlice,
-//     drafterPro: drafterProSlice,
-//     toggle: toggleSlice,
-//   },
+// const reducer = combineReducers({
+//   auth: authReducer,
+//   gpt: gptReducer,
+//   cart: cartReducer,
+//   sidebar: sidebarReducer,
+//   popup: popupReducer,
+//   bookings: bookingsSlice,
+//   splash: splashReducer,
+//   user: userSlice,
+//   booking: bookingReducer,
+//   courtroomAdminAddUser: courtroomAdminAddUserSlice,
+//   allowedBooking: allowedBookingReducer, // Add to the store
+//   laws: lawSlice,
+//   drafter: drafterSlice,
+//   drafterPro: drafterProSlice,
+//   toggle: toggleSlice,
 // });
+
+// const persistedReducer = persistReducer(persistConfigure, reducer);
+
+// const store = configureStore({
+//   reducer: persistedReducer,
+// });
+
+// export default store;
+
+export default configureStore({
+  reducer: {
+    auth: authReducer,
+    gpt: gptReducer,
+    cart: cartReducer,
+    sidebar: sidebarReducer,
+    popup: popupReducer,
+    bookings: bookingsSlice,
+    splash: splashReducer,
+    user: userSlice,
+    booking: bookingReducer,
+    courtroomAdminAddUser: courtroomAdminAddUserSlice,
+    allowedBooking: allowedBookingReducer, // Add to the store
+    laws: lawSlice,
+    drafter: drafterSlice,
+    drafterPro: drafterProSlice,
+    toggle: toggleSlice,
+  },
+});

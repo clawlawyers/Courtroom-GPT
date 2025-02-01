@@ -5,7 +5,7 @@ export const retrieveCourtroomAuth = createAsyncThunk(
   "auth/retrieveAuth",
   async () => {
     const storedAuth = localStorage.getItem("courtroom-auth");
-    console.log(storedAuth);
+    // console.log(storedAuth);
     if (storedAuth) {
       const parsedUser = JSON.parse(storedAuth);
       if (parsedUser.expiresAt < new Date().valueOf()) return null;
@@ -49,9 +49,10 @@ const userSlice = createSlice({
     logout(state) {
       state.user = "";
       localStorage.removeItem("courtroom-auth");
+      localStorage.removeItem("persist:root");
     },
     setOverview(state, action) {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.caseOverview = action.payload;
     },
     setUser(state, action) {
