@@ -1413,12 +1413,12 @@ const CourtroomArgument = () => {
       </div>
       {/* mid container */}
       <div
-        className="flex-1  overflow-auto border border-black relative"
+        className="flex-1   overflow-auto border border-black  relative"
         style={{
           background: "#033E40",
           borderRadius: "10px",
         }}>
-        <div className="flex flex-col ">
+        <div className="flex flex-col  ">
           <div className="p-3 flex gap-2 items-center">
             <img
               style={{ width: "20px", height: "20px" }}
