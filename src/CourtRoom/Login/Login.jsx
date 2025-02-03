@@ -65,6 +65,10 @@ function Login() {
   const [visibleotp, setVisibleotp] = useState(true);
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [showPasswordInputs, setShowPasswordInputs] = useState(false);
+  const [email, setEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpInput, setOtpInput] = useState("");
   // const currentUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
@@ -118,8 +122,49 @@ function Login() {
   };
 
   const buttonHandler = () => {
+    if (!email) {
+      console.log("plz fill the email");
+    }
     setShowOtpInput(true);
     setVisibleotp(false);
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    // console.log(email);
+    // console.log(otpInput);
+    // console.log(newPassword);
+    // console.log(confirmPassword);
+    console.log("Rahul Prajapati!!!");
+
+    if (newPassword !== confirmPassword) {
+      console.log("Passwords do not match."); // Show error message
+      alert("Password do not match.");
+    } else {
+      // Clear error if passwords match
+      alert("Password reset successfully!");
+
+      // Clear the form
+      setNewPassword("");
+      setConfirmPassword("");
+    }
+
+    // try {
+    //   const response = await axios.post("", {
+    //     email,
+    //     otpInput,
+    //     newPassword,
+    //     confirmPassword,
+    //   });
+
+    //   if (response.data) {
+    //     console.log(response.data);
+    //   } else {
+    //     console.log("not found the data!!!");
+    //   }
+    // } catch (err) {
+    //   console.error(err);
+    // }
   };
 
   return (
@@ -498,14 +543,14 @@ function Login() {
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    // value={email}
-                    // onChange={(e) => setEmail(e.target.value)}
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full text-black p-3 border rounded-lg"
                   />
                   {!showOtpInput && (
                     <button
                       type="button"
-                      //onClick={() => setShowOtpInput(true)}
                       onClick={buttonHandler}
                       className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                       Get OTP
@@ -518,8 +563,13 @@ function Login() {
                 (showOtpInput && (
                   <>
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter OTP"
+                      required
+                      value={otpInput}
+                      onChange={(e) => {
+                        setOtpInput(e.target.value);
+                      }}
                       className="w-full p-3 text-black border rounded-lg"
                     />
                     <button
@@ -536,20 +586,23 @@ function Login() {
                 <>
                   <input
                     type="password"
-                    // value={newPassword}
-                    // onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="New Password"
                     className="w-full text-black p-3 border rounded-lg"
                   />
                   <input
                     type="password"
-                    // value={confirmPassword}
-                    // onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm New Password"
                     className="w-full p-3 text-black border rounded-lg"
                   />
                   <button
                     type="submit"
+                    onClick={submitHandler}
                     className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                     Submit
                   </button>

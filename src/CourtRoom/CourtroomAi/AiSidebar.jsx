@@ -1445,7 +1445,7 @@ const AiSidebar = () => {
             overflow: "auto",
           }}>
           <div
-            className="h-[95%] w-2/3 flex flex-col rounded-md border-2 border-white"
+            className="h-[95%] sm:w-2/3 w-4/5 flex flex-col rounded-md border-2 border-white"
             style={{
               background: "linear-gradient(to right,#0e1118,#008080)",
             }}>
@@ -1458,7 +1458,7 @@ const AiSidebar = () => {
               />
             </div>
             <div className="flex-1 m-0 h-[90%] flex flex-column justify-center items-center">
-              <div className="flex h-full px-4 pb-3 flex-row justify-between items-center w-full gap-5">
+              <div className="flex h-full px-4 pb-3 sm:flex-row flex-col justify-between items-center w-full gap-5">
                 <div className="flex h-full  flex-col gap-2 justify-center w-full items-center">
                   {firstDraft !== "" ? (
                     <div className="flex flex-col w-full h-full rounded-md bg-white text-black overflow-y-auto">
@@ -1496,7 +1496,7 @@ const AiSidebar = () => {
                   <div className="w-full flex gap-2 text-sm justify-end">
                     <button
                       onClick={handleResearchArguments}
-                      className="px-4 py-2 rounded-md border hover:bg-[#008080] flex items-center justify-center min-w-[200px]">
+                      className="px-4 py-2 rounded-md border hover:bg-[#008080] flex items-center justify-center sm:min-w-[200px]">
                       {reserachArgumentsLoading ? (
                         <div className="w-36 flex justify-center">
                           <CircularProgress size={22} color="inherit" />
@@ -1507,7 +1507,7 @@ const AiSidebar = () => {
                     </button>
                     <button
                       onClick={handleNextAppeal}
-                      className="px-4 py-2 rounded-md border hover:bg-[#008080]  flex items-center justify-center min-w-[200px]">
+                      className="px-4 py-2 rounded-md border hover:bg-[#008080]  flex items-center justify-center sm:min-w-[200px]">
                       {nextAppealLoading ? (
                         <div className="w-36 flex justify-center">
                           <CircularProgress size={22} color="inherit" />
@@ -1518,8 +1518,8 @@ const AiSidebar = () => {
                     </button>
                   </div>
                 </div>
-                <div className="h-full w-1 bg-neutral-200/40" />
-                <div className="flex flex-col justify-center h-full w-full gap-4 ">
+                <div className="hidden md:block h-full w-1 bg-neutral-200/40" />
+                <div className="flex flex-col justify-center sm:h-full w-full gap-4 ">
                   {showRelevantLaws ? (
                     <div className="h-full overflow-auto border-2 border-white rounded bg-white text-black p-2">
                       {relevantCaseLoading ? (
@@ -1544,7 +1544,7 @@ const AiSidebar = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="flex flex-col w-full gap-2">
+                    <div className="hidden md:flex flex-col w-full gap-2">
                       <img className="" src={clawLogo} alt="logo" />
                       <h3 className=" text-center">Draft Preview</h3>
                     </div>
