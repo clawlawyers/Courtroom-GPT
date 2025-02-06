@@ -139,7 +139,7 @@ const CaseLaws = () => {
 
   return (
     <div className="p-3 h-screen">
-      <div className="p-2 bg-[#d9d9d92d] h-full rounded-md">
+      <div className="p-2 mt-8 sm:mt-0 bg-[#d9d9d92d] h-full rounded-md">
         <div className="flex justify-between items-center">
           <p className="m-0 py-2 pl-2 text-xl font-bold text-white">
             Case Law Links
@@ -166,8 +166,7 @@ const CaseLaws = () => {
                       padding: 16,
                       backgroundColor: "#008080",
                       borderRadius: 10,
-                    }}
-                  >
+                    }}>
                     <div style={{ flex: 1 }}>
                       <h2 style={{ fontSize: 23, fontWeight: 700 }}>
                         {x.Title}
@@ -195,8 +194,7 @@ const CaseLaws = () => {
                         textDecoration: "none",
                         color: "black",
                         backgroundImage: "none",
-                      }}
-                    >
+                      }}>
                       View document
                     </button>
                   </div>
@@ -215,8 +213,7 @@ const CaseLaws = () => {
                     padding: 25,
                     backgroundColor: "#008080",
                     borderRadius: 10,
-                  }}
-                >
+                  }}>
                   No Case Laws Found
                 </div>
               </div>
@@ -231,8 +228,7 @@ const CaseLaws = () => {
                 padding: 50,
                 backgroundColor: "grey",
                 borderRadius: 10,
-              }}
-            ></div>
+              }}></div>
             <div
               className="animate-pulse"
               style={{
@@ -240,16 +236,14 @@ const CaseLaws = () => {
                 padding: 50,
                 backgroundColor: "grey",
                 borderRadius: 10,
-              }}
-            ></div>
+              }}></div>
           </div>
         )}
       </div>
       <Modal
         open={modalOpen}
         onClose={handleClose}
-        aria-labelledby="child-modal-title"
-      >
+        aria-labelledby="child-modal-title">
         <div
           className={Styles.scrollable}
           style={{
@@ -265,23 +259,20 @@ const CaseLaws = () => {
             padding: 10,
             transform: "translate(-50%, -50%)",
             boxShadow: 24,
-          }}
-        >
+          }}>
           <div
             style={{
               position: "sticky",
               top: 0,
               display: "flex",
-            }}
-          >
+            }}>
             <div style={{ flex: 1 }} />
             <button
               onClick={handleClose}
               style={{
                 border: "none",
                 backgroundColor: "transparent",
-              }}
-            >
+              }}>
               <Close style={{ fontSize: 30, color: "black" }} />
             </button>
           </div>
@@ -294,8 +285,7 @@ const CaseLaws = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                }}
-              >
+                }}>
                 <CircularProgress style={{ color: "black" }} />
               </div>
             ) : (
@@ -310,8 +300,7 @@ const CaseLaws = () => {
                 }}
                 dangerouslySetInnerHTML={{
                   __html: documentData,
-                }}
-              >
+                }}>
                 {/* <Markdown>{documentData}</Markdown> */}
               </div>
             )}

@@ -123,8 +123,8 @@ const AiDrafterPro = () => {
   };
 
   return (
-    <div className="p-3 h-screen">
-      <div className="border-2 border-black h-full bg-[#D9D9D9] rounded-md">
+    <div className="p-3 mt-8 sm:mt-0 h-screen">
+      <div className="border-2  border-black h-full bg-[#D9D9D9] rounded-md">
         <div className="py-3 h-full flex flex-col gap-2">
           <div className="px-3 flex justify-between">
             <p className="m-0 text-xl font-bold text-teal-700">AI Drafter</p>
@@ -133,8 +133,8 @@ const AiDrafterPro = () => {
               className="text-teal-700 cursor-pointer"
             />
           </div>
-          <div className="flex-1 grid grid-cols-[65%_35%] gap-2 px-3 h-[80%]">
-            <div className="bg-[#00808034] rounded-md h-full overflow-scroll">
+          <div className="flex-1 grid sm:grid-cols-[65%_35%] grid-cols-1 gap-2 px-3 h-[80%]">
+            <div className="bg-[#00808034] rounded-md sm:h-full h-[95%] overflow-scroll">
               {drafterText ? (
                 <p
                   className="m-0 p-2 text-sm text-black h-full overflow-auto +"

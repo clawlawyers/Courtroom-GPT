@@ -47,7 +47,7 @@ const BuyPlan = () => {
         const { amount, id, currency } = result.data.razorpayOrder;
         const { _id } = result.data.createdOrder;
         const options = {
-          key: "rzp_test_UWcqHHktRV6hxM",
+          key: "rzp_live_vlDmt5SV4QPDhN",
           amount: String(amount),
           currency: currency,
           name: "CLAW LEGALTECH PRIVATE LIMITED",
@@ -100,8 +100,7 @@ const BuyPlan = () => {
       <div className="relative w-[90%] max-w-5xl flex flex-col md:flex-row justify-between gap-6">
         <div
           className="w-full md:w-[60%] flex flex-col justify-start"
-          style={{ marginTop: "20%" }}
-        >
+          style={{ marginTop: "20%" }}>
           <h1 className="text-4xl font-bold" style={{ marginLeft: "-20px" }}>
             Payment Confirmation
           </h1>
@@ -113,16 +112,13 @@ const BuyPlan = () => {
 
         <div
           className="relative w-full md:w-[50%]"
-          style={{ marginTop: "20%" }}
-        >
+          style={{ marginTop: "20%" }}>
           <div
             className="relative bg-teal-700 p-6 rounded-lg shadow-lg text-white flex flex-col"
-            style={{ height: "300px" }}
-          >
+            style={{ height: "300px" }}>
             <button
               onClick={() => navigate("/pricing-plans")}
-              className="absolute -top-12 right-4 px-4 py-2 bg-teal-700 text-white rounded hover:bg-teal-800"
-            >
+              className="absolute -top-12 right-4 px-4 py-2 bg-teal-700 text-white rounded hover:bg-teal-800">
               Go Back
             </button>
 
@@ -152,8 +148,7 @@ const BuyPlan = () => {
 
           <button
             onClick={handlePayment}
-            className="mt-4 w-full py-3 bg-teal-500 rounded hover:bg-teal-600 font-semibold"
-          >
+            className="mt-4 w-full py-3 bg-teal-500 rounded hover:bg-teal-600 font-semibold">
             {paymentGatewayLoading ? "Loading..." : "Proceed to Payment"}
           </button>
         </div>

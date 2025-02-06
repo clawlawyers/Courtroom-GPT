@@ -3,6 +3,7 @@ import balances from "../../assets/images/BalanceScales.png";
 import clawLogo from "../../assets/images/claw-login.png";
 import Styles from "./LoginToCourtRoom.module.css";
 import { motion } from "framer-motion";
+import { CircularProgress } from "@mui/material";
 
 // import { Link } from "react-router-dom";
 import axios from "axios";
@@ -69,10 +70,25 @@ function Login() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpInput, setOtpInput] = useState("");
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
   // const currentUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
   const loginTime = new Date().toISOString();
+
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    // Clean up when component unmounts
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [open]);
 
   // Import the action creator from the slice
 
@@ -120,51 +136,99 @@ function Login() {
         toast.error(error.message);
       });
   };
-
-  const buttonHandler = () => {
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const buttonHandler = async () => {
     if (!email) {
       console.log("plz fill the email");
     }
-    setShowOtpInput(true);
-    setVisibleotp(false);
+    if (validateEmail(email)) {
+      try {
+        const resp = await fetch(
+          `${NODE_API_ENDPOINT}/courtroomPricing/resetPassword-sendOtp`,
+          {
+            method: "POST",
+            body: JSON.stringify({ email }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!resp.ok) {
+          throw new Error("Invalid Email");
+        }
+        // const respo = await resp.json();
+
+        setShowOtpInput(true);
+        setVisibleotp(false);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+      }
+    }
+  };
+
+  const VerifyOtp = async () => {
+    try {
+      const resp = await fetch(
+        `${NODE_API_ENDPOINT}/courtroomPricing/resetPassword-verifyOtp`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email, otp: otpInput }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!resp.ok) {
+        throw new Error("Invalid OTP");
+      }
+      const repo = await resp.json();
+      setToken(repo.data.token.jwt);
+      setShowPasswordInputs(true);
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    // console.log(email);
-    // console.log(otpInput);
-    // console.log(newPassword);
-    // console.log(confirmPassword);
-    console.log("Rahul Prajapati!!!");
-
     if (newPassword !== confirmPassword) {
       console.log("Passwords do not match."); // Show error message
       alert("Password do not match.");
     } else {
-      // Clear error if passwords match
-      alert("Password reset successfully!");
+      try {
+        const respo = await fetch(
+          `${NODE_API_ENDPOINT}/courtroomPricing/resetPassword`,
+          {
+            method: "POST",
+            body: JSON.stringify({ password: newPassword }),
+            headers: {
+              "Content-Type": "application/json",
+              "passwordreset-token": token,
+            },
+          }
+        );
 
-      // Clear the form
-      setNewPassword("");
-      setConfirmPassword("");
+        if (!respo.ok) {
+          throw new Error("Error in reseting password");
+        }
+        toast.success("Password Reset successfully done!!");
+        setOpen(false);
+        setEmail("");
+        setOtpInput("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setShowPasswordInputs(false);
+        setShowOtpInput(false);
+        setVisibleotp(true);
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      }
     }
-
-    // try {
-    //   const response = await axios.post("", {
-    //     email,
-    //     otpInput,
-    //     newPassword,
-    //     confirmPassword,
-    //   });
-
-    //   if (response.data) {
-    //     console.log(response.data);
-    //   } else {
-    //     console.log("not found the data!!!");
-    //   }
-    // } catch (err) {
-    //   console.error(err);
-    // }
   };
 
   return (
@@ -321,7 +385,7 @@ function Login() {
                   <motion.button
                     type="button"
                     whileTap={{ scale: "0.95" }}
-                    className="px-2 py-2"
+                    className="sm:px-2 px-4 py-2 sm:mb-0 mb-2"
                     style={{
                       background: "none",
                       border: "2px solid white",
@@ -520,8 +584,8 @@ function Login() {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-6 bg-white rounded-2xl shadow-lg w-full relative  max-w-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
+          <div className="p-6  bg-white rounded-2xl shadow-lg sm:w-full w-[90%] relative  max-w-md">
             <button
               onClick={() => setOpen(false)} // This will close the modal
               className="absolute top-2 right-3 text-2xl text-gray-500 hover:text-gray-700">
@@ -574,7 +638,7 @@ function Login() {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPasswordInputs(true)}
+                      onClick={VerifyOtp}
                       className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                       Verify OTP
                     </button>

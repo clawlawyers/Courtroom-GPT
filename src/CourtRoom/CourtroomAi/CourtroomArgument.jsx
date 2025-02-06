@@ -1233,7 +1233,7 @@ const CourtroomArgument = () => {
         ) : (
           <div
             id="aijudge"
-            className="flex flex-col bg-[#033E40] h-[25vh] overflow-auto border border-black rounded-lg">
+            className="flex flex-col bg-[#033E40]  overflow-auto border border-black rounded-lg">
             <div className="flex justify-between">
               <div className="ml-5 h-[5vh] p-[10px] flex gap-[10px] items-center">
                 <img
@@ -1334,7 +1334,7 @@ const CourtroomArgument = () => {
         ) : (
           <div
             id="ailawyer"
-            className="flex flex-col bg-[#033E40] h-[25vh] rounded-lg overflow-auto border border-black">
+            className="flex flex-col bg-[#033E40]  rounded-lg overflow-auto border border-black">
             <div className="flex justify-between">
               <div className="h-[5vh] p-[10px] flex gap-[10px] items-center">
                 <img
@@ -1413,7 +1413,7 @@ const CourtroomArgument = () => {
       </div>
       {/* mid container */}
       <div
-        className="flex-1   overflow-auto border border-black  relative"
+        className="flex-1    overflow-auto border border-black  relative"
         style={{
           background: "#033E40",
           borderRadius: "10px",

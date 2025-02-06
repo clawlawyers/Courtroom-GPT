@@ -117,7 +117,9 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
   };
   return (
     <>
-      <div  id="time-left" className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+      <div
+        id="time-left"
+        className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
         <div className="w-full flex justify-between items-center">
           <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
           <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
@@ -1641,7 +1643,7 @@ const AiSidebarHome = () => {
               <div className="flex flex-col justify-between py-20  w-full gap-4 ">
                 <div className="flex flex-col w-full gap-4">
                   <img className="" src={clawLogo} alt="logo" />
-                  <h1 className="uppercase text-center font-bold text-4xl">
+                  <h1 className="uppercase  text-center font-bold sm:text-4xl text-[15px]">
                     {" "}
                     Edit Your Document
                   </h1>
