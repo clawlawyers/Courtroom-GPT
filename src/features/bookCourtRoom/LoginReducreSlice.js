@@ -5,10 +5,11 @@ export const retrieveCourtroomAuth = createAsyncThunk(
   "auth/retrieveAuth",
   async () => {
     const storedAuth = localStorage.getItem("userToken");
-    // console.log(storedAuth);
+    console.log(storedAuth);
     if (storedAuth) {
       const parsedUser = JSON.parse(storedAuth);
       console.log(parsedUser);
+      console.log(parsedUser.token);
       if (parsedUser.expiresAt < new Date().valueOf()) return null;
       const props = await fetch(
         `${NODE_API_ENDPOINT}/courtroomPricing/getCourtroomUser`,

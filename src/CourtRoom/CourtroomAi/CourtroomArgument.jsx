@@ -1214,9 +1214,9 @@ const CourtroomArgument = () => {
   };
 
   return (
-    <div className="flex flex-col p-3 h-screen gap-2">
+    <div className="flex flex-col p-3 h-screen gap-2 ">
       {/* top container */}
-      <div className="grid sm:grid-cols-2 grid-cols-1 h-[35vh] gap-2">
+      <div className="grid sm:grid-cols-2 grid-cols-1 sm:h-[35vh] h-[52vh] gap-2">
         {/* top left Cont */}
         {aiJudgeLoading ? (
           <div

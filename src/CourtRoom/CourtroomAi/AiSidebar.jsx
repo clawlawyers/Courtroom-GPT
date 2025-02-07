@@ -1718,7 +1718,7 @@ const AiSidebar = () => {
 
           className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               ">
-          <div className="bg-[#eeeeee] border-8 border-white rounded-xl shadow-inner">
+          <div className="bg-[#eeeeee] border-8 sm:mr-0 mr-8 border-white rounded-xl shadow-inner">
             <div className="flex justify-between gap-14 items-center shadow-md">
               <div className="flex items-center">
                 <img alt="logo" className="h-20 w-20" src={assistantLogo} />
@@ -1782,7 +1782,7 @@ const AiSidebar = () => {
             overflow: "auto",
           }}>
           {promptArr.length === 0 ? (
-            <div className="h-screen flex flex-col justify-between border-2 border-white rounded w-2/4 bg-[#222222]">
+            <div className="sm:h-screen h-[80%] flex flex-col justify-between border-2 border-white rounded sm:w-2/4 w-4/5 bg-[#222222]">
               <div
                 className="flex justify-end p-3 cursor-pointer"
                 onClick={() => {
@@ -2056,7 +2056,7 @@ const AiSidebar = () => {
             alignItems: "center",
             zIndex: "50",
           }}>
-          <div className="w-2/5 h-[90%] bg-[#D9D9D9] rounded p-3">
+          <div className="sm:w-2/5 w-4/5 h-[90%] bg-[#D9D9D9] rounded p-3">
             <div className="flex  flex-row justify-between items-start w-full">
               <div className="flex  flex-col justify-center items-start">
                 <h1 className="px-2 text-xl font-semibold text-teal-700 text-left">
@@ -2131,7 +2131,7 @@ const AiSidebar = () => {
             alignItems: "center",
             zIndex: "10",
           }}>
-          <main className="w-2/4 p-3 flex flex-col justify-center items-center bg-white rounded">
+          <main className="sm:w-2/4 w-4/5 p-3 flex flex-col justify-center items-center bg-white rounded">
             <>
               {/* //header */}
               <section className="flex flex-row justify-between items-start w-full">
