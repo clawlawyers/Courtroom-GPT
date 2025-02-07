@@ -121,7 +121,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
     <>
       <div
         id="time-left"
-        className="flex flex-col justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
+        className="flex flex-col justify-between items-center px-2  py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded">
         <div className="w-full flex justify-between items-center">
           <h1 className="text-xs m-0 font-bold text-teal-800">Total Time:</h1>
           <h1 className="text-xs m-0 font-semibold">{totalHours} hr</h1>
@@ -150,7 +150,7 @@ const TimerComponent = React.memo(({ ExitToCourtroom }) => {
             zIndex: "20",
           }}>
           <div
-            className="flex flex-col justify-center gap-20 p-5"
+            className="flex flex-col justify-center gap-20  p-5"
             style={{
               background: "linear-gradient(to right,#0e1118,#008080)",
               height: "450px",
@@ -1645,7 +1645,7 @@ const AiSidebar = () => {
               </svg>
             </div>
             {/* <div className="m-0 flex flex-column justify-center items-center"> */}
-            <div className="grid grid-cols-2  px-4 py-3 justify-between items-center w-full h-full gap-5">
+            <div className="grid sm:grid-cols-2 grid-cols-1  px-4 py-3 justify-between items-center w-full h-full gap-5">
               <div className="flex flex-row justify-center w-full h-full items-center">
                 <div
                   className={`${
@@ -1675,9 +1675,10 @@ const AiSidebar = () => {
                 </div>
               </div>
               {/* <div className="h-5/6 w-1 bg-neutral-200/40" /> */}
-              <div className="flex flex-col justify-between py-20  w-full gap-4 ">
+              <div className="flex flex-col justify-between py-20   w-full gap-4 ">
                 <div className="flex flex-col w-full gap-4">
-                  <img className="" src={clawLogo} alt="logo" />
+                  <img className="hidden md:block" src={clawLogo} alt="logo" />
+
                   <h1 className="uppercase text-center font-bold text-4xl">
                     {" "}
                     Edit Your Document

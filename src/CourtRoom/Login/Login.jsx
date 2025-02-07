@@ -171,7 +171,7 @@ function Login() {
       return; // Stop execution if passwords don't match
     }
 
-    alert("Password reset successfully!");
+    // alert("Password reset successfully!");
 
     try {
       const response = await fetch(
@@ -361,7 +361,7 @@ function Login() {
                   <motion.button
                     type="button"
                     whileTap={{ scale: "0.95" }}
-                    className="px-2 py-2"
+                    className=" sm:px-2 px-4 mb-2 py-2"
                     style={{
                       background: "none",
                       border: "2px solid white",
@@ -375,7 +375,7 @@ function Login() {
                   <motion.button
                     type="submit"
                     whileTap={{ scale: "0.95" }}
-                    className="px-3 py-2"
+                    className="px-3 mb-2 py-2"
                     style={{
                       background: "none",
                       border: "2px solid white",
