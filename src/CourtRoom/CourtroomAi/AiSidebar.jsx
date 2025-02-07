@@ -1718,7 +1718,7 @@ const AiSidebar = () => {
 
           className="absolute flex  h-screen items-center left-1/4 overflow-auto z-10
               ">
-          <div className="bg-[#eeeeee] border-8 sm:mr-0 mr-8 border-white rounded-xl shadow-inner">
+          <div className="bg-[#eeeeee] border-8 sm:mr-0 mr-8  border-white rounded-xl shadow-inner">
             <div className="flex justify-between gap-14 items-center shadow-md">
               <div className="flex items-center">
                 <img alt="logo" className="h-20 w-20" src={assistantLogo} />
