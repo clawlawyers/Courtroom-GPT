@@ -49,12 +49,6 @@ function Login() {
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
 
-  // if (currentUser && caseOverView === "NA") {
-  //   navigate("/courtroom-ai");
-  // } else if (currentUser && (caseOverView !== "NA" && caseOverView !== "")) {
-  //   navigate("/courtroom-ai/arguments");
-  // }
-
   const [isHovered, setIsHovered] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [errorState, setErrorState] = useState(false);
@@ -69,6 +63,7 @@ function Login() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpInput, setOtpInput] = useState("");
+  const [token, setToken] = useState("");
   // const currentUser = useSelector((state) => state.user.user);
 
   const dispatch = useDispatch();
@@ -78,8 +73,6 @@ function Login() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    // Get current time in ISO format
-
     axios
       .post(`${NODE_API_ENDPOINT}/courtroomPricing/login`, {
         phoneNumber: phone,
@@ -121,50 +114,97 @@ function Login() {
       });
   };
 
-  const buttonHandler = () => {
+  const buttonHandler = async () => {
     if (!email) {
       console.log("plz fill the email");
+    }
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroomPricing/resetPassword-sendOtp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        }
+      );
+      console.log(response);
+      const result = await response.json();
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
     setShowOtpInput(true);
     setVisibleotp(false);
   };
 
+  const verificationHander = async () => {
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroomPricing/resetPassword-verifyOtp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, otp: otpInput }),
+        }
+      );
+      console.log(response);
+      const result = await response.json();
+      console.log(result);
+      setToken(result.data.token.jwt);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setShowPasswordInputs(true);
+  };
+
+  console.log(token);
   const submitHandler = async (e) => {
     e.preventDefault();
-    // console.log(email);
-    // console.log(otpInput);
-    // console.log(newPassword);
-    // console.log(confirmPassword);
     console.log("Rahul Prajapati!!!");
 
     if (newPassword !== confirmPassword) {
-      console.log("Passwords do not match."); // Show error message
-      alert("Password do not match.");
-    } else {
-      // Clear error if passwords match
-      alert("Password reset successfully!");
-
-      // Clear the form
-      setNewPassword("");
-      setConfirmPassword("");
+      console.log("Passwords do not match.");
+      alert("Passwords do not match.");
+      return; // Stop execution if passwords don't match
     }
 
-    // try {
-    //   const response = await axios.post("", {
-    //     email,
-    //     otpInput,
-    //     newPassword,
-    //     confirmPassword,
-    //   });
+    alert("Password reset successfully!");
 
-    //   if (response.data) {
-    //     console.log(response.data);
-    //   } else {
-    //     console.log("not found the data!!!");
-    //   }
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    try {
+      const response = await fetch(
+        `${NODE_API_ENDPOINT}/courtroomPricing/resetPassword`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "passwordreset-token": token,
+          },
+          body: JSON.stringify({ password: newPassword }), // Use newPassword
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to reset password. Please try again.");
+      }
+
+      const result = await response.json();
+      console.log(result);
+      // Clear form fields
+      setOpen(false);
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowPasswordInputs(false);
+      setShowOtpInput(false);
+      setEmail("");
+      setOtpInput("");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      alert("Something went wrong! Please try again.");
+    }
   };
 
   return (
@@ -574,7 +614,7 @@ function Login() {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPasswordInputs(true)}
+                      onClick={verificationHander}
                       className="w-full py-2 text-white bg-teal-500 rounded-2xl hover:bg-teal-600">
                       Verify OTP
                     </button>
