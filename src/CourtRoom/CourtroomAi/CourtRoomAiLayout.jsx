@@ -29,9 +29,9 @@ const CourtRoomAiLayout = () => {
   // console.log(caseOverView);
   const { status } = useSelector((state) => state.user);
   // const countdownOver = useSelector((state) => state.toggle.popup);
-  console.log(countdownOver);
+  // console.log(countdownOver);
   var slotTimeInterval = useSelector((state) => state?.user?.user?.slot);
-  console.log(slotTimeInterval);
+  // console.log(slotTimeInterval);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,10 +65,10 @@ const CourtRoomAiLayout = () => {
 
   useEffect(() => {
     let todaysSlot = new Date(slotTimeInterval);
-    console.log(slotTimeInterval);
     const todaysSlotTime =
       todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
-    const Offset = 0.5 * 60 * 60000 + 5.5 * 60 * 60000;
+    const Offset =
+      (currentUser?.totalTime / 60) * 60 * 60000 + 5.5 * 60 * 60000;
     var slot = new Date(todaysSlotTime + Offset);
 
     const currenttime = new Date();
@@ -104,10 +104,10 @@ const CourtRoomAiLayout = () => {
     }
 
     const intervalId = setInterval(() => {
-      console.log("interval");
       const todaysSlotTime =
         todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
-      const Offset = 0.5 * 60 * 60000 + 5.5 * 60 * 60000;
+      const Offset =
+        (currentUser?.totalTime / 60) * 60 * 60000 + 5.5 * 60 * 60000;
       var slot = new Date(todaysSlotTime + Offset);
 
       const currenttime = new Date();
