@@ -76,17 +76,19 @@ const drafterQuestions = [
 ];
 
 const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
-  var slotTimeInterval = useSelector((state) => state?.user?.user?.slot);
+  var slotTime = useSelector((state) => state?.user?.user?.slot);
 
   const currentUser = useSelector((state) => state.user.user);
 
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState(0);
   const [countdownOver, setCountDownOver] = useState(false);
   const [feedbackForm, setFeedbackForm] = useState(false);
   const [rateValue, setRateValue] = React.useState(0);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const sidebarTut = useSelector((state) => state.sidebar.sidebarTut);
+  const timeDuration = 120;
+  const [isRunning, setIsRunning] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -95,113 +97,54 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
   // }, [dispatch]);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const slot = new Date(slotTimeInterval);
+    if (!slotTime) return;
 
-      const currenttime = new Date();
-      const utcTime =
-        currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
-      const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
-      const istOffset = 5.5 * 60 * 60000;
-      const currentItcTime = new Date(utcTime + istOffset);
-      const slotcurrentItcTime = new Date(slotutcTime);
-      const realcurrentItcTime = new Date(
-        currentItcTime.getFullYear(),
-        currentItcTime.getMonth(),
-        currentItcTime.getDate(),
-        currentItcTime.getHours(),
-        currentItcTime.getMinutes(),
-        currentItcTime.getSeconds()
-      );
-      const slotrealcurrentItcTime = new Date(
-        slotcurrentItcTime.getFullYear(),
-        slotcurrentItcTime.getMonth(),
-        slotcurrentItcTime.getDate(),
-        slotcurrentItcTime.getHours(),
-        slotcurrentItcTime.getMinutes(),
-        slotcurrentItcTime.getSeconds()
-      );
+    let targetTime = new Date(slotTime);
 
-      // console.log(slotrealcurrentItcTime)
-      // console.log(realcurrentItcTime)
+    targetTime.setTime(targetTime.getTime() + 2 * 60 * 60 * 1000);
 
-      const main =
-        realcurrentItcTime.getTime() - slotrealcurrentItcTime.getTime();
+    let targetUtcString = targetTime.toUTCString();
+    let targetTimeinMilli = new Date(targetUtcString);
+    targetTimeinMilli = targetTimeinMilli.getTime();
 
-      const totalSeconds = Math.floor(main / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      // console.log(main)
-      let minutesLeft;
-      // if(now.getMinutes()>30){
+    const intervalId = setInterval(() => {
+      const currentTimeStr = new Date(Date.now()).toUTCString();
 
-      //    minutesLeft = now.getMinutes()  - slot.getMinutes() - 1;
-      // }
-      // else{
+      let currentTime = new Date(currentTimeStr);
 
-      minutesLeft = 30 - minutes - 1;
+      currentTime.setHours(currentTime.getHours() + 5);
+      currentTime.setMinutes(currentTime.getMinutes() + 30);
 
-      // }
-      // console.log(now.getMinutes())
-      // console.log(slot.getMinutes())
-      const secondsLeft = 60 - seconds;
+      currentTime.toUTCString();
+      let currentTimeinMilli = new Date(currentTime);
+      currentTimeinMilli = currentTimeinMilli.getTime();
 
-      // console.log("minutesLeft")
-      // console.log(minutesLeft)
-      // console.log("seconds")
-      // console.log(secondsLeft)
-      if (minutesLeft == -1 && secondsLeft == 60) {
-        setCountDownOver(true);
+      const remainingTime = targetTimeinMilli - currentTimeinMilli;
+
+      if (remainingTime <= 0) {
+        clearInterval(intervalId);
+        setTimeLeft(0);
+        setIsRunning(false);
+      } else {
+        setTimeLeft(remainingTime);
+        setIsRunning(true);
       }
-      setTimeLeft({ minutes: minutesLeft, seconds: secondsLeft });
-    };
+    }, 1000);
 
-    calculateTimeLeft();
+    return () => clearInterval(intervalId);
+  }, [slotTime, timeDuration]);
 
-    const timer = setInterval(calculateTimeLeft, 1000);
-
-    return () => clearInterval(timer);
-  }, [slotTimeInterval]);
-
-  // useEffect(() => {
-  //   let todaysSlot = new Date(slotTimeInterval);
-  //   const todaysSlotTime =
-  //     todaysSlot.getTime() + todaysSlot.getTimezoneOffset() * 60000;
-  //   const Offset = 0.5 * 60 * 60000 + 5.5 * 60 * 60000;
-  //   var slot = new Date(todaysSlotTime + Offset);
-  //   //  slot =new Date(slot.getFullYear(), slot.getMonth(), slot.getDate(), slot.getHours(), slot.getMinutes(), slot.getSeconds())
-  //   const currenttime = new Date();
-  //   const utcTime =
-  //     currenttime.getTime() + currenttime.getTimezoneOffset() * 60000;
-  //   const slotutcTime = slot.getTime() + slot.getTimezoneOffset() * 60000;
-  //   const istOffset = 5.5 * 60 * 60000;
-  //   const currentItcTime = new Date(utcTime + istOffset);
-  //   const slotcurrentItcTime = new Date(slotutcTime);
-  //   const realcurrentItcTime = new Date(
-  //     currentItcTime.getFullYear(),
-  //     currentItcTime.getMonth(),
-  //     currentItcTime.getDate(),
-  //     currentItcTime.getHours(),
-  //     currentItcTime.getMinutes(),
-  //     currentItcTime.getSeconds()
-  //   );
-  //   const slotrealcurrentItcTime = new Date(
-  //     slotcurrentItcTime.getFullYear(),
-  //     slotcurrentItcTime.getMonth(),
-  //     slotcurrentItcTime.getDate(),
-  //     slotcurrentItcTime.getHours(),
-  //     slotcurrentItcTime.getMinutes(),
-  //     slotcurrentItcTime.getSeconds()
-  //   );
-  //   // console.log(realcurrentItcTime)
-  //   // console.log(slotrealcurrentItcTime)
-
-  //   if (slotrealcurrentItcTime < realcurrentItcTime) {
-  //     // setCountDownOver(true);
-  //     dispatch(setPopupMenu());
-  //     localStorage.removeItem("persist:root");
-  //   }
-  // });
+  const formatTime = (milliseconds) => {
+    if (milliseconds === null) return "00:00:00";
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
+      2,
+      "0"
+    );
+    const seconds = String(totalSeconds % 60).padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  };
 
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
@@ -238,17 +181,19 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
     <>
       <div
         className="flex justify-between items-center px-2 py-1 bg-[#C5C5C5] text-[#008080] border-2 rounded"
-        style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
+        // style={{ borderColor: timeLeft.minutes < 5 ? "red" : "white" }}
       >
         <h1 id="time-left" className="text-xs m-0 font-bold text-teal-800">
           Time Remaining:
         </h1>
         <h1
           className="text-xs m-0 font-semibold"
-          style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
+          // style={{ color: timeLeft.minutes < 5 ? "red" : "#008080" }}
         >
-          {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
-          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds}
+          {/* {timer} */}
+          {isRunning ? formatTime(timeLeft) : "00:00:00"}
+          {/* {timeLeft.minutes < 10 ? `0${timeLeft.minutes}` : timeLeft.minutes} :{" "}
+          {timeLeft.seconds < 10 ? `0${timeLeft.seconds}` : timeLeft.seconds} */}
         </h1>
       </div>
       <Modal open={countdownOver}>
