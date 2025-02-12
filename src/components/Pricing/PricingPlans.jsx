@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { setPlanData } from "../../features/bookCourtRoom/bookingSlice.js";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
+import { NODE_API_ENDPOINT } from "../../utils/utils.js";
 
 const pricingArr = [
   {
@@ -152,7 +153,8 @@ const pricingArr = [
 const PricingPlans = () => {
   const handleSignForm = useSelector((state) => state.user.signUpModal);
   const currentUser = useSelector((state) => state.user.user);
-
+  const bookingData = useSelector((state) => state?.booking?.planData);
+  console.log(bookingData);
   const [billingCycle, setBillingCycle] = useState("daily");
 
   const dispatch = useDispatch();
@@ -205,58 +207,120 @@ const PricingPlans = () => {
         x.planName.toLowerCase() === plan.title.toLowerCase() &&
         x.duration.toLowerCase() === billingCycle
     );
+    console.log(findPlanData);
     if (currentUser) {
       if (findPlanData) {
         if (currentUser?.plan) {
           if (findPlanData.price > currentUser.plan.plan.price) {
+            const { planType, ...rest } = bookingData;
+
             newObj = {
-              amount: findPlanData.price - currentUser.plan.plan.price,
-              currency: "INR",
-              receipt: `receipt_${Date.now()}`,
-              planId: findPlanData._id,
-              planType: findPlanData.duration,
-              expiryDate: currentUser.plan.endData,
+              createPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
+              createPaymentPayload: {
+                amount: findPlanData.price - currentUser.plan.plan.price,
+                currency: "INR",
+                receipt: `receipt_${Date.now()}`,
+                planId: findPlanData._id,
+                planType: findPlanData.duration,
+                planName: findPlanData.planName,
+                expiryDate: currentUser.plan.endData,
+                phoneNumber: currentUser.phoneNumber,
+              },
+              verifyPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/verifyPayment`,
+              verifyPaymentPayload: {
+                bookingData: {
+                  planId: findPlanData._id,
+                  endDate: currentUser.plan.endData,
+                },
+                amount: findPlanData.price - currentUser.plan.plan.price,
+                mongoId: currentUser.mongoId,
+              },
             };
             // console.log(newObj);
-            dispatch(setPlanData(newObj));
-            navigate("/buy-plan");
+            // dispatch(setPlanData(newObj));
+            // navigate("/buy-plan");
+            openPaymentGateway(newObj);
           } else {
             toast.error("Please subscribe to a higher plan than current plan!");
           }
         } else {
+          const { planType, ...rest } = bookingData;
           newObj = {
-            amount: findPlanData.price,
-            currency: "INR",
-            receipt: `receipt_${Date.now()}`,
-            planId: findPlanData._id,
-            planType: findPlanData.duration,
-            expiryDate:
-              billingCycle === "monthly"
-                ? new Date(new Date().setDate(new Date().getDate() + 30))
-                : new Date(),
+            createPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
+            createPaymentPayload: {
+              amount: findPlanData.price,
+              currency: "INR",
+              receipt: `receipt_${Date.now()}`,
+              planId: findPlanData._id,
+              planType: findPlanData.duration,
+              expiryDate:
+                billingCycle === "monthly"
+                  ? new Date(new Date().setDate(new Date().getDate() + 30))
+                  : new Date(),
+              phoneNumber: currentUser.phoneNumber,
+            },
+            verifyPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/verifyPayment`,
+            verifyPaymentPayload: {
+              bookingData: {
+                planId: findPlanData._id,
+                endDate:
+                  billingCycle === "monthly"
+                    ? new Date(new Date().setDate(new Date().getDate() + 30))
+                    : new Date(),
+              },
+              amount: findPlanData.price,
+              mongoId: currentUser.mongoId,
+            },
           };
-          dispatch(setPlanData(newObj));
-          navigate("/buy-plan");
+          // dispatch(setPlanData(newObj));
+          // navigate("/buy-plan");
+          openPaymentGateway(newObj);
         }
       } else {
         toast.error("Details not found for selected plan!");
       }
     } else {
+      const { planType, ...rest } = bookingData;
       newObj = {
-        amount: findPlanData.price,
-        currency: "INR",
-        receipt: `receipt_${Date.now()}`,
-        planId: findPlanData._id,
-        planType: findPlanData.duration,
-        expiryDate:
-          billingCycle === "monthly"
-            ? new Date(new Date().setDate(new Date().getDate() + 30))
-            : new Date(),
+        createPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
+        createPaymentPayload: {
+          amount: findPlanData.price,
+          currency: "INR",
+          receipt: `receipt_${Date.now()}`,
+          planId: findPlanData._id,
+          planType: findPlanData.duration,
+          expiryDate:
+            billingCycle === "monthly"
+              ? new Date(new Date().setDate(new Date().getDate() + 30))
+              : new Date(),
+        },
+        verifyPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/verifyPayment`,
+        verifyPaymentPayload: {
+          bookingData: {
+            // planId: rest.planId,
+            // endDate: rest.expiryDate,
+            planId: findPlanData._id,
+            endDate:
+              billingCycle === "monthly"
+                ? new Date(new Date().setDate(new Date().getDate() + 30))
+                : new Date(),
+          },
+          amount: findPlanData.price,
+          mongoId: currentUser.mongoId,
+        },
       };
-      dispatch(setPlanData(newObj));
-      toast.error("Please signin or login first");
-      navigate("/login-new");
+      // dispatch(setPlanData(newObj));
+      // toast.error("Please signin or login first");
+      // navigate("/login-new");
+      openPaymentGateway(newObj);
     }
+  };
+
+  const openPaymentGateway = (newObj) => {
+    var encodedStringBtoA = btoa(JSON.stringify(newObj));
+    console.log(newObj);
+    console.log(encodedStringBtoA);
+    window.open(`http://localhost:5173/?user=${encodedStringBtoA}`);
   };
 
   return (
@@ -288,8 +352,7 @@ const PricingPlans = () => {
             fontWeight: 800,
             letterSpacing: "-0.01em",
             lineHeight: "1.2",
-          }}
-        >
+          }}>
           AI COURTROOM
         </div>
 
@@ -300,8 +363,7 @@ const PricingPlans = () => {
                 ? "bg-[#018585] text-[white] hover:bg-[#52a8a8]]"
                 : "bg-white text-[#226e6e] hover:bg-gray-200"
             } hover:scale-105`}
-            onClick={() => setBillingCycle("daily")}
-          >
+            onClick={() => setBillingCycle("daily")}>
             Daily
           </button>
           <button
@@ -310,8 +372,7 @@ const PricingPlans = () => {
                 ? "bg-[#018585] text-[white] hover:bg-[#008080] hover:text-[white]"
                 : "bg-white text-[#018585] hover:bg-[#E0FFFA] hover:text-[#5a8781]"
             } hover:scale-105`}
-            onClick={() => setBillingCycle("monthly")}
-          >
+            onClick={() => setBillingCycle("monthly")}>
             Monthly
           </button>
         </div>
@@ -323,8 +384,7 @@ const PricingPlans = () => {
               className={`relative rounded-lg shadow-lg overflow-hidden flex flex-col bg-[rgba(217,217,217,0.37)] border-4 border-white p-6 ${
                 plan.popular ? "popular-plan" : ""
               }`}
-              style={{ height: "100%" }}
-            >
+              style={{ height: "100%" }}>
               <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
                 {plan.title}
               </h2>

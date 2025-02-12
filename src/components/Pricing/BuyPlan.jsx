@@ -17,6 +17,7 @@ const BuyPlan = () => {
   const currentUser = useSelector((state) => state.user.user);
   const [paymentGatewayLoading, setPaymentGatewayLoading] = useState(false);
   console.log(currentUser);
+  console.log(bookingData);
 
   useEffect(() => {
     if (bookingData === "") {
