@@ -12,9 +12,12 @@ const courtIdMapping = [
   { name: "Chattisgarh High Court", id: "10WjvWkkE5P9AZJTdBuK3rOB3FBfSuPON" },
   { name: "Sikkim High Court", id: "1LRcl09Lc2psq3kFjZ92oYEBV54Bgdr4q" },
   { name: "Uttarakhand High Court", id: "16ghA911ENkOJ5GDa-317ncVA_egwsy6J" },
-  { name: "Calcutta High Court", id: "1CTxPb31Kvj-iyUxef5THaTL7pzJpXsE0" },
+  { name: "Calcutta High Court", id: "1N2sWHiEoxv8ckb1ezYXttGtskBYQgP3a" },
   { name: "Kerela High Court", id: "1ss5iK8rcrEzjWUjUl5Cg2qhKunTQX4II" },
-  { name: "Karnataka High Court", id: "1k8EEGMnzCbdyTKsNVGxboa4wqRiW2SNi" },
+  {
+    name: "Karnataka High Court",
+    id: "1k8EEGMnzCbdyTKsNVGxboa4wqRiW2SNi, 12yzXXlf3hAxUAp1fmYTKCQrBV4O2TqwB, 1giA5ZiRlujgv1KwAEqBtH7-0wUi2I0qQ",
+  },
   {
     name: "Jammu and Kashmir High Court",
     id: "15PrnIvUGB4OdKzSjvGtdpyVLLPlBEZ2M",
@@ -26,9 +29,19 @@ const courtIdMapping = [
     name: "Madhya Pradesh High Court",
     id: "1exastQPw80VSb359G8xournBF1MPShdn",
   },
-  { name: "Allahabad High Court", id: "1qpWWufkZ4ciCskmJ3xPHLe72Z8oKWjcO" },
-  { name: "Gujarat High Court", id: "1NyOxx5lBZ-rFy3wtwdOlepTog668HUwJ" },
+  {
+    name: "Allahabad High Court",
+    id: "1qpWWufkZ4ciCskmJ3xPHLe72Z8oKWjcO,1--Ae2LBLKKeAJQ66PSXWwPqThK37csOk",
+  },
+  {
+    name: "Gujarat High Court",
+    id: "1NyOxx5lBZ-rFy3wtwdOlepTog668HUwJ, 1Hn_UM2BNWdJz_xHDeQox_3V8UE3HU89s",
+  },
   { name: "Rajasthan High Court", id: "153TCPW0SuDtXQzlgLUtqES3uwVUkaMtu" },
+  {
+    name: "Bombay High Court",
+    id: "1merBzHbjRaUxHFbpAQHgPH7YGX4RDgdD, 18j0neJBquHzsveZxNSEUtcO0MSqYaaf8, 1CPx_Yv7y-aZrzDbwHWg3P8dGBYiwQSzW",
+  },
 ];
 
 const newcourtIdMapping = [
@@ -56,6 +69,10 @@ const newcourtIdMapping = [
   { name: "Allahabad High Court", id: "1e_EdyqEQkCEW3pXFEo9eFweVGYoiwQRW" },
   { name: "Gujarat High Court", id: "1GWbg3GnvbseAGRfCvQt6ImhXgsg4ZfXl" },
   { name: "Rajasthan High Court", id: "18VP7y7NKx8jwSq87T2iSUEh4KnDyImOX" },
+  {
+    name: "Bombay High Court",
+    id: "1merBzHbjRaUxHFbpAQHgPH7YGX4RDgdD, 18j0neJBquHzsveZxNSEUtcO0MSqYaaf8, 1CPx_Yv7y-aZrzDbwHWg3P8dGBYiwQSzW",
+  },
 ];
 
 const CaseLaws = () => {
@@ -69,6 +86,7 @@ const CaseLaws = () => {
   const [documentData, setDocumentData] = useState("");
 
   const handleOpen = async (court, caseId, date) => {
+    console.log(date, court, caseId);
     setModalOpen(true);
     setLoading(true);
     let findFileId;
@@ -85,6 +103,7 @@ const CaseLaws = () => {
           court.split(" ").join("").toLowerCase()
       );
     }
+    console.log(findFileId);
     const fieldId = findFileId.id.toString();
     try {
       const props = await fetch(
