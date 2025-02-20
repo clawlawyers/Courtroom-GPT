@@ -103,8 +103,8 @@ const TimerComponent = React.memo(({ EndSessionToCourtroom }) => {
 
     targetTime.setTime(
       targetTime.getTime() +
-        // parseFloat(currentUser.totalTime / 60).toFixed(2) * 60 * 60 * 1000
-        parseFloat(30 / 60).toFixed(2) * 60 * 60 * 1000
+        parseFloat(currentUser.totalTime / 60).toFixed(2) * 60 * 60 * 1000
+      // parseFloat(30 / 60).toFixed(2) * 60 * 60 * 1000
     );
 
     let targetUtcString = targetTime.toUTCString();
