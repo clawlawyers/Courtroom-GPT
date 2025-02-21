@@ -3,7 +3,8 @@ import balances from "../../assets/images/BalanceScales.png";
 import clawLogo from "../../assets/images/claw-login.png";
 import Styles from "./LoginToCourtRoom.module.css";
 import { motion } from "framer-motion";
-
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 // import { Link } from "react-router-dom";
 import axios from "axios";
 import { NODE_API_ENDPOINT } from "../../utils/utils";
@@ -48,7 +49,7 @@ function Login() {
   const currentUser = useSelector((state) => state.user.user);
   const caseOverView = useSelector((state) => state.user.caseOverview);
   const navigate = useNavigate();
-
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [errorState, setErrorState] = useState(false);
@@ -73,45 +74,49 @@ function Login() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    axios
-      .post(`${NODE_API_ENDPOINT}/courtroomPricing/login`, {
-        phoneNumber: phone,
-        password: password,
-      })
-      .then((response) => {
-        console.log(response.data);
+    if (!isPhoneValid) {
+      toast.error("Phone Number  is not valid!");
+    } else {
+      axios
+        .post(`${NODE_API_ENDPOINT}/courtroomPricing/login`, {
+          phoneNumber: phone,
+          password: password,
+        })
+        .then((response) => {
+          console.log(response.data);
 
-        if (
-          response.data === "Invalid phone number" ||
-          response.data === "Invalid phone number or password."
-        ) {
-          console.log("Invalid phone number or password");
-          setErrorState(true);
-          setErrorData([response.data, "Please Try Again"]);
-          toast.error(response.data);
-        } else {
-          dispatch(setUser(response.data));
-          localStorage.setItem(
-            "userToken",
-            JSON.stringify({
-              token: response.data.token,
-              expiresAt: response.data.expiresAt,
-            })
-          );
-          if (response.data.plan === null) {
-            navigate("/pricing-plans");
-            toast.error("You don't seem to have any active plans right now!");
+          if (
+            response.data === "Invalid phone number" ||
+            response.data === "Invalid phone number or password."
+          ) {
+            console.log("Invalid phone number or password");
+            setErrorState(true);
+            setErrorData([response.data, "Please Try Again"]);
+            toast.error(response.data);
           } else {
-            navigate("/courtroom-ai");
-            toast.success("You have successfully logged in");
+            dispatch(setUser(response.data));
+            localStorage.setItem(
+              "userToken",
+              JSON.stringify({
+                token: response.data.token,
+                expiresAt: response.data.expiresAt,
+              })
+            );
+            if (response.data.plan === null) {
+              navigate("/pricing-plans");
+              toast.error("You don't seem to have any active plans right now!");
+            } else {
+              navigate("/courtroom-ai");
+              toast.success("You have successfully logged in");
+            }
           }
-        }
-      })
-      .catch((error) => {
-        setErrorState(true);
-        setErrorData([error.message, "Please try again"]);
-        toast.error(error.message);
-      });
+        })
+        .catch((error) => {
+          setErrorState(true);
+          setErrorData([error.message, "Please try again"]);
+          toast.error(error.message);
+        });
+    }
   };
 
   const buttonHandler = async () => {
@@ -207,6 +212,17 @@ function Login() {
     }
   };
 
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    setPhone(value);
+
+    if (/^\d{10}$/.test(value)) {
+      setIsPhoneValid(true);
+    } else {
+      setIsPhoneValid(false);
+    }
+  };
+
   return (
     <div
       className="flex flex-col justify-center items-center pt-14"
@@ -280,12 +296,23 @@ function Login() {
                     clip-rule="evenodd">
                     <path d="M8.26 1.289l-1.564.772c-5.793 3.02 2.798 20.944 9.31 20.944.46 0 .904-.094 1.317-.284l1.542-.755-2.898-5.594-1.54.754c-.181.087-.384.134-.597.134-2.561 0-6.841-8.204-4.241-9.596l1.546-.763-2.875-5.612zm7.746 22.711c-5.68 0-12.221-11.114-12.221-17.832 0-2.419.833-4.146 2.457-4.992l2.382-1.176 3.857 7.347-2.437 1.201c-1.439.772 2.409 8.424 3.956 7.68l2.399-1.179 3.816 7.36s-2.36 1.162-2.476 1.215c-.547.251-1.129.376-1.733.376" />
                   </svg>
-                  <input
-                    type="text"
-                    placeholder="Enter your Phone Number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
+                  <div className="relative">
+                    <input
+                      type="tel"
+                      placeholder="Enter your Phone Number"
+                      value={phone}
+                      onChange={handlePhoneNumberChange}
+                    />
+                    {phone?.length > 0 && (
+                      <div className="absolute right-12 top-6">
+                        {isPhoneValid ? (
+                          <CheckIcon className="text-green-600" />
+                        ) : (
+                          <ClearIcon className="text-red-600" />
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className={Styles.phoneContainer}>
                   <svg

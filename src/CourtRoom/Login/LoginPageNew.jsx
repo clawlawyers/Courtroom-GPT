@@ -21,7 +21,8 @@ import {
 import Header from "../../components/Header/Header";
 import { setUser } from "../../features/bookCourtRoom/LoginReducreSlice";
 import { Helmet } from "react-helmet";
-
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 const LoginPageNew = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,8 @@ const LoginPageNew = () => {
   const [otpVerifySuccess, setOtpVerifySuccess] = useState(false);
   const [otpToken, setOtpToken] = useState("");
   const [verifyToken, setVerifyToken] = useState("");
-
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [showPass, setShowPass] = useState(true);
   const [password, setPassword] = useState(null);
 
@@ -49,53 +51,57 @@ const LoginPageNew = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!otpVerifySuccess) {
-      toast.error("Please verify phone number to proceed!");
-    } else if (!password) {
-      toast.error("Please enter a password!");
+    if (!isEmailValid) {
+      toast.error(" Email is not valid!");
     } else {
-      setLoading(true);
+      if (!otpVerifySuccess) {
+        toast.error("Please verify phone number to proceed!");
+      } else if (!password) {
+        toast.error("Please enter a password!");
+      } else {
+        setLoading(true);
 
-      const bookingData = {
-        // phoneNumber: contact,
-        name: userName,
-        email: email,
-        password,
-      };
-      try {
-        const response = await axios.post(
-          `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom`,
-          {
-            ...bookingData,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "auth-token": verifyToken,
+        const bookingData = {
+          // phoneNumber: contact,
+          name: userName,
+          email: email,
+          password,
+        };
+        try {
+          const response = await axios.post(
+            `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom`,
+            {
+              ...bookingData,
             },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "auth-token": verifyToken,
+              },
+            }
+          );
+          console.log(response);
+          dispatch(setUser(response.data.respo));
+          localStorage.setItem(
+            "userToken",
+            JSON.stringify({
+              token: response.data.respo.token,
+              expiresAt: response.data.respo.expiresAt,
+            })
+          );
+          // dispatch(setBookingData(bookingData));
+          setLoading(false);
+          // navigate(-1);  // make it conditional and also make a cart slice where users selected plan will store
+          if (bookingDataSlice !== "") {
+            navigate("/buy-plan");
+          } else {
+            navigate("/pricing-plans");
           }
-        );
-        console.log(response);
-        dispatch(setUser(response.data.respo));
-        localStorage.setItem(
-          "userToken",
-          JSON.stringify({
-            token: response.data.respo.token,
-            expiresAt: response.data.respo.expiresAt,
-          })
-        );
-        // dispatch(setBookingData(bookingData));
-        setLoading(false);
-        // navigate(-1);  // make it conditional and also make a cart slice where users selected plan will store
-        if (bookingDataSlice !== "") {
-          navigate("/buy-plan");
-        } else {
-          navigate("/pricing-plans");
+        } catch (error) {
+          console.log(error);
+          toast.error("Sign in failed!");
+          setLoading(false);
         }
-      } catch (error) {
-        console.log(error);
-        toast.error("Sign in failed!");
-        setLoading(false);
       }
     }
   };
@@ -166,54 +172,61 @@ const LoginPageNew = () => {
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
-    // handleDisableButton();
-    setOtpLoading(true);
-    console.log("sendOTP");
-    const response = await axios.post(
-      `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom-validation`,
-      {
-        phoneNumber: contact,
-        email: email,
-      }
-    );
-    const checkValid = response.data.data.data;
-    // const checkValid = true;
-    if (checkValid) {
-      toast.success("Phone number is valid!");
-      try {
-        const handleOTPsend = await fetch(`${OTP_ENDPOINT}/generateOTPmobile`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone: contact,
-            siteName: "www.courtroom.clawlaw.in",
-          }),
-        });
-
-        if (!handleOTPsend.ok) {
-          console.error("Failed to send OTP");
-          toast.error("Failed to send OTP");
-          throw new Error("Failed to send OTP");
-        }
-        const data = await handleOTPsend.json();
-        if (data.authtoken) {
-          setOtpToken(data.authtoken);
-        }
-
-        toast.success("OTP sent successfully!");
-        setOtpSuccess(true);
-        setOtpLoading(false);
-        setIsDisabled(true);
-      } catch (error) {
-        toast.error("Failed to send OTP");
-        setOtpLoading(false);
-      }
+    if (!isPhoneValid) {
+      toast.error("Phone Number  is not valid!");
     } else {
-      toast.error("This contact already exists!! Please try another number");
-      setOtpLoading(false);
-      setContact("");
+      // handleDisableButton();
+      setOtpLoading(true);
+      console.log("sendOTP");
+      const response = await axios.post(
+        `${NODE_API_ENDPOINT}/courtroomPricing/book-courtroom-validation`,
+        {
+          phoneNumber: contact,
+          email: email,
+        }
+      );
+      const checkValid = response.data.data.data;
+      // const checkValid = true;
+      if (checkValid) {
+        toast.success("Phone number is valid!");
+        try {
+          const handleOTPsend = await fetch(
+            `${OTP_ENDPOINT}/generateOTPmobile`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                phone: contact,
+                siteName: "www.courtroom.clawlaw.in",
+              }),
+            }
+          );
+
+          if (!handleOTPsend.ok) {
+            console.error("Failed to send OTP");
+            toast.error("Failed to send OTP");
+            throw new Error("Failed to send OTP");
+          }
+          const data = await handleOTPsend.json();
+          if (data.authtoken) {
+            setOtpToken(data.authtoken);
+          }
+
+          toast.success("OTP sent successfully!");
+          setOtpSuccess(true);
+          setOtpLoading(false);
+          setIsDisabled(true);
+        } catch (error) {
+          toast.error("Failed to send OTP");
+          setOtpLoading(false);
+        }
+      } else {
+        toast.error("This contact already exists!! Please try another number");
+        setOtpLoading(false);
+        setContact("");
+      }
     }
   };
 
@@ -345,6 +358,29 @@ const LoginPageNew = () => {
     }
   };
 
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    setContact(value);
+
+    if (/^\d{10}$/.test(value)) {
+      setIsPhoneValid(true);
+    } else {
+      setIsPhoneValid(false);
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (regex.test(value)) {
+      setIsEmailValid(true);
+    } else {
+      setIsEmailValid(false);
+    }
+  };
+
   return (
     <div className={styles.topContainer}>
       <Helmet>
@@ -367,7 +403,7 @@ const LoginPageNew = () => {
           <h2 className="text-5xl font-bold">Sign In</h2>
           <form
             // className={`${styles.forms} gap-4 lg:gap-5`}
-            className="w-full px-5 flex flex-col justify-center gap-4"
+            className="w-full px-5  flex flex-col justify-center gap-4"
             onSubmit={handleSubmit}>
             <input
               type="text"
@@ -379,28 +415,48 @@ const LoginPageNew = () => {
               required
               className="p-3 rounded text-black"
             />
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="p-3 rounded text-black"
-            />
+            <div className="flex flex-col relative">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+                className="p-3 rounded text-black"
+              />
+              {email.length > 0 && (
+                <div className="absolute right-3 top-3">
+                  {isEmailValid ? (
+                    <CheckIcon className="text-green-600" />
+                  ) : (
+                    <ClearIcon className="text-red-600" />
+                  )}
+                </div>
+              )}
+            </div>
             <div className="flex flex-col gap-3">
-              <div className="flex gap-2">
+              <div className="flex relative gap-2">
                 <input
-                  type="number"
+                  type="tel"
                   id="contact"
                   name="contact"
                   placeholder="Enter your contact number"
                   value={contact}
-                  onChange={(e) => setContact(e.target.value)}
+                  onChange={handlePhoneNumberChange}
                   required
                   className="flex-1 p-3 rounded text-black"
                 />
+                {contact.length > 0 && (
+                  <div className="absolute right-32 top-3">
+                    {isPhoneValid ? (
+                      <CheckIcon className="text-green-600" />
+                    ) : (
+                      <ClearIcon className="text-red-600" />
+                    )}
+                  </div>
+                )}
                 {!otpVerifySuccess ? (
                   <button
                     style={{
