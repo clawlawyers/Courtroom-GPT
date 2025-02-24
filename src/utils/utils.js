@@ -14,6 +14,16 @@ export const OTP_ENDPOINT =
     : "https://claw-app.onrender.com";
 // : "http://localhost:7000";
 
+export const PAYMENT_END_POINT =
+  process.env.NODE_ENV === "production"
+    ? " payment.clawlaw.in"
+    : " http://localhost:5173/";
+
+export const CURRENT_SITE_ENDPOINT =
+  process.env.NODE_ENV === "production"
+    ? import.meta.env.VITE_CURRENT_SITE_ENDPOINT
+    : "http://localhost:6000/";
+
 export const splitContentIntoPages = (text, maxWordsPerPage) => {
   const words = text.split(" ");
   const pages = [];

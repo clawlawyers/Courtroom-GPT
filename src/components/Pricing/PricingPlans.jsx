@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { setPlanData } from "../../features/bookCourtRoom/bookingSlice.js";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
-import { NODE_API_ENDPOINT } from "../../utils/utils.js";
+import {
+  CURRENT_SITE_ENDPOINT,
+  NODE_API_ENDPOINT,
+  PAYMENT_END_POINT,
+} from "../../utils/utils.js";
 
 const pricingArr = [
   {
@@ -215,6 +219,7 @@ const PricingPlans = () => {
             const { planType, ...rest } = bookingData;
 
             newObj = {
+              homeSite: CURRENT_SITE_ENDPOINT,
               createPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
               createPaymentPayload: {
                 amount: findPlanData.price - currentUser.plan.plan.price,
@@ -235,6 +240,7 @@ const PricingPlans = () => {
                 amount: findPlanData.price - currentUser.plan.plan.price,
                 mongoId: currentUser.mongoId,
               },
+              isLive: false,
             };
             // console.log(newObj);
             // dispatch(setPlanData(newObj));
@@ -246,6 +252,7 @@ const PricingPlans = () => {
         } else {
           const { planType, ...rest } = bookingData;
           newObj = {
+            homeSite: CURRENT_SITE_ENDPOINT,
             createPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
             createPaymentPayload: {
               amount: findPlanData.price,
@@ -271,6 +278,7 @@ const PricingPlans = () => {
               amount: findPlanData.price,
               mongoId: currentUser.mongoId,
             },
+            isLive: false,
           };
           // dispatch(setPlanData(newObj));
           // navigate("/buy-plan");
@@ -282,6 +290,7 @@ const PricingPlans = () => {
     } else {
       const { planType, ...rest } = bookingData;
       newObj = {
+        homeSite: CURRENT_SITE_ENDPOINT,
         createPaymentURL: `${NODE_API_ENDPOINT}/courtroomPayment/create-order`,
         createPaymentPayload: {
           amount: findPlanData.price,
@@ -305,9 +314,10 @@ const PricingPlans = () => {
                 ? new Date(new Date().setDate(new Date().getDate() + 30))
                 : new Date(),
           },
-          amount: findPlanData.price,
-          mongoId: currentUser.mongoId,
+          amount: findPlanData?.price,
+          mongoId: currentUser?.mongoId,
         },
+        isLive: false,
       };
       // dispatch(setPlanData(newObj));
       // toast.error("Please signin or login first");
@@ -320,7 +330,7 @@ const PricingPlans = () => {
     var encodedStringBtoA = btoa(JSON.stringify(newObj));
     console.log(newObj);
     console.log(encodedStringBtoA);
-    window.open(`http://localhost:5173/?user=${encodedStringBtoA}`);
+    window.open(`${PAYMENT_END_POINT}?user=${encodedStringBtoA}`);
   };
 
   return (
